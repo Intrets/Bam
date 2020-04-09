@@ -1,0 +1,31 @@
+#pragma once
+
+#include "BufferWrappers.h"
+
+#include <unordered_map>
+
+class BlockIDTextures
+{
+public:
+	bwo::VertexArrayObject VAO;
+	bwo::Program program;
+	bwo::Buffer quad;
+	bwo::Texture textureArray;
+	bwo::Buffer textureBuffer;
+	bwo::Uniform1i layer;
+	bwo::UniformTexture2D texture;
+
+	int maxArrayLayers;
+	int arrayLayers = 0;
+
+	std::unordered_map<std::string, int> textures;
+
+	int getBlockTextureID(std::string);
+	void loadBlockTexture(std::string);
+
+	deleteDefaults(BlockIDTextures);
+
+	BlockIDTextures();
+	~BlockIDTextures() = default;
+};
+

@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GLWrappers">
+      <UniqueIdentifier>{7258898c-4661-4ebe-be62-f5a27a27b8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{343ae8c2-25c5-4678-a4b9-243a1b75e36a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Loaders">
+      <UniqueIdentifier>{872266c1-c8d1-4437-a012-0142c7f6b161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data">
+      <UniqueIdentifier>{0883e599-1791-4cde-9638-25a8d6b4ca5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Stores">
+      <UniqueIdentifier>{73d2bd7b-1d97-4229-b6fa-3e50105d9062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Resources">
+      <UniqueIdentifier>{3408cc33-b516-40b1-8f1c-6b1eaab71e5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Util">
+      <UniqueIdentifier>{4e83184f-bfef-4859-9ae2-8f829ea632ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{d2b4b622-3506-4455-8e0c-e7a15e034c74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Bam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLhelpers.cpp">
+      <Filter>GLWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferWrappers.cpp">
+      <Filter>GLWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Locator.cpp">
+      <Filter>Memory\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Memory\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Memory\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Memory\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelStore.cpp">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureStore.cpp">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureResource.cpp">
+      <Filter>Memory\Data\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelResource.cpp">
+      <Filter>Memory\Data\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PathManager.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagerModel.cpp">
+      <Filter>Memory\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagerTexture.cpp">
+      <Filter>Memory\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="vboindexer.cpp">
+      <Filter>Memory\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorldRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorldRenderInfo.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GLEnableWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockIDTextures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OGLhelpers.h">
+      <Filter>GLWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferWrappers.h">
+      <Filter>GLWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="PathManager.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Locator.h">
+      <Filter>Memory\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Memory\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Memory\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Memory\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelStore.h">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureStore.h">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureResource.h">
+      <Filter>Memory\Data\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelResource.h">
+      <Filter>Memory\Data\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagerModel.h">
+      <Filter>Memory\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagerTexture.h">
+      <Filter>Memory\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="vboindexer.h">
+      <Filter>Memory\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorldRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorldRenderInfo.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEnableWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInfo.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockIDTextures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StaticWorldShader.frag" />
+    <None Include="StaticWorldShader.vert" />
+    <None Include="PassthroughArray.frag" />
+    <None Include="PassthroughArray.vert" />
+  </ItemGroup>
+</Project>

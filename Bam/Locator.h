@@ -1,0 +1,20 @@
+#pragma once
+
+template<class T>
+class Locator
+{
+public:
+	static T* getService() { return object; };
+
+	static void provide(T* obj) {
+		if (object != nullptr) {
+			delete object;
+		}
+		object = obj;
+	}
+
+private:
+	static T* object;
+};
+
+template<class T> T* Locator<T>::object;
