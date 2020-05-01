@@ -163,7 +163,10 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
+    <ClCompile Include="DebugRenderer.cpp" />
+    <ClCompile Include="DebugRenderInfo.cpp" />
     <ClCompile Include="FPSLimiter.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
@@ -195,7 +198,10 @@
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="DebugRenderer.h" />
+    <ClInclude Include="DebugRenderInfo.h" />
     <ClInclude Include="FPSLimiter.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
     <ClInclude Include="IOwrapped.h" />
@@ -224,6 +230,8 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DebugLine.frag" />
+    <None Include="DebugLine.vert" />
     <None Include="PassthroughArray.frag" />
     <None Include="PassthroughArray.vert" />
     <None Include="StaticWorldShader.frag" />

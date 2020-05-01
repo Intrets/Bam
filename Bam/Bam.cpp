@@ -17,6 +17,9 @@
 #include <thread>
 #include "RenderInfo.h"
 #include "Option.h"
+#include "DebugRenderer.h"
+#include "DebugRenderInfo.h"
+#include "GameLogic.h"
 
 GLFWwindow* window;
 
@@ -84,8 +87,9 @@ int main() {
 	Locator<ResourceManagerTexture>::provide(new ResourceManagerTexture());
 
 	Locator<OptionManager>::provide(new OptionManager());
-	//Locator<DebugRenderer>::provide(new DebugRenderer());
+	Locator<DebugRenderer>::provide(new DebugRenderer());
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
+	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
 	//Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
 	//Locator<CommandHandler>::provide(new CommandHandler());
@@ -98,11 +102,18 @@ int main() {
 	WindowManager windowManager;
 
 	GameState gameState;
+	GameLogic gameLogic;
 
 	Renderer renderer;
 
 	Option<float> viewportScale{ "viewportscale", 20.0f };
-	Option<bool> seperateRenderThread{ "render_thread", true };
+	//Option<bool> seperateRenderThread{ "render_thread", true };
+
+	float t = 0;
+	std::thread logicThread;
+
+	int fps = 0;
+	double last = 0;
 
 	while (!glfwWindowShouldClose(window)) {
 		//if (gamestate.exit) {
@@ -114,7 +125,7 @@ int main() {
 		glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 		float ratio = frameSizeX / static_cast<float>(frameSizeY);
 		glm::vec2 viewport(ratio, 1.0f);
-		viewport *= viewportScale * 10;
+		viewport *= viewportScale;
 
 		RenderInfo renderInfo;
 		//renderInfo.cameraInfo = { 1000, 1000, glm::vec2{0,0}, glm::vec3(20.0f, 20.0f, 20.0f) };
@@ -123,33 +134,40 @@ int main() {
 		//renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(10, 10), 1);
 
 		//auto camPos = gamestate.cam->getPosition();
-		auto camPos = glm::vec2(0, 0);
+		auto camPos = glm::vec2(t, 0);
 
 		renderInfo.cameraInfo = { frameSizeX, frameSizeY, camPos, glm::vec3(viewport, 200.0f) };
 
-		bool doneSomething = false;
-		bool rendering = false;
-		std::thread rendererThread;
-
-		if (fpsLimiter.ready() && !rendering) {
+		if (fpsLimiter.ready()) {
+			Locator<DebugRenderInfo>::getService()->addPoint(glm::vec2(0));
 			renderer.prepareRender(renderInfo, gameState, windowManager);
+		}
+
+		if (gameLogic.ready()) {
+			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
+		}
+
+		if (fpsLimiter.ready()) {
+			if (glfwGetTime() - last > 1.0f) {
+				last = glfwGetTime();
+				std::cout << fps << "\n";
+				fps = 0;
+			}
+			fps++;
+
 			//renderer.prepareRender(renderInfo, gamestate, windowManager);
 			//renderInfo.debugLines = std::move(Locator<DebugRenderer>::getService()->lines);
 			//renderInfo.debugPoints = std::move(Locator<DebugRenderer>::getService()->points);
 
-			doneSomething = true;
 
 			//fpsdisplay.displayFPS(window);
 			fpsLimiter.renderStart();
-			if (seperateRenderThread) {
-				rendering = true;
-				glfwMakeContextCurrent(0);
-				rendererThread = std::thread(&Renderer::render, &renderer, window, std::ref(renderInfo), true);
-			}
-			else {
-				renderer.render(window, renderInfo, false);
-				fpsLimiter.renderFinish();
-			}
+			renderer.render(window, renderInfo);
+			fpsLimiter.renderFinish();
+		}
+
+		if (logicThread.joinable()) {
+			logicThread.join();
 		}
 
 		//if (physicsHandler.ready() && (!stepByStep || nextStep)) {
@@ -188,12 +206,6 @@ int main() {
 		//	controlState.clearJustChanged();
 		//}
 
-		if (rendering) {
-			rendererThread.join();
-			fpsLimiter.renderFinish();
-			glfwMakeContextCurrent(window);
-			rendering = false;
-		}
 
 		{
 			GLenum err;
@@ -205,8 +217,6 @@ int main() {
 		glfwPollEvents();
 		//Locator<CommandHandler>::getService()->runCommands(gamestate);
 
-		if (!doneSomething) {
-			std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
-		}
+		std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
 	}
 }

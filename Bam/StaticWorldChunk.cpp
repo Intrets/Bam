@@ -28,12 +28,11 @@ void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (int i = 0; i < CHUNKSIZE; i++) {
 		for (int j = 0; j < CHUNKSIZE; j++) {
 			if (staticWorld[i][j].isBlock()) {
-				renderInfo.staticWorldRenderInfo.offsets.push_back(glm::vec2(i, j) + glm::vec2(position));
-				//renderInfo.staticWorldRenderInfo.textureIDs.push_back(staticWorldChunk->staticWorld[i][j].blockID);
-				renderInfo.staticWorldRenderInfo.textureIDs.push_back(staticWorld[i][j].blockID);
-
 				if (!staticWorld[i][j].isOccluded()) {
-					renderInfo.staticWorldRenderInfo.offsetsShadow.push_back(glm::vec2(i, j) + glm::vec2(position));
+					renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
+				}
+				else {
+					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
 				}
 			}
 		}

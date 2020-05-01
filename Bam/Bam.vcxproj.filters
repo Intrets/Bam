@@ -46,6 +46,15 @@
     <Filter Include="Game\StaticWorld">
       <UniqueIdentifier>{b12e86f8-f1a4-41cd-a02a-ae1c73762230}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{bdffc8a3-099d-4f9a-875b-ac040e47031d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\RenderInfo">
+      <UniqueIdentifier>{1a155e98-54e5-4c66-ba2c-a22300ec777a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Shaders">
+      <UniqueIdentifier>{c9a5c9eb-0128-466f-bed4-b2ffc68f9a97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp">
@@ -96,9 +105,6 @@
     <ClCompile Include="StaticWorldRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="StaticWorldRenderInfo.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="GLEnableWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -133,7 +139,19 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorldRenderInfo.cpp">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderInfo.cpp">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,19 +203,10 @@
     <ClInclude Include="StaticWorldRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="StaticWorldRenderInfo.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="GLEnableWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CameraInfo.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="BlockIDTextures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FPSLimiter.h">
@@ -231,13 +240,45 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
-      <Filter>Header Files</Filter>
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorldRenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="StaticWorldShader.frag" />
-    <None Include="StaticWorldShader.vert" />
-    <None Include="PassthroughArray.frag" />
-    <None Include="PassthroughArray.vert" />
+    <None Include="DebugLine.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="DebugLine.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="PassthroughArray.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="PassthroughArray.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="StaticWorldShader.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="StaticWorldShader.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

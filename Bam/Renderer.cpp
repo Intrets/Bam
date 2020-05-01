@@ -20,15 +20,15 @@ void Renderer::prepareRender(RenderInfo& renderInfo, GameState& gameState, Windo
 	//if (res.first == 1) {
 	//	res.second.get()->appendSelectionInfo(gameState, target);
 	//}
+	
+	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
+	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
 	gameState.appendStaticRenderInfo(renderInfo);
 	//windowManager.addRenderInfo(target.uiRenderInfo, target.cameraInfo, textRenderer);
 }
 
-void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo, bool differentContext) {
-	if (differentContext) {
-		glfwMakeContextCurrent(window);
-	}
+void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	//gameState.inventory.worldSelector.dummyRender(gameState);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -107,9 +107,10 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo, bool different
 
 	//selectionRenderer.render(renderInfo, 0);
 
-	//if (debugOption) {
-	//	DebugRenderer().render(0, renderInfo.cameraInfo, renderInfo.debugPoints, renderInfo.debugLines);
-	//}
+	if (debugOption) {
+		debugRenderer.render(0, renderInfo);
+		//DebugRenderer().render(0, renderInfo.cameraInfo, renderInfo.debugPoints, renderInfo.debugLines);
+	}
 
 	//if (uiOption) {
 	//	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, screen.get()->ID, renderInfo.cameraInfo);
@@ -117,10 +118,6 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo, bool different
 	//}
 
 	glfwSwapBuffers(window);
-
-	if (differentContext) {
-		glfwMakeContextCurrent(0);
-	}
 }
 
 Renderer::Renderer() 

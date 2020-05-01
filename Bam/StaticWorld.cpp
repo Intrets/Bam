@@ -13,11 +13,6 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	auto i0 = glm::ivec2(glm::floor(p0 / size));
 	auto i1 = glm::ivec2(glm::floor(p1 / size));
 
-	renderInfo.staticWorldRenderInfo.textureIDs.push_back(1);
-	renderInfo.staticWorldRenderInfo.offsets.push_back(glm::vec2(0));
-	renderInfo.staticWorldRenderInfo.offsetsShadow.push_back(glm::vec2(0));
-
-
 	for (int ci = i0.x; ci <= i1.x; ci++) {
 		for (int cj = i0.y; cj <= i1.y; cj++) {
 			auto staticWorldChunk = getChunkByIndex(ci, cj);
