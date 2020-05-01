@@ -4,16 +4,22 @@
 
 #include <iostream>
 
-#include "StaticWorldRenderer.h"
+#include "Renderer.h"
 #include "CameraInfo.h"
 #include "BlockIDTextures.h"
 #include "ResourceManagerModel.h"
 #include "ResourceManagerTexture.h"
+#include "FPSLimiter.h"
+#include "GameState.h"
+#include "WindowManager.h"
 
 #include <chrono>
 #include <thread>
+#include "RenderInfo.h"
+#include "Option.h"
 
 GLFWwindow* window;
+
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
@@ -70,12 +76,14 @@ static int initGLFW() {
 int main() {
 	initGLFW();
 
+	FPSLimiter fpsLimiter;
+
 	Locator<PathManager>::provide(new PathManager());
 
 	Locator<ResourceManagerModel>::provide(new ResourceManagerModel());
 	Locator<ResourceManagerTexture>::provide(new ResourceManagerTexture());
 
-	//Locator<OptionManager>::provide(new OptionManager());
+	Locator<OptionManager>::provide(new OptionManager());
 	//Locator<DebugRenderer>::provide(new DebugRenderer());
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 
@@ -87,41 +95,52 @@ int main() {
 
 	//Locator<BindHandler>::provide(new BindHandler());
 
-	StaticWorldRenderer test;
-	StaticWorldRenderInfo info;
-	CameraInfo cameraInfo = { 1000, 1000, glm::vec2{0,0}, glm::vec3(20.0f, 20.0f, 20.0f) };
+	WindowManager windowManager;
 
-	info.addBlockWithoutShadow(glm::vec2(0,0), 2);
-	info.addBlockWithoutShadow(glm::vec2(10,10), 1);
+	GameState gameState;
+
+	Renderer renderer;
+
+	Option<float> viewportScale{ "viewportscale", 20.0f };
+	Option<bool> seperateRenderThread{ "render_thread", true };
+
 	while (!glfwWindowShouldClose(window)) {
-		if (gamestate.exit) {
-			glfwSetWindowShouldClose(window, GLFW_TRUE);
-			break;
-		}
+		//if (gamestate.exit) {
+		//	glfwSetWindowShouldClose(window, GLFW_TRUE);
+		//	break;
+		//}
 
 		int frameSizeX, frameSizeY;
 		glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 		float ratio = frameSizeX / static_cast<float>(frameSizeY);
 		glm::vec2 viewport(ratio, 1.0f);
-		viewport *= viewportScale;
+		viewport *= viewportScale * 10;
 
 		RenderInfo renderInfo;
+		//renderInfo.cameraInfo = { 1000, 1000, glm::vec2{0,0}, glm::vec3(20.0f, 20.0f, 20.0f) };
 
-		auto camPos = gamestate.cam->getPosition();
+		//renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(0, 0), 2);
+		//renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(10, 10), 1);
+
+		//auto camPos = gamestate.cam->getPosition();
+		auto camPos = glm::vec2(0, 0);
 
 		renderInfo.cameraInfo = { frameSizeX, frameSizeY, camPos, glm::vec3(viewport, 200.0f) };
 
 		bool doneSomething = false;
+		bool rendering = false;
+		std::thread rendererThread;
+
 		if (fpsLimiter.ready() && !rendering) {
-			renderer.prepareRender(renderInfo, gamestate, windowManager);
-			renderInfo.debugLines = std::move(Locator<DebugRenderer>::getService()->lines);
-			renderInfo.debugPoints = std::move(Locator<DebugRenderer>::getService()->points);
+			renderer.prepareRender(renderInfo, gameState, windowManager);
+			//renderer.prepareRender(renderInfo, gamestate, windowManager);
+			//renderInfo.debugLines = std::move(Locator<DebugRenderer>::getService()->lines);
+			//renderInfo.debugPoints = std::move(Locator<DebugRenderer>::getService()->points);
 
 			doneSomething = true;
 
-			fpsdisplay.displayFPS(window);
+			//fpsdisplay.displayFPS(window);
 			fpsLimiter.renderStart();
-
 			if (seperateRenderThread) {
 				rendering = true;
 				glfwMakeContextCurrent(0);
@@ -133,41 +152,41 @@ int main() {
 			}
 		}
 
-		if (physicsHandler.ready() && (!stepByStep || nextStep)) {
-			Locator<BindHandler>::getService()->runBinds(controlState, gamestate);
-			nextStep = false;
-			Locator<DebugRenderer>::getService()->clear();
-			doneSomething = true;
+		//if (physicsHandler.ready() && (!stepByStep || nextStep)) {
+		//	Locator<BindHandler>::getService()->runBinds(controlState, gamestate);
+		//	nextStep = false;
+		//	Locator<DebugRenderer>::getService()->clear();
+		//	doneSomething = true;
 
-			physicsHandler.runPhysicsTick(controlState, gamestate);
+		//	physicsHandler.runPhysicsTick(controlState, gamestate);
 
-			Locator<DebugRenderer>::getService()->points.push_back(glm::vec2(0.0f));
+		//	Locator<DebugRenderer>::getService()->points.push_back(glm::vec2(0.0f));
 
-			glm::vec3 debugPos = gamestate.player->getPosition();
-			std::vector<glm::vec2> line;
-			for (int i = 0; i < 5; i++) {
-				auto test = (reinterpret_cast<HitBox*>((reinterpret_cast<PhysicsObject*>(gamestate.player)->hitObject.get()))->corners[i % 4]);
-				line.push_back(test + glm::vec2(debugPos));
-			}
+		//	glm::vec3 debugPos = gamestate.player->getPosition();
+		//	std::vector<glm::vec2> line;
+		//	for (int i = 0; i < 5; i++) {
+		//		auto test = (reinterpret_cast<HitBox*>((reinterpret_cast<PhysicsObject*>(gamestate.player)->hitObject.get()))->corners[i % 4]);
+		//		line.push_back(test + glm::vec2(debugPos));
+		//	}
 
-			Locator<DebugRenderer>::getService()->lines.push_back(line);
+		//	Locator<DebugRenderer>::getService()->lines.push_back(line);
 
-			// TODO: nicely do background
-			auto temppos = glm::floor(gamestate.player->getPosition());
-			temppos.z = -100.0f;
-			background->spatial.origin[background->spatial.currentNode] = temppos;
+		//	// TODO: nicely do background
+		//	auto temppos = glm::floor(gamestate.player->getPosition());
+		//	temppos.z = -100.0f;
+		//	background->spatial.origin[background->spatial.currentNode] = temppos;
 
-			glm::dvec2 cursorPos;
-			glfwGetCursorPos(window, &cursorPos.x, &cursorPos.y);
-			cursorPos.y = frameSizeY - cursorPos.y;
-			cursorPos.x = -viewport.x + (cursorPos.x / frameSizeX) * 2 * viewport.x;
-			cursorPos.y = -viewport.y + (cursorPos.y / frameSizeY) * 2 * viewport.y;
+		//	glm::dvec2 cursorPos;
+		//	glfwGetCursorPos(window, &cursorPos.x, &cursorPos.y);
+		//	cursorPos.y = frameSizeY - cursorPos.y;
+		//	cursorPos.x = -viewport.x + (cursorPos.x / frameSizeX) * 2 * viewport.x;
+		//	cursorPos.y = -viewport.y + (cursorPos.y / frameSizeY) * 2 * viewport.y;
 
-			gamestate.playerCursor = glm::vec2(gamestate.cam->getPosition()) + glm::vec2(cursorPos);
-			cursor->setScale(viewportScale / 20.0f);
-			cursor->spatial.origin[cursor->spatial.currentNode] = glm::vec3(gamestate.playerCursor + (viewportScale / 20.0f) * glm::vec2(0.5f, -0.5f), 10.0f);
-			controlState.clearJustChanged();
-		}
+		//	gamestate.playerCursor = glm::vec2(gamestate.cam->getPosition()) + glm::vec2(cursorPos);
+		//	cursor->setScale(viewportScale / 20.0f);
+		//	cursor->spatial.origin[cursor->spatial.currentNode] = glm::vec3(gamestate.playerCursor + (viewportScale / 20.0f) * glm::vec2(0.5f, -0.5f), 10.0f);
+		//	controlState.clearJustChanged();
+		//}
 
 		if (rendering) {
 			rendererThread.join();
@@ -184,30 +203,10 @@ int main() {
 		}
 
 		glfwPollEvents();
-		Locator<CommandHandler>::getService()->runCommands(gamestate);
+		//Locator<CommandHandler>::getService()->runCommands(gamestate);
 
 		if (!doneSomething) {
 			std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
 		}
 	}
-
-	//while (!glfwWindowShouldClose(window)) {
-	//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//	std::cout << "start\n";
-	//	test.render(info, 0, cameraInfo);
-
-	//	std::cout << "swap\n";
-	//	glfwSwapBuffers(window);
-	//	glfwPollEvents();
-
-	//	GLenum err;
-	//	while ((err = glGetError()) != GL_NO_ERROR) {
-	//		std::cout << std::hex << err << std::dec << std::endl;
-	//		// Process/log the error.
-	//	}
-
-	//	std::this_thread::sleep_for(std::chrono::milliseconds((long) 16));
-	//}
 }

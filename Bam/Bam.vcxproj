@@ -160,46 +160,68 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
+    <ClCompile Include="FPSLimiter.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
+    <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ModelStore.cpp" />
     <ClCompile Include="OGLhelpers.cpp" />
+    <ClCompile Include="Option.cpp" />
     <ClCompile Include="PathManager.cpp" />
+    <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="StaticWorld.cpp" />
+    <ClCompile Include="StaticWorldChunk.cpp" />
     <ClCompile Include="StaticWorldRenderer.cpp" />
     <ClCompile Include="StaticWorldRenderInfo.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="vboindexer.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
+    <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="FPSLimiter.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
+    <ClInclude Include="IOwrapped.h" />
     <ClInclude Include="Locator.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelStore.h" />
     <ClInclude Include="OGLhelpers.h" />
+    <ClInclude Include="Option.h" />
     <ClInclude Include="PathManager.h" />
+    <ClInclude Include="PerlinNoise.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderInfo.h" />
     <ClInclude Include="ResourceManagerModel.h" />
     <ClInclude Include="ResourceManagerTexture.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="StaticWorld.h" />
+    <ClInclude Include="StaticWorldChunk.h" />
     <ClInclude Include="StaticWorldRenderer.h" />
     <ClInclude Include="StaticWorldRenderInfo.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="vboindexer.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PassthroughArray.frag" />

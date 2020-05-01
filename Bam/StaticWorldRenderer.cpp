@@ -21,7 +21,6 @@ StaticWorldRenderer::StaticWorldRenderer() :
 	VAO.gen(5);
 
 	ModelResource tempp("devtile.obj");
-	auto tttt = tempp.get();
 
 	// 1rst attribute buffer : vertices
 	glBindBuffer(GL_ARRAY_BUFFER, tempp.get()->vertexbufferHandle);
@@ -139,7 +138,7 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y); 
 
-	texture.set(Locator<BlockIDTextures>::getService()->textureArray.ID);
+	texture.set(Locator<BlockIDTextures>::getService()->getTextureArrayID());
 
 	if (info.offsets.size() == 0) {
 		return;
@@ -179,7 +178,7 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
-	texture.set(Locator<BlockIDTextures>::getService()->textureArray.ID);
+	texture.set(Locator<BlockIDTextures>::getService()->getTextureArrayID());
 
 	if (infos.size() == 0) {
 		return;

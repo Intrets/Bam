@@ -37,6 +37,15 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{d2b4b622-3506-4455-8e0c-e7a15e034c74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory\Options">
+      <UniqueIdentifier>{a721e69b-d2b6-44b5-9cfa-effb2611a0c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{8ba66f3b-6227-48b1-835f-fdbdd97a8aee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\StaticWorld">
+      <UniqueIdentifier>{b12e86f8-f1a4-41cd-a02a-ae1c73762230}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp">
@@ -94,6 +103,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BlockIDTextures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSLimiter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Option.cpp">
+      <Filter>Memory\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="IOwrapped.cpp">
+      <Filter>Memory\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorld.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticWorldChunk.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -156,6 +195,42 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="BlockIDTextures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSLimiter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Memory\Options</Filter>
+    </ClInclude>
+    <ClInclude Include="IOwrapped.h">
+      <Filter>Memory\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorld.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticWorldChunk.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

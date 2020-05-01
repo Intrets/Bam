@@ -13,7 +13,9 @@
 
 #define deleteDefaults(T) T(const T&) = delete; T(T&&) = delete; T& operator=(const T&) = delete; T& operator=(T&&) = delete;
 
-#define MAX_STATIC_DRAW 1024
+#define MAX_STATIC_DRAW 100000 
+
+#define CHUNKSIZE 32
 
 #include "Locator.h"
 #include "PathManager.h"

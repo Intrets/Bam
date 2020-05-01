@@ -41,6 +41,10 @@ void BlockIDTextures::loadBlockTexture(std::string name) {
 	VAO.unbind();
 }
 
+GLuint BlockIDTextures::getTextureArrayID() {
+	return textureArray.ID;
+}
+
 BlockIDTextures::BlockIDTextures() :
 	program(Locator<PathManager>::getService()->LoadShadersP("PassthroughArray.vert", "PassthroughArray.frag")),
 	layer("layer", program),

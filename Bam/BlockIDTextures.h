@@ -6,7 +6,7 @@
 
 class BlockIDTextures
 {
-public:
+private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 	bwo::Buffer quad;
@@ -20,8 +20,10 @@ public:
 
 	std::unordered_map<std::string, int> textures;
 
+public:
 	int getBlockTextureID(std::string);
 	void loadBlockTexture(std::string);
+	GLuint getTextureArrayID();
 
 	deleteDefaults(BlockIDTextures);
 
