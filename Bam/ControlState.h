@@ -10,6 +10,8 @@ typedef enum
 	LEFT,
 	RIGHT,
 	JUMP,
+	ZOOM_IN,
+	ZOOM_OUT,
 	ROTATEL,
 	ROTATER,
 	DESTROYBLOCK,

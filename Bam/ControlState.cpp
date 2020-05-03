@@ -2,6 +2,7 @@
 #include "ControlState.h"
 
 #include <array>
+#include <iostream>
 
 ControlState::ControlState() {
 	controlState.fill(CONTROLSTATE::CONTROLSTATE_UP);
@@ -22,6 +23,8 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_Z] = CONTROLS::TEST_EXTEND;
 	keyToControl[GLFW_KEY_X] = CONTROLS::TEST_RETRACT;
 	keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_4] = CONTROLS::SELECTACTIVITYROOT;
+	keyToControl[GLFW_KEY_R] = CONTROLS::ZOOM_IN;
+	keyToControl[GLFW_KEY_F] = CONTROLS::ZOOM_OUT;
 }
 
 void ControlState::cycleStates() {
@@ -41,10 +44,12 @@ void ControlState::key_callback(GLFWwindow* w, int key, int scancode, int action
 		return;
 	}
 
-	auto state = CONTROLSTATE::CONTROLSTATE_PRESSED;
+	CONTROLSTATE state;
 	if (action == GLFW_RELEASE) {
-		state = CONTROLSTATE::CONTROLSTATE_DOWN;
+		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_RELEASED;
+	}
+	else if (action == GLFW_PRESS) {
+		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 	}
 
-	controlState[keyToControl[key]] = state;
 }

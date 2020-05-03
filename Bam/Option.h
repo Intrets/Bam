@@ -66,6 +66,7 @@ private:
 
 public:
 	operator T();
+	void set(T val);
 
 	Option(std::string name_, T defaultValue_);
 	~Option() = default;
@@ -93,6 +94,9 @@ public:
 	template <typename T>
 	T getVal(Option<T>& option);
 
+	template <typename T>
+	void setVal(Option<T>& option, T val);
+
 	std::string stringCommand(std::vector<std::string>& command);
 
 	void readFromFile();
@@ -105,6 +109,11 @@ public:
 template<typename T>
 inline Option<T>::operator T() {
 	return Locator<OptionManager>::getService()->getVal(*this);
+}
+
+template<typename T>
+inline void Option<T>::set(T val) {
+	Locator<OptionManager>::getService()->setVal(*this, val);
 }
 
 template<typename T>
@@ -147,6 +156,16 @@ inline T OptionManager::getVal(Option<T>& option) {
 		option.index = insert<T>(option.name, option.defaultValue);
 	}
 	return static_cast<OptionValue<T>*>(data[option.index].get())->val;
+}
+
+template<typename T>
+inline void OptionManager::setVal(Option<T>& option, T val) {
+	if (option.index == 0) {
+		option.index = insert<T>(option.name, val);
+	}
+	else {
+		static_cast<OptionValue<T>*>(data[option.index].get())->val = val;
+	}
 }
 
 template<typename T>
