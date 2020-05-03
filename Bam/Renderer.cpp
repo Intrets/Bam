@@ -7,7 +7,15 @@
 //#include "GameObject.h"
 #include "RenderInfo.h"
 
-void Renderer::prepareRender(RenderInfo& renderInfo, GameState& gameState, WindowManager& windowManager) {
+void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, WindowManager& windowManager) {
+	int frameSizeX, frameSizeY;
+	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
+	float ratio = frameSizeX / static_cast<float>(frameSizeY);
+	glm::vec2 viewport(ratio, 1.0f);
+	Option<float> viewportScale{ "viewportscale", 20.0f };
+	viewport *= viewportScale;
+	renderInfo.cameraInfo = { frameSizeX, frameSizeY, gameState.playerPos, glm::vec3(viewport, 200.0f) };
+
 	//for (auto& object : gameState.objects) {
 	//	object->renderPrepare(target.renderState);
 	//}
@@ -20,7 +28,7 @@ void Renderer::prepareRender(RenderInfo& renderInfo, GameState& gameState, Windo
 	//if (res.first == 1) {
 	//	res.second.get()->appendSelectionInfo(gameState, target);
 	//}
-	
+
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
@@ -120,13 +128,13 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	glfwSwapBuffers(window);
 }
 
-Renderer::Renderer() 
-	// :
-	//shadowRenderer(256 * 4, 256 * 4),
-	//lightScreenBuffer(9),
-	//lightScreenBufferSmall(6),
-	//lightScreenBufferFinal(10),
-	//textRenderer("Consolas_60x111_15x9.dds", { 60,111 }, { 15,9 }) 
+Renderer::Renderer()
+// :
+//shadowRenderer(256 * 4, 256 * 4),
+//lightScreenBuffer(9),
+//lightScreenBufferSmall(6),
+//lightScreenBufferFinal(10),
+//textRenderer("Consolas_60x111_15x9.dds", { 60,111 }, { 15,9 }) 
 {
 }
 

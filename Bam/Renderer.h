@@ -19,7 +19,7 @@ class Renderer
 {
 private:
 	Option<bool> shadowOption{ "render_shadow", true };
-	Option<glm::ivec2> blurOption{ "render_blur", { 1, 2 }};
+	Option<glm::ivec2> blurOption{ "render_blur", { 1, 2 } };
 	Option<bool> uiOption{ "render_ui" , true };
 	Option<bool> debugOption{ "render_debug", true };
 	Option<glm::vec4> ambientLightOption{ "cosm_ambient_light", glm::vec4(0.3) };
@@ -43,7 +43,7 @@ private:
 	//LightScreenBuffer lightScreenBufferFinal;
 
 public:
-	void prepareRender(RenderInfo& target, GameState& gameState, WindowManager& windowManager);
+	void prepareRender(GLFWwindow* window, RenderInfo& target, GameState& gameState, WindowManager& windowManager);
 
 	void render(GLFWwindow* window, RenderInfo& renderInfo);
 

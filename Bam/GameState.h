@@ -24,6 +24,7 @@ public:
 	//GameObject* cam;
 	//GameObject* player;
 	glm::vec2 playerCursor;
+	glm::vec2 playerPos;
 
 	//Inventory inventory;
 

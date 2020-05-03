@@ -160,9 +160,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp" />
+    <ClCompile Include="BindHandler.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
+    <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
     <ClCompile Include="FPSLimiter.cpp" />
@@ -193,11 +195,13 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BindHandler.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
     <ClInclude Include="FPSLimiter.h" />
