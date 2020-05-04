@@ -58,6 +58,10 @@ public:
 	virtual std::string set(std::string) {
 		return "read only";
 	};
+
+	_OptionValueBase(std::string name_, std::string description_) : name(name_), description(description_) {};
+
+	virtual ~_OptionValueBase() = default;
 };
 
 template <typename T>
@@ -69,7 +73,9 @@ private:
 	friend class OptionManager;
 
 public:
-	OptionValue(T val_) : val(val_) {};
+	OptionValue(T val_, std::string name, std::string description) : _OptionValueBase(name, description),
+		val(val_) {
+	};
 
 	T getVal() { return val; };
 	void setVal(T val_) { val = val_; };
@@ -92,17 +98,13 @@ inline std::ostream& operator<< (std::ostream& out, OptionValue<T>& D) {
 class OptionManager
 {
 private:
-	//std::unordered_map<std::string, int> indexMap;
-	//std::vector<std::string> names;
-	//std::unordered_map<int, std::unique_ptr<_OptionValueBase>> data;
-	//std::vector<std::unique_ptr<_OptionValueBase>> data;
-	//std::vector<std::unique_ptr<_OptionValueBase>> data;
 	std::array<std::unique_ptr<_OptionValueBase>, OPTIONS2::OPTIONS2_MAX> data;
+	std::unordered_map<std::string, OPTIONS2> nameMap;
 
 	void defaultValues();
 
 	template<class T>
-	void initVal(OPTIONS2 option, T val);
+	void initVal(OPTIONS2 option, T val, std::string name, std::string description);
 
 public:
 	template<class T>
@@ -110,14 +112,6 @@ public:
 
 	template<class T>
 	void setVal(OPTIONS2 option, T val);
-
-	//template <typename T>
-	//T getVal(Option<T>& option);
-
-	//template <typename T>
-	//void setVal(Option<T>& option, T val);
-
-	//std::string stringCommand(std::vector<std::string>& command);
 
 	void readFromFile();
 	void writeToFile();
@@ -137,8 +131,9 @@ inline void OptionManager::setVal(OPTIONS2 option, T val) {
 }
 
 template<class T>
-inline void OptionManager::initVal(OPTIONS2 option, T val) {
-	data[option] = std::make_unique<OptionValue<T>>(val);
+inline void OptionManager::initVal(OPTIONS2 option, T val, std::string name, std::string description) {
+	data[option] = std::make_unique<OptionValue<T>>(val, name, description);
+	nameMap[name] = option;
 }
 
 template<typename T>

@@ -275,6 +275,9 @@
     <ClInclude Include="BindHandler.h">
       <Filter>Game\Control</Filter>
     </ClInclude>
+    <ClInclude Include="StringHelpers.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

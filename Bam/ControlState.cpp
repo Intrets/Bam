@@ -44,7 +44,6 @@ void ControlState::key_callback(GLFWwindow* w, int key, int scancode, int action
 		return;
 	}
 
-	CONTROLSTATE state;
 	if (action == GLFW_RELEASE) {
 		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_RELEASED;
 	}

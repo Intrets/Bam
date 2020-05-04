@@ -13,7 +13,7 @@
 //#include "Loader.h"
 
 //class GameObject;
-class RenderInfo;
+struct RenderInfo;
 
 class GameState
 {
