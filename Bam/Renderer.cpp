@@ -12,8 +12,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
 	glm::vec2 viewport(ratio, 1.0f);
-	Option<float> viewportScale{ "viewportscale", 20.0f };
-	viewport *= viewportScale;
+	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
+	viewport *= viewportScale.getVal();
 	renderInfo.cameraInfo = { frameSizeX, frameSizeY, gameState.playerPos, glm::vec3(viewport, 200.0f) };
 
 	//for (auto& object : gameState.objects) {
@@ -115,7 +115,7 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 
 	//selectionRenderer.render(renderInfo, 0);
 
-	if (debugOption) {
+	if (debugOption.getVal()) {
 		debugRenderer.render(0, renderInfo);
 		//DebugRenderer().render(0, renderInfo.cameraInfo, renderInfo.debugPoints, renderInfo.debugLines);
 	}

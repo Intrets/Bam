@@ -109,39 +109,39 @@ int main() {
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::LEFT, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(-1.0f, 0.0f);
+		gameState.playerPos += glm::vec2(-0.5f, 0.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::RIGHT, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(1.0f, 0.0f);
+		gameState.playerPos += glm::vec2(0.5f, 0.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::UP, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, 1.0f);
+		gameState.playerPos += glm::vec2(0.0f, 0.5f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::DOWN, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, -1.0f);
+		gameState.playerPos += glm::vec2(0.0f, -0.5f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::ZOOM_IN, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		Option<float> viewportScale{ "viewportscale", 20.0f };
-		viewportScale.set(viewportScale * 1.1f);
+		Option<CL_VIEWPORTSCALE, float> viewportScale;
+		viewportScale.setVal(viewportScale.getVal() * 1.1f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::ZOOM_OUT, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		Option<float> viewportScale{ "viewportscale", 20.0f };
-		viewportScale.set(viewportScale / 1.1f);
+		Option<CL_VIEWPORTSCALE, float> viewportScale;
+		viewportScale.setVal(viewportScale.getVal() / 1.1f);
 	}
 	);
 

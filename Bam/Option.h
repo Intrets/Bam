@@ -8,6 +8,39 @@
 #include "IOwrapped.h"
 #include <optional>
 
+class OptionManager;
+
+typedef enum
+{
+	GR_FRAMESYNCMODE,
+	GR_DEBUG,
+	CL_VIEWPORTSCALE,
+	OPTIONS2_MAX
+} OPTIONS2;
+
+class _OptionBase
+{
+
+};
+
+template<OPTIONS2 A, class T>
+class Option : public _OptionBase
+{
+public:
+	T getVal();
+	void setVal(T val);
+};
+
+template<OPTIONS2 A, class T>
+inline T Option<A, T>::getVal() {
+	return Locator<OptionManager>::getService()->getVal<T>(A);
+}
+
+template<OPTIONS2 A, class T>
+inline void Option<A, T>::setVal(T val) {
+	Locator<OptionManager>::getService()->setVal(A, val);
+}
+
 class _OptionValueBase
 {
 private:
@@ -32,16 +65,19 @@ class OptionValue : public _OptionValueBase
 {
 private:
 	T val;
-	
+
 	friend class OptionManager;
 
 public:
-	T getVal();
+	OptionValue(T val_) : val(val_) {};
+
+	T getVal() { return val; };
+	void setVal(T val_) { val = val_; };
 
 	virtual std::string set(std::string) override;
 	std::string type();
 
-	virtual std::ostream & toStream(std::ostream& out) override {
+	virtual std::ostream& toStream(std::ostream& out) override {
 		out << *this;
 		return out;
 	}
@@ -53,51 +89,35 @@ inline std::ostream& operator<< (std::ostream& out, OptionValue<T>& D) {
 	return out;
 }
 
-template <typename T>
-class Option
-{
-private:
-	T defaultValue;
-
-	int index = 0;
-	const std::string name;
-
-	friend class OptionManager;
-
-public:
-	operator T();
-	void set(T val);
-
-	Option(std::string name_, T defaultValue_);
-	~Option() = default;
-private:
-	Option() = default;
-};
-
 class OptionManager
 {
 private:
-	std::unordered_map<std::string, int> indexMap;
-	std::vector<std::string> names;
+	//std::unordered_map<std::string, int> indexMap;
+	//std::vector<std::string> names;
 	//std::unordered_map<int, std::unique_ptr<_OptionValueBase>> data;
-	std::vector<std::unique_ptr<_OptionValueBase>> data;
+	//std::vector<std::unique_ptr<_OptionValueBase>> data;
+	//std::vector<std::unique_ptr<_OptionValueBase>> data;
+	std::array<std::unique_ptr<_OptionValueBase>, OPTIONS2::OPTIONS2_MAX> data;
+
+	void defaultValues();
+
+	template<class T>
+	void initVal(OPTIONS2 option, T val);
 
 public:
-	template <class T>
-	std::pair<bool, int> getIndex(std::string name);
+	template<class T>
+	T getVal(OPTIONS2 option);
 
-	std::optional<int> retrieveIndex(std::string name);
-	
-	template <typename T>
-	int insert(std::string name, T val);
+	template<class T>
+	void setVal(OPTIONS2 option, T val);
 
-	template <typename T>
-	T getVal(Option<T>& option);
+	//template <typename T>
+	//T getVal(Option<T>& option);
 
-	template <typename T>
-	void setVal(Option<T>& option, T val);
+	//template <typename T>
+	//void setVal(Option<T>& option, T val);
 
-	std::string stringCommand(std::vector<std::string>& command);
+	//std::string stringCommand(std::vector<std::string>& command);
 
 	void readFromFile();
 	void writeToFile();
@@ -106,71 +126,19 @@ public:
 	~OptionManager();
 };
 
-template<typename T>
-inline Option<T>::operator T() {
-	return Locator<OptionManager>::getService()->getVal(*this);
-}
-
-template<typename T>
-inline void Option<T>::set(T val) {
-	Locator<OptionManager>::getService()->setVal(*this, val);
-}
-
-template<typename T>
-inline Option<T>::Option(std::string name_, T defaultValue_) : name(name_), defaultValue(defaultValue_) {
+template<class T>
+inline T OptionManager::getVal(OPTIONS2 option) {
+	return static_cast<OptionValue<T>*>(data[option].get())->val;
 }
 
 template<class T>
-inline std::pair<bool, int> OptionManager::getIndex(std::string name) {
-	int index;
-	auto it = indexMap.find(name);
-	bool newOption = it == indexMap.end();
-	if (newOption) {
-		index = names.size();
-		indexMap[name] = index;
-		names.push_back(name);
-		data.emplace_back(new OptionValue<T>());
-		data.back()->name = name;
-	}
-	else {
-		index = it->second;
-	}
-	return std::make_pair(newOption, index);
+inline void OptionManager::setVal(OPTIONS2 option, T val) {
+	static_cast<OptionValue<T>*>(data[option].get())->setVal(val);
 }
 
-template<typename T>
-inline int OptionManager::insert(std::string name_, T val_) {
-	auto pair = getIndex<T>(name_);
-	int& index = pair.second;
-	bool& newOption = pair.first;
-	//static_cast<OptionValue<T>*>(data[index].get())->val = val_;
-	if (newOption) {
-		static_cast<OptionValue<T>*>(data[index].get())->val = val_;
-	}
-	return index;
-}
-
-template<typename T>
-inline T OptionManager::getVal(Option<T>& option) {
-	if (option.index == 0) {
-		option.index = insert<T>(option.name, option.defaultValue);
-	}
-	return static_cast<OptionValue<T>*>(data[option.index].get())->val;
-}
-
-template<typename T>
-inline void OptionManager::setVal(Option<T>& option, T val) {
-	if (option.index == 0) {
-		option.index = insert<T>(option.name, val);
-	}
-	else {
-		static_cast<OptionValue<T>*>(data[option.index].get())->val = val;
-	}
-}
-
-template<typename T>
-inline T OptionValue<T>::getVal() {
-	return val;
+template<class T>
+inline void OptionManager::initVal(OPTIONS2 option, T val) {
+	data[option] = std::make_unique<OptionValue<T>>(val);
 }
 
 template<typename T>

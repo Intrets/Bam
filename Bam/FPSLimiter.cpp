@@ -34,7 +34,7 @@ bool FPSLimiter::ready() {
 
 double FPSLimiter::getTimeTillNextRender() {
 	double remaining = 0.0;
-	switch (frameSyncMode) {
+	switch (frameSyncMode.getVal()) {
 		case OFF:
 			remaining = 0.0;
 			break;
