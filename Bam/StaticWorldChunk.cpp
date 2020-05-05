@@ -39,6 +39,14 @@ void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	}
 }
 
+bool StaticWorldChunk::isOccupied(glm::ivec2& pos) {
+	return staticWorld[pos.x][pos.y].isOccupied();
+}
+
+bool StaticWorldChunk::isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore) {
+	return staticWorld[pos.x][pos.y].isOccupied(ignore);
+}
+
 StaticWorldChunk::StaticWorldChunk(glm::ivec2 pos) : StaticWorldChunk(pos, false) {
 }
 

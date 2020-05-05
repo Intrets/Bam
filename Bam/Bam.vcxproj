@@ -96,6 +96,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
+      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,10 +108,11 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +133,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
+      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,12 +147,13 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +163,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Activity.cpp" />
+    <ClCompile Include="ActivityIgnoringGroup.cpp" />
+    <ClCompile Include="ActivityLoaderHelper.cpp" />
+    <ClCompile Include="ActivityPaceHandler.cpp" />
+    <ClCompile Include="ActivitySaverHelper.cpp" />
+    <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
     <ClCompile Include="BindHandler.cpp" />
     <ClCompile Include="Block.cpp" />
@@ -176,10 +186,14 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ModelStore.cpp" />
+    <ClCompile Include="Modifyables.cpp" />
+    <ClCompile Include="ModifyingInterface.cpp" />
     <ClCompile Include="OGLhelpers.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="PathManager.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
+    <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="ReferenceManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
@@ -195,6 +209,12 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Activity.h" />
+    <ClInclude Include="ActivityIgnoringGroup.h" />
+    <ClInclude Include="ActivityLoaderHelper.h" />
+    <ClInclude Include="ActivityPaceHandler.h" />
+    <ClInclude Include="ActivitySaverHelper.h" />
+    <ClInclude Include="Anchor.h" />
     <ClInclude Include="BindHandler.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
@@ -208,6 +228,10 @@
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
+    <ClInclude Include="Modifyables.h" />
+    <ClInclude Include="ModifyingInterface.h" />
+    <ClInclude Include="Platform.h" />
+    <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="StringHelpers.h" />
     <ClInclude Include="IOwrapped.h" />
     <ClInclude Include="Locator.h" />

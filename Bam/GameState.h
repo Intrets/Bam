@@ -5,7 +5,7 @@
 
 #include "StaticWorld.h"
 
-//#include "ActivityPaceHandler.h"
+#include "ActivityPaceHandler.h"
 //#include "Inventory.h"
 //#include "BaseWindow.h"
 //#include "ReferenceManager.h"
@@ -33,8 +33,8 @@ public:
 	//std::vector<std::unique_ptr<GameObject>> objects;
 
 	StaticWorld staticWorld;
-	//ActivityPaceHandler activityPaceHandler;
-	//MovementPaceHandler movementPaceHandler;
+	ActivityPaceHandler activityPaceHandler;
+	MovementPaceHandler movementPaceHandler;
 
 	//bool load(Loader& loader);
 	//bool save(Saver& saver);

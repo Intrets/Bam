@@ -24,6 +24,32 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	}
 }
 
+void StaticWorld::leaveTrace(glm::ivec2 pos, Handle m) {
+	auto r = floordivmod(pos, CHUNKSIZE);
+	auto global = r.first;
+	auto local = r.second;
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setID(1);
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setM(m);
+}
+
+void StaticWorld::removeTrace(glm::ivec2 pos) {
+	auto r = floordivmod(pos, CHUNKSIZE);
+	auto global = r.first;
+	auto local = r.second;
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setID(0);
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setM(0);
+}
+
+void StaticWorld::removeTrace(glm::ivec2 pos, Handle m) {
+	auto r = floordivmod(pos, CHUNKSIZE);
+	auto global = r.first;
+	auto local = r.second;
+	if (getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].m.handle == m) {
+		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].blockID = 0;
+		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].m.handle = 0;
+	}
+}
+
 StaticWorldChunk* StaticWorld::getChunkByIndex(int i, int j) {
 	auto search = world.find(glm::ivec2(i, j));
 	StaticWorldChunk* res;

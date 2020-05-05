@@ -23,10 +23,10 @@
 
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	staticWorld.appendStaticRenderInfo(renderInfo);
-	//auto activityManager = Locator<ReferenceManager<Activity>>::getService();
-	//for (auto& p : activityManager->data) {
-	//	p.second.get()->appendStaticRenderInfo(*this, renderInfo);
-	//}
+	auto activityManager = Locator<ReferenceManager<Activity>>::getService();
+	for (auto& p : activityManager->data) {
+		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
+	}
 }
 
 GameState::GameState() {

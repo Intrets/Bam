@@ -14,6 +14,9 @@ public:
 	void setBlock(glm::ivec2 pos, int blockID, bool occlude);
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 
+	bool isOccupied(glm::ivec2& pos);
+	bool isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore);
+
 	StaticWorldChunk(glm::ivec2 pos);
 
 private:

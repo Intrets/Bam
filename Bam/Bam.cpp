@@ -22,6 +22,7 @@
 #include "GameLogic.h"
 #include "ControlState.h"
 #include "BindHandler.h"
+#include "Platform.h"
 
 GLFWwindow* window;
 ControlState controlState;
@@ -98,7 +99,8 @@ int main() {
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
-	//Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+
 	//Locator<CommandHandler>::provide(new CommandHandler());
 
 	//Locator<ReferenceManager<BaseWindow>>::provide(new ReferenceManager<BaseWindow>());
@@ -148,6 +150,10 @@ int main() {
 	WindowManager windowManager;
 
 	GameState gameState;
+
+	auto t = Locator<ReferenceManager<Activity>>::getService();
+	t->makeRef<Platform>(gameState, glm::ivec2(4), glm::ivec2(0));
+
 	GameLogic gameLogic;
 
 	Renderer renderer;

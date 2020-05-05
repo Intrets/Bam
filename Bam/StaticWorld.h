@@ -4,6 +4,8 @@
 
 #include <unordered_map>
 
+typedef int Handle;
+
 class StaticWorldChunk;
 struct RenderInfo;
 
@@ -11,7 +13,14 @@ class StaticWorld
 {
 public:
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
+	void leaveTrace(glm::ivec2 pos, Handle m);
 
+	void removeTrace(glm::ivec2 pos);
+	void removeTrace(glm::ivec2 pos, Handle m);
+
+	//TODO: !
+	StaticWorldChunk* getChunkByIndex(int i, int j);
+	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
 private:
 	struct hash
 	{
@@ -21,8 +30,5 @@ private:
 	};
 
 	std::unordered_map<glm::ivec2, std::unique_ptr<StaticWorldChunk>, hash> world;
-
-	StaticWorldChunk* getChunkByIndex(int i, int j);
-	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
 };
 

@@ -58,6 +58,9 @@
     <Filter Include="Game\Control">
       <UniqueIdentifier>{3f74bb0e-1c23-4a9b-8e47-7d4ce69a65fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fresh">
+      <UniqueIdentifier>{5e657bf3-1606-4d79-a310-3c0a496371e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp">
@@ -107,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="StaticWorldRenderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="GLEnableWrapper.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BlockIDTextures.cpp">
       <Filter>Source Files</Filter>
@@ -162,6 +162,39 @@
     <ClCompile Include="BindHandler.cpp">
       <Filter>Game\Control</Filter>
     </ClCompile>
+    <ClCompile Include="GLEnableWrapper.cpp">
+      <Filter>GLWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Activity.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityLoaderHelper.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityPaceHandler.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivitySaverHelper.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="Anchor.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ModifyingInterface.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceManager.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="Modifyables.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityIgnoringGroup.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -212,16 +245,10 @@
     <ClInclude Include="StaticWorldRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="GLEnableWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BlockIDTextures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FPSLimiter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CircularArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
@@ -277,6 +304,42 @@
     </ClInclude>
     <ClInclude Include="StringHelpers.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularArray.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GLEnableWrapper.h">
+      <Filter>GLWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Activity.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityLoaderHelper.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityPaceHandler.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySaverHelper.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="Anchor.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ModifyingInterface.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceManager.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="Modifyables.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityIgnoringGroup.h">
+      <Filter>Fresh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
