@@ -5,6 +5,9 @@
 #include "PerlinNoise.h"
 #include "RenderInfo.h"
 
+#include "Loader.h"
+#include "Saver.h"
+
 glm::ivec2 StaticWorldChunk::getPosition() {
 	return position;
 }
@@ -35,6 +38,9 @@ void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
 				}
 			}
+			if (staticWorld[i][j].isActivity()) {
+				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(position));
+			}
 		}
 	}
 }
@@ -45,6 +51,26 @@ bool StaticWorldChunk::isOccupied(glm::ivec2& pos) {
 
 bool StaticWorldChunk::isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore) {
 	return staticWorld[pos.x][pos.y].isOccupied(ignore);
+}
+
+bool StaticWorldChunk::load(Loader& loader) {
+	loader.retrieve(position);
+	for (int i = 0; i < CHUNKSIZE; i++) {
+		for (int j = 0; j < CHUNKSIZE; j++) {
+			staticWorld[i][j].load(loader);
+		}
+	}
+	return true;
+}
+
+bool StaticWorldChunk::save(Saver& saver) {
+	saver.store(position);
+	for (int i = 0; i < CHUNKSIZE; i++) {
+		for (int j = 0; j < CHUNKSIZE; j++) {
+			staticWorld[i][j].save(saver);
+		}
+	}
+	return true;
 }
 
 StaticWorldChunk::StaticWorldChunk(glm::ivec2 pos) : StaticWorldChunk(pos, false) {

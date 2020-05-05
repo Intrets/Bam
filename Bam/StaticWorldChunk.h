@@ -5,6 +5,8 @@
 
 class PerlinNoise;
 struct RenderInfo;
+class Saver;
+class Loader;
 
 class StaticWorldChunk
 {
@@ -17,7 +19,13 @@ public:
 	bool isOccupied(glm::ivec2& pos);
 	bool isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore);
 
+	bool load(Loader& loader);
+	bool save(Saver& saver);
+
 	StaticWorldChunk(glm::ivec2 pos);
+
+	StaticWorldChunk(glm::ivec2 _position, bool empty);
+	StaticWorldChunk() = default;
 
 private:
 	friend class StaticWorld;
@@ -27,8 +35,5 @@ private:
 private:
 	void fill(PerlinNoise& noise);
 	void calculateOcclusions();
-
-	StaticWorldChunk(glm::ivec2 _position, bool empty);
-	StaticWorldChunk() = default;
 };
 

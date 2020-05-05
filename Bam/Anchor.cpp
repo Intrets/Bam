@@ -90,23 +90,23 @@ void Anchor::getGroup(ActivityIgnoringGroup & ignore) {
 }
 
 void Anchor::save(Saver& saver) {
-	//Activity::save(saver);
-	//int s = children.size();
-	//saver.store<int>(s);
-	//for (auto& child : children) {
-	//	saver.store<int>(child.handle);
-	//}
+	Activity::save(saver);
+	int s = children.size();
+	saver.store<int>(s);
+	for (auto& child : children) {
+		saver.store<int>(child.handle);
+	}
 }
 
 bool Anchor::load(Loader& loader) {
-	//Activity::load(loader);
-	//int count;
-	//loader.retrieve<int>(count);
-	//for (int i = 0; i < count; i++) {
-	//	int handle;
-	//	loader.retrieve<int>(handle);
-	//	children.push_back(WeakReference<Activity, Activity>(handle));
-	//}
+	Activity::load(loader);
+	int count;
+	loader.retrieve<int>(count);
+	for (int i = 0; i < count; i++) {
+		int handle;
+		loader.retrieve<int>(handle);
+		children.push_back(WeakReference<Activity, Activity>(handle));
+	}
 	return true;
 }
 

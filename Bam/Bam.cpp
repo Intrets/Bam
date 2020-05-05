@@ -79,7 +79,7 @@ static int initGLFW() {
 	// back culling
 	//glDisable(GL_CULL_FACE);
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 	return 1;
 }
@@ -111,25 +111,25 @@ int main() {
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::LEFT, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(-0.5f, 0.0f);
+		gameState.playerPos += glm::vec2(-1.0f, 0.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::RIGHT, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.5f, 0.0f);
+		gameState.playerPos += glm::vec2(1.0f, 0.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::UP, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, 0.5f);
+		gameState.playerPos += glm::vec2(0.0f, 1.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
 		CONTROLS::DOWN, CONTROLSTATE_DOWN,
 		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, -0.5f);
+		gameState.playerPos += glm::vec2(0.0f, -1.0f);
 	}
 	);
 	Locator<BindHandler>::getService()->addBind(
@@ -146,13 +146,27 @@ int main() {
 		viewportScale.setVal(viewportScale.getVal() / 1.1f);
 	}
 	);
+	Locator<BindHandler>::getService()->addBind(
+		CONTROLS::TEST_SAVE, CONTROLSTATE_PRESSED,
+		[](GameState& gameState) -> void {
+		Saver saver("test.save");
+		saver.saveGame(gameState);
+	}
+	);
+	Locator<BindHandler>::getService()->addBind(
+		CONTROLS::TEST_LOAD, CONTROLSTATE_PRESSED,
+		[](GameState& gameState) -> void {
+		Loader loader("test.save");
+		loader.loadGame(gameState);
+	}
+	);
 
 	WindowManager windowManager;
 
 	GameState gameState;
 
 	auto t = Locator<ReferenceManager<Activity>>::getService();
-	t->makeRef<Platform>(gameState, glm::ivec2(4), glm::ivec2(0));
+	t->makeRef<Platform>(gameState, glm::ivec2(1,2), glm::ivec2(0));
 
 	GameLogic gameLogic;
 
@@ -171,12 +185,15 @@ int main() {
 
 		RenderInfo renderInfo;
 
-		if (fpsLimiter.ready()) {
-			Locator<DebugRenderInfo>::getService()->addPoint(glm::vec2(0));
+		bool rendering = fpsLimiter.ready();
+		bool logic = gameLogic.ready();
+
+		if (rendering) {
+			//Locator<DebugRenderInfo>::getService()->addPoint(glm::vec2(0));
 			renderer.prepareRender(window, renderInfo, gameState, windowManager);
 		}
 
-		if (gameLogic.ready()) {
+		if (logic) {
 			controlState.cycleStates();
 			glfwPollEvents();
 
@@ -185,7 +202,7 @@ int main() {
 			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
 		}
 
-		if (fpsLimiter.ready()) {
+		if (rendering) {
 			if (glfwGetTime() - last > 1.0f) {
 				last = glfwGetTime();
 				std::cout << fps << "\n";

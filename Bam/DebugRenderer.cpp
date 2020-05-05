@@ -50,8 +50,6 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int type, RenderI
 		return;
 	}
 
-	VP.set(renderInfo.cameraInfo.VP);
-
 	int drawtype = 0;
 	// POINTS
 	if (type == 0) {
@@ -67,6 +65,8 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int type, RenderI
 
 	VAO.bind();
 	program.use();
+
+	VP.set(renderInfo.cameraInfo.VP);
 
 	glBindBuffer(GL_ARRAY_BUFFER, data.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * line.size(), &(line[0]), GL_STATIC_DRAW);

@@ -195,6 +195,12 @@
     <ClCompile Include="ActivityIgnoringGroup.cpp">
       <Filter>Fresh</Filter>
     </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
+    <ClCompile Include="Saver.cpp">
+      <Filter>Fresh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -339,6 +345,12 @@
       <Filter>Fresh</Filter>
     </ClInclude>
     <ClInclude Include="ActivityIgnoringGroup.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Fresh</Filter>
+    </ClInclude>
+    <ClInclude Include="Saver.h">
       <Filter>Fresh</Filter>
     </ClInclude>
   </ItemGroup>

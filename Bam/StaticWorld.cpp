@@ -4,6 +4,8 @@
 
 #include "RenderInfo.h"
 #include "StaticWorldChunk.h"
+#include "Saver.h"
+#include "Loader.h"
 
 void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	auto& cameraInfo = renderInfo.cameraInfo;
@@ -48,6 +50,29 @@ void StaticWorld::removeTrace(glm::ivec2 pos, Handle m) {
 		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].blockID = 0;
 		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].m.handle = 0;
 	}
+}
+
+bool StaticWorld::load(Loader& loader) {
+	world.clear();
+	int size;
+	loader.retrieve(size);
+	for (int i = 0; i < size; i++) {
+		glm::ivec2 key;
+		loader.retrieve(key);
+		auto chunk = std::make_unique<StaticWorldChunk>(key * CHUNKSIZE, true);
+		chunk->load(loader);
+		world[key] = std::move(chunk);
+	}
+	return true;
+}
+
+bool StaticWorld::save(Saver& saver) {
+	saver.store(world.size());
+	for (auto& chunk : world) {
+		saver.store(chunk.first);
+		chunk.second->save(saver);
+	}
+	return true;
 }
 
 StaticWorldChunk* StaticWorld::getChunkByIndex(int i, int j) {

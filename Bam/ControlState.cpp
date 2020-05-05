@@ -25,6 +25,8 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_4] = CONTROLS::SELECTACTIVITYROOT;
 	keyToControl[GLFW_KEY_R] = CONTROLS::ZOOM_IN;
 	keyToControl[GLFW_KEY_F] = CONTROLS::ZOOM_OUT;
+	keyToControl[GLFW_KEY_F7] = CONTROLS::TEST_SAVE;
+	keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 }
 
 void ControlState::cycleStates() {

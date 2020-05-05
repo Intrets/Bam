@@ -1,7 +1,7 @@
 #include "common.h"
 #include "DebugRenderInfo.h"
 
-void DebugRenderInfo::addBox(glm::vec2& u, glm::vec2& d) {
+void DebugRenderInfo::addBox(glm::vec2 u, glm::vec2 d) {
 	lines.push_back(std::vector<glm::vec2>());
 	lines.back().push_back(u);
 	lines.back().push_back({ u.x, d.y });

@@ -9,7 +9,7 @@ private:
 
 public:
 	void add(Handle h);
-	void prepare() ;
+	void prepare();
 
 	bool contains(Handle h);
 

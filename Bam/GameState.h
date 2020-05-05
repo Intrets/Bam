@@ -9,8 +9,8 @@
 //#include "Inventory.h"
 //#include "BaseWindow.h"
 //#include "ReferenceManager.h"
-//#include "Saver.h"
-//#include "Loader.h"
+#include "Saver.h"
+#include "Loader.h"
 
 //class GameObject;
 struct RenderInfo;
@@ -36,8 +36,8 @@ public:
 	ActivityPaceHandler activityPaceHandler;
 	MovementPaceHandler movementPaceHandler;
 
-	//bool load(Loader& loader);
-	//bool save(Saver& saver);
+	bool load(Loader& loader);
+	bool save(Saver& saver);
 
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 

@@ -8,6 +8,8 @@ typedef int Handle;
 
 class StaticWorldChunk;
 struct RenderInfo;
+class Saver;
+class Loader;
 
 class StaticWorld
 {
@@ -17,6 +19,9 @@ public:
 
 	void removeTrace(glm::ivec2 pos);
 	void removeTrace(glm::ivec2 pos, Handle m);
+
+	bool load(Loader& loader);
+	bool save(Saver& saver);
 
 	//TODO: !
 	StaticWorldChunk* getChunkByIndex(int i, int j);

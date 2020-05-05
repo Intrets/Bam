@@ -1,10 +1,10 @@
 #pragma once
 
  #include "Activity.h"
-// #include "Loader.h"
-// #include "Saver.h"
 
 class ActivityIgnoringGroup;
+class Loader;
+class Saver;
 
 class Block
 {
@@ -20,8 +20,8 @@ private:
 
 	WeakReference<Activity, Activity> m;
 
-	//bool load(Loader& loader);
-	//bool save(Saver& saver);
+	bool load(Loader& loader);
+	bool save(Saver& saver);
 
 public:
 	bool isOccupied(ActivityIgnoringGroup& ignore);

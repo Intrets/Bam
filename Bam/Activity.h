@@ -85,10 +85,11 @@ class Activity : public ModifyingInterface
 private:
 	virtual void doActivityInternal(GameState& gameState, int type, int pace) = 0;
 
+	Handle getRootHandle();
+
 protected:
 	glm::vec2 getMovingOrigin(GameState& gameState);
 
-public:
 	WeakReference<Activity, Anchor> parentRef;
 	Handle selfHandle;
 
@@ -104,7 +105,9 @@ public:
 
 	glm::ivec2 origin;
 
+public:
 	virtual ACTIVITY::TYPE getType() = 0;
+	Handle getHandle() { return selfHandle; };
 
 	virtual bool canActivity(GameState& gameState, int type, Activity* ignore) = 0;
 	virtual bool applyActivity(GameState& gameState, int type, int pace);
@@ -130,7 +133,6 @@ public:
 
 	virtual void getGroup(ActivityIgnoringGroup& ignore);
 	WeakReference<Activity, Activity> getRoot();
-	Handle getRoot2();
 
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);

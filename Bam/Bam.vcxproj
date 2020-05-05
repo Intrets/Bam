@@ -182,6 +182,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
+    <ClCompile Include="Saver.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="StaticWorld.cpp" />
     <ClCompile Include="StaticWorldChunk.cpp" />
@@ -228,10 +230,12 @@
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="Modifyables.h" />
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="ReferenceManager.h" />
+    <ClInclude Include="Saver.h" />
     <ClInclude Include="StringHelpers.h" />
     <ClInclude Include="IOwrapped.h" />
     <ClInclude Include="Locator.h" />

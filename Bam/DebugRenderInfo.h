@@ -3,7 +3,7 @@
 class DebugRenderInfo
 {
 public:
-	void addBox(glm::vec2& u, glm::vec2& d);
+	void addBox(glm::vec2 u, glm::vec2 d);
 	void addPoint(glm::vec2 p);
 	void addLine(glm::vec2 p1, glm::vec2 p2);
 

@@ -177,25 +177,25 @@ void Platform::leaveActivityTraces(GameState& gameState) {
 }
 
 void Platform::save(Saver& saver) {
-	//Activity::save(saver);
-	//saver.store<glm::ivec2>(size);
+	Activity::save(saver);
+	saver.store<glm::ivec2>(size);
 }
 
 bool Platform::load(Loader& loader) {
-	//Activity::load(loader);
-	//loader.retrieve<glm::ivec2>(size);
+	Activity::load(loader);
+	loader.retrieve<glm::ivec2>(size);
 
-	//blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
-	////type = ACTIVITY::MOVEABLE;
-	//int textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
-	//for (int i = 0; i < size[0]; i++) {
-	//	for (int j = 0; j < size[1]; j++) {
-	//		auto p = origin + glm::ivec2(i, j);
-	//		blocks[i][j].blockID = textureID;
-	//	}
-	//}
+	blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
+	//type = ACTIVITY::MOVEABLE;
+	int textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
+	for (int i = 0; i < size[0]; i++) {
+		for (int j = 0; j < size[1]; j++) {
+			auto p = origin + glm::ivec2(i, j);
+			blocks[i][j].setID(textureID);
+		}
+	}
 
-	//calculateBlockedDirections();
+	calculateBlockedDirections();
 	return true;
 }
 
