@@ -3,8 +3,6 @@
 #include "GameState.h"
 #include "RenderInfo.h"
 
-//#include "GameObject.h"
-
 bool GameState::load(Loader& loader) {
 	loader.retrieve(tick);
 	staticWorld.load(loader);
@@ -27,7 +25,6 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (auto& p : activityManager->data) {
 		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
 	}
-	renderInfo.debugRenderInfo.addBox(glm::vec2(1.0f, 1.0f), glm::vec2(5.0f, 5.0f));
 }
 
 GameState::GameState() {

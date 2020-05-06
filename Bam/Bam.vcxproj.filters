@@ -58,8 +58,38 @@
     <Filter Include="Game\Control">
       <UniqueIdentifier>{3f74bb0e-1c23-4a9b-8e47-7d4ce69a65fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fresh">
-      <UniqueIdentifier>{5e657bf3-1606-4d79-a310-3c0a496371e6}</UniqueIdentifier>
+    <Filter Include="Game\StaticWorld\Activities">
+      <UniqueIdentifier>{7595f977-ac93-4f8c-b1d9-973d439139b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\StaticWorld\Activities\Game Objects">
+      <UniqueIdentifier>{c1747ff5-2d6a-4d71-854b-da4293829cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\StaticWorld\Activities\Utils">
+      <UniqueIdentifier>{02a7e6b1-78ab-435f-bacd-cc211a963a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Saver and Loader">
+      <UniqueIdentifier>{032343f5-548c-48ab-bda0-6732ac598b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Modifyables">
+      <UniqueIdentifier>{cda8b4b0-4ef2-4744-a65a-ed07629fb5b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Managers">
+      <UniqueIdentifier>{933b8fc8-b481-43a3-921a-70454ad798e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Managers\Models">
+      <UniqueIdentifier>{c24f90fe-9c3f-4bf8-a5a2-2b1a3677db18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Managers\Textures">
+      <UniqueIdentifier>{e2e373f1-8e36-4f0d-9c49-bda34964f980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\Data\Managers\Game object references">
+      <UniqueIdentifier>{9de46dd8-9529-456c-b833-15e5d0e10e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Program Control">
+      <UniqueIdentifier>{b710d87f-b48a-4ab6-8030-e88d25b95425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Program Control\Inits">
+      <UniqueIdentifier>{98751956-bee4-4d9e-9e3b-04ebfa1a815c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,23 +129,11 @@
     <ClCompile Include="PathManager.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManagerModel.cpp">
-      <Filter>Memory\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManagerTexture.cpp">
-      <Filter>Memory\Util</Filter>
-    </ClCompile>
     <ClCompile Include="vboindexer.cpp">
       <Filter>Memory\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="StaticWorldRenderer.cpp">
       <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="BlockIDTextures.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSLimiter.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Option.cpp">
       <Filter>Memory\Options</Filter>
@@ -166,40 +184,61 @@
       <Filter>GLWrappers</Filter>
     </ClCompile>
     <ClCompile Include="Activity.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivityLoaderHelper.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivityPaceHandler.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivitySaverHelper.cpp">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Anchor.cpp">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Platform.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="ModifyingInterface.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="ReferenceManager.cpp">
-      <Filter>Fresh</Filter>
-    </ClCompile>
-    <ClCompile Include="Modifyables.cpp">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="ActivityIgnoringGroup.cpp">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Loader.cpp">
-      <Filter>Fresh</Filter>
+    <ClCompile Include="ActivityLoaderHelper.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityPaceHandler.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivitySaverHelper.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Saver.cpp">
-      <Filter>Fresh</Filter>
+      <Filter>Game\Saver and Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Game\Saver and Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="Modifyables.cpp">
+      <Filter>Game\Modifyables</Filter>
+    </ClCompile>
+    <ClCompile Include="ModifyingInterface.cpp">
+      <Filter>Game\Modifyables</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagerModel.cpp">
+      <Filter>Memory\Data\Managers\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagerTexture.cpp">
+      <Filter>Memory\Data\Managers\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceManager.cpp">
+      <Filter>Memory\Data\Managers\Game object references</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockIDTextures.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSLimiter.cpp">
+      <Filter>Program Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Program Control</Filter>
+    </ClCompile>
+    <ClCompile Include="InitBinds.cpp">
+      <Filter>Program Control\Inits</Filter>
+    </ClCompile>
+    <ClCompile Include="InitManagers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,12 +275,6 @@
     <ClInclude Include="ModelResource.h">
       <Filter>Memory\Data\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManagerModel.h">
-      <Filter>Memory\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManagerTexture.h">
-      <Filter>Memory\Util</Filter>
-    </ClInclude>
     <ClInclude Include="vboindexer.h">
       <Filter>Memory\Loaders</Filter>
     </ClInclude>
@@ -250,12 +283,6 @@
     </ClInclude>
     <ClInclude Include="StaticWorldRenderer.h">
       <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockIDTextures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSLimiter.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
       <Filter>Memory\Options</Filter>
@@ -318,40 +345,61 @@
       <Filter>GLWrappers</Filter>
     </ClInclude>
     <ClInclude Include="Activity.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityLoaderHelper.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityPaceHandler.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivitySaverHelper.h">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Anchor.h">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="ModifyingInterface.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="ReferenceManager.h">
-      <Filter>Fresh</Filter>
-    </ClInclude>
-    <ClInclude Include="Modifyables.h">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="ActivityIgnoringGroup.h">
-      <Filter>Fresh</Filter>
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Loader.h">
-      <Filter>Fresh</Filter>
+    <ClInclude Include="ActivityLoaderHelper.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityPaceHandler.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySaverHelper.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Saver.h">
-      <Filter>Fresh</Filter>
+      <Filter>Game\Saver and Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Game\Saver and Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Modifyables.h">
+      <Filter>Game\Modifyables</Filter>
+    </ClInclude>
+    <ClInclude Include="ModifyingInterface.h">
+      <Filter>Game\Modifyables</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagerModel.h">
+      <Filter>Memory\Data\Managers\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagerTexture.h">
+      <Filter>Memory\Data\Managers\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceManager.h">
+      <Filter>Memory\Data\Managers\Game object references</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockIDTextures.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSLimiter.h">
+      <Filter>Program Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>Program Control</Filter>
+    </ClInclude>
+    <ClInclude Include="InitBinds.h">
+      <Filter>Program Control\Inits</Filter>
+    </ClInclude>
+    <ClInclude Include="InitManagers.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

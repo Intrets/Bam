@@ -181,9 +181,12 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
+    <ClCompile Include="InitBinds.cpp" />
+    <ClCompile Include="InitManagers.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ModelStore.cpp" />
@@ -230,6 +233,9 @@
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
+    <ClInclude Include="InitBinds.h" />
+    <ClInclude Include="InitManagers.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modifyables.h" />
     <ClInclude Include="ModifyingInterface.h" />

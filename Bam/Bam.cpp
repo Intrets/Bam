@@ -4,25 +4,11 @@
 
 #include <iostream>
 
-#include "Renderer.h"
-#include "CameraInfo.h"
-#include "BlockIDTextures.h"
-#include "ResourceManagerModel.h"
-#include "ResourceManagerTexture.h"
-#include "FPSLimiter.h"
-#include "GameState.h"
-#include "WindowManager.h"
-
 #include <chrono>
 #include <thread>
-#include "RenderInfo.h"
-#include "Option.h"
-#include "DebugRenderer.h"
-#include "DebugRenderInfo.h"
-#include "GameLogic.h"
 #include "ControlState.h"
-#include "BindHandler.h"
-#include "Platform.h"
+#include "Main.h"
+#include "InitManagers.h"
 
 GLFWwindow* window;
 ControlState controlState;
@@ -86,147 +72,6 @@ static int initGLFW() {
 
 int main() {
 	initGLFW();
-
-	FPSLimiter fpsLimiter;
-
-	Locator<PathManager>::provide(new PathManager());
-
-	Locator<ResourceManagerModel>::provide(new ResourceManagerModel());
-	Locator<ResourceManagerTexture>::provide(new ResourceManagerTexture());
-
-	Locator<OptionManager>::provide(new OptionManager());
-	Locator<DebugRenderer>::provide(new DebugRenderer());
-	Locator<BlockIDTextures>::provide(new BlockIDTextures());
-	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
-
-	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
-
-	//Locator<CommandHandler>::provide(new CommandHandler());
-
-	//Locator<ReferenceManager<BaseWindow>>::provide(new ReferenceManager<BaseWindow>());
-	//Locator<ScriptManager>::provide(new ScriptManager());
-
-	Locator<BindHandler>::provide(new BindHandler());
-
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::LEFT, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(-1.0f, 0.0f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::RIGHT, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(1.0f, 0.0f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::UP, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, 1.0f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::DOWN, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		gameState.playerPos += glm::vec2(0.0f, -1.0f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::ZOOM_IN, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		Option<CL_VIEWPORTSCALE, float> viewportScale;
-		viewportScale.setVal(viewportScale.getVal() * 1.1f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::ZOOM_OUT, CONTROLSTATE_DOWN,
-		[](GameState& gameState) -> void {
-		Option<CL_VIEWPORTSCALE, float> viewportScale;
-		viewportScale.setVal(viewportScale.getVal() / 1.1f);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::TEST_SAVE, CONTROLSTATE_PRESSED,
-		[](GameState& gameState) -> void {
-		Saver saver("test.save");
-		saver.saveGame(gameState);
-	}
-	);
-	Locator<BindHandler>::getService()->addBind(
-		CONTROLS::TEST_LOAD, CONTROLSTATE_PRESSED,
-		[](GameState& gameState) -> void {
-		Loader loader("test.save");
-		loader.loadGame(gameState);
-	}
-	);
-
-	WindowManager windowManager;
-
-	GameState gameState;
-
-	auto t = Locator<ReferenceManager<Activity>>::getService();
-	t->makeRef<Platform>(gameState, glm::ivec2(1,2), glm::ivec2(0));
-
-	GameLogic gameLogic;
-
-	Renderer renderer;
-
-	std::thread logicThread;
-
-	int fps = 0;
-	double last = 0;
-
-	while (!glfwWindowShouldClose(window)) {
-		//if (gamestate.exit) {
-		//	glfwSetWindowShouldClose(window, GLFW_TRUE);
-		//	break;
-		//}
-
-		RenderInfo renderInfo;
-
-		bool rendering = fpsLimiter.ready();
-		bool logic = gameLogic.ready();
-
-		if (rendering) {
-			//Locator<DebugRenderInfo>::getService()->addPoint(glm::vec2(0));
-			renderer.prepareRender(window, renderInfo, gameState, windowManager);
-		}
-
-		if (logic) {
-			controlState.cycleStates();
-			glfwPollEvents();
-
-			Locator<BindHandler>::getService()->runBinds(controlState, gameState);
-
-			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
-		}
-
-		if (rendering) {
-			if (glfwGetTime() - last > 1.0f) {
-				last = glfwGetTime();
-				std::cout << fps << "\n";
-				fps = 0;
-			}
-			fps++;
-
-			//fpsdisplay.displayFPS(window);
-			fpsLimiter.renderStart();
-			renderer.render(window, renderInfo);
-			fpsLimiter.renderFinish();
-		}
-
-		if (logicThread.joinable()) {
-			logicThread.join();
-		}
-
-		{
-			GLenum err;
-			while ((err = glGetError()) != GL_NO_ERROR) {
-				std::cout << std::hex << err << std::dec << std::endl;
-			}
-		}
-
-		std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
-	}
+	initManagers();
+	mainLoop(window,controlState);
 }
