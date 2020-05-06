@@ -73,5 +73,5 @@ static int initGLFW() {
 int main() {
 	initGLFW();
 	initManagers();
-	mainLoop(window,controlState);
+	mainLoop(window, controlState);
 }

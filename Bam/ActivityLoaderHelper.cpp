@@ -18,7 +18,7 @@
 bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 	int size;
 	loader.retrieve(size);
-	for (size_t i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		ACTIVITY::TYPE type;
 		loader.retrieve(type);
 		switch (type) {

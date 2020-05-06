@@ -125,7 +125,6 @@ void Anchor::modifyMember(GameState & gameState, std::string & name, std::vector
 
 std::stringstream & Anchor::getMembers(std::stringstream & out) {
 	out << "^ Anchor members: ^\n";
-	auto& t = Locator<Modifyer<Anchor>>::getService()->modifyables;
 	for (auto& member : Locator<Modifyer<Anchor>>::getService()->modifyables) {
 		out << member.first << ": ";
 		member.second->toStream(this, out) << "\n";
