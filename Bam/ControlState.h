@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <optional>
 
 typedef enum
 {
@@ -28,6 +29,8 @@ typedef enum
 	TEST_CYCLEBLOCK,
 	TEST_SAVE,
 	TEST_LOAD,
+	TEST_EXIT,
+	TOGGLE_DEBUG,
 	CANCEL,
 	CONTROLS_MAX
 } CONTROLS;
@@ -41,14 +44,35 @@ typedef enum
 	CONTROLSTATE_MAX
 } CONTROLSTATE;
 
+struct BindControl
+{
+	CONTROLS control;
+	CONTROLSTATE state;
+
+	bool operator== (const BindControl& other) const {
+		return this->control == other.control && this->state == other.state;
+	}
+};
+
+struct BindControlHash
+{
+	std::size_t operator() (const BindControl& c) const {
+		return c.control + (c.state >> 16);
+	}
+};
+
 class ControlState
 {
 public:
 	ControlState();
 
 	void cycleStates();
+	std::vector<BindControl> getBindControls();
 
 	void key_callback(GLFWwindow* w, int key, int scancode, int action, int mods);
+private:
+	std::optional<std::vector<BindControl>> cachedBindControls;
+
 private:
 	friend class BindHandler;
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;

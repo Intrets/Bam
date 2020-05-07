@@ -27,6 +27,8 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_F] = CONTROLS::ZOOM_OUT;
 	keyToControl[GLFW_KEY_F7] = CONTROLS::TEST_SAVE;
 	keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
+	keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
+	keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::TEST_EXIT;
 }
 
 void ControlState::cycleStates() {
@@ -38,6 +40,19 @@ void ControlState::cycleStates() {
 			state = CONTROLSTATE::CONTROLSTATE_UP;
 		}
 	}
+	cachedBindControls.reset();
+}
+
+std::vector<BindControl> ControlState::getBindControls() {
+	if (!cachedBindControls.has_value()) {
+		cachedBindControls.emplace();
+		for (int i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
+			CONTROLS control = static_cast<CONTROLS>(i);
+			CONTROLSTATE state = controlState[i];
+			cachedBindControls->push_back({ control, state });
+		}
+	}
+	return cachedBindControls.value();
 }
 
 void ControlState::key_callback(GLFWwindow* w, int key, int scancode, int action, int mods) {

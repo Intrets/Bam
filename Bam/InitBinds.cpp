@@ -58,4 +58,10 @@ void initBinds(BindHandler& bindHandler) {
 		loader.loadGame(gameState);
 	}
 	);
+	bindHandler.addBind(
+		CONTROLS::TOGGLE_DEBUG, CONTROLSTATE_PRESSED,
+		[](GameState& gameState) -> void {
+		Option<GR_DEBUG, bool>().setVal(!Option<GR_DEBUG, bool>().getVal());
+	}
+	);
 }

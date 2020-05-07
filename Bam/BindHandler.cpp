@@ -7,8 +7,17 @@
 //#include "Platform.h"
 #include "ControlState.h"
 #include "GameState.h"
+#include "LogicSequencer.h"
+#include <iostream>
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
+	for (auto& logicSequence : logicSequences) {
+		auto blocking = logicSequence->runBinds(controlState, gameState);
+		if (blocking != CONTINUATION::CONTINUE) {
+			return;
+		}
+	}
+
 	for (int i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
 		CONTROLS control = static_cast<CONTROLS>(i);
 		CONTROLSTATE state = controlState.controlState[control];
@@ -16,14 +25,6 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		for (auto& bind : binds[control][state]) {
 			bind(gameState);
 		}
-
-		//CONTROLS control = static_cast<CONTROLS>(i);
-		//if (controlState.justChanged[control]) {
-		//	int index = bindToIndex(control, controlState.controlState[control]);
-		//	for (auto& bind : binds[index]) {
-		//		bind(gameState);
-		//	}
-		//}
 	}
 }
 
@@ -32,6 +33,17 @@ void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<vo
 }
 
 BindHandler::BindHandler() {
+	auto test = std::make_unique<LogicSequencer>(false);
+	test->addBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState) -> LogicSequencer::MaybeSequencer {
+		std::cout << "TEST_UP\n";
+		auto test = std::make_unique<LogicSequencer>(false);
+		test->addBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState) -> LogicSequencer::MaybeSequencer {
+			std::cout << "TEST_RIGHT\n";
+			return std::make_pair(CONTINUATION::STOP, std::nullopt);
+		});
+		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(test)));
+	});
+	logicSequences.push_back(std::move(test));
 }
 
 BindHandler::~BindHandler() {

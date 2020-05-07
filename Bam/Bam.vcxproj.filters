@@ -67,9 +67,6 @@
     <Filter Include="Game\StaticWorld\Activities\Utils">
       <UniqueIdentifier>{02a7e6b1-78ab-435f-bacd-cc211a963a75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Saver and Loader">
-      <UniqueIdentifier>{032343f5-548c-48ab-bda0-6732ac598b86}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Modifyables">
       <UniqueIdentifier>{cda8b4b0-4ef2-4744-a65a-ed07629fb5b7}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,15 @@
     </Filter>
     <Filter Include="Program Control\Inits">
       <UniqueIdentifier>{98751956-bee4-4d9e-9e3b-04ebfa1a815c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic">
+      <UniqueIdentifier>{a4f6887e-7198-44dd-85d3-edb3d877bd85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Serial">
+      <UniqueIdentifier>{032343f5-548c-48ab-bda0-6732ac598b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\IO">
+      <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +177,6 @@
     <ClCompile Include="DebugRenderInfo.cpp">
       <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
-    <ClCompile Include="GameLogic.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="ControlState.cpp">
       <Filter>Game\Control</Filter>
     </ClCompile>
@@ -205,10 +208,10 @@
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Saver.cpp">
-      <Filter>Game\Saver and Loader</Filter>
+      <Filter>Game\Serial</Filter>
     </ClCompile>
     <ClCompile Include="Loader.cpp">
-      <Filter>Game\Saver and Loader</Filter>
+      <Filter>Game\Serial</Filter>
     </ClCompile>
     <ClCompile Include="Modifyables.cpp">
       <Filter>Game\Modifyables</Filter>
@@ -239,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="InitManagers.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic.cpp">
+      <Filter>Game\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="LogicSequencer.cpp">
+      <Filter>Game\Logic\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -326,9 +335,6 @@
     <ClInclude Include="DebugRenderInfo.h">
       <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
-    <ClInclude Include="GameLogic.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="ControlState.h">
       <Filter>Game\Control</Filter>
     </ClInclude>
@@ -366,10 +372,10 @@
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Saver.h">
-      <Filter>Game\Saver and Loader</Filter>
+      <Filter>Game\Serial</Filter>
     </ClInclude>
     <ClInclude Include="Loader.h">
-      <Filter>Game\Saver and Loader</Filter>
+      <Filter>Game\Serial</Filter>
     </ClInclude>
     <ClInclude Include="Modifyables.h">
       <Filter>Game\Modifyables</Filter>
@@ -400,6 +406,12 @@
     </ClInclude>
     <ClInclude Include="InitManagers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic.h">
+      <Filter>Game\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicSequencer.h">
+      <Filter>Game\Logic\IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

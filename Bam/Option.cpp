@@ -9,7 +9,7 @@
 
 void OptionManager::defaultValues() {
 	initVal(OPTIONS2::CL_VIEWPORTSCALE, 20.0f, "cl_viewportscale", "");
-	initVal(OPTIONS2::GR_DEBUG, true, "gr_debug", "");
+	initVal(OPTIONS2::GR_DEBUG, false, "gr_debug", "");
 	initVal(OPTIONS2::GR_FRAMESYNCMODE, 0, "gr_framesyncmode", "");
 }
 

@@ -4,6 +4,7 @@
 #include <functional>
 
 class GameState;
+class LogicSequencer;
 
 class BindHandler
 {
@@ -16,7 +17,8 @@ public:
 	~BindHandler();
 
 private:
-	//std::array<std::vector<std::function<void(GameState&)>>, 2 * CONTROLS::CONTROLS_MAX> binds;
+	std::vector<std::unique_ptr<LogicSequencer>> logicSequences;
+
 	using CallbackVector = std::vector<std::function<void(GameState&)>>;
 	std::array<std::array<CallbackVector, CONTROLSTATE::CONTROLSTATE_MAX>, CONTROLS::CONTROLS_MAX > binds;
 };

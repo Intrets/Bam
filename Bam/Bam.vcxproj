@@ -189,6 +189,7 @@
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
+    <ClCompile Include="LogicSequencer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="GLEnableWrapper.h" />
     <ClInclude Include="InitBinds.h" />
     <ClInclude Include="InitManagers.h" />
+    <ClInclude Include="LogicSequencer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modifyables.h" />
