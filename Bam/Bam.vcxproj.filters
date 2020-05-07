@@ -264,7 +264,13 @@
     <ClCompile Include="ActivityPlacer.cpp">
       <Filter>Game\Logic\Seqs</Filter>
     </ClCompile>
+    <ClCompile Include="ActivityInteractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ActivityLinker.cpp">
+      <Filter>Game\Logic\Seqs</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivitySelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -443,7 +449,13 @@
     <ClInclude Include="ActivityPlacer.h">
       <Filter>Game\Logic\Seqs</Filter>
     </ClInclude>
+    <ClInclude Include="ActivityInteractor.h">
+      <Filter>Game\Logic\Seqs</Filter>
+    </ClInclude>
     <ClInclude Include="ActivityLinker.h">
+      <Filter>Game\Logic\Seqs</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

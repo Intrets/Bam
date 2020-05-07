@@ -168,11 +168,13 @@
   <ItemGroup>
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
+    <ClCompile Include="ActivityInteractor.cpp" />
     <ClCompile Include="ActivityLinker.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivityPlacer.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
+    <ClCompile Include="ActivitySelector.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
     <ClCompile Include="BindHandler.cpp" />
@@ -225,11 +227,13 @@
   <ItemGroup>
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
+    <ClInclude Include="ActivityInteractor.h" />
     <ClInclude Include="ActivityLinker.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivityPlacer.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
+    <ClInclude Include="ActivitySelector.h" />
     <ClInclude Include="Anchor.h" />
     <ClInclude Include="BindHandler.h" />
     <ClInclude Include="Block.h" />

@@ -48,9 +48,9 @@ void ActivityPlacer::placeHover(GameState& gameState, glm::ivec2 pos) {
 ActivityPlacer::ActivityPlacer() {
 	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, &updateHoverPos);
 
-	addBind({ CONTROLS::SELECTACTIVITY, CONTROLSTATE::CONTROLSTATE_PRESSED }, &pickUpActivity);
+	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, &pickUpActivity);
 
-	addBind({ CONTROLS::PLACEBLOCK_HOVER, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+	addBind({ CONTROLS::ACTION1, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityPlacer*>(self_);
 		self->placeHover(gameState, gameState.getPlayerCursorWorldSpace());
 

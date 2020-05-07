@@ -143,4 +143,7 @@ bool Anchor::removeTraces(GameState& gameState) {
 }
 
 void Anchor::appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) {
+	for (auto& child : children) {
+		child.get()->appendSelectionInfo(gameState, renderInfo);
+	}
 }

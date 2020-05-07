@@ -6,7 +6,7 @@
 #include "Linker.h"
 
 ActivityLinker::ActivityLinker() {
-	addBind({ CONTROLS::PLACEBLOCK_HOVER, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityLinker*>(self_);
 		auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
 
