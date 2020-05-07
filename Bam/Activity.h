@@ -125,7 +125,7 @@ public:
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
-	virtual void fillTraces(GameState& gameState) = 0;
+	virtual bool fillTraces(GameState& gameState) = 0;
 	virtual bool removeTraces(GameState& gameState) = 0;
 
 	virtual void removeActivityTraces(GameState& gameState) = 0;

@@ -12,10 +12,13 @@ enum class CONTINUATION
 class GameState;
 
 class LogicSequencer;
+struct RenderInfo;
 
 class LogicSequencer
 {
 public:
+	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
+
 	using MaybeSequencer = std::pair<CONTINUATION, std::optional<std::unique_ptr<LogicSequencer>>>;
 
 	using BindType = std::function<MaybeSequencer(GameState&, LogicSequencer*)>;
@@ -33,6 +36,9 @@ private:
 	std::optional<std::unique_ptr<LogicSequencer>> next;
 
 	std::unordered_map<BindControl, BindType, BindControlHash> binds;
+
+protected:
+	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {};
 
 public:
 	int test = 0;

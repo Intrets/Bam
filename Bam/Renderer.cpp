@@ -6,6 +6,7 @@
 #include "FPSLimiter.h"
 //#include "GameObject.h"
 #include "RenderInfo.h"
+#include "BindHandler.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, WindowManager& windowManager) {
 	int frameSizeX, frameSizeY;
@@ -31,6 +32,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
+
+	Locator<BindHandler>::getService()->appendRenderInfo(gameState, renderInfo);
 
 	gameState.appendStaticRenderInfo(renderInfo);
 	//windowManager.addRenderInfo(target.uiRenderInfo, target.cameraInfo, textRenderer);
@@ -114,12 +117,10 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	//	false
 	//);
 
-	//selectionRenderer.render(renderInfo, 0);
-
+	selectionRenderer.render(renderInfo, 0);
 
 	if (debugOption.getVal()) {
 		debugRenderer.render(0, renderInfo);
-		//DebugRenderer().render(0, renderInfo.cameraInfo, renderInfo.debugPoints, renderInfo.debugLines);
 	}
 
 	//if (uiOption) {

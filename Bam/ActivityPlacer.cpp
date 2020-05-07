@@ -29,11 +29,12 @@ static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 
 void ActivityPlacer::placeHover(GameState& gameState, glm::ivec2 pos) {
 	if (hover) {
-		hover.get()->fillTraces(gameState);
-		hover.handle = 0;
+		if (hover.get()->fillTraces(gameState)) {
+			hover.handle = 0;
+		}
 	}
 	else {
-		hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(2, 3), pos, false);
+		hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
 	}
 }
 
@@ -52,3 +53,10 @@ ActivityPlacer::ActivityPlacer() {
 	});
 
 }
+
+void ActivityPlacer::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
+	if (hover) {
+		hover.get()->appendSelectionInfo(gameState, renderInfo);
+	}
+}
+

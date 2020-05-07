@@ -12,5 +12,8 @@ public:
 
 	ActivityPlacer();
 	~ActivityPlacer() = default;
+
+protected:
+	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) override;
 };
 

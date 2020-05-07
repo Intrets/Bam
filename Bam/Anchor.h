@@ -26,7 +26,7 @@ public:
 	virtual bool canActivity(GameState & gameState, int type, Activity * ignore) override;
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
-	virtual void fillTraces(GameState& gameState) override;
+	virtual bool fillTraces(GameState& gameState) override;
 	virtual bool removeTraces(GameState& gameState) override;
 
 	virtual void removeMoveableTraces(GameState & gameState) override;

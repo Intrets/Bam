@@ -10,6 +10,13 @@
 #include "LogicSequencer.h"
 #include <iostream>
 #include "ActivityPlacer.h"
+#include "RenderInfo.h"
+
+void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
+	for (auto& logicSequence : logicSequences) {
+		logicSequence->appendRenderInfo(gameState, renderInfo);
+	}
+}
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 	for (auto& logicSequence : logicSequences) {

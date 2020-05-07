@@ -75,13 +75,24 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	calculateBlockedDirections();
 }
 
-void Platform::fillTraces(GameState& gameState) {
+bool Platform::fillTraces(GameState& gameState) {
+
+	for (int i = 0; i < size[0]; i++) {
+		for (int j = 0; j < size[1]; j++) {
+			auto p = origin + glm::ivec2(i, j);
+			if (gameState.staticWorld.getBlock(p).first != 0) {
+				return false;
+			}
+		}
+	}
+
 	for (int i = 0; i < size[0]; i++) {
 		for (int j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.leaveTrace(p, selfHandle);
 		}
 	}
+	return true;
 }
 
 void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
@@ -91,7 +102,10 @@ void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo)
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
 		v += scale * glm::vec2(getDirection(movementDirection));
 	}
-	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
+	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
+	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size));
+	renderInfo.debugRenderInfo.addPoint(v);
+
 }
 
 void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {

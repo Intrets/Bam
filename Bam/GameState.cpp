@@ -5,10 +5,7 @@
 #include "Option.h"
 
 glm::vec2 GameState::getPlayerCursorWorldSpace() {
-	glm::vec2 pos = playerPos;
-	Option<CL_VIEWPORTSCALE, float> viewportScale;
-	pos += viewportScale.getVal() * playerCursorScreenSpace;
-	return pos;
+	return playerCursorWorldSpace;
 }
 
 void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
@@ -24,7 +21,13 @@ void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
 	x = 2 * x - 1;
 	y = 2 * y - 1;
 
+	float ratio = frameSizeX / static_cast<float>(frameSizeY);
+	glm::vec2 viewport(ratio, 1.0f);
+	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
+	viewport *= viewportScale.getVal();
+
 	playerCursorScreenSpace = glm::vec2(x, y);
+	playerCursorWorldSpace = playerPos + playerCursorScreenSpace * viewport;
 }
 
 bool GameState::load(Loader& loader) {

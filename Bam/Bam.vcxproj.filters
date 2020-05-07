@@ -454,5 +454,11 @@
     <None Include="StaticWorldShader.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
+    <None Include="HighlightShader.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="HighlightShader.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

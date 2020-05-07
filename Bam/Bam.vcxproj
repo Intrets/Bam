@@ -282,6 +282,8 @@
   <ItemGroup>
     <None Include="DebugLine.frag" />
     <None Include="DebugLine.vert" />
+    <None Include="HighlightShader.frag" />
+    <None Include="HighlightShader.vert" />
     <None Include="PassthroughArray.frag" />
     <None Include="PassthroughArray.vert" />
     <None Include="StaticWorldShader.frag" />

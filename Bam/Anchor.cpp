@@ -45,7 +45,8 @@ bool Anchor::canMove(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringG
 	return !blocked;
 }
 
-void Anchor::fillTraces(GameState & gameState) {
+bool Anchor::fillTraces(GameState & gameState) {
+	return true;
 }
 
 void Anchor::removeMoveableTraces(GameState & gameState) {

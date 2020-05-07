@@ -5,10 +5,12 @@
 
 class GameState;
 class LogicSequencer;
+struct RenderInfo;
 
 class BindHandler
 {
 public:
+	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
 	void runBinds(ControlState& controlState, GameState& gameState);
 
 	void addBind(CONTROLS control, CONTROLSTATE state, std::function<void(GameState&)> f);

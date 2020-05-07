@@ -19,6 +19,7 @@ class GameState
 {
 private:
 	glm::vec2 playerCursorScreenSpace;
+	glm::vec2 playerCursorWorldSpace;
 
 public:
 	bool exit;

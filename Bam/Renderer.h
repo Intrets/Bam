@@ -9,6 +9,7 @@
 #include "Option.h"
 //#include "SelectionHighlightRenderer.h"
 #include "DebugRenderer.h"
+#include "SelectionHighlightRenderer.h"
 
 struct RenderInfo;
 class FPSLimiter;
@@ -35,7 +36,7 @@ private:
 	StaticWorldRenderer staticWorldRenderer;
 	//TextRenderer textRenderer;
 	//UIbackgroundRenderer uiBackgroundRenderer;
-	//SelectionHighlightRenderer selectionRenderer;
+	SelectionHighlightRenderer selectionRenderer;
 
 	//Blur blur;
 

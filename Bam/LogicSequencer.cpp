@@ -3,6 +3,14 @@
 
 #include "ControlState.h"
 #include "GameState.h"
+#include "RenderInfo.h"
+
+void LogicSequencer::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
+	if (next.has_value()) {
+		next.value()->appendRenderInfo(gameState, renderInfo);
+	}
+	appendRenderInfoInternal(gameState, renderInfo);
+}
 
 // returns if blocking
 CONTINUATION LogicSequencer::runBinds(ControlState& controlState, GameState& gameState) {
