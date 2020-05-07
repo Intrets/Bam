@@ -94,11 +94,11 @@
     <Filter Include="Game\Serial">
       <UniqueIdentifier>{032343f5-548c-48ab-bda0-6732ac598b86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Logic\IO">
-      <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="New">
       <UniqueIdentifier>{7bb8f725-72d4-4148-bbb8-d45799a450df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\Seqs">
+      <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -250,16 +250,22 @@
       <Filter>Game\Logic</Filter>
     </ClCompile>
     <ClCompile Include="LogicSequencer.cpp">
-      <Filter>Game\Logic\IO</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivityPlacer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Game\Logic\Seqs</Filter>
     </ClCompile>
     <ClCompile Include="SelectionHighlightRenderer.cpp">
       <Filter>New</Filter>
     </ClCompile>
     <ClCompile Include="SelectionRenderInfo.cpp">
       <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="Linker.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityPlacer.cpp">
+      <Filter>Game\Logic\Seqs</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityLinker.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -423,16 +429,22 @@
       <Filter>Game\Logic</Filter>
     </ClInclude>
     <ClInclude Include="LogicSequencer.h">
-      <Filter>Game\Logic\IO</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityPlacer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Game\Logic\Seqs</Filter>
     </ClInclude>
     <ClInclude Include="SelectionHighlightRenderer.h">
       <Filter>New</Filter>
     </ClInclude>
     <ClInclude Include="SelectionRenderInfo.h">
       <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="Linker.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityPlacer.h">
+      <Filter>Game\Logic\Seqs</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityLinker.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,16 @@ std::pair<int, WeakReference<Activity, Activity>> StaticWorld::getBlock(glm::ive
 	return std::pair<int, WeakReference<Activity, Activity>>(b->blockID, WeakReference<Activity, Activity>(b->m));
 }
 
+std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::ivec2 pos) {
+	auto res = getBlock(pos);
+	if (res.first == 1) {
+		return res.second;
+	}
+	else {
+		return std::nullopt;
+	}
+}
+
 void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	auto& cameraInfo = renderInfo.cameraInfo;
 	auto p0 = cameraInfo.camPos - glm::vec2(cameraInfo.viewPort);

@@ -10,6 +10,7 @@
 #include "LogicSequencer.h"
 #include <iostream>
 #include "ActivityPlacer.h"
+#include "ActivityLinker.h"
 #include "RenderInfo.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
@@ -38,8 +39,25 @@ void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<vo
 }
 
 BindHandler::BindHandler() {
-	auto placer = std::make_unique<ActivityPlacer>();
-	logicSequences.push_back(std::move(placer));
+	auto tools = std::make_unique<LogicSequencer>();
+
+	auto placerTool = [](GameState& gameState, LogicSequencer* logicSequencer) {
+		auto placer = std::make_unique<ActivityPlacer>();
+		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(placer)));
+	};
+
+	auto linkerTool = [](GameState& gameState, LogicSequencer* logicSequencer) {
+		auto placer = std::make_unique<ActivityLinker>();
+		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(placer)));
+	};
+
+	tools->addBind({ CONTROLS::TOOL_1, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(placerTool)
+	);
+
+	tools->addBind({ CONTROLS::TOOL_2, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(linkerTool)
+	);
+
+	logicSequences.push_back(std::move(tools));
 }
 
 BindHandler::~BindHandler() {

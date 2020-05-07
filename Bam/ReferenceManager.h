@@ -18,6 +18,8 @@ class _WeakReferenceBase
 public:
 	Handle handle = 0;
 
+	void clear() { handle = 0; };
+
 	explicit operator bool() const {
 		return handle != 0;
 	};

@@ -26,6 +26,10 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 	keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
 	keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::TEST_EXIT;
+	keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_1;
+	keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_2;
+	keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_3;
+	keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_4;
 }
 
 void ControlState::cycleStates() {

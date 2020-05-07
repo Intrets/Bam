@@ -60,6 +60,7 @@ CONTINUATION LogicSequencer::runBinds(ControlState& controlState, GameState& gam
 LogicSequencer::LogicSequencer() {
 	blocking = true;
 	auto exitBind = [](GameState& gameState, LogicSequencer* logicSequencer) {
+		logicSequencer->exit(gameState);
 		return std::make_pair(CONTINUATION::EXIT, std::nullopt);
 	};
 	addBind({ CONTROLS::TEST_EXIT, CONTROLSTATE::CONTROLSTATE_PRESSED }, exitBind);

@@ -27,6 +27,12 @@ static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 }
 
+void ActivityPlacer::exit(GameState& gameState) {
+	if (hover) {
+		hover.deleteObject();
+	}
+}
+
 void ActivityPlacer::placeHover(GameState& gameState, glm::ivec2 pos) {
 	if (hover) {
 		if (hover.get()->fillTraces(gameState)) {

@@ -17,6 +17,8 @@ struct RenderInfo;
 class LogicSequencer
 {
 public:
+	virtual void exit(GameState& gameState) {};
+
 	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
 
 	using MaybeSequencer = std::pair<CONTINUATION, std::optional<std::unique_ptr<LogicSequencer>>>;

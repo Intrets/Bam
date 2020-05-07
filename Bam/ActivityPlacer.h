@@ -7,6 +7,8 @@
 class ActivityPlacer : public LogicSequencer
 {
 public:
+	virtual void exit(GameState& gameState) override;
+
 	WeakReference<Activity, Activity> hover;
 	void placeHover(GameState& gameState, glm::ivec2 pos);
 

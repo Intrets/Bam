@@ -90,9 +90,6 @@ private:
 protected:
 	glm::vec2 getMovingOrigin(GameState& gameState);
 
-	WeakReference<Activity, Anchor> parentRef;
-	Handle selfHandle;
-
 	int activityPace = 10;
 	int activityTickStart = 0;
 	int activityType = 0;
@@ -106,6 +103,9 @@ protected:
 	glm::ivec2 origin;
 
 public:
+	WeakReference<Activity, Anchor> parentRef;
+	Handle selfHandle;
+
 	void forceOrigin(glm::ivec2 origin_) { origin = origin_; };
 
 	virtual ACTIVITY::TYPE getType() = 0;
