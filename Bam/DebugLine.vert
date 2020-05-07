@@ -1,6 +1,7 @@
 #version 330 core
 
 in vec2 position;
+in int color_index;
 
 uniform mat4 VP;
 

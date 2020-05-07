@@ -1,13 +1,13 @@
 #include "common.h"
 #include "Block.h"
 //#include "Activity.h"
-//#include "ActivityIgnoringGroup.h"
+#include "ActivityIgnoringGroup.h"
 #include "Loader.h"
 #include "Saver.h"
 
 bool Block::isOccupied(ActivityIgnoringGroup& ignore) {
 	if (blockID == 1) {
-		//return m && !ignore.contains(m.handle);
+		return m && !ignore.contains(m.handle);
 	}
 	else if (blockID > 1) {
 		return true;

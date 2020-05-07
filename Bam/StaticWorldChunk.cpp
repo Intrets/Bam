@@ -38,9 +38,9 @@ void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
 				}
 			}
-			//if (staticWorld[i][j].isActivity()) {
-			//	renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(position));
-			//}
+			if (staticWorld[i][j].isActivity()) {
+				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(position) + glm::vec2(0.5f));
+			}
 		}
 	}
 }

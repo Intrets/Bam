@@ -107,6 +107,7 @@ public:
 	Handle selfHandle;
 
 	void forceOrigin(glm::ivec2 origin_) { origin = origin_; };
+	glm::ivec2 getOrigin() { return origin; };
 
 	virtual ACTIVITY::TYPE getType() = 0;
 	Handle getHandle() { return selfHandle; };

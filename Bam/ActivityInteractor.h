@@ -1,8 +1,11 @@
 #pragma once
-class ActivityInteractor
+
+#include "ActivitySelector.h"
+
+class ActivityInteractor : public ActivitySelector
 {
 public:
-
-
+	ActivityInteractor();
+	~ActivityInteractor() = default;
 };
 

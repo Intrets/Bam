@@ -21,19 +21,29 @@ Anchor::Anchor() {
 Anchor::Anchor(Handle self) : Activity(self, glm::ivec2(0, 0)) {
 }
 
-Anchor::Anchor(Handle self, GameState & gameState) : Anchor(self) {
+Anchor::Anchor(Handle self, GameState& gameState) : Anchor(self) {
 }
 
 Anchor::~Anchor() {
 }
 
-void Anchor::appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) {
+void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+	//TODO: better debug render info handling?
+	glm::vec2 center;
 	for (auto& child : children) {
+		center += child.get()->getOrigin();
 		child.get()->appendStaticRenderInfo(gameState, staticWorldRenderInfo);
+	}
+
+	center /= children.size();
+	Locator<DebugRenderInfo>::getService()->addPoint(center);
+
+	for (auto& child : children) {
+		Locator<DebugRenderInfo>::getService()->addLine(center, child.get()->getOrigin());
 	}
 }
 
-bool Anchor::canMove(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
+bool Anchor::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	if (moving) return false;
 	bool blocked = false;
 	for (auto& child : children) {
@@ -45,17 +55,17 @@ bool Anchor::canMove(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringG
 	return !blocked;
 }
 
-bool Anchor::fillTraces(GameState & gameState) {
+bool Anchor::fillTraces(GameState& gameState) {
 	return true;
 }
 
-void Anchor::removeMoveableTraces(GameState & gameState) {
+void Anchor::removeMoveableTraces(GameState& gameState) {
 }
 
-void Anchor::leaveMoveableTraces(GameState & gameState) {
+void Anchor::leaveMoveableTraces(GameState& gameState) {
 }
 
-void Anchor::doMove(GameState & gameState, MOVEABLE::DIR dir, int pace) {
+void Anchor::doMove(GameState& gameState, MOVEABLE::DIR dir, int pace) {
 	//gameState.activityPaceHandler.add(this, pace);
 	moving = true;
 	for (auto& child : children) {
@@ -63,27 +73,27 @@ void Anchor::doMove(GameState & gameState, MOVEABLE::DIR dir, int pace) {
 	}
 }
 
-void Anchor::stopMovement(GameState & gameState) {
+void Anchor::stopMovement(GameState& gameState) {
 	for (auto& child : children) {
 		child.get()->stopMovement(gameState);
 	}
 	moving = false;
 }
 
-bool Anchor::canActivity(GameState & gameState, int useType, Activity * ignore) {
+bool Anchor::canActivity(GameState& gameState, int useType, Activity* ignore) {
 	return false;
 }
 
-void Anchor::doActivityInternal(GameState & gameState, int useType, int pace) {
+void Anchor::doActivityInternal(GameState& gameState, int useType, int pace) {
 }
 
-void Anchor::removeActivityTraces(GameState & gameState) {
+void Anchor::removeActivityTraces(GameState& gameState) {
 }
 
-void Anchor::leaveActivityTraces(GameState & gameState) {
+void Anchor::leaveActivityTraces(GameState& gameState) {
 }
 
-void Anchor::getGroup(ActivityIgnoringGroup & ignore) {
+void Anchor::getGroup(ActivityIgnoringGroup& ignore) {
 	ignore.add(selfHandle);
 	for (auto& child : children) {
 		child.get()->getGroup(ignore);
@@ -117,14 +127,14 @@ void Anchor::fillModifyingMap(ModifyerBase& modifyer) {
 
 }
 
-void Anchor::modifyMember(GameState & gameState, std::string & name, std::vector<std::string>& value) {
+void Anchor::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
 	auto& modifyer = Locator<Modifyer<Anchor>>::getService()->modifyables;
 	if (modifyer.count(name) != 0) {
 		modifyer[name]->modify(this, gameState, value);
 	}
 }
 
-std::stringstream & Anchor::getMembers(std::stringstream & out) {
+std::stringstream& Anchor::getMembers(std::stringstream& out) {
 	out << "^ Anchor members: ^\n";
 	for (auto& member : Locator<Modifyer<Anchor>>::getService()->modifyables) {
 		out << member.first << ": ";
@@ -142,7 +152,7 @@ bool Anchor::removeTraces(GameState& gameState) {
 	return false;
 }
 
-void Anchor::appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) {
+void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& child : children) {
 		child.get()->appendSelectionInfo(gameState, renderInfo);
 	}
