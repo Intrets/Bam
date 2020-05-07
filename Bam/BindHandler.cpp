@@ -9,13 +9,11 @@
 #include "GameState.h"
 #include "LogicSequencer.h"
 #include <iostream>
+#include "ActivityPlacer.h"
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 	for (auto& logicSequence : logicSequences) {
-		auto blocking = logicSequence->runBinds(controlState, gameState);
-		if (blocking != CONTINUATION::CONTINUE) {
-			return;
-		}
+		logicSequence->runBinds(controlState, gameState);
 	}
 
 	for (int i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
@@ -33,17 +31,8 @@ void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<vo
 }
 
 BindHandler::BindHandler() {
-	auto test = std::make_unique<LogicSequencer>(false);
-	test->addBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState) -> LogicSequencer::MaybeSequencer {
-		std::cout << "TEST_UP\n";
-		auto test = std::make_unique<LogicSequencer>(false);
-		test->addBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState) -> LogicSequencer::MaybeSequencer {
-			std::cout << "TEST_RIGHT\n";
-			return std::make_pair(CONTINUATION::STOP, std::nullopt);
-		});
-		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(test)));
-	});
-	logicSequences.push_back(std::move(test));
+	auto placer = std::make_unique<ActivityPlacer>();
+	logicSequences.push_back(std::move(placer));
 }
 
 BindHandler::~BindHandler() {

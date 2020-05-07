@@ -137,5 +137,9 @@ ACTIVITY::TYPE Anchor::getType() {
 	return ACTIVITY::ANCHOR;
 }
 
+bool Anchor::removeTraces(GameState& gameState) {
+	return false;
+}
+
 void Anchor::appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) {
 }

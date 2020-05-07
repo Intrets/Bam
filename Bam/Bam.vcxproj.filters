@@ -97,6 +97,9 @@
     <Filter Include="Game\Logic\IO">
       <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="New">
+      <UniqueIdentifier>{7bb8f725-72d4-4148-bbb8-d45799a450df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp">
@@ -248,6 +251,15 @@
     </ClCompile>
     <ClCompile Include="LogicSequencer.cpp">
       <Filter>Game\Logic\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityPlacer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionHighlightRenderer.cpp">
+      <Filter>New</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionRenderInfo.cpp">
+      <Filter>New</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +424,15 @@
     </ClInclude>
     <ClInclude Include="LogicSequencer.h">
       <Filter>Game\Logic\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityPlacer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionHighlightRenderer.h">
+      <Filter>New</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionRenderInfo.h">
+      <Filter>New</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

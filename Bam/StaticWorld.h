@@ -4,6 +4,9 @@
 
 #include <unordered_map>
 
+#include "ReferenceManager.h"
+#include "Activity.h"
+
 typedef int Handle;
 
 class StaticWorldChunk;
@@ -14,6 +17,8 @@ class Loader;
 class StaticWorld
 {
 public:
+	std::pair<int, WeakReference<Activity, Activity>> getBlock(glm::ivec2 pos);
+
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 	void leaveTrace(glm::ivec2 pos, Handle m);
 

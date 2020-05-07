@@ -27,6 +27,8 @@ public:
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
 	virtual void fillTraces(GameState& gameState) override;
+	virtual bool removeTraces(GameState& gameState) override;
+
 	virtual void removeMoveableTraces(GameState & gameState) override;
 	virtual void leaveMoveableTraces(GameState & gameState) override;
 
@@ -43,6 +45,5 @@ public:
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
 
 	virtual ACTIVITY::TYPE getType() override;
-
 };
 

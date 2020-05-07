@@ -7,6 +7,14 @@
 #include "Saver.h"
 #include "Loader.h"
 
+std::pair<int, WeakReference<Activity, Activity>> StaticWorld::getBlock(glm::ivec2 pos) {
+	auto r = floordivmod(pos, CHUNKSIZE);
+	auto global = r.first;
+	auto local = r.second;
+	auto b = &getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y];
+	return std::pair<int, WeakReference<Activity, Activity>>(b->blockID, WeakReference<Activity, Activity>(b->m));
+}
+
 void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	auto& cameraInfo = renderInfo.cameraInfo;
 	auto p0 = cameraInfo.camPos - glm::vec2(cameraInfo.viewPort);

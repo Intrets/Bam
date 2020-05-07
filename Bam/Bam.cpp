@@ -17,6 +17,11 @@ static void key_callback(GLFWwindow* w, int key, int scancode, int action, int m
 	controlState.key_callback(w, key, scancode, action, mods);
 }
 
+static void mouse_callback(GLFWwindow* w, int key, int action, int mods) {
+	key_callback(w, key + GLFW_KEY_LAST, 0, action, mods);
+}
+
+
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
@@ -52,7 +57,7 @@ static int initGLFW() {
 
 	//glfwSetCharCallback(window, char_callback);
 	glfwSetKeyCallback(window, key_callback);
-	//glfwSetMouseButtonCallback(window, mouse_callback);
+	glfwSetMouseButtonCallback(window, mouse_callback);
 
 	// constrain cursor to window
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

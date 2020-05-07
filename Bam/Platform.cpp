@@ -85,13 +85,13 @@ void Platform::fillTraces(GameState& gameState) {
 }
 
 void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
-	//int tick = gameState.tick;
-	//glm::vec2 v = glm::vec2(origin);
-	//if (moving) {
-	//	float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-	//	v += scale * glm::vec2(getDirection(movementDirection));
-	//}
-	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
+	int tick = gameState.tick;
+	glm::vec2 v = glm::vec2(origin);
+	if (moving) {
+		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
+		v += scale * glm::vec2(getDirection(movementDirection));
+	}
+	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
 }
 
 void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
@@ -218,4 +218,18 @@ std::stringstream& Platform::getMembers(std::stringstream& out) {
 	}
 	out << "v Platform members: v\n";
 	return out;
+}
+
+bool Platform::removeTraces(GameState& gameState) {
+	if (moving || active) {
+		return false;
+	}
+
+	for (int i = 0; i < size[0]; i++) {
+		for (int j = 0; j < size[1]; j++) {
+			auto p = origin + glm::ivec2(i, j);
+			gameState.staticWorld.removeTrace(p);
+		}
+	}
+	return true;
 }

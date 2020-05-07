@@ -18,6 +18,7 @@ public:
 	~Platform() = default;
 
 	virtual void fillTraces(GameState& gameState) override;
+	virtual bool removeTraces(GameState& gameState) override;
 
 	// Inherited via Moveable
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;

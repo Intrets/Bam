@@ -170,6 +170,7 @@
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
+    <ClCompile Include="ActivityPlacer.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
@@ -206,6 +207,8 @@
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
     <ClCompile Include="Saver.cpp" />
+    <ClCompile Include="SelectionHighlightRenderer.cpp" />
+    <ClCompile Include="SelectionRenderInfo.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="StaticWorld.cpp" />
     <ClCompile Include="StaticWorldChunk.cpp" />
@@ -222,6 +225,7 @@
     <ClInclude Include="ActivityIgnoringGroup.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
+    <ClInclude Include="ActivityPlacer.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="Anchor.h" />
     <ClInclude Include="BindHandler.h" />
@@ -247,6 +251,8 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="Saver.h" />
+    <ClInclude Include="SelectionHighlightRenderer.h" />
+    <ClInclude Include="SelectionRenderInfo.h" />
     <ClInclude Include="StringHelpers.h" />
     <ClInclude Include="IOwrapped.h" />
     <ClInclude Include="Locator.h" />

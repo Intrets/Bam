@@ -106,6 +106,8 @@ protected:
 	glm::ivec2 origin;
 
 public:
+	void forceOrigin(glm::ivec2 origin_) { origin = origin_; };
+
 	virtual ACTIVITY::TYPE getType() = 0;
 	Handle getHandle() { return selfHandle; };
 
@@ -124,6 +126,7 @@ public:
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
 	virtual void fillTraces(GameState& gameState) = 0;
+	virtual bool removeTraces(GameState& gameState) = 0;
 
 	virtual void removeActivityTraces(GameState& gameState) = 0;
 	virtual void leaveActivityTraces(GameState& gameState) = 0;

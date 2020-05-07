@@ -24,7 +24,6 @@ public:
 };
 
 template <class B, class T>
-
 class WeakReference : public _WeakReferenceBase
 {
 public:
@@ -35,6 +34,8 @@ public:
 		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
 		return WeakReference<B, N>(handle);
 	};
+
+	void deleteObject();
 
 	WeakReference(Handle h) { handle = h; };
 	WeakReference() = default;
@@ -147,13 +148,19 @@ public:
 
 
 template<class B, class T>
-inline T * WeakReference<B, T>::get() {
+inline T* WeakReference<B, T>::get() {
 	auto& t = Locator<ReferenceManager<B>>::getService()->data;
 	return static_cast<T*>(t[handle].get());
 }
 
 template<class B, class T>
-inline T * ManagedReference<B, T>::get() {
+inline void WeakReference<B, T>::deleteObject() {
+	Locator<ReferenceManager<B>>::getService()->deleteReference(handle);
+	handle = 0;
+}
+
+template<class B, class T>
+inline T* ManagedReference<B, T>::get() {
 	return static_cast<T*>(Locator<ReferenceManager<B>>::getService()->data[handle].get());
 }
 
@@ -195,7 +202,7 @@ inline ManagedReference<B, T>::~ManagedReference() {
 
 template<class B>
 template<class T, class ...Args>
-inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args && ...args) {
+inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args&& ...args) {
 	Handle h = getFreeHandle();
 	data[h] = std::make_unique<T>(h, std::forward<Args>(args)...);
 	usedHandle[h] = true;
@@ -204,7 +211,7 @@ inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args && ...args) {
 
 template<class B>
 template<class T, class ...Args>
-inline WeakReference<B, T> ReferenceManager<B>::makeNamedRef(std::string name, Args && ...args) {
+inline WeakReference<B, T> ReferenceManager<B>::makeNamedRef(std::string name, Args&& ...args) {
 	WeakReference<B, T> ref = makeRef<T>(std::forward<Args>(args)...);
 	indexMap[name] = ref.handle;
 	return ref;
@@ -239,7 +246,7 @@ inline std::optional<WeakReference<B, B>> ReferenceManager<B>::getRef(Handle h) 
 }
 
 template<class B>
-inline bool ReferenceManager<B>::storeReference(Handle h, B * ref) {
+inline bool ReferenceManager<B>::storeReference(Handle h, B* ref) {
 	if (freeHandles.count(h) == 0) {
 		return false;
 	}
@@ -262,7 +269,7 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 }
 
 template<class B>
-inline void ReferenceManager<B>::deleteReference(_WeakReferenceBase * b) {
+inline void ReferenceManager<B>::deleteReference(_WeakReferenceBase* b) {
 	deleteReference(b->handle);
 	b->handle = 0;
 }

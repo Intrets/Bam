@@ -17,14 +17,19 @@ struct RenderInfo;
 
 class GameState
 {
+private:
+	glm::vec2 playerCursorScreenSpace;
+
 public:
 	bool exit;
+	glm::vec2 playerPos;
 
 	int tick = 0;
+
+	glm::vec2 getPlayerCursorWorldSpace();
+	void updatePlayerCursorScreenSpace(GLFWwindow* window);
 	//GameObject* cam;
 	//GameObject* player;
-	glm::vec2 playerCursor;
-	glm::vec2 playerPos;
 
 	//Inventory inventory;
 
