@@ -14,7 +14,7 @@ ActivitySelector::ActivitySelector() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 	// expand selection
-	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+	addBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
 		if (self->target.isValid()) {
 			if (self->target.get()->parentRef) {
@@ -26,7 +26,7 @@ ActivitySelector::ActivitySelector() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 	// shrink selection
-	addBind({ CONTROLS::ACTION4, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+	addBind({ CONTROLS::ACTION6, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
 		while (!self->history.empty() && !self->history.back()->isValid()) {
 			self->history.pop_back();

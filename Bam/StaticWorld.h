@@ -20,6 +20,9 @@ public:
 	std::pair<int, WeakReference<Activity, Activity>> getBlock(glm::ivec2 pos);
 	std::optional<WeakReference<Activity, Activity>> getActivity(glm::ivec2 pos);
 
+	bool isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore);
+	bool isOccupied(glm::ivec2 pos);
+
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 	void leaveTrace(glm::ivec2 pos, Handle m);
 

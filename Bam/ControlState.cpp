@@ -32,6 +32,8 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_4;
 	keyToControl[GLFW_KEY_Z] = CONTROLS::ACTION3;
 	keyToControl[GLFW_KEY_X] = CONTROLS::ACTION4;
+	keyToControl[GLFW_KEY_C] = CONTROLS::ACTION5;
+	keyToControl[GLFW_KEY_V] = CONTROLS::ACTION6;
 
 }
 

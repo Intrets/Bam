@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "GameState.h"
 #include <iostream>
+#include "Piston.h"
 
 static auto updateHoverPos(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
@@ -40,10 +41,27 @@ void ActivityPlacer::placeHover(GameState& gameState, glm::ivec2 pos) {
 		}
 	}
 	else {
-		hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
+		spawnHover(gameState, pos);
 	}
 }
 
+void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
+	if (hover) {
+		hover.deleteObject();
+	}
+	switch (static_cast<HOVERTYPES>(hoverType)) {
+		case HOVERTYPES::PLATFORM:
+			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
+			break;
+		case HOVERTYPES::PISTON:
+			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Piston>(gameState, glm::ivec2(6, 5), MOVEABLE::UP, false);
+			break;
+		case HOVERTYPES::HOVERTYPES_MAX:
+			break;
+		default:
+			break;
+	}
+}
 
 ActivityPlacer::ActivityPlacer() {
 	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, &updateHoverPos);
@@ -55,7 +73,15 @@ ActivityPlacer::ActivityPlacer() {
 		self->placeHover(gameState, gameState.getPlayerCursorWorldSpace());
 
 		return std::make_pair(CONTINUATION::STOP, std::nullopt);
+	});
 
+	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityPlacer*>(self_);
+		self->hoverType++;
+		self->hoverType %= static_cast<int>(HOVERTYPES::HOVERTYPES_MAX);
+		self->spawnHover(gameState, gameState.getPlayerCursorWorldSpace());
+
+		return std::make_pair(CONTINUATION::STOP, std::nullopt);
 	});
 
 }

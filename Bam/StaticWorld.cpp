@@ -117,3 +117,13 @@ StaticWorldChunk* StaticWorld::getChunkByCoords(glm::vec2 pos) {
 	glm::ivec2 t = glm::floor(pos / size);
 	return getChunkByIndex(t.x, t.y);
 }
+
+bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore) {
+	auto p = floordivmod(pos, CHUNKSIZE);
+	return getChunkByIndex(p.first.x, p.first.y)->isOccupied(p.second, ignore);
+}
+
+bool StaticWorld::isOccupied(glm::ivec2 pos) {
+	auto p = floordivmod(pos, CHUNKSIZE);
+	return getChunkByIndex(p.first.x, p.first.y)->isOccupied(p.second);
+}

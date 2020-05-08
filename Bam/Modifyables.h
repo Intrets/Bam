@@ -163,7 +163,6 @@ public:
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) {
 		if (readOnly) return false;
 		T* base = static_cast<T*>(base_);
-		MOVEABLE::DIR direction;
 		if (value.size() == 0) {
 			return false;
 		}

@@ -18,8 +18,14 @@ ActivityLinker::ActivityLinker() {
 			self->target = maybeTarget.value();
 		}
 		else {
-			Linker::link(gameState, maybeTarget.value(), self->target);
-			self->target.clear();
+			if (self->target.get()->getType() == ACTIVITY::PISTON) {
+				Linker::linkPiston(gameState, self->target, maybeTarget.value());
+				self->target.clear();
+			}
+			else {
+				Linker::link(gameState, maybeTarget.value(), self->target);
+				self->target.clear();
+			}
 		}
 
 		return std::make_pair(CONTINUATION::STOP, std::nullopt);

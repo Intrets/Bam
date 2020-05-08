@@ -76,11 +76,10 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 }
 
 bool Platform::fillTraces(GameState& gameState) {
-
 	for (int i = 0; i < size[0]; i++) {
 		for (int j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			if (gameState.staticWorld.getBlock(p).first != 0) {
+			if (gameState.staticWorld.isOccupied(p)) {
 				return false;
 			}
 		}

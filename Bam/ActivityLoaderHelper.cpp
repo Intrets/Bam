@@ -3,7 +3,7 @@
 #include "Activity.h"
 
 //#include "Breaker.h"
-//#include "Piston.h"
+#include "Piston.h"
 //#include "Loader.h"
 #include "Anchor.h"
 //#include "Mover.h"
@@ -37,11 +37,11 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 					LOAD(Platform);
 					break;
 				}
-			//case ACTIVITY::PISTON:
-			//	{
-			//		LOAD(Piston);
-			//		break;
-			//	}
+			case ACTIVITY::PISTON:
+				{
+					LOAD(Piston);
+					break;
+				}
 			//case ACTIVITY::SINGLEPLATFORM:
 			//	{
 			//		LOAD(SinglePlatform);

@@ -21,36 +21,36 @@ std::string Linker::linkAnchors(GameState& gameState, WeakReference<Activity, An
 }
 
 
-//std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Piston> r1, WeakReference<Activity, Activity> r2) {
-//	if (!r1 || !r2) {
-//		return "Invalid references";
-//	}
-//	auto a11 = r1.get();
-//	auto a2 = r2.get();
-//	WeakReference<Activity, Anchor> target;
-//	if (a2->getType() == ACTIVITY::ANCHOR) {
-//		target = r2;
-//	}
-//	else if (a2->parentRef) {
-//		target = a2->parentRef;
-//	}
-//	else {
-//		target = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
-//		target.get()->addChild(a2->selfHandle);
-//		a2->parentRef = target;
-//	}
-//
-//	WeakReference<Activity, Anchor> head;
-//	if (a11->child) {
-//		head = a11->child;
-//	}
-//	else {
-//		head = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
-//		head.get()->parentRef = r1;
-//		a11->addChild(head);
-//	}
-//	return link(gameState, head, target);
-//}
+std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Piston> r1, WeakReference<Activity, Activity> r2) {
+	if (!r1 || !r2) {
+		return "Invalid references";
+	}
+	auto a11 = r1.get();
+	auto a2 = r2.get();
+	WeakReference<Activity, Anchor> target;
+	if (a2->getType() == ACTIVITY::ANCHOR) {
+		target = r2;
+	}
+	else if (a2->parentRef) {
+		target = a2->parentRef;
+	}
+	else {
+		target = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		target.get()->addChild(a2->selfHandle);
+		a2->parentRef = target;
+	}
+
+	WeakReference<Activity, Anchor> head;
+	if (a11->child) {
+		head = a11->child;
+	}
+	else {
+		head = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		head.get()->parentRef = r1;
+		a11->addChild(head);
+	}
+	return link(gameState, head, target);
+}
 
 // from r1 to r2, or grouped together with Anchor
 std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2) {

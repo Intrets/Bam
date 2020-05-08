@@ -34,5 +34,21 @@ ActivityInteractor::ActivityInteractor() : ActivitySelector() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 
+	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_DOWN }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityInteractor*>(self_);
+		if (self->target.isValid()) {
+			self->target.get()->applyActivity(gameState, 1, 10);
+		}
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	});
+
+	addBind({ CONTROLS::ACTION4, CONTROLSTATE::CONTROLSTATE_DOWN }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityInteractor*>(self_);
+		if (self->target.isValid()) {
+			self->target.get()->applyActivity(gameState, 2, 10);
+		}
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	});
+
 }
 

@@ -43,3 +43,7 @@ template<class T>
 inline bool indexInVector(size_t i, std::vector<T>& V) {
 	return i >= 0 && i < V.size();
 }
+
+inline int idot(glm::ivec2 v1, glm::ivec2 v2) {
+	return v1.x * v2.x + v1.y * v2.y;
+}

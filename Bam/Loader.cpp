@@ -1,7 +1,6 @@
 #include "common.h"
 #include "GameState.h"
 //#include "Breaker.h"
-//#include "Piston.h"
 #include "Loader.h"
 #include "Anchor.h"
 //#include "Mover.h"
@@ -13,10 +12,6 @@
 //#include "ScriptManager.h"
 #include "ActivityLoaderHelper.h"
 
-
-#define LOAD(TYPE) TYPE* p = new TYPE();\
-					p->load(*this);\
-					manager->storeReference(p->selfHandle, p);
 
 bool Loader::retrieveString(std::string& str) {
 	int s;
