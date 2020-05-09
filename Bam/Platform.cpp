@@ -148,7 +148,7 @@ void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInf
 	}
 }
 
-bool Platform::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
+bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	if (moving) return false;
 
 	glm::ivec2 movedOrigin = origin + getDirection(dir);
@@ -179,29 +179,26 @@ bool Platform::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoring
 	return !blocked;
 }
 
-void Platform::removeMoveableTraces(GameState& gameState) {
+void Platform::removeMoveableTracesLocal(GameState& gameState) {
 	for (auto& dir : blockedDirections[(movementDirection + 2) % 4]) {
 		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
 	}
 }
 
-void Platform::leaveMoveableTraces(GameState& gameState) {
+void Platform::leaveMoveableTracesLocal(GameState& gameState) {
 	for (auto& dir : blockedDirections[movementDirection]) {
 		gameState.staticWorld.leaveTrace(origin + dir, selfHandle);
 	}
 }
 
-bool Platform::canActivity(GameState& gameState, int useType) {
+bool Platform::canActivityLocal(GameState& gameState, int useType) {
 	return false;
 }
 
-void Platform::doActivityInternal(GameState& gameState, int useType, int pace) {
+void Platform::removeActivityTracesLocal(GameState& gameState) {
 }
 
-void Platform::removeActivityTraces(GameState& gameState) {
-}
-
-void Platform::leaveActivityTraces(GameState& gameState) {
+void Platform::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Platform::save(Saver& saver) {
@@ -280,4 +277,8 @@ void Platform::removeTracesLocalForced(GameState& gameState) {
 			gameState.staticWorld.removeTraceForced(p);
 		}
 	}
+}
+
+void Platform::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+	Activity::applyActivityLocalForced(gameState, type, pace);
 }

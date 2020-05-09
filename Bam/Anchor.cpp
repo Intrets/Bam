@@ -54,11 +54,11 @@ void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 	}
 }
 
-bool Anchor::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
+bool Anchor::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	if (moving) return false;
 	bool blocked = false;
 	for (auto& child : children) {
-		if (!child.get()->canMove(gameState, dir, ignore)) {
+		if (!child.get()->canMoveLocal(gameState, dir, ignore)) {
 			blocked = true;
 			break;
 		}
@@ -66,45 +66,35 @@ bool Anchor::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGr
 	return !blocked;
 }
 
-void Anchor::removeMoveableTraces(GameState& gameState) {
+void Anchor::removeMoveableTracesLocal(GameState& gameState) {
 }
 
-void Anchor::leaveMoveableTraces(GameState& gameState) {
+void Anchor::leaveMoveableTracesLocal(GameState& gameState) {
 }
 
-void Anchor::doMove(GameState& gameState, MOVEABLE::DIR dir, int pace) {
-	//gameState.activityPaceHandler.add(this, pace);
-	moving = true;
-	for (auto& child : children) {
-		child.get()->doMove(gameState, dir, pace);
-	}
-}
+//void Anchor::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace) {
+//	//gameState.activityPaceHandler.add(this, pace);
+//	moving = true;
+//	for (auto& child : children) {
+//		child.get()->applyMoveLocalForced(gameState, dir, pace);
+//	}
+//}
 
-void Anchor::stopMovement(GameState& gameState) {
-	for (auto& child : children) {
-		child.get()->stopMovement(gameState);
-	}
-	moving = false;
-}
+//void Anchor::stopMovement(GameState& gameState) {
+//	for (auto& child : children) {
+//		child.get()->stopMovement(gameState);
+//	}
+//	moving = false;
+//}
 
-bool Anchor::canActivity(GameState& gameState, int useType) {
+bool Anchor::canActivityLocal(GameState& gameState, int useType) {
 	return false;
 }
 
-void Anchor::doActivityInternal(GameState& gameState, int useType, int pace) {
+void Anchor::removeActivityTracesLocal(GameState& gameState) {
 }
 
-void Anchor::removeActivityTraces(GameState& gameState) {
-}
-
-void Anchor::leaveActivityTraces(GameState& gameState) {
-}
-
-void Anchor::getGroup(ActivityIgnoringGroup& ignore) {
-	ignore.add(selfHandle);
-	for (auto& child : children) {
-		child.get()->getGroup(ignore);
-	}
+void Anchor::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Anchor::save(Saver& saver) {
@@ -170,6 +160,10 @@ void Anchor::fillTracesLocalForced(GameState& gameState) {
 }
 
 void Anchor::removeTracesLocalForced(GameState& gameState) {
+}
+
+void Anchor::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+	Activity::applyActivityLocalForced(gameState, type, pace);
 }
 
 void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {

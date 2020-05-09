@@ -89,7 +89,7 @@ class Anchor;
 class Activity : public ModifyingInterface
 {
 private:
-	virtual void doActivityInternal(GameState& gameState, int type, int pace) = 0;
+	//virtual void doActivityInternal(GameState& gameState, int type, int pace) = 0;
 
 	Handle getRootHandle();
 
@@ -122,16 +122,19 @@ public:
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
 	bool idleLocal();
 
-	virtual bool canActivity(GameState& gameState, int type) = 0;
-	virtual bool applyActivity(GameState& gameState, int type, int pace);
-	virtual void doActivity(GameState& gameState, int type, int pace);
-	virtual void stopActivity(GameState& gameState);
+	virtual bool canActivityLocal(GameState& gameState, int type) = 0;
+	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) = 0;
+	bool applyActivityLocal(GameState& gameState, int type, int pace);
+	void stopActivity(GameState& gameState);
 
-	virtual bool canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
-	virtual bool applyRootMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
-	virtual bool applyCurrentMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
-	virtual void doMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
-	virtual void stopMovement(GameState& gameState);
+	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
+	virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir);
+	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore);
+	bool applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	void applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	bool applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	void stopMovement(GameState& gameState);
 
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
@@ -151,15 +154,13 @@ public:
 	bool removeTracesUp(GameState& gameState);
 
 	// Activity Traces
-	virtual void removeActivityTraces(GameState& gameState) = 0;
-	virtual void leaveActivityTraces(GameState& gameState) = 0;
+	virtual void removeActivityTracesLocal(GameState& gameState) = 0;
+	virtual void leaveActivityTracesLocal(GameState& gameState) = 0;
 
 	// Moveable Traces
-	virtual void removeMoveableTraces(GameState& gameState) = 0;
-	virtual void leaveMoveableTraces(GameState& gameState) = 0;
+	virtual void removeMoveableTracesLocal(GameState& gameState) = 0;
+	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
 
-	//
-	virtual void getGroup(ActivityIgnoringGroup& ignore);
 	WeakReference<Activity, Activity> getRoot();
 
 	virtual void save(Saver& saver);

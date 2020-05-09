@@ -1,6 +1,7 @@
 #pragma once
 
 typedef int Handle;
+class Activity;
 
 class ActivityIgnoringGroup
 {
@@ -13,6 +14,8 @@ public:
 
 	bool contains(Handle h);
 
+	ActivityIgnoringGroup(std::vector<Activity*>& members);
+	ActivityIgnoringGroup(std::vector<Activity*>& members, std::vector<Activity*>& members2);
 	ActivityIgnoringGroup();
 	~ActivityIgnoringGroup();
 };

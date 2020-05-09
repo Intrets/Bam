@@ -23,20 +23,18 @@ public:
 	virtual void appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
 	virtual void appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) override;
 
-	virtual bool canMove(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
-	virtual void doMove(GameState & gameState, MOVEABLE::DIR dir, int pace) override;
-	virtual void stopMovement(GameState& gameState) override;
+	virtual bool canMoveLocal(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
+	//virtual void applyMoveLocalForced(GameState & gameState, MOVEABLE::DIR dir, int pace) override;
+	//virtual void stopMovement(GameState& gameState) override;
 
-	virtual bool canActivity(GameState & gameState, int type) override;
-	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
+	virtual bool canActivityLocal(GameState & gameState, int type) override;
+	//virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
-	virtual void removeMoveableTraces(GameState & gameState) override;
-	virtual void leaveMoveableTraces(GameState & gameState) override;
+	virtual void removeMoveableTracesLocal(GameState & gameState) override;
+	virtual void leaveMoveableTracesLocal(GameState & gameState) override;
 
-	virtual void removeActivityTraces(GameState & gameState) override;
-	virtual void leaveActivityTraces(GameState & gameState) override;
-
-	virtual void getGroup(ActivityIgnoringGroup& ignore) override;
+	virtual void removeActivityTracesLocal(GameState & gameState) override;
+	virtual void leaveActivityTracesLocal(GameState & gameState) override;
 
 	virtual void save(Saver & saver) override;
 	virtual bool load(Loader& loader) override;
@@ -52,5 +50,8 @@ public:
 	virtual bool canFillTracesLocal(GameState& gameState) override;
 	virtual void fillTracesLocalForced(GameState& gameState) override;
 	virtual void removeTracesLocalForced(GameState& gameState) override;
+
+	// Inherited via Activity
+	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
 };
 
