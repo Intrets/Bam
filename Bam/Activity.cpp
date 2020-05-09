@@ -56,6 +56,14 @@ bool Activity::idleLocal() {
 	return !moving && !active;
 }
 
+void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
+	std::vector<Activity*> members;
+	getTreeMembers(members);
+	for (auto member : members) {
+		member->rotateForcedLocal(center, rotation);
+	}
+}
+
 void Activity::applyActivityLocalForced(GameState& gameState, int type, int pace) {
 	activityPace = pace;
 	active = true;

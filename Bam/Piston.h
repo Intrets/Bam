@@ -32,45 +32,47 @@ public:
 	Piston();
 	~Piston();
 
-	virtual void forceMoveOrigin(glm::ivec2 d);
-
-	virtual void fillModifyingMap(ModifyerBase& modifier) override;
-	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
-
-	//virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace) override;
-	//virtual void stopMovement(GameState& gameState) override;
-	// Inherited via Activity
-	virtual std::stringstream& getMembers(std::stringstream& out) override;
-	//virtual void doActivityInternal(GameState& gameState, int type, int pace) override;
-	virtual ACTIVITY::TYPE getType() override;
-	virtual bool canActivityLocal(GameState& gameState, int type) override;
-	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
-
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;
-	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
-
-	// Activity Traces
-	virtual void removeActivityTracesLocal(GameState& gameState) override;
-	virtual void leaveActivityTracesLocal(GameState& gameState) override;
-
-	// Moveable Traces
-	virtual void removeMoveableTracesLocal(GameState& gameState) override;
-	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
-
-	virtual void save(Saver& saver) override;
-	virtual bool load(Loader& loader) override;
-
 	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 
-	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
-	virtual bool idleLocal();
+	// Placement
+	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
-	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	// Activity
+	virtual bool canActivityLocal(GameState& gameState, int type) override;
+	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+
+	// Moveable
+	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
+
+	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
 	virtual void fillTracesLocalForced(GameState& gameState) override;
 	virtual void removeTracesLocalForced(GameState& gameState) override;
 
-	// Inherited via Grouper
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+	// Traces Activity
+	virtual void removeActivityTracesLocal(GameState& gameState) override;
+	virtual void leaveActivityTracesLocal(GameState& gameState) override;
+	
+	// Traces Moveable
+	virtual void removeMoveableTracesLocal(GameState& gameState) override;
+	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
+
+	// Tree Informations
+	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+
+	// Serial
+	virtual ACTIVITY::TYPE getType() override;
+	virtual void save(Saver& saver) override;
+	virtual bool load(Loader& loader) override;
+
+	// Render
+	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;
+	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
+
+	// Modifying
+	virtual void fillModifyingMap(ModifyerBase& modifier) override;
+	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
+	virtual std::stringstream& getMembers(std::stringstream& out) override;
+
 };
 

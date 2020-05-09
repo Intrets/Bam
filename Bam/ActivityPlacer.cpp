@@ -10,7 +10,7 @@ static auto updateHoverPos(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
 	if (self->hover.isNotNull()) {
 		auto pos = glm::ivec2(glm::floor(gameState.getPlayerCursorWorldSpace()));
-		self->hover.get()->forceMoveOrigin(pos - self->hover.get()->getOrigin());
+		self->hover.get()->forceMoveOriginLocal(pos - self->hover.get()->getOrigin());
 	}
 	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 }

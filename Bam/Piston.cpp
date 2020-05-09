@@ -32,13 +32,6 @@ Piston::Piston() {
 Piston::~Piston() {
 }
 
-void Piston::forceMoveOrigin(glm::ivec2 d) {
-	Activity::forceMoveOrigin(d);
-	if (child.isNotNull()) {
-		child.get()->forceMoveOrigin(d);
-	}
-}
-
 void Piston::fillModifyingMap(ModifyerBase& modifier) {
 	Activity::fillModifyingMap(modifier);
 	modifier.modifyables["headdirection"] = std::make_unique<ModifyableDIR<Piston>>(&Piston::headDir);
@@ -102,10 +95,7 @@ bool Piston::canActivityLocal(GameState& gameState, int type) {
 bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::ivec2 moveDirection = MOVEABLE::DIRECTION[dir];
-	if (moving) return false;
-	if (child.isNotNull() && !child.get()->canMoveLocal(gameState, dir, ignore)) {
-		return false;
-	}
+
 	int d = idot(moveDirection, headDirection);
 	auto ori = origin + moveDirection;
 	bool blocked = false;
@@ -177,7 +167,6 @@ void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 	}
 	auto p = grabberPos + static_cast<float>(length + 1) * headDirection;
 	staticWorldRenderInfo.addBlockWithShadow(p, headTex);
-	Locator<DebugRenderInfo>::getService()->addPoint(origin);
 }
 
 void Piston::removeActivityTracesLocal(GameState& gameState) {
@@ -263,28 +252,21 @@ bool Piston::addChild(WeakReference<Activity, Activity> ref) {
 	return true;
 }
 
-void Piston::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
+void Piston::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	auto d = origin - center;
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
-			d = glm::ivec2(d.y, -d.x);
+			d = glm::ivec2(d.y, -d.x - 1);
 			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 1) % 4);
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
 			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 3) % 4);
-			d = glm::ivec2(-d.y, d.x);
+			d = glm::ivec2(-d.y - 1, d.x);
 			break;
 		default:
 			break;
 	}
 	origin = center + d;
-	if (child.isNotNull()) {
-		child.get()->rotateForced(center, rotation);
-	}
-}
-
-bool Piston::idleLocal() {
-	return Activity::idleLocal() && child.isNotNull() && child.get()->idleLocal();
 }
 
 void Piston::getTreeMembers(std::vector<Activity*>& members) {

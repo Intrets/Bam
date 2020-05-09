@@ -27,43 +27,14 @@ Anchor::Anchor(Handle self, GameState& gameState) : Anchor(self) {
 Anchor::~Anchor() {
 }
 
-void Anchor::forceMoveOrigin(glm::ivec2 d) {
-	for (auto& child : children) {
-		child.get()->forceMoveOrigin(d);
-	}
-}
-
-void Anchor::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
-	for (auto& child : children) {
-		child.get()->rotateForced(center, rotation);
-	}
+void Anchor::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 }
 
 void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	//TODO: better debug render info handling?
-	glm::vec2 center;
-	for (auto& child : children) {
-		center += child.get()->getOrigin();
-	}
-
-	center /= children.size();
-	Locator<DebugRenderInfo>::getService()->addPoint(center);
-
-	for (auto& child : children) {
-		Locator<DebugRenderInfo>::getService()->addLine(center, child.get()->getOrigin());
-	}
 }
 
 bool Anchor::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
-	if (moving) return false;
-	bool blocked = false;
-	for (auto& child : children) {
-		if (!child.get()->canMoveLocal(gameState, dir, ignore)) {
-			blocked = true;
-			break;
-		}
-	}
-	return !blocked;
+	return true;
 }
 
 void Anchor::removeMoveableTracesLocal(GameState& gameState) {
@@ -71,21 +42,6 @@ void Anchor::removeMoveableTracesLocal(GameState& gameState) {
 
 void Anchor::leaveMoveableTracesLocal(GameState& gameState) {
 }
-
-//void Anchor::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace) {
-//	//gameState.activityPaceHandler.add(this, pace);
-//	moving = true;
-//	for (auto& child : children) {
-//		child.get()->applyMoveLocalForced(gameState, dir, pace);
-//	}
-//}
-
-//void Anchor::stopMovement(GameState& gameState) {
-//	for (auto& child : children) {
-//		child.get()->stopMovement(gameState);
-//	}
-//	moving = false;
-//}
 
 bool Anchor::canActivityLocal(GameState& gameState, int useType) {
 	return false;

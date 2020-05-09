@@ -89,8 +89,6 @@ class Anchor;
 class Activity : public ModifyingInterface
 {
 private:
-	//virtual void doActivityInternal(GameState& gameState, int type, int pace) = 0;
-
 	Handle getRootHandle();
 
 protected:
@@ -112,21 +110,28 @@ public:
 	WeakReference<Activity, Anchor> parentRef;
 	Handle selfHandle;
 
-	virtual void forceMoveOrigin(glm::ivec2 d) { origin += d; };
-
 	glm::ivec2 getOrigin() { return origin; };
-
-	virtual ACTIVITY::TYPE getType() = 0;
 	Handle getHandle() { return selfHandle; };
 
-	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
 	bool idleLocal();
 
+	// Constructors
+	Activity() = default;
+	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {};
+	virtual ~Activity() = default;
+
+	// Placement 
+	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
+	void rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation);
+	void forceMoveOriginLocal(glm::ivec2 d) { origin += d; };
+
+	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int type) = 0;
 	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) = 0;
 	bool applyActivityLocal(GameState& gameState, int type, int pace);
 	void stopActivity(GameState& gameState);
 
+	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
 	virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace);
 	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir);
@@ -136,15 +141,9 @@ public:
 	bool applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int pace);
 	void stopMovement(GameState& gameState);
 
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
-	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
-
-	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
-
-	// Traces
+	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) = 0;
 	virtual void fillTracesLocalForced(GameState& gameState) = 0;
-
 	virtual void removeTracesLocalForced(GameState& gameState) = 0;
 
 	void fillTracesUpForced(GameState& gameState);
@@ -153,28 +152,33 @@ public:
 	void removeTracesUpForced(GameState& gameState);
 	bool removeTracesUp(GameState& gameState);
 
-	// Activity Traces
+	// Traces Activity
 	virtual void removeActivityTracesLocal(GameState& gameState) = 0;
 	virtual void leaveActivityTracesLocal(GameState& gameState) = 0;
 
-	// Moveable Traces
+	// Traces Moveable
 	virtual void removeMoveableTracesLocal(GameState& gameState) = 0;
 	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
 
+	// Tree Informations
 	WeakReference<Activity, Activity> getRoot();
+	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
 
+	// Serial
+	virtual ACTIVITY::TYPE getType() = 0;
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);
 
-	virtual void fillModifyingMap(ModifyerBase& modifyer) override;
+	// Render
+	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
+	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
+	// Modifying
+	virtual void fillModifyingMap(ModifyerBase& modifyer) override;
 	using ModifyingInterface::getSimpleInfo;
 	virtual std::ostream& getSimpleInfo(std::ostream& out) override;
 
-	Activity() = default;
-	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {};
-	virtual ~Activity() = default;
-
+	// TODO: move helper function
 	glm::ivec2 getDirection(int i) {
 		return MOVEABLE::DIRECTION[i];
 	}

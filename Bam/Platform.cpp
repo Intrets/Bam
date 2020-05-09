@@ -77,8 +77,7 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	calculateBlockedDirections();
 }
 
-void Platform::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
-	center = { 0,0 };
+void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	auto d = origin - center;
 	std::cout << origin.x << " " << origin.y << "\n";
 	std::cout << center.x << " " << center.y << "\n";
@@ -149,8 +148,6 @@ void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInf
 }
 
 bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
-	if (moving) return false;
-
 	glm::ivec2 movedOrigin = origin + getDirection(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);
 	glm::ivec2 p2 = floordiv(movedOrigin + size, CHUNKSIZE);

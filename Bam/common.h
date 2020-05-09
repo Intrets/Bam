@@ -18,6 +18,7 @@
 
 #include "Locator.h"
 #include "PathManager.h"
+#include "DebugRenderInfo.h"
 
 inline int floordiv(int x, int y) {
 	return (x + (x < 0)) / y - (x < 0);
