@@ -25,6 +25,10 @@ glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
 	return v;
 }
 
+bool Activity::idle() {
+	return !moving && !active;
+}
+
 bool Activity::applyActivity(GameState & gameState, int useType, int pace) {
 	if (moving) return false;
 	if (!canActivity(gameState, useType, this)) return false;
@@ -73,7 +77,7 @@ WeakReference<Activity, Activity> Activity::getRoot() {
 }
 
 Handle Activity::getRootHandle() {
-	if (parentRef) {
+	if (parentRef.isNotNull()) {
 		return parentRef.get()->getRootHandle();
 	}
 	else {

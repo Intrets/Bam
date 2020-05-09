@@ -1,6 +1,7 @@
 #include "common.h"
 #include "GameLogic.h"
 #include "GameState.h"
+#include <iostream>
 
 bool GameLogic::ready() {
 	return glfwGetTime() > nextStep;

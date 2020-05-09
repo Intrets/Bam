@@ -1,8 +1,8 @@
 #pragma once
 
-#include "LogicSequencer.h"
 #include "ReferenceManager.h"
 #include "Activity.h"
+#include "ActivitySelector.h"
 
 enum class HOVERTYPES
 {
@@ -11,7 +11,7 @@ enum class HOVERTYPES
 	HOVERTYPES_MAX
 };
 
-class ActivityPlacer : public LogicSequencer
+class ActivityPlacer : public ActivitySelector 
 {
 public:
 	virtual void exit(GameState& gameState) override;

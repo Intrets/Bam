@@ -16,6 +16,11 @@ public:
 	Anchor(Handle self, GameState& gameState);
 	~Anchor();
 
+	virtual void forceMoveOrigin(glm::ivec2 d);
+	virtual bool idle() override;
+
+	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
+
 	virtual void appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
 	virtual void appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) override;
 
@@ -27,7 +32,7 @@ public:
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
 	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTraces(GameState& gameState) override;
+	virtual bool removeTracesForced(GameState& gameState) override;
 
 	virtual void removeMoveableTraces(GameState & gameState) override;
 	virtual void leaveMoveableTraces(GameState & gameState) override;
@@ -45,5 +50,8 @@ public:
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
 
 	virtual ACTIVITY::TYPE getType() override;
+
+	// Inherited via Activity
+	virtual void removeTracesUp(GameState& gameState) override;
 };
 

@@ -7,9 +7,9 @@
 ActivitySelector::ActivitySelector() {
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
-		auto maybeTarget = gameState.staticWorld.getBlock(gameState.getPlayerCursorWorldSpace());
-		if (maybeTarget.first == 1) {
-			self->target.set(maybeTarget.second);
+		auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
+		if (maybeTarget.has_value()) {
+			self->target.set(maybeTarget.value());
 		}
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
@@ -17,7 +17,7 @@ ActivitySelector::ActivitySelector() {
 	addBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
 		if (self->target.isValid()) {
-			if (self->target.get()->parentRef) {
+			if (self->target.get()->parentRef.isNotNull()) {
 				self->history.push_back(std::make_unique<ManagedReference<Activity, Activity>>(self->target.handle));
 				WeakReference<Activity, Activity> newTarget = self->target.get()->parentRef;
 				self->target.set(newTarget);

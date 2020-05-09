@@ -22,7 +22,7 @@ std::string Linker::linkAnchors(GameState& gameState, WeakReference<Activity, An
 
 
 std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Piston> r1, WeakReference<Activity, Activity> r2) {
-	if (!r1 || !r2) {
+	if (r1.isNull() || r2.isNull()) {
 		return "Invalid references";
 	}
 	auto a11 = r1.get();
@@ -31,7 +31,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Pi
 	if (a2->getType() == ACTIVITY::ANCHOR) {
 		target = r2;
 	}
-	else if (a2->parentRef) {
+	else if (a2->parentRef.isNotNull()) {
 		target = a2->parentRef;
 	}
 	else {
@@ -41,7 +41,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Pi
 	}
 
 	WeakReference<Activity, Anchor> head;
-	if (a11->child) {
+	if (a11->child.isNotNull()) {
 		head = a11->child;
 	}
 	else {
@@ -54,7 +54,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Pi
 
 // from r1 to r2, or grouped together with Anchor
 std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2) {
-	if (!r1 || !r2) {
+	if (r1.isNull() || r2.isNull()) {
 		return "Invalid references";
 	}
 	auto a1 = r1.get();
@@ -65,7 +65,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 	if (a1->getType() == ACTIVITY::ANCHOR) {
 		g1 = r1;
 	}
-	else if (!a1->parentRef) {
+	else if (a1->parentRef.isNull()) {
 		g1 = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
 		g1.get()->addChild(a1->selfHandle);
 		a1->parentRef = g1;
@@ -76,7 +76,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 	if (a2->getType() == ACTIVITY::ANCHOR) {
 		g2 = r2;
 	}
-	else if (!a2->parentRef) {
+	else if (a2->parentRef.isNull()) {
 		g2 = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
 		g2.get()->addChild(a2->selfHandle);
 		a2->parentRef = g2;
@@ -85,10 +85,10 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 		g2 = a2->parentRef;
 	}
 
-	if (g1.get()->parentRef && g2.get()->parentRef) {
+	if (g1.get()->parentRef.isNotNull() && g2.get()->parentRef.isNotNull()) {
 		return "two groups already with parents";
 	}
-	if (g1.get()->parentRef) {
+	if (g1.get()->parentRef.isNotNull()) {
 		linkAnchors(gameState, g1, g2);
 	}
 	else {

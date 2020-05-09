@@ -17,8 +17,10 @@ public:
 	Platform() = default;
 	~Platform() = default;
 
+	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
+
 	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTraces(GameState& gameState) override;
+	virtual bool removeTracesForced(GameState& gameState) override;
 
 	// Inherited via Moveable
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;
@@ -45,5 +47,8 @@ public:
 	virtual std::stringstream& getMembers(std::stringstream& out);
 
 	virtual ACTIVITY::TYPE getType() override { return ACTIVITY::PLATFORM; }
+
+	// Inherited via Activity
+	virtual void removeTracesUp(GameState& gameState) override;
 };
 

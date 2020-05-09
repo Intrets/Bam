@@ -27,6 +27,30 @@ Anchor::Anchor(Handle self, GameState& gameState) : Anchor(self) {
 Anchor::~Anchor() {
 }
 
+void Anchor::forceMoveOrigin(glm::ivec2 d) {
+	for (auto& child : children) {
+		child.get()->forceMoveOrigin(d);
+	}
+}
+
+bool Anchor::idle() {
+	if (!Activity::idle()) {
+		return false;
+	}
+	for (auto& child : children) {
+		if (!child.get()->idle()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void Anchor::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
+	for (auto& child : children) {
+		child.get()->rotateForced(center, rotation);
+	}
+}
+
 void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	//TODO: better debug render info handling?
 	glm::vec2 center;
@@ -148,8 +172,15 @@ ACTIVITY::TYPE Anchor::getType() {
 	return ACTIVITY::ANCHOR;
 }
 
-bool Anchor::removeTraces(GameState& gameState) {
-	return false;
+void Anchor::removeTracesUp(GameState& gameState) {
+	for (auto& child : children) {
+		child.get()->removeTracesUp(gameState);
+	}
+	removeTracesForced(gameState);
+}
+
+bool Anchor::removeTracesForced(GameState& gameState) {
+	return true;
 }
 
 void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {

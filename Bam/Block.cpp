@@ -6,17 +6,14 @@
 #include "Saver.h"
 
 bool Block::isOccupied(ActivityIgnoringGroup& ignore) {
-	if (blockID == 1) {
-		return m && !ignore.contains(m.handle);
+	if (m.isNotNull()) {
+		return !ignore.contains(m.handle);
 	}
-	else if (blockID > 1) {
-		return true;
-	}
-	return false;
+	return isBlock();
 }
 
 bool Block::isOccupied() {
-	return blockID;
+	return isActivity() || isBlock();
 }
 
 bool Block::isOccluded() {
@@ -24,11 +21,11 @@ bool Block::isOccluded() {
 }
 
 bool Block::isBlock() {
-	return blockID > 1;
+	return m.isNull() && blockID > 0;
 }
 
 bool Block::isActivity() {
-	return blockID == 1;
+	return m.isNotNull();
 }
 
 bool Block::load(Loader& loader) {

@@ -6,6 +6,7 @@
 
 #include "ReferenceManager.h"
 #include "Activity.h"
+#include <map>
 
 typedef int Handle;
 
@@ -13,11 +14,11 @@ class StaticWorldChunk;
 struct RenderInfo;
 class Saver;
 class Loader;
+class Block;
 
 class StaticWorld
 {
 public:
-	std::pair<int, WeakReference<Activity, Activity>> getBlock(glm::ivec2 pos);
 	std::optional<WeakReference<Activity, Activity>> getActivity(glm::ivec2 pos);
 
 	bool isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore);
@@ -26,8 +27,8 @@ public:
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 	void leaveTrace(glm::ivec2 pos, Handle m);
 
-	void removeTrace(glm::ivec2 pos);
-	void removeTrace(glm::ivec2 pos, Handle m);
+	void removeTraceForced(glm::ivec2 pos);
+	void removeTraceFilter(glm::ivec2 pos, Handle m);
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);
@@ -35,6 +36,8 @@ public:
 	//TODO: !
 	StaticWorldChunk* getChunkByIndex(int i, int j);
 	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
+	Block* getBlockRef(glm::ivec2 pos);
+
 private:
 	struct hash
 	{
@@ -43,6 +46,14 @@ private:
 		}
 	};
 
-	std::unordered_map<glm::ivec2, std::unique_ptr<StaticWorldChunk>, hash> world;
+	struct cmp
+	{
+		bool operator()(const glm::ivec2& a, const glm::ivec2& b) const {
+			return (a[0] < b[0]) || (a[0] == b[0]) && (a[1] < b[1]);
+		}
+	};
+
+	//std::unordered_map<glm::ivec2, std::unique_ptr<StaticWorldChunk>, hash> world;
+	std::map<glm::ivec2, std::unique_ptr<StaticWorldChunk>, cmp> world;
 };
 

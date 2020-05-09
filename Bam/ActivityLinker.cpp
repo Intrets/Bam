@@ -14,7 +14,7 @@ ActivityLinker::ActivityLinker() {
 			return std::make_pair(CONTINUATION::STOP, std::nullopt);
 		}
 
-		if (!self->target) {
+		if (self->target.isNull()) {
 			self->target = maybeTarget.value();
 		}
 		else {
@@ -33,7 +33,7 @@ ActivityLinker::ActivityLinker() {
 }
 
 void ActivityLinker::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
-	if (target) {
+	if (target.isNotNull()) {
 		target.get()->appendSelectionInfo(gameState, renderInfo);
 	}
 }

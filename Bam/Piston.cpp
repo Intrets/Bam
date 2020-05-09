@@ -32,6 +32,13 @@ Piston::Piston() {
 Piston::~Piston() {
 }
 
+void Piston::forceMoveOrigin(glm::ivec2 d) {
+	Activity::forceMoveOrigin(d);
+	if (child.isNotNull()) {
+		child.get()->forceMoveOrigin(d);
+	}
+}
+
 void Piston::fillModifyingMap(ModifyerBase& modifier) {
 	Activity::fillModifyingMap(modifier);
 	modifier.modifyables["headdirection"] = std::make_unique<ModifyableDIR<Piston>>(&Piston::headDir);
@@ -47,14 +54,14 @@ void Piston::modifyMember(GameState& gameState, std::string& name, std::vector<s
 
 void Piston::doMove(GameState& gameState, MOVEABLE::DIR dir, int pace) {
 	Activity::doMove(gameState, dir, pace);
-	if (child) {
+	if (child.isNotNull()) {
 		child.get()->doMove(gameState, dir, pace);
 	}
 }
 
 void Piston::stopMovement(GameState& gameState) {
 	Activity::stopMovement(gameState);
-	if (child) {
+	if (child.isNotNull()) {
 		child.get()->stopMovement(gameState);
 	}
 }
@@ -79,7 +86,7 @@ void Piston::doActivityInternal(GameState& gameState, int useType, int pace) {
 			{
 				auto next = origin + (length + 2) * headDirection;
 				gameState.staticWorld.leaveTrace(next, selfHandle);
-				if (child) {
+				if (child.isNotNull()) {
 					child.get()->applyCurrentMove(gameState, headDir, pace);
 				}
 				direction = headDirection;
@@ -89,8 +96,9 @@ void Piston::doActivityInternal(GameState& gameState, int useType, int pace) {
 		case PISTON::RETRACT:
 			{
 				auto headpos = origin + (length + 1) * headDirection;
-				gameState.staticWorld.removeTrace(headpos, selfHandle);
-				if (child) {
+				//gameState.staticWorld.removeTrace(headpos, selfHandle);
+				gameState.staticWorld.removeTraceFilter(headpos, selfHandle);
+				if (child.isNotNull()) {
 					child.get()->applyCurrentMove(gameState, MOVEABLE::REV_DIR[headDir], pace);
 				}
 				direction = -headDirection;
@@ -112,7 +120,7 @@ bool Piston::canActivity(GameState& gameState, int type, Activity* ignore_) {
 	switch (type) {
 		case PISTON::EXTEND:
 			{
-				if (child) {
+				if (child.isNotNull()) {
 					ActivityIgnoringGroup ignore;
 					getGroup(ignore);
 					child.get()->getGroup(ignore);
@@ -121,8 +129,7 @@ bool Piston::canActivity(GameState& gameState, int type, Activity* ignore_) {
 				}
 				else {
 					auto next = origin + (length + 2) * headDirection;
-					auto r = gameState.staticWorld.getBlock(next);
-					return r.first == 0;
+					return !gameState.staticWorld.getActivity(next).has_value();
 				}
 			}
 			break;
@@ -131,7 +138,7 @@ bool Piston::canActivity(GameState& gameState, int type, Activity* ignore_) {
 				if (length == 0) {
 					return false;
 				}
-				if (!child) {
+				if (child.isNull()) {
 					return true;
 				}
 				ActivityIgnoringGroup ignore;
@@ -151,7 +158,7 @@ bool Piston::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGr
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::ivec2 moveDirection = MOVEABLE::DIRECTION[dir];
 	if (moving) return false;
-	if (child && !child.get()->canMove(gameState, dir, ignore)) {
+	if (child.isNotNull() && !child.get()->canMove(gameState, dir, ignore)) {
 		return false;
 	}
 	int d = idot(moveDirection, headDirection);
@@ -182,7 +189,7 @@ bool Piston::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGr
 }
 
 void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
-	if (child) {
+	if (child.isNotNull()) {
 		child.get()->appendSelectionInfo(gameState, renderInfo);
 	}
 	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
@@ -230,6 +237,7 @@ void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 	staticWorldRenderInfo.offsets.push_back(p);
 	staticWorldRenderInfo.offsetsShadow.push_back(p);
 	staticWorldRenderInfo.textureIDs.push_back(headTex);
+	Locator<DebugRenderInfo>::getService()->addPoint(origin);
 }
 
 bool Piston::fillTraces(GameState& gameState) {
@@ -248,13 +256,13 @@ bool Piston::fillTraces(GameState& gameState) {
 	return true;
 }
 
-bool Piston::removeTraces(GameState& gameState) {
+bool Piston::removeTracesForced(GameState& gameState) {
 	if (moving || active) {
 		return false;
 	}
 	glm::ivec2 pos = origin;
 	for (int i = 0; i < length + 2; i++) {
-		gameState.staticWorld.removeTrace(pos);
+		gameState.staticWorld.removeTraceForced(pos);
 		pos += MOVEABLE::DIRECTION[headDir];
 	}
 	return true;
@@ -273,16 +281,16 @@ void Piston::removeMoveableTraces(GameState& gameState) {
 	if (d == 0) {
 		for (int i = 0; i <= length + 1; i++) {
 			auto p = ori + i * headDirection;
-			gameState.staticWorld.removeTrace(p, selfHandle);
+			gameState.staticWorld.removeTraceFilter(p, selfHandle);
 		}
 	}
 	else if (d == -1) {
 		auto p = ori + (length + 1) * headDirection;
-		gameState.staticWorld.removeTrace(p, selfHandle);
+		gameState.staticWorld.removeTraceFilter(p, selfHandle);
 	}
 	else {
 		auto p = ori;
-		gameState.staticWorld.removeTrace(p, selfHandle);
+		gameState.staticWorld.removeTraceFilter(p, selfHandle);
 	}
 }
 
@@ -308,7 +316,7 @@ void Piston::leaveMoveableTraces(GameState& gameState) {
 
 void Piston::getGroup(ActivityIgnoringGroup& ignore) {
 	ignore.add(selfHandle);
-	if (child) {
+	if (child.isNotNull()) {
 		child.get()->getGroup(ignore);
 	}
 }
@@ -341,11 +349,42 @@ bool Piston::load(Loader& loader) {
 }
 
 bool Piston::addChild(WeakReference<Activity, Activity> ref) {
-	if (child) {
+	if (child.isNotNull()) {
 		return false;
 	}
 	else {
 		child = ref;
 	}
 	return true;
+}
+
+void Piston::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
+	auto d = origin - center;
+	switch (rotation) {
+		case MOVEABLE::ROT::CLOCKWISE:
+			d = glm::ivec2(d.y, -d.x);
+			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 1) % 4);
+			break;
+		case MOVEABLE::ROT::COUNTERCLOCKWISE:
+			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 3) % 4);
+			d = glm::ivec2(-d.y, d.x);
+			break;
+		default:
+			break;
+	}
+	origin = center + d;
+	if (child.isNotNull()) {
+		child.get()->rotateForced(center, rotation);
+	}
+}
+
+bool Piston::idle() {
+	return Activity::idle() && child.isNotNull() && child.get()->idle();
+}
+
+void Piston::removeTracesUp(GameState& gameState) {
+	removeTracesForced(gameState);
+	if (child.isNotNull()) {
+		child.get()->removeTracesUp(gameState);
+	}
 }

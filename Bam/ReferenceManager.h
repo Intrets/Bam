@@ -20,9 +20,12 @@ public:
 
 	void clear() { handle = 0; };
 
-	explicit operator bool() const {
-		return handle != 0;
-	};
+	//explicit operator bool() const {
+	//	return handle != 0;
+	//};
+
+	bool isNotNull() { return handle != 0; };
+	bool isNull() { return handle == 0; };
 };
 
 template <class B, class T>

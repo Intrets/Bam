@@ -16,6 +16,12 @@ namespace MOVEABLE
 {
 	typedef enum
 	{
+		CLOCKWISE,
+		COUNTERCLOCKWISE,
+	} ROT;
+
+	typedef enum
+	{
 		UP,
 		RIGHT,
 		DOWN,
@@ -106,18 +112,22 @@ public:
 	WeakReference<Activity, Anchor> parentRef;
 	Handle selfHandle;
 
-	void forceOrigin(glm::ivec2 origin_) { origin = origin_; };
+	virtual void forceMoveOrigin(glm::ivec2 d) { origin += d; };
+
 	glm::ivec2 getOrigin() { return origin; };
 
 	virtual ACTIVITY::TYPE getType() = 0;
 	Handle getHandle() { return selfHandle; };
+
+	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
+	virtual bool idle();
 
 	virtual bool canActivity(GameState& gameState, int type, Activity* ignore) = 0;
 	virtual bool applyActivity(GameState& gameState, int type, int pace);
 	virtual void doActivity(GameState& gameState, int type, int pace);
 	virtual void stopActivity(GameState& gameState);
 
-	virtual bool canMove(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
+	virtual bool canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
 	virtual bool applyRootMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
 	virtual bool applyCurrentMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
 	virtual void doMove(GameState& gameState, MOVEABLE::DIR dir, int pace);
@@ -127,7 +137,8 @@ public:
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
 	virtual bool fillTraces(GameState& gameState) = 0;
-	virtual bool removeTraces(GameState& gameState) = 0;
+	virtual bool removeTracesForced(GameState& gameState) = 0;
+	virtual void removeTracesUp(GameState& gameState) = 0;
 
 	virtual void removeActivityTraces(GameState& gameState) = 0;
 	virtual void leaveActivityTraces(GameState& gameState) = 0;

@@ -7,6 +7,7 @@
 
 #include "Loader.h"
 #include "Saver.h"
+#include <iostream>
 
 glm::ivec2 StaticWorldChunk::getPosition() {
 	return position;

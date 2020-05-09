@@ -6,19 +6,12 @@
 #include "StaticWorldChunk.h"
 #include "Saver.h"
 #include "Loader.h"
-
-std::pair<int, WeakReference<Activity, Activity>> StaticWorld::getBlock(glm::ivec2 pos) {
-	auto r = floordivmod(pos, CHUNKSIZE);
-	auto global = r.first;
-	auto local = r.second;
-	auto b = &getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y];
-	return std::pair<int, WeakReference<Activity, Activity>>(b->blockID, WeakReference<Activity, Activity>(b->m));
-}
+#include "Block.h"
 
 std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::ivec2 pos) {
-	auto res = getBlock(pos);
-	if (res.first == 1) {
-		return res.second;
+	auto block = getBlockRef(pos);
+	if (block->isActivity()) {
+		return std::make_optional(block->m);
 	}
 	else {
 		return std::nullopt;
@@ -45,28 +38,17 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 }
 
 void StaticWorld::leaveTrace(glm::ivec2 pos, Handle m) {
-	auto r = floordivmod(pos, CHUNKSIZE);
-	auto global = r.first;
-	auto local = r.second;
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setID(1);
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setM(m);
+	getBlockRef(pos)->m.handle = m;
 }
 
-void StaticWorld::removeTrace(glm::ivec2 pos) {
-	auto r = floordivmod(pos, CHUNKSIZE);
-	auto global = r.first;
-	auto local = r.second;
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setID(0);
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setM(0);
+void StaticWorld::removeTraceForced(glm::ivec2 pos) {
+	getBlockRef(pos)->m.handle = 0;
 }
 
-void StaticWorld::removeTrace(glm::ivec2 pos, Handle m) {
-	auto r = floordivmod(pos, CHUNKSIZE);
-	auto global = r.first;
-	auto local = r.second;
-	if (getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].m.handle == m) {
-		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].blockID = 0;
-		getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].m.handle = 0;
+void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {	
+	auto block = getBlockRef(pos);
+	if (block->m.handle == m) {
+		block->m.handle = 0;
 	}
 }
 
@@ -113,9 +95,15 @@ StaticWorldChunk* StaticWorld::getChunkByIndex(int i, int j) {
 }
 
 StaticWorldChunk* StaticWorld::getChunkByCoords(glm::vec2 pos) {
-	float size = CHUNKSIZE;
-	glm::ivec2 t = glm::floor(pos / size);
+	glm::ivec2 t = floordiv(pos, CHUNKSIZE);
 	return getChunkByIndex(t.x, t.y);
+}
+
+Block* StaticWorld::getBlockRef(glm::ivec2 pos) {
+	auto r = floordivmod(pos, CHUNKSIZE);
+	auto global = r.first;
+	auto local = r.second;
+	return &(getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y]);
 }
 
 bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore) {

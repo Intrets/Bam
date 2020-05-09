@@ -32,6 +32,8 @@ public:
 	Piston();
 	~Piston();
 
+	virtual void forceMoveOrigin(glm::ivec2 d);
+
 	virtual void fillModifyingMap(ModifyerBase& modifier) override;
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
 
@@ -48,7 +50,7 @@ public:
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
 
 	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTraces(GameState& gameState) override;
+	virtual bool removeTracesForced(GameState& gameState) override;
 
 	virtual void removeActivityTraces(GameState& gameState) override;
 	virtual void leaveActivityTraces(GameState& gameState) override;
@@ -58,7 +60,13 @@ public:
 	void getGroup(ActivityIgnoringGroup& ignore);
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
-	// Inherited via Grouper
+
 	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
+
+	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
+	virtual bool idle();
+
+	// Inherited via Grouper
+	virtual void removeTracesUp(GameState& gameState) override;
 };
 

@@ -50,5 +50,20 @@ ActivityInteractor::ActivityInteractor() : ActivitySelector() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 
+	addBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityInteractor*>(self_);
+		if (self->target.isValid()) {
+			self->target.get()->rotateForced(self->target.get()->getOrigin(), MOVEABLE::ROT::COUNTERCLOCKWISE);
+		}
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	});
+
+	addBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityInteractor*>(self_);
+		if (self->target.isValid()) {
+			self->target.get()->rotateForced(self->target.get()->getOrigin(), MOVEABLE::ROT::CLOCKWISE);
+		}
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	});
 }
 

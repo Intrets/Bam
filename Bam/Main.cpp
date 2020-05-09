@@ -26,11 +26,6 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 	double last = 0;
 
 	while (!glfwWindowShouldClose(window)) {
-		//if (gamestate.exit) {
-		//	glfwSetWindowShouldClose(window, GLFW_TRUE);
-		//	break;
-		//}
-
 		RenderInfo renderInfo;
 
 		bool rendering = fpsLimiter.ready();
