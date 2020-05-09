@@ -27,7 +27,7 @@ public:
 	virtual void doMove(GameState & gameState, MOVEABLE::DIR dir, int pace) override;
 	virtual void stopMovement(GameState& gameState) override;
 
-	virtual bool canActivity(GameState & gameState, int type, Activity * ignore) override;
+	virtual bool canActivity(GameState & gameState, int type) override;
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
 	virtual void removeMoveableTraces(GameState & gameState) override;

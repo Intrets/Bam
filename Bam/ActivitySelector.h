@@ -10,6 +10,8 @@ public:
 	std::vector<std::unique_ptr<ManagedReference<Activity, Activity>>> history;
 	ManagedReference<Activity, Activity> target;
 
+	virtual void selectTarget(GameState& gameState);
+
 	ActivitySelector();
 	~ActivitySelector() = default;
 

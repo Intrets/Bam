@@ -31,7 +31,7 @@ bool Activity::idleLocal() {
 
 bool Activity::applyActivity(GameState & gameState, int useType, int pace) {
 	if (moving) return false;
-	if (!canActivity(gameState, useType, this)) return false;
+	if (!canActivity(gameState, useType)) return false;
 	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
 	doActivity(gameState, useType, pace);
 	return true;

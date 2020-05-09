@@ -43,7 +43,7 @@ public:
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
 	virtual void doActivityInternal(GameState& gameState, int type, int pace) override;
 	virtual ACTIVITY::TYPE getType() override;
-	virtual bool canActivity(GameState& gameState, int type, Activity* ignore) override;
+	virtual bool canActivity(GameState& gameState, int type) override;
 	virtual bool canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
 
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;

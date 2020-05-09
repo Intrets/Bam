@@ -27,7 +27,7 @@ public:
 	virtual void leaveMoveableTraces(GameState & gameState) override;
 
 	// Inherited via Activity
-	virtual bool canActivity(GameState & gameState, int type, Activity * ignore) override;
+	virtual bool canActivity(GameState & gameState, int type) override;
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
 
 	// Inherited via Activity

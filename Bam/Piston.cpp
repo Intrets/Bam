@@ -114,7 +114,7 @@ ACTIVITY::TYPE Piston::getType() {
 	return ACTIVITY::PISTON;
 }
 
-bool Piston::canActivity(GameState& gameState, int type, Activity* ignore_) {
+bool Piston::canActivity(GameState& gameState, int type) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	if (active) return false;
 	switch (type) {
@@ -225,18 +225,13 @@ void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 		float scale = static_cast<float>(tick - activityTickStart) / activityPace;
 		grabberPos += (scale - 1) * glm::vec2(direction);
 	}
-	staticWorldRenderInfo.offsets.push_back(ori);
-	staticWorldRenderInfo.offsetsShadow.push_back(ori);
-	staticWorldRenderInfo.textureIDs.push_back(cogTex);
+	staticWorldRenderInfo.addBlockWithShadow(ori, cogTex);
 	for (int i = 0; i <= length; i++) {
 		auto p = ori + static_cast<float>(i) * headDirection;
-		staticWorldRenderInfo.offsets.push_back(p);
-		staticWorldRenderInfo.textureIDs.push_back(ropeTex);
+		staticWorldRenderInfo.addBlockWithoutShadow(p, ropeTex);
 	}
 	auto p = grabberPos + static_cast<float>(length + 1) * headDirection;
-	staticWorldRenderInfo.offsets.push_back(p);
-	staticWorldRenderInfo.offsetsShadow.push_back(p);
-	staticWorldRenderInfo.textureIDs.push_back(headTex);
+	staticWorldRenderInfo.addBlockWithShadow(p, headTex);
 	Locator<DebugRenderInfo>::getService()->addPoint(origin);
 }
 

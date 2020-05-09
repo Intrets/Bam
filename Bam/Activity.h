@@ -122,7 +122,7 @@ public:
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
 	bool idleLocal();
 
-	virtual bool canActivity(GameState& gameState, int type, Activity* ignore) = 0;
+	virtual bool canActivity(GameState& gameState, int type) = 0;
 	virtual bool applyActivity(GameState& gameState, int type, int pace);
 	virtual void doActivity(GameState& gameState, int type, int pace);
 	virtual void stopActivity(GameState& gameState);

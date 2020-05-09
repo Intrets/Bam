@@ -191,7 +191,7 @@ void Platform::leaveMoveableTraces(GameState& gameState) {
 	}
 }
 
-bool Platform::canActivity(GameState& gameState, int useType, Activity* ignore) {
+bool Platform::canActivity(GameState& gameState, int useType) {
 	return false;
 }
 

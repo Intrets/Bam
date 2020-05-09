@@ -15,6 +15,8 @@ class ActivityPlacer : public ActivitySelector
 {
 public:
 	virtual void exit(GameState& gameState) override;
+	
+	virtual void selectTarget(GameState& gameState) override;
 
 	WeakReference<Activity, Activity> hover;
 	int hoverType;

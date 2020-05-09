@@ -44,7 +44,6 @@ void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 	glm::vec2 center;
 	for (auto& child : children) {
 		center += child.get()->getOrigin();
-		child.get()->appendStaticRenderInfo(gameState, staticWorldRenderInfo);
 	}
 
 	center /= children.size();
@@ -88,7 +87,7 @@ void Anchor::stopMovement(GameState& gameState) {
 	moving = false;
 }
 
-bool Anchor::canActivity(GameState& gameState, int useType, Activity* ignore) {
+bool Anchor::canActivity(GameState& gameState, int useType) {
 	return false;
 }
 

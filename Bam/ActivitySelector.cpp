@@ -7,10 +7,7 @@
 ActivitySelector::ActivitySelector() {
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
-		auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
-		if (maybeTarget.has_value()) {
-			self->target.set(maybeTarget.value());
-		}
+		self->selectTarget(gameState);
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 	// expand selection
@@ -37,6 +34,13 @@ ActivitySelector::ActivitySelector() {
 		}
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
+}
+
+void ActivitySelector::selectTarget(GameState& gameState) {
+	auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
+	if (maybeTarget.has_value()) {
+		target.set(maybeTarget.value());
+	}
 }
 
 void ActivitySelector::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {

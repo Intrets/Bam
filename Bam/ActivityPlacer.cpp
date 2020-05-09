@@ -41,6 +41,12 @@ void ActivityPlacer::exit(GameState& gameState) {
 	}
 }
 
+void ActivityPlacer::selectTarget(GameState& gameState) {
+	if (hover.isNull()) {
+		ActivitySelector::selectTarget(gameState);
+	}
+}
+
 void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 	if (hover.isNotNull()) {
 		hover.deleteObject();
@@ -71,15 +77,16 @@ ActivityPlacer::ActivityPlacer() {
 	//	return std::make_pair(CONTINUATION::STOP, std::nullopt);
 	//});
 
-	//addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-	//	auto self = static_cast<ActivityPlacer*>(self_);
-	//	self->hoverType++;
-	//	self->hoverType %= static_cast<int>(HOVERTYPES::HOVERTYPES_MAX);
-	//	self->spawnHover(gameState, gameState.getPlayerCursorWorldSpace());
+	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityPlacer*>(self_);
+		if (!self->target.isValid()) {
+			self->hoverType++;
+			self->hoverType %= static_cast<int>(HOVERTYPES::HOVERTYPES_MAX);
+			self->spawnHover(gameState, gameState.getPlayerCursorWorldSpace());
+		}
 
-	//	return std::make_pair(CONTINUATION::STOP, std::nullopt);
-	//});
-
+		return std::make_pair(CONTINUATION::STOP, std::nullopt);
+	});
 }
 
 void ActivityPlacer::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
