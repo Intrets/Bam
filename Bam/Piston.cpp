@@ -17,7 +17,7 @@ Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, MOVEABLE::DIR 
 	state = PISTON::STATIONARY;
 
 	if (leaveTraces) {
-		fillTraces(gameState);
+		fillTracesLocalForced(gameState);
 	}
 
 	auto t = Locator<BlockIDTextures>::getService();
@@ -240,34 +240,6 @@ void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 	Locator<DebugRenderInfo>::getService()->addPoint(origin);
 }
 
-bool Piston::fillTraces(GameState& gameState) {
-	glm::ivec2 pos = origin;
-	for (int i = 0; i < length + 2; i++) {
-		if (gameState.staticWorld.isOccupied(pos)) {
-			return false;
-		}
-		pos += MOVEABLE::DIRECTION[headDir];
-	}
-	pos = origin;
-	for (int i = 0; i < length + 2; i++) {
-		gameState.staticWorld.leaveTrace(pos, selfHandle);
-		pos += MOVEABLE::DIRECTION[headDir];
-	}
-	return true;
-}
-
-bool Piston::removeTracesForced(GameState& gameState) {
-	if (moving || active) {
-		return false;
-	}
-	glm::ivec2 pos = origin;
-	for (int i = 0; i < length + 2; i++) {
-		gameState.staticWorld.removeTraceForced(pos);
-		pos += MOVEABLE::DIRECTION[headDir];
-	}
-	return true;
-}
-
 void Piston::removeActivityTraces(GameState& gameState) {
 }
 
@@ -378,13 +350,41 @@ void Piston::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	}
 }
 
-bool Piston::idle() {
-	return Activity::idle() && child.isNotNull() && child.get()->idle();
+bool Piston::idleLocal() {
+	return Activity::idleLocal() && child.isNotNull() && child.get()->idleLocal();
 }
 
-void Piston::removeTracesUp(GameState& gameState) {
-	removeTracesForced(gameState);
+void Piston::getTreeMembers(std::vector<Activity*>& members) {
+	members.push_back(this);
 	if (child.isNotNull()) {
-		child.get()->removeTracesUp(gameState);
+		child.get()->getTreeMembers(members);
 	}
 }
+
+void Piston::fillTracesLocalForced(GameState& gameState) {
+	glm::ivec2 pos = origin;
+	for (int i = 0; i < length + 2; i++) {
+		gameState.staticWorld.leaveTrace(pos, selfHandle);
+		pos += MOVEABLE::DIRECTION[headDir];
+	}
+}
+
+void Piston::removeTracesLocalForced(GameState& gameState) {
+	glm::ivec2 pos = origin;
+	for (int i = 0; i < length + 2; i++) {
+		gameState.staticWorld.removeTraceForced(pos);
+		pos += MOVEABLE::DIRECTION[headDir];
+	}
+}
+
+bool Piston::canFillTracesLocal(GameState& gameState) {
+	glm::ivec2 pos = origin;
+	for (int i = 0; i < length + 2; i++) {
+		if (gameState.staticWorld.isOccupied(pos)) {
+			return false;
+		}
+		pos += MOVEABLE::DIRECTION[headDir];
+	}
+	return true;
+}
+

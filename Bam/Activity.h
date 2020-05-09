@@ -120,7 +120,7 @@ public:
 	Handle getHandle() { return selfHandle; };
 
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
-	virtual bool idle();
+	bool idleLocal();
 
 	virtual bool canActivity(GameState& gameState, int type, Activity* ignore) = 0;
 	virtual bool applyActivity(GameState& gameState, int type, int pace);
@@ -136,16 +136,29 @@ public:
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
-	virtual bool fillTraces(GameState& gameState) = 0;
-	virtual bool removeTracesForced(GameState& gameState) = 0;
-	virtual void removeTracesUp(GameState& gameState) = 0;
+	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
 
+	// Traces
+	virtual bool canFillTracesLocal(GameState& gameState) = 0;
+	virtual void fillTracesLocalForced(GameState& gameState) = 0;
+
+	virtual void removeTracesLocalForced(GameState& gameState) = 0;
+
+	void fillTracesUpForced(GameState& gameState);
+	bool fillTracesUp(GameState& gameState);
+
+	void removeTracesUpForced(GameState& gameState);
+	bool removeTracesUp(GameState& gameState);
+
+	// Activity Traces
 	virtual void removeActivityTraces(GameState& gameState) = 0;
 	virtual void leaveActivityTraces(GameState& gameState) = 0;
 
+	// Moveable Traces
 	virtual void removeMoveableTraces(GameState& gameState) = 0;
 	virtual void leaveMoveableTraces(GameState& gameState) = 0;
 
+	//
 	virtual void getGroup(ActivityIgnoringGroup& ignore);
 	WeakReference<Activity, Activity> getRoot();
 

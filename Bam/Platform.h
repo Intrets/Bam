@@ -19,9 +19,6 @@ public:
 
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
-	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTracesForced(GameState& gameState) override;
-
 	// Inherited via Moveable
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;
 	virtual void appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
@@ -49,6 +46,9 @@ public:
 	virtual ACTIVITY::TYPE getType() override { return ACTIVITY::PLATFORM; }
 
 	// Inherited via Activity
-	virtual void removeTracesUp(GameState& gameState) override;
+	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual bool canFillTracesLocal(GameState& gameState) override;
+	virtual void fillTracesLocalForced(GameState& gameState) override;
+	virtual void removeTracesLocalForced(GameState& gameState) override;
 };
 

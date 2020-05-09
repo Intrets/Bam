@@ -33,18 +33,6 @@ void Anchor::forceMoveOrigin(glm::ivec2 d) {
 	}
 }
 
-bool Anchor::idle() {
-	if (!Activity::idle()) {
-		return false;
-	}
-	for (auto& child : children) {
-		if (!child.get()->idle()) {
-			return false;
-		}
-	}
-	return true;
-}
-
 void Anchor::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	for (auto& child : children) {
 		child.get()->rotateForced(center, rotation);
@@ -77,10 +65,6 @@ bool Anchor::canMove(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGr
 		}
 	}
 	return !blocked;
-}
-
-bool Anchor::fillTraces(GameState& gameState) {
-	return true;
 }
 
 void Anchor::removeMoveableTraces(GameState& gameState) {
@@ -172,15 +156,21 @@ ACTIVITY::TYPE Anchor::getType() {
 	return ACTIVITY::ANCHOR;
 }
 
-void Anchor::removeTracesUp(GameState& gameState) {
+void Anchor::getTreeMembers(std::vector<Activity*>& members) {
+	members.push_back(this);
 	for (auto& child : children) {
-		child.get()->removeTracesUp(gameState);
+		members.push_back(child.get());
 	}
-	removeTracesForced(gameState);
 }
 
-bool Anchor::removeTracesForced(GameState& gameState) {
+bool Anchor::canFillTracesLocal(GameState& gameState) {
 	return true;
+}
+
+void Anchor::fillTracesLocalForced(GameState& gameState) {
+}
+
+void Anchor::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {

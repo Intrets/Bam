@@ -17,7 +17,6 @@ public:
 	~Anchor();
 
 	virtual void forceMoveOrigin(glm::ivec2 d);
-	virtual bool idle() override;
 
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
@@ -30,9 +29,6 @@ public:
 
 	virtual bool canActivity(GameState & gameState, int type, Activity * ignore) override;
 	virtual void doActivityInternal(GameState & gameState, int type, int pace) override;
-
-	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTracesForced(GameState& gameState) override;
 
 	virtual void removeMoveableTraces(GameState & gameState) override;
 	virtual void leaveMoveableTraces(GameState & gameState) override;
@@ -52,6 +48,9 @@ public:
 	virtual ACTIVITY::TYPE getType() override;
 
 	// Inherited via Activity
-	virtual void removeTracesUp(GameState& gameState) override;
+	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual bool canFillTracesLocal(GameState& gameState) override;
+	virtual void fillTracesLocalForced(GameState& gameState) override;
+	virtual void removeTracesLocalForced(GameState& gameState) override;
 };
 

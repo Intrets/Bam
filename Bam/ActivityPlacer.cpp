@@ -17,10 +17,20 @@ static auto updateHoverPos(GameState& gameState, LogicSequencer* self_) {
 
 static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
-	if (self->target.isValid() && self->target.get()->idle()) {
-		self->hover = WeakReference<Activity, Activity>(self->target.handle);
-		self->hover.get()->removeTracesUp(gameState);
-		self->target.unset();
+	if (self->target.isValid()) {
+		if (self->target.get()->idleLocal()) {
+			self->hover = WeakReference<Activity, Activity>(self->target.handle);
+			self->hover.get()->removeTracesUp(gameState);
+			self->target.unset();
+		}
+	}
+	else if (self->hover.isNotNull()) {
+		if (self->hover.get()->fillTracesUp(gameState)) {
+			self->hover.handle = 0;
+		}
+	}
+	else {
+		self->spawnHover(gameState, gameState.getPlayerCursorWorldSpace());
 	}
 	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 }
@@ -28,17 +38,6 @@ static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 void ActivityPlacer::exit(GameState& gameState) {
 	if (hover.isNotNull()) {
 		hover.deleteObject();
-	}
-}
-
-void ActivityPlacer::placeHover(GameState& gameState, glm::ivec2 pos) {
-	if (hover.isNotNull()) {
-		if (hover.get()->fillTraces(gameState)) {
-			hover.handle = 0;
-		}
-	}
-	else {
-		spawnHover(gameState, pos);
 	}
 }
 

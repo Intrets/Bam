@@ -25,7 +25,7 @@ glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
 	return v;
 }
 
-bool Activity::idle() {
+bool Activity::idleLocal() {
 	return !moving && !active;
 }
 
@@ -136,4 +136,45 @@ void Activity::stopActivity(GameState & gameState) {
 	removeActivityTraces(gameState);
 	activityType = 0;
 	active = false;
+}
+
+void Activity::fillTracesUpForced(GameState& gameState) {
+	std::vector<Activity*> members;
+	getTreeMembers(members);
+	for (auto member : members) {
+		member->fillTracesLocalForced(gameState);
+	}
+}
+
+bool Activity::fillTracesUp(GameState& gameState) {
+	std::vector<Activity*> members;
+	getTreeMembers(members);
+	for (auto member : members) {
+		if (!member->canFillTracesLocal(gameState)) {
+			return false;
+		}
+	}
+
+	for (auto member : members) {
+		member->fillTracesLocalForced(gameState);
+	}
+	return true;
+}
+
+void Activity::removeTracesUpForced(GameState& gameState) {
+}
+
+bool Activity::removeTracesUp(GameState& gameState) {
+	std::vector<Activity*> members;
+	getTreeMembers(members);
+	for (auto member : members) {
+		if (!member->idleLocal()) {
+			return false;
+		}
+	}
+
+	for (auto member : members) {
+		member->removeTracesLocalForced(gameState);
+	}
+	return true;
 }

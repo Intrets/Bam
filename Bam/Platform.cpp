@@ -72,7 +72,7 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	blocks[0][1].setID(4);
 	blocks[1][0].setID(5);
 	if (leaveTraces) {
-		fillTraces(gameState);
+		fillTracesLocalForced(gameState);
 	}
 	calculateBlockedDirections();
 }
@@ -107,25 +107,6 @@ void Platform::rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) {
 			break;
 	}
 	origin = center + d;
-}
-
-bool Platform::fillTraces(GameState& gameState) {
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
-			auto p = origin + glm::ivec2(i, j);
-			if (gameState.staticWorld.isOccupied(p)) {
-				return false;
-			}
-		}
-	}
-
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
-			auto p = origin + glm::ivec2(i, j);
-			gameState.staticWorld.leaveTrace(p, selfHandle);
-		}
-	}
-	return true;
 }
 
 void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
@@ -267,16 +248,36 @@ std::stringstream& Platform::getMembers(std::stringstream& out) {
 	return out;
 }
 
-void Platform::removeTracesUp(GameState& gameState) {
-	removeTracesForced(gameState);
+void Platform::getTreeMembers(std::vector<Activity*>& members) {
+	members.push_back(this);
 }
 
-bool Platform::removeTracesForced(GameState& gameState) {
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
+bool Platform::canFillTracesLocal(GameState& gameState) {
+	for (int i = 0; i < size.x; i++) {
+		for (int j = 0; j < size.y; j++) {
+			auto p = origin + glm::ivec2(i, j);
+			if (gameState.staticWorld.isOccupied(p)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void Platform::fillTracesLocalForced(GameState& gameState) {
+	for (int i = 0; i < size.x; i++) {
+		for (int j = 0; j < size.y; j++) {
+			auto p = origin + glm::ivec2(i, j);
+			gameState.staticWorld.leaveTrace(p, selfHandle);
+		}
+	}
+}
+
+void Platform::removeTracesLocalForced(GameState& gameState) {
+	for (int i = 0; i < size.x; i++) {
+		for (int j = 0; j < size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.removeTraceForced(p);
 		}
 	}
-	return true;
 }

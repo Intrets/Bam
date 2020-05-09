@@ -49,11 +49,21 @@ public:
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) override;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
 
-	virtual bool fillTraces(GameState& gameState) override;
-	virtual bool removeTracesForced(GameState& gameState) override;
+	// Traces
+	//virtual void fillTracesLocalForced(GameState& gameState) override;
+	//virtual bool fillTracesUp(GameState& gameState) override;
 
+	//virtual bool canFillTracesLocal(GameState& gameState) override;
+	//virtual bool canFillTracesUp(GameState& gameState) override;
+
+	//virtual bool removeTracesForced(GameState& gameState) override;
+	//virtual void removeTracesUp(GameState& gameState) override;
+
+	// Activity Traces
 	virtual void removeActivityTraces(GameState& gameState) override;
 	virtual void leaveActivityTraces(GameState& gameState) override;
+
+	// Moveable Traces
 	virtual void removeMoveableTraces(GameState& gameState) override;
 	virtual void leaveMoveableTraces(GameState& gameState) override;
 
@@ -64,9 +74,11 @@ public:
 	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 
 	virtual void rotateForced(glm::ivec2 center, MOVEABLE::ROT rotation) override;
-	virtual bool idle();
+	virtual bool idleLocal();
 
-	// Inherited via Grouper
-	virtual void removeTracesUp(GameState& gameState) override;
+	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual bool canFillTracesLocal(GameState& gameState) override;
+	virtual void fillTracesLocalForced(GameState& gameState) override;
+	virtual void removeTracesLocalForced(GameState& gameState) override;
 };
 
