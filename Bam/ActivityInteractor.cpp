@@ -45,10 +45,9 @@ ActivityInteractor::ActivityInteractor() : ActivitySelector() {
 	addBind({ CONTROLS::ACTION4, CONTROLSTATE::CONTROLSTATE_DOWN }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityInteractor*>(self_);
 		if (self->target.isValid()) {
-			self->target.get()->applyActivityLocal(gameState, 2, 10);
+			self->target.get()->applyActivityLocal(gameState, 2, 60);
 		}
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
-
 }
 

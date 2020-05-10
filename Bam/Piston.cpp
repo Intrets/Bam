@@ -61,7 +61,6 @@ ACTIVITY::TYPE Piston::getType() {
 
 bool Piston::canActivityLocal(GameState& gameState, int type) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	if (active) return false;
 	switch (type) {
 		case PISTON::EXTEND:
 			{

@@ -7,7 +7,7 @@
 //#include "Saver.h"
 //#include "Loader.h"
 
-void Activity::applyMoveLocalForced(GameState & gameState, MOVEABLE::DIR dir, int pace) {
+void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace) {
 	movingPace = pace;
 	moving = true;
 	movementDirection = dir;
@@ -19,8 +19,14 @@ void Activity::applyMoveLocalForced(GameState & gameState, MOVEABLE::DIR dir, in
 bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);
-	ActivityIgnoringGroup ignoring(members);
 
+	for (auto member : members) {
+		if (!member->moveableIdleLocal()) {
+			return false;
+		}
+	}
+
+	ActivityIgnoringGroup ignoring(members);
 	for (auto member : members) {
 		if (!member->idleLocal() || !member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
@@ -32,8 +38,14 @@ bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
 bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);
-	ActivityIgnoringGroup ignoring(members, extraIgnore);
 
+	for (auto member : members) {
+		if (!member->moveableIdleLocal()) {
+			return false;
+		}
+	}
+
+	ActivityIgnoringGroup ignoring(members, extraIgnore);
 	for (auto member : members) {
 		if (!member->idleLocal() || !member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
@@ -54,6 +66,14 @@ glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
 
 bool Activity::idleLocal() {
 	return !moving && !active;
+}
+
+bool Activity::moveableIdleLocal() {
+	return idleLocal();
+}
+
+bool Activity::activityIdleLocal() {
+	return idleLocal();
 }
 
 void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
@@ -78,22 +98,30 @@ void Activity::applyActivityLocalForced(GameState& gameState, int type, int pace
 	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
 }
 
-bool Activity::applyActivityLocal(GameState & gameState, int useType, int pace) {
-	if (!idleLocal() || !canActivityLocal(gameState, useType)) {
+bool Activity::applyActivityLocal(GameState& gameState, int useType, int pace) {
+	if (!activityIdleLocal()) {
 		return false;
 	}
-	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
+	if (!canActivityLocal(gameState, useType)) {
+		return false;
+	}
 	applyActivityLocalForced(gameState, useType, pace);
 	return true;
 }
 
-bool Activity::applyMoveUp(GameState & gameState, MOVEABLE::DIR dir, int pace) {
+bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int pace) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);
-	ActivityIgnoringGroup ignoring(members);
 
 	for (auto member : members) {
-		if (!member->idleLocal() || !member->canMoveLocal(gameState, dir, ignoring)) {
+		if (!member->moveableIdleLocal()) {
+			return false;
+		}
+	}
+
+	ActivityIgnoringGroup ignoring(members);
+	for (auto member : members) {
+		if (!member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
 		}
 	}
@@ -138,7 +166,7 @@ Handle Activity::getRootHandle() {
 
 }
 
-void Activity::save(Saver & saver) {
+void Activity::save(Saver& saver) {
 	saver.store(getType());
 	saver.store<int>(parentRef.handle);
 	saver.store<int>(selfHandle);
@@ -153,7 +181,7 @@ void Activity::save(Saver & saver) {
 	saver.store<glm::ivec2>(origin);
 }
 
-bool Activity::load(Loader & loader) {
+bool Activity::load(Loader& loader) {
 	loader.retrieve<int>(parentRef.handle);
 	loader.retrieve<int>(selfHandle);
 	loader.retrieve<int>(activityPace);
@@ -168,7 +196,7 @@ bool Activity::load(Loader & loader) {
 	return true;
 }
 
-void Activity::fillModifyingMap(ModifyerBase & modifyer) {
+void Activity::fillModifyingMap(ModifyerBase& modifyer) {
 	modifyer.modifyables["self"] = std::make_unique<ModifyableInt<Activity>>(&Activity::selfHandle);
 	modifyer.modifyables["parent"] = std::make_unique<ModifyableAnchorRef<Activity>>(&Activity::parentRef);
 	modifyer.modifyables["rootMove"] = std::make_unique<ModifyableDoRootMove<Activity>>(&Activity::applyMoveUp);
@@ -178,16 +206,16 @@ void Activity::fillModifyingMap(ModifyerBase & modifyer) {
 	modifyer.modifyables["applyActivityLocalForced"] = std::make_unique<ModifyableDoActivity<Activity>>(&Activity::applyActivityLocal);
 }
 
-std::ostream & Activity::getSimpleInfo(std::ostream & out) {
+std::ostream& Activity::getSimpleInfo(std::ostream& out) {
 	std::string typeName = ACTIVITY::TYPE_NAMES[getType()];
 	out << typeName << ": " << selfHandle;
 	return out;
 }
 
-void Activity::stopActivity(GameState & gameState) {
-	removeActivityTracesLocal(gameState);
+void Activity::stopActivity(GameState& gameState) {
 	activityType = 0;
 	active = false;
+	removeActivityTracesLocal(gameState);
 }
 
 void Activity::fillTracesUpForced(GameState& gameState) {

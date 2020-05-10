@@ -279,6 +279,12 @@
     <ClCompile Include="Grouper.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="SingleBlockActivity.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Activator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -469,6 +475,12 @@
     </ClInclude>
     <ClInclude Include="Grouper.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleBlockActivity.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Activator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

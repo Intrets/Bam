@@ -82,8 +82,6 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 
 void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	auto d = origin - center;
-	std::cout << origin.x << " " << origin.y << "\n";
-	std::cout << center.x << " " << center.y << "\n";
 	size = glm::ivec2(size.y, size.x);
 	auto old = blocks;
 	blocks.clear();

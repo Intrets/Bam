@@ -68,6 +68,7 @@ namespace ACTIVITY
 		BREAKER,
 		GRABBER,
 		PLANT,
+		ACTIVATOR,
 		_MAX,
 	} TYPE;
 
@@ -80,6 +81,7 @@ namespace ACTIVITY
 		"breaker",
 		"grabber",
 		"plant",
+		"activator",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 }
@@ -114,6 +116,8 @@ public:
 	Handle getHandle() { return selfHandle; };
 
 	bool idleLocal();
+	virtual bool moveableIdleLocal();
+	virtual bool activityIdleLocal();
 
 	// Constructors
 	Activity() = default;

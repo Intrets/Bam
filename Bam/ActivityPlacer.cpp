@@ -5,6 +5,7 @@
 #include "GameState.h"
 #include <iostream>
 #include "Piston.h"
+#include "Activator.h"
 
 static auto updateHoverPos(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
@@ -55,6 +56,9 @@ void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 			break;
 		case HOVERTYPES::PISTON:
 			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Piston>(gameState, pos, MOVEABLE::UP, false);
+			break;
+		case HOVERTYPES::ACTIVATOR:
+			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Activator>(gameState, pos, "dirt.dds", false);
 			break;
 		case HOVERTYPES::HOVERTYPES_MAX:
 			break;
