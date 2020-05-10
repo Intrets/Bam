@@ -64,6 +64,13 @@ void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	}
 }
 
+void Activity::disconnectFromParent() {
+	if (parentRef.isNotNull()) {
+		auto anchor = parentRef.get();
+		anchor->removeChild(selfHandle);
+	}
+}
+
 void Activity::applyActivityLocalForced(GameState& gameState, int type, int pace) {
 	activityPace = pace;
 	active = true;

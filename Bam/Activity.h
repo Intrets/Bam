@@ -124,6 +124,7 @@ public:
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
 	void rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation);
 	void forceMoveOriginLocal(glm::ivec2 d) { origin += d; };
+	void disconnectFromParent();
 
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int type) = 0;

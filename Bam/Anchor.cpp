@@ -15,6 +15,15 @@ void Anchor::addChild(Handle h) {
 	children.push_back(WeakReference<Activity, Activity>(h));
 }
 
+void Anchor::removeChild(Handle h) {
+	for (auto it = children.begin(); it != children.end(); it++) {
+		if (it->handle == h) {
+			children.erase(it);
+			return;
+		}
+	}
+}
+
 Anchor::Anchor() {
 }
 

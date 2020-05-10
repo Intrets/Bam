@@ -10,6 +10,7 @@ public:
 	std::vector<WeakReference<Activity, Activity>> children;
 
 	void addChild(Handle h);
+	void removeChild(Handle h);
 
 	Anchor();
 	Anchor(Handle self);

@@ -36,9 +36,7 @@ static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 }
 
 void ActivityPlacer::exit(GameState& gameState) {
-	if (hover.isNotNull()) {
-		hover.deleteObject();
-	}
+	deleteHover();
 }
 
 void ActivityPlacer::selectTarget(GameState& gameState) {
@@ -49,7 +47,7 @@ void ActivityPlacer::selectTarget(GameState& gameState) {
 
 void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 	if (hover.isNotNull()) {
-		hover.deleteObject();
+		deleteHover();
 	}
 	switch (static_cast<HOVERTYPES>(hoverType)) {
 		case HOVERTYPES::PLATFORM:
@@ -62,6 +60,18 @@ void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 			break;
 		default:
 			break;
+	}
+}
+
+void ActivityPlacer::deleteHover() {
+	if (hover.isNotNull()) {
+		auto activity = hover.get();
+		activity->disconnectFromParent();
+		std::vector<Activity*> members;
+		activity->getTreeMembers(members);
+		for (auto member : members) {
+			WeakReference<Activity, Activity>(member->selfHandle).deleteObject();
+		}
 	}
 }
 
