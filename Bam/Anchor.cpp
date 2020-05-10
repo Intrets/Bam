@@ -64,8 +64,8 @@ void Anchor::leaveActivityTracesLocal(GameState& gameState) {
 
 void Anchor::save(Saver& saver) {
 	Activity::save(saver);
-	int s = children.size();
-	saver.store<int>(s);
+	size_t s = children.size();
+	saver.store<size_t>(s);
 	for (auto& child : children) {
 		saver.store<int>(child.handle);
 	}
@@ -73,8 +73,8 @@ void Anchor::save(Saver& saver) {
 
 bool Anchor::load(Loader& loader) {
 	Activity::load(loader);
-	int count;
-	loader.retrieve<int>(count);
+	size_t count;
+	loader.retrieve<size_t>(count);
 	for (int i = 0; i < count; i++) {
 		int handle;
 		loader.retrieve<int>(handle);

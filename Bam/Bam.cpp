@@ -37,7 +37,7 @@ static int initGLFW() {
 	window = glfwCreateWindow(1000, 1000, "Hello World", NULL, NULL);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	glfwSetWindowPos(window, 500, 20);
+	glfwSetWindowPos(window, 500, 40);
 	if (!window) {
 		glfwTerminate();
 		return -1;
@@ -70,7 +70,7 @@ static int initGLFW() {
 	// back culling
 	//glDisable(GL_CULL_FACE);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	return 1;
 }

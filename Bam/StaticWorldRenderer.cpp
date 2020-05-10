@@ -186,13 +186,10 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 
 	VP.set(cameraInfo.VP);
 
-	//int drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int>(info.offsets.size()));
-	
 	int offseti = 0;
 
-
 	for (auto info : infos) {
-		int infoSize = info->offsets.size();
+		auto infoSize = static_cast<int>(info->offsets.size());
 		bool done = false;
 
 		if (offseti + infoSize > MAX_STATIC_DRAW) {

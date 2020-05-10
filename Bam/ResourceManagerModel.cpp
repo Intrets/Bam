@@ -8,7 +8,7 @@
 int ResourceManagerModel::getIndex(std::string name) {
 	int index;
 	if (indexMap.count(name) == 0) {
-		index = indexMap.size();
+		index = static_cast<int>(indexMap.size());
 		indexMap[name] = index;
 		names.push_back(name);
 		resources.push_back(std::make_unique<ModelStore>(name));

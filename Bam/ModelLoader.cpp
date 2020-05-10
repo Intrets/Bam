@@ -135,7 +135,7 @@ bool loadModel(std::string &path,
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, out_normals.size() * sizeof(glm::vec3), &out_normals[0], GL_STATIC_DRAW);
 
-	indexsize = out_indices.size();
+	indexsize = static_cast<int>(out_indices.size());
 
 	glGenBuffers(1, &indexbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);

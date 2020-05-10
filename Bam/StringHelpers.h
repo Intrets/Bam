@@ -13,11 +13,11 @@ inline void split(size_t n, std::string& in, std::vector<std::string>& out) {
 		while (i < in.size() && in[i] == ' ') {
 			i++;
 		}
-		int first = i;
+		auto first = i;
 		while (i < in.size() && in[i] != ' ') {
 			i++;
 		}
-		int second = i;
+		auto second = i;
 		if (out.size() == n) {
 			out.push_back(in.substr(first, in.size() - 1));
 			return;

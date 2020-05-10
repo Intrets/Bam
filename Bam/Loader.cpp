@@ -14,8 +14,8 @@
 
 
 bool Loader::retrieveString(std::string& str) {
-	int s;
-	retrieve<int>(s);
+	size_t s;
+	retrieve<size_t>(s);
 	str.resize(s);
 	in.read(&str[0], s);
 	return false;

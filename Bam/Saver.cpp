@@ -7,8 +7,8 @@
 #include "ActivitySaverHelper.h"
 
 bool Saver::storeString(std::string s) {
-	int ss = s.size();
-	store<int>(ss);
+	size_t ss = s.size();
+	store<size_t>(ss);
 	out.write(&s[0], s.size());
 	return false;
 }

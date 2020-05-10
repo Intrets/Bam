@@ -74,7 +74,7 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int type, RenderI
 	glDrawArrays(
 		drawtype,	// mode
 		0,				// start
-		line.size()   // count
+		static_cast<GLsizei>(line.size())   // count
 	);
 
 	VAO.unbind();

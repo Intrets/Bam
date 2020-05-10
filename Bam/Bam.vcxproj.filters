@@ -285,6 +285,9 @@
     <ClCompile Include="Activator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FPSDisplay.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -481,6 +484,9 @@
     </ClInclude>
     <ClInclude Include="Activator.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSDisplay.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

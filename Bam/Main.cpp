@@ -10,9 +10,11 @@
 #include "ControlState.h"
 #include <thread>
 #include "BindHandler.h"
+#include "FPSDisplay.h"
 
 void mainLoop(GLFWwindow* window, ControlState& controlState) {
 	FPSLimiter fpsLimiter;
+	FPSDisplay fpsDisplay;
 	WindowManager windowManager;
 
 	GameState gameState;
@@ -22,19 +24,16 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 
 	std::thread logicThread;
 
-	int fps = 0;
-	double last = 0;
-
 	while (!glfwWindowShouldClose(window)) {
 		RenderInfo renderInfo;
 
 		bool rendering = fpsLimiter.ready();
-		bool logic = gameLogic.ready();
 
 		if (rendering) {
 			renderer.prepareRender(window, renderInfo, gameState, windowManager);
 		}
 
+		bool logic = gameLogic.ready();
 		if (logic) {
 			controlState.cycleStates();
 			glfwPollEvents();
@@ -47,16 +46,10 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 		}
 
 		if (rendering) {
-			if (glfwGetTime() - last > 1.0f) {
-				last = glfwGetTime();
-				std::cout << fps << "\n";
-				fps = 0;
-			}
-			fps++;
-
 			fpsLimiter.renderStart();
 			renderer.render(window, renderInfo);
 			fpsLimiter.renderFinish();
+			fpsDisplay.displayFPS(window);
 		}
 
 		if (logicThread.joinable()) {
