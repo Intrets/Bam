@@ -12,6 +12,9 @@
 #include "RenderInfo.h"
 
 void Platform::calculateBlockedDirections() {
+	for (int i = 0; i < 4; i++) {
+		blockedDirections[i].clear();
+	}
 	for (int x = 0; x < size.x; x++) {
 		{
 			int y = 0;
@@ -93,6 +96,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 					blocks[i][j] = old[size.y - 1 - j][i];
 				}
 			}
+			calculateBlockedDirections();
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
 			d = glm::ivec2(-d.y - size.x, d.x);
@@ -101,6 +105,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 					blocks[i][j] = old[j][size.x - 1 - i];
 				}
 			}
+			calculateBlockedDirections();
 			break;
 		default:
 			break;
@@ -208,7 +213,6 @@ bool Platform::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(size);
 
 	blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
-	//type = ACTIVITY::MOVEABLE;
 	int textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int i = 0; i < size[0]; i++) {
 		for (int j = 0; j < size[1]; j++) {
