@@ -13,13 +13,7 @@ ActivitySelector::ActivitySelector() {
 	// expand selection
 	addBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivitySelector*>(self_);
-		if (self->target.isValid()) {
-			if (self->target.get()->parentRef.isNotNull()) {
-				self->history.push_back(std::make_unique<ManagedReference<Activity, Activity>>(self->target.handle));
-				WeakReference<Activity, Activity> newTarget = self->target.get()->parentRef;
-				self->target.set(newTarget);
-			}
-		}
+		self->expandTarget();
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 	// shrink selection
@@ -40,6 +34,16 @@ void ActivitySelector::selectTarget(GameState& gameState) {
 	auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
 	if (maybeTarget.has_value()) {
 		target.set(maybeTarget.value());
+	}
+}
+
+void ActivitySelector::expandTarget() {
+	if (target.isValid()) {
+		if (target.get()->parentRef.isNotNull()) {
+			history.push_back(std::make_unique<ManagedReference<Activity, Activity>>(target.handle));
+			WeakReference<Activity, Activity> newTarget = target.get()->parentRef;
+			target.set(newTarget);
+		}
 	}
 }
 

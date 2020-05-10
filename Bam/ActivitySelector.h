@@ -11,6 +11,7 @@ public:
 	ManagedReference<Activity, Activity> target;
 
 	virtual void selectTarget(GameState& gameState);
+	void expandTarget();
 
 	ActivitySelector();
 	~ActivitySelector() = default;

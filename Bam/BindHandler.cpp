@@ -53,11 +53,6 @@ BindHandler::BindHandler() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(placer)));
 	};
 
-	auto selectorToolTest = [](GameState& gameState, LogicSequencer* logicSequencer) {
-		auto placer = std::make_unique<ActivitySelector>();
-		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(placer)));
-	};
-
 	auto activityInteractorTool = [](GameState& gameState, LogicSequencer* logicSequencer) {
 		auto interactor = std::make_unique<ActivityInteractor>();
 		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(interactor)));
@@ -69,10 +64,7 @@ BindHandler::BindHandler() {
 	tools->addBind({ CONTROLS::TOOL_2, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(linkerTool)
 	);
 
-	tools->addBind({ CONTROLS::TOOL_3, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(selectorToolTest)
-	);
-
-	tools->addBind({ CONTROLS::TOOL_4, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(activityInteractorTool)
+	tools->addBind({ CONTROLS::TOOL_3, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(activityInteractorTool)
 	);
 
 	logicSequences.push_back(std::move(tools));

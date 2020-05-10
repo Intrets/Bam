@@ -22,6 +22,7 @@ public:
 	int hoverType;
 
 	void spawnHover(GameState& gameState, glm::ivec2 pos);
+	void rotateHover(MOVEABLE::ROT rot);
 	void deleteHover();
 
 	ActivityPlacer();

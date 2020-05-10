@@ -63,6 +63,13 @@ void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 	}
 }
 
+void ActivityPlacer::rotateHover(MOVEABLE::ROT rot) {
+	if (hover.isNotNull()) {
+		auto center = hover.get()->getOrigin();
+		hover.get()->rotateForcedUp(center, rot);
+	}
+}
+
 void ActivityPlacer::deleteHover() {
 	if (hover.isNotNull()) {
 		auto activity = hover.get();
@@ -80,13 +87,6 @@ ActivityPlacer::ActivityPlacer() {
 
 	addBind({ CONTROLS::ACTION2, CONTROLSTATE::CONTROLSTATE_PRESSED }, &pickUpActivity);
 
-	//addBind({ CONTROLS::ACTION1, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-	//	auto self = static_cast<ActivityPlacer*>(self_);
-	//	self->placeHover(gameState, gameState.getPlayerCursorWorldSpace());
-
-	//	return std::make_pair(CONTINUATION::STOP, std::nullopt);
-	//});
-
 	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityPlacer*>(self_);
 		if (!self->target.isValid()) {
@@ -96,6 +96,18 @@ ActivityPlacer::ActivityPlacer() {
 		}
 
 		return std::make_pair(CONTINUATION::STOP, std::nullopt);
+	});
+
+	addBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityPlacer*>(self_);
+		self->rotateHover(MOVEABLE::ROT::COUNTERCLOCKWISE);
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	});
+
+	addBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+		auto self = static_cast<ActivityPlacer*>(self_);
+		self->rotateHover(MOVEABLE::ROT::CLOCKWISE);
+		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
 }
 
