@@ -4,8 +4,8 @@
 //#include "MainRenderer.h"
 #include "StaticWorldRenderer.h"
 //#include "Blur.h"
-//#include "TextRenderer.h"
-//#include "UIbackgroundRenderer.h"
+#include "TextRenderer.h"
+#include "UIbackgroundRenderer.h"
 #include "Option.h"
 //#include "SelectionHighlightRenderer.h"
 #include "DebugRenderer.h"
@@ -34,8 +34,8 @@ private:
 	//PassthroughRenderer passthroughRenderer;
 
 	StaticWorldRenderer staticWorldRenderer;
-	//TextRenderer textRenderer;
-	//UIbackgroundRenderer uiBackgroundRenderer;
+	TextRenderer textRenderer{ "font_kaiser_90x199_22x6.dds", { 90, 199 }, { 22, 6 } };
+	UIbackgroundRenderer uiBackgroundRenderer;
 	SelectionHighlightRenderer selectionRenderer;
 
 	//Blur blur;

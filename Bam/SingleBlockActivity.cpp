@@ -37,7 +37,7 @@ void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
 }
 
 void SingleBlockActivity::removeMoveableTracesLocal(GameState& gameState) {
-	gameState.staticWorld.removeTraceForced(origin - getDirection(movementDirection));
+	gameState.staticWorld.removeTraceFilter(origin - getDirection(movementDirection), selfHandle);
 }
 
 void SingleBlockActivity::leaveMoveableTracesLocal(GameState& gameState) {

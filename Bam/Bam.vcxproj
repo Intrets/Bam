@@ -237,9 +237,13 @@
     <ClCompile Include="StaticWorldChunk.cpp" />
     <ClCompile Include="StaticWorldRenderer.cpp" />
     <ClCompile Include="StaticWorldRenderInfo.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
+    <ClCompile Include="TextRenderInfo.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
+    <ClCompile Include="UIbackgroundRenderer.cpp" />
+    <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
@@ -305,9 +309,13 @@
     <ClInclude Include="StaticWorldChunk.h" />
     <ClInclude Include="StaticWorldRenderer.h" />
     <ClInclude Include="StaticWorldRenderInfo.h" />
+    <ClInclude Include="TextRenderer.h" />
+    <ClInclude Include="TextRenderInfo.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
+    <ClInclude Include="UIbackgroundRenderer.h" />
+    <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
@@ -320,6 +328,10 @@
     <None Include="PassthroughArray.vert" />
     <None Include="StaticWorldShader.frag" />
     <None Include="StaticWorldShader.vert" />
+    <None Include="Text.frag" />
+    <None Include="Text.vert" />
+    <None Include="UIbg.frag" />
+    <None Include="UIbg.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

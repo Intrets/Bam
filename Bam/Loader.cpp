@@ -41,7 +41,6 @@ Loader::Loader(std::string file) : in(file, std::ifstream::binary) {
 Loader::Loader() {
 }
 
-
 Loader::~Loader() {
 	in.close();
 }

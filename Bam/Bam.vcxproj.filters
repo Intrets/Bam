@@ -100,6 +100,9 @@
     <Filter Include="Game\Logic\Seqs">
       <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\UI">
+      <UniqueIdentifier>{6a5a1940-06dc-40d3-ab11-1d32428ce2ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bam.cpp">
@@ -243,20 +246,11 @@
     <ClCompile Include="InitBinds.cpp">
       <Filter>Program Control\Inits</Filter>
     </ClCompile>
-    <ClCompile Include="InitManagers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameLogic.cpp">
       <Filter>Game\Logic</Filter>
     </ClCompile>
     <ClCompile Include="LogicSequencer.cpp">
       <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectionHighlightRenderer.cpp">
-      <Filter>New</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectionRenderInfo.cpp">
-      <Filter>New</Filter>
     </ClCompile>
     <ClCompile Include="Linker.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
@@ -282,11 +276,32 @@
     <ClCompile Include="SingleBlockActivity.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Activator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FPSDisplay.cpp">
       <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Renderer\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderInfo.cpp">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Activator.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionRenderInfo.cpp">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionHighlightRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="UIbackgroundRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="InitManagers.cpp">
+      <Filter>Program Control\Inits</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRenderInfo.cpp">
+      <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -443,20 +458,11 @@
     <ClInclude Include="InitBinds.h">
       <Filter>Program Control\Inits</Filter>
     </ClInclude>
-    <ClInclude Include="InitManagers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameLogic.h">
       <Filter>Game\Logic</Filter>
     </ClInclude>
     <ClInclude Include="LogicSequencer.h">
       <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectionHighlightRenderer.h">
-      <Filter>New</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectionRenderInfo.h">
-      <Filter>New</Filter>
     </ClInclude>
     <ClInclude Include="Linker.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
@@ -482,11 +488,32 @@
     <ClInclude Include="SingleBlockActivity.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Activator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FPSDisplay.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Renderer\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Activator.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionRenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionHighlightRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="UIbackgroundRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="InitManagers.h">
+      <Filter>Program Control\Inits</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRenderInfo.h">
+      <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -512,6 +539,18 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="HighlightShader.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="Text.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="Text.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="UIbg.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="UIbg.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
   </ItemGroup>

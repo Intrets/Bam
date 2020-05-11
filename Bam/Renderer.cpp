@@ -37,7 +37,6 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 
 	gameState.appendStaticRenderInfo(renderInfo);
 	//windowManager.addRenderInfo(target.uiRenderInfo, target.cameraInfo, textRenderer);
-
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
@@ -118,6 +117,9 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	//);
 
 	selectionRenderer.render(renderInfo, 0);
+
+	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, 0, renderInfo.cameraInfo);
+	textRenderer.render(renderInfo.textRenderInfo, 0, renderInfo.cameraInfo);
 
 	if (debugOption.getVal()) {
 		debugRenderer.render(0, renderInfo);

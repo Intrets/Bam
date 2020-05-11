@@ -115,7 +115,7 @@ public:
 	glm::ivec2 getOrigin() { return origin; };
 	Handle getHandle() { return selfHandle; };
 
-	bool idleLocal();
+	virtual bool idleLocal();
 	virtual bool moveableIdleLocal();
 	virtual bool activityIdleLocal();
 
