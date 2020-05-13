@@ -34,7 +34,6 @@ public:
 	int size;
 	int i = 0;
 
-	//std::vector<std::vector<Activity*>> activities;
 	std::vector<std::vector<WeakReference<Activity, Activity>>> activities;
 
 	void finish(GameState& gameState);
@@ -45,9 +44,9 @@ public:
 	void cycle();
 	void add(WeakReference<Activity, Activity> m, int duration);
 
-	deleteDefaults(MovementPaceHandler);
-
 	MovementPaceHandler(int max);
 	MovementPaceHandler();
 	~MovementPaceHandler() = default;
+
+	deleteDefaults(MovementPaceHandler);
 };

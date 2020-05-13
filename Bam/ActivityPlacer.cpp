@@ -11,7 +11,7 @@ static auto updateHoverPos(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
 	if (self->hover.isNotNull()) {
 		auto pos = glm::ivec2(glm::floor(gameState.getPlayerCursorWorldSpace()));
-		self->hover.get()->forceMoveOriginLocal(pos - self->hover.get()->getOrigin());
+		self->hover.get()->forceMoveOriginUp(pos - self->hover.get()->getOrigin());
 	}
 	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 }
@@ -20,9 +20,10 @@ static auto pickUpActivity(GameState& gameState, LogicSequencer* self_) {
 	auto self = static_cast<ActivityPlacer*>(self_);
 	if (self->target.isValid()) {
 		if (self->target.get()->idleLocal()) {
-			self->hover = WeakReference<Activity, Activity>(self->target.handle);
-			self->hover.get()->removeTracesUp(gameState);
-			self->target.unset();
+			if (self->target.get()->removeTracesUp(gameState)) {
+				self->hover = WeakReference<Activity, Activity>(self->target.handle);
+				self->target.unset();
+			}
 		}
 	}
 	else if (self->hover.isNotNull()) {

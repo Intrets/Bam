@@ -226,6 +226,7 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManagerModel.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="Saver.h" />
     <ClInclude Include="SelectionHighlightRenderer.h" />

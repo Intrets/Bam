@@ -115,6 +115,7 @@ public:
 	glm::ivec2 getOrigin() { return origin; };
 	Handle getHandle() { return selfHandle; };
 
+	bool idleUp();
 	virtual bool idleLocal();
 	virtual bool moveableIdleLocal();
 	virtual bool activityIdleLocal();
@@ -127,6 +128,7 @@ public:
 	// Placement 
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
 	void rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation);
+	void forceMoveOriginUp(glm::ivec2 d);
 	void forceMoveOriginLocal(glm::ivec2 d) { origin += d; };
 	void disconnectFromParent();
 

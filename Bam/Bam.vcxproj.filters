@@ -294,6 +294,9 @@
     </ClCompile>
     <ClCompile Include="Bam.cpp" />
     <ClCompile Include="InitModifyables.cpp" />
+    <ClCompile Include="RailCrane.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -508,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="common.h" />
     <ClInclude Include="InitModifyables.h" />
+    <ClInclude Include="RailCrane.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

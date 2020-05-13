@@ -64,6 +64,16 @@ glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
 	return v;
 }
 
+bool Activity::idleUp() {
+	std::vector<Activity*> members;
+	for (auto& member : members) {
+		if (!member->idleLocal()) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool Activity::idleLocal() {
 	return !moving && !active;
 }
@@ -81,6 +91,14 @@ void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	getTreeMembers(members);
 	for (auto member : members) {
 		member->rotateForcedLocal(center, rotation);
+	}
+}
+
+void Activity::forceMoveOriginUp(glm::ivec2 d) {
+	std::vector<Activity*> members;
+	getTreeMembers(members);
+	for (auto& member : members) {
+		member->forceMoveOriginLocal(d);
 	}
 }
 

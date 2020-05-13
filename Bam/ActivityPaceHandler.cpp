@@ -58,7 +58,7 @@ void ActivityPaceHandler::load(Loader & loader) {
 MovementPaceHandler::MovementPaceHandler(int max) : activities(max), size(max) {
 }
 
-MovementPaceHandler::MovementPaceHandler() : MovementPaceHandler(60) {
+MovementPaceHandler::MovementPaceHandler() : MovementPaceHandler(600) {
 }
 
 void MovementPaceHandler::finish(GameState& gameState) {
