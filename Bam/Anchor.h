@@ -10,7 +10,9 @@ public:
 	std::vector<WeakReference<Activity, Activity>> children;
 
 	void addChild(Handle h);
-	void removeChild(Handle h);
+
+	// returns if this Anchor has no children and has to be cleaned up
+	bool removeChild(Handle h);
 
 	Anchor();
 	Anchor(Handle self);
@@ -50,7 +52,7 @@ public:
 
 	// Render
 	virtual void appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
-	virtual void appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo) override;
+	virtual void appendSelectionInfo(GameState & gameState, RenderInfo & renderInfo, glm::vec4 color) override;
 
 	// Modifying
 	void modifyMember(GameState & gameState, std::string & name, std::vector<std::string>& value) override;

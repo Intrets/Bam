@@ -1,7 +1,7 @@
 #include "common.h"
 #include "SelectionRenderInfo.h"
 
-void SelectionRenderInfo::addBox(glm::vec2 up_, glm::vec2 down_, glm::vec3 color) {
+void SelectionRenderInfo::addBox(glm::vec2 up_, glm::vec2 down_, glm::vec4 color) {
 	glm::vec2 down = glm::min(up_, down_);
 	glm::vec2 up = glm::max(up_, down_);
 
@@ -11,5 +11,5 @@ void SelectionRenderInfo::addBox(glm::vec2 up_, glm::vec2 down_, glm::vec3 color
 	offsets.push_back(up);
 	glm::vec2 scale = glm::vec2(down - up);
 	scales.push_back(scale);
-	colors.push_back(glm::vec4(color, 0.5));
+	colors.push_back(color);
 }

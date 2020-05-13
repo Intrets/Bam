@@ -122,10 +122,7 @@ bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnor
 	return !blocked;
 }
 
-void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
-	if (child.isNotNull()) {
-		child.get()->appendSelectionInfo(gameState, renderInfo);
-	}
+void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::vec2 moveDirection = MOVEABLE::DIRECTION[movementDirection];
 	int tick = gameState.tick;
@@ -142,7 +139,7 @@ void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
 
 	glm::vec2 base = ori;
 	glm::vec2 head = grabberPos + headDirection * (1.0f + length) + glm::vec2(1.0f);
-	renderInfo.selectionRenderInfo.addBox(base, head);
+	renderInfo.selectionRenderInfo.addBox(base, head, color);
 }
 
 void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {

@@ -48,13 +48,13 @@ void SingleBlockActivity::getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 
-void SingleBlockActivity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
+void SingleBlockActivity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 ori = origin;
 	if (moving) {
 		float scale = static_cast<float>(gameState.tick - movingTickStart) / movingPace;
 		ori += scale * glm::vec2(getDirection(movementDirection));
 	}
-	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1));
+	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1), color);
 }
 
 void SingleBlockActivity::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {

@@ -14,6 +14,7 @@
 #include "ActivitySelector.h"
 #include "ActivityInteractor.h"
 #include "RenderInfo.h"
+#include "ActivityEditor.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
@@ -58,6 +59,11 @@ BindHandler::BindHandler() {
 		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(interactor)));
 	};
 
+	auto activityEditorTool = [](GameState& gameState, LogicSequencer* logicSequencer) {
+		auto interactor = std::make_unique<ActivityEditor>();
+		return std::make_pair(CONTINUATION::CONTINUE, std::make_optional(std::move(interactor)));
+	};
+
 	tools->addBind({ CONTROLS::TOOL_1, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(placerTool)
 	);
 
@@ -65,6 +71,9 @@ BindHandler::BindHandler() {
 	);
 
 	tools->addBind({ CONTROLS::TOOL_3, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(activityInteractorTool)
+	);
+
+	tools->addBind({ CONTROLS::TOOL_4, CONTROLSTATE::CONTROLSTATE_PRESSED }, std::move(activityEditorTool)
 	);
 
 	logicSequences.push_back(std::move(tools));

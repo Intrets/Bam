@@ -175,7 +175,7 @@ public:
 	virtual bool load(Loader& loader);
 
 	// Render
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) = 0;
+	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) = 0;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 
 	// Modifying

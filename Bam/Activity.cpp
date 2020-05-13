@@ -87,7 +87,11 @@ void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 void Activity::disconnectFromParent() {
 	if (parentRef.isNotNull()) {
 		auto anchor = parentRef.get();
-		anchor->removeChild(selfHandle);
+		if (anchor->removeChild(selfHandle)) {
+			anchor->disconnectFromParent();
+			parentRef.deleteObject();
+		}
+		parentRef.handle = 0;
 	}
 }
 
@@ -194,6 +198,9 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve<bool>(moving);
 	loader.retrieve<glm::ivec2>(origin);
 	return true;
+}
+
+void Activity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 }
 
 void Activity::fillModifyingMap(ModifyerBase& modifyer) {

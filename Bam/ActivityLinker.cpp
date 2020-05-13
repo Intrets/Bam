@@ -8,7 +8,7 @@
 ActivityLinker::ActivityLinker() {
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityLinker*>(self_);
-		auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
+		auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
 
 		if (!maybeTarget.has_value()) {
 			return std::make_pair(CONTINUATION::STOP, std::nullopt);
@@ -34,6 +34,6 @@ ActivityLinker::ActivityLinker() {
 
 void ActivityLinker::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
 	if (target.isNotNull()) {
-		target.get()->appendSelectionInfo(gameState, renderInfo);
+		target.get()->appendSelectionInfo(gameState, renderInfo, { 1,1,1,0.5 });
 	}
 }

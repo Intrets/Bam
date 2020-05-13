@@ -7,6 +7,9 @@
 #include "UIRenderInfo.h"
 
 void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, CameraInfo& cameraInfo) {
+	if (renderInfo.positions.empty()) {
+		return;
+	}
 	VAO.bind();
 	program.use();
 

@@ -50,5 +50,17 @@ void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo,
 	//	offset[1] -= fontScale.y;
 	//	if (offset[1] + fontScale.y > pos2.y) break;
 	//}
-
 }
+
+void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int fontSize, std::vector<std::string>& texts) {
+	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
+	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
+
+	glm::vec2 start = { pos.x, pos.y - fontScale.y };
+
+	for (auto& text : texts) {
+		addText(textRenderer, cameraInfo, start, width, fontSize, text);
+		start.y -= fontScale.y;
+	}
+}
+

@@ -9,6 +9,7 @@
 #include "ControlState.h"
 #include "Main.h"
 #include "InitManagers.h"
+#include "InitModifyables.h"
 
 GLFWwindow* window;
 ControlState controlState;
@@ -78,5 +79,6 @@ static int initGLFW() {
 int main() {
 	initGLFW();
 	initManagers();
+	initModifyables();
 	mainLoop(window, controlState);
 }

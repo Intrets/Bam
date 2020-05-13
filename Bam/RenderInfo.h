@@ -18,6 +18,7 @@ struct RenderInfo
 	SelectionRenderInfo selectionRenderInfo;
 	TextRenderInfo textRenderInfo;
 	UIRenderInfo uiRenderInfo;
+
 	//RenderState renderState;
 
 	//TODO: add buffering of options

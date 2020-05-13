@@ -3,6 +3,9 @@
 #include "ActivitySelector.h"
 #include "GameState.h"
 #include "LogicSequencer.h"
+#include "RenderInfo.h"
+#include <sstream>
+#include "StringHelpers.h"
 
 ActivitySelector::ActivitySelector() {
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
@@ -31,7 +34,7 @@ ActivitySelector::ActivitySelector() {
 }
 
 void ActivitySelector::selectTarget(GameState& gameState) {
-	auto maybeTarget = gameState.staticWorld.getActivity(gameState.getPlayerCursorWorldSpace());
+	auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
 	if (maybeTarget.has_value()) {
 		target.set(maybeTarget.value());
 	}
@@ -49,6 +52,18 @@ void ActivitySelector::expandTarget() {
 
 void ActivitySelector::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
 	if (target.isValid()) {
-		target.get()->appendSelectionInfo(gameState, renderInfo);
+		target.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,1,0.5 });
+		renderInfo.uiRenderInfo.addRectangle({ -1,1 }, { -0.5,-1 }, { 0,0,0,1 });
+		std::stringstream ss;
+		target.get()->getMembers(ss);
+		auto s = ss.str();
+		std::vector<std::string> texts;
+		split(0, s, texts, '\n');
+
+		renderInfo.textRenderInfo.addTexts(
+			*renderInfo.textRenderInfo.textRendererRef,
+			renderInfo.cameraInfo,
+			{ -1,1 }, 0, 20, texts
+		);
 	}
 }

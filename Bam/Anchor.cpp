@@ -7,6 +7,7 @@
 //#include "Saver.h"
 //#include "Loader.h"
 #include "RenderInfo.h"
+#include <algorithm>
 
 void Anchor::addChild(Handle h) {
 	if (h == selfHandle) {
@@ -15,13 +16,15 @@ void Anchor::addChild(Handle h) {
 	children.push_back(WeakReference<Activity, Activity>(h));
 }
 
-void Anchor::removeChild(Handle h) {
-	for (auto it = children.begin(); it != children.end(); it++) {
-		if (it->handle == h) {
-			children.erase(it);
-			return;
-		}
+bool Anchor::removeChild(Handle h) {
+	auto newEnd = std::remove_if(
+		children.begin(), children.end(),
+		[=](WeakReference<Activity, Activity> t) -> bool {
+		return t.handle == h;
 	}
+	);
+	children.erase(newEnd, children.end());
+	return children.empty();
 }
 
 Anchor::Anchor() {
@@ -113,7 +116,7 @@ ACTIVITY::TYPE Anchor::getType() {
 void Anchor::getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 	for (auto& child : children) {
-		members.push_back(child.get());
+		child.get()->getTreeMembers(members);
 	}
 }
 
@@ -131,8 +134,8 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int type, int pace) 
 	Activity::applyActivityLocalForced(gameState, type, pace);
 }
 
-void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
+void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	for (auto& child : children) {
-		child.get()->appendSelectionInfo(gameState, renderInfo);
+		child.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,0.5,0.5 });
 	}
 }

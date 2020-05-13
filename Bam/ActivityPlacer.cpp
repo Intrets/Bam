@@ -118,7 +118,14 @@ ActivityPlacer::ActivityPlacer() {
 void ActivityPlacer::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
 	ActivitySelector::appendRenderInfoInternal(gameState, renderInfo);
 	if (hover.isNotNull()) {
-		hover.get()->appendSelectionInfo(gameState, renderInfo);
+		glm::vec4 highlightColor;
+		if (hover.get()->canFillTracesLocal(gameState)) {
+			highlightColor = { 0.5, 1, 0.5, 0.5 };
+		}
+		else {
+			highlightColor = { 1, 0.5, 0.5, 0.5 };
+		}
+		hover.get()->appendSelectionInfo(gameState, renderInfo, highlightColor);
 	}
 }
 

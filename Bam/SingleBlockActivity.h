@@ -34,7 +34,7 @@ public:
 	virtual void getTreeMembers(std::vector<Activity*>& members) override;
 
 	// Render
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo);
+	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color);
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
 
 	virtual void fillModifyingMap(ModifyerBase& modifyer) override;

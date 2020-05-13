@@ -111,7 +111,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	origin = center + d;
 }
 
-void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo) {
+void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	int tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
@@ -119,7 +119,7 @@ void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo)
 		v += scale * glm::vec2(getDirection(movementDirection));
 	}
 	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
-	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size));
+	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size), color);
 	renderInfo.debugRenderInfo.addPoint(v);
 
 }
