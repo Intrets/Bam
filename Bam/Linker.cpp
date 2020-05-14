@@ -21,14 +21,14 @@ std::string Linker::linkAnchors(GameState& gameState, WeakReference<Activity, An
 }
 
 
-std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Piston> r1, WeakReference<Activity, Activity> r2) {
+std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Grouper> r1, WeakReference<Activity, Activity> r2) {
 	if (r1.isNull() || r2.isNull()) {
 		return "Invalid references";
 	}
 	auto a11 = r1.get();
 	auto a2 = r2.get();
 	WeakReference<Activity, Anchor> target;
-	if (a2->getType() == ACTIVITY::ANCHOR) {
+	if (a2->getType() == ACTIVITY::ANCHOR || a2->getType() == ACTIVITY::RAILCRANE) {
 		target = r2;
 	}
 	else if (a2->parentRef.isNotNull()) {

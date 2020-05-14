@@ -26,7 +26,6 @@ public:
 
 	PISTON::DIR state = PISTON::STATIONARY;
 
-	WeakReference<Activity, Anchor> child;
 
 	Piston(Handle self, GameState& gameState, glm::ivec2 pos, MOVEABLE::DIR dir, bool leaveTraces = true);
 	Piston();
@@ -55,9 +54,6 @@ public:
 	virtual void removeMoveableTracesLocal(GameState& gameState) override;
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
-	// Tree Informations
-	virtual void getTreeMembers(std::vector<Activity*>& members) override;
-
 	// Serial
 	virtual ACTIVITY::TYPE getType() override;
 	virtual void save(Saver& saver) override;
@@ -71,10 +67,5 @@ public:
 	virtual void fillModifyingMap(ModifyerBase& modifier) override;
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
-
-
-	// Inherited via Grouper
-	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
-
 };
 

@@ -55,16 +55,6 @@ std::stringstream& Piston::getMembers(std::stringstream& out) {
 	return out;
 }
 
-bool Piston::addChild(WeakReference<Activity, Activity> ref) {
-	if (child.isNotNull()) {
-		return false;
-	}
-	else {
-		child = ref;
-	}
-	return true;
-}
-
 ACTIVITY::TYPE Piston::getType() {
 	return ACTIVITY::PISTON;
 }
@@ -263,13 +253,6 @@ void Piston::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 			break;
 	}
 	origin = center + d;
-}
-
-void Piston::getTreeMembers(std::vector<Activity*>& members) {
-	members.push_back(this);
-	if (child.isNotNull()) {
-		child.get()->getTreeMembers(members);
-	}
 }
 
 void Piston::fillTracesLocalForced(GameState& gameState) {

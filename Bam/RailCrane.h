@@ -24,8 +24,6 @@ public:
 	int length;
 	int anchorIndexPos;
 
-	WeakReference<Activity, Anchor> child;
-
 	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces = true);
 	RailCrane();
 	~RailCrane();
@@ -53,9 +51,6 @@ public:
 	virtual void removeMoveableTracesLocal(GameState& gameState) override;
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
-	// Tree Information
-	virtual void getTreeMembers(std::vector<Activity*>& members) override;
-	
 	// Serial
 	virtual ACTIVITY::TYPE getType() override;
 	virtual void save(Saver& saver);
@@ -68,8 +63,5 @@ public:
 	// Modyfing
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
-
-	// Inherited via Grouper
-	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 };
 

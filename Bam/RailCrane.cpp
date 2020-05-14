@@ -4,6 +4,9 @@
 #include "BlockIDTextures.h"
 #include "GameState.h"
 #include "StaticWorldRenderInfo.h"
+#include "RenderInfo.h"
+#include "ActivityIgnoringGroup.h"
+#include "Anchor.h"
 
 void RailCrane::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
 }
@@ -11,16 +14,6 @@ void RailCrane::modifyMember(GameState& gameState, std::string& name, std::vecto
 std::stringstream& RailCrane::getMembers(std::stringstream& out) {
 	// TODO: insert return statement here
 	return out;
-}
-
-bool RailCrane::addChild(WeakReference<Activity, Activity> ref) {
-	if (child.isNotNull()) {
-		return false;
-	}
-	else {
-		child = ref;
-	}
-	return true;
 }
 
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces) :
@@ -70,9 +63,8 @@ bool RailCrane::canActivityLocal(GameState& gameState, int type) {
 				if (anchorIndexPos == 0) {
 					return false;
 				}
-				glm::ivec2 pos = origin + (anchorIndexPos) *MOVEABLE::DIRECTION[orientation];
-				if (gameState.staticWorld.isOccupied(pos)) {
-					return false;
+				if (child.isNotNull()) {
+					return child.get()->canMoveUp(gameState, MOVEABLE::REV_DIR[orientation]);
 				}
 				return true;
 				break;
@@ -82,9 +74,8 @@ bool RailCrane::canActivityLocal(GameState& gameState, int type) {
 				if (anchorIndexPos == length - 1) {
 					return false;
 				}
-				glm::ivec2 pos = origin + (anchorIndexPos + 2) * MOVEABLE::DIRECTION[orientation];
-				if (gameState.staticWorld.isOccupied(pos)) {
-					return false;
+				if (child.isNotNull()) {
+					return child.get()->canMoveUp(gameState, orientation);
 				}
 				return true;
 				break;
@@ -99,25 +90,28 @@ void RailCrane::applyActivityLocalForced(GameState& gameState, int type, int pac
 	Activity::applyActivityLocalForced(gameState, type, pace);
 	switch (type) {
 		case RAILCRANE::LEFT:
+			if (child.isNotNull()) {
+				child.get()->applyMoveUpForced(gameState, MOVEABLE::REV_DIR[orientation], pace);
+			}
 			anchorDirection = RAILCRANE::LEFT;
 			anchorIndexPos--;
 			break;
 		case RAILCRANE::RIGHT:
+			if (child.isNotNull()) {
+				child.get()->applyMoveUpForced(gameState, orientation, pace);
+			}
 			anchorDirection = RAILCRANE::RIGHT;
 			anchorIndexPos++;
 			break;
 		default:
 			break;
 	}
-	glm::ivec2 pos = origin + (1 + anchorIndexPos) * MOVEABLE::DIRECTION[orientation];
-	gameState.staticWorld.leaveTrace(pos, selfHandle);
 }
 
 bool RailCrane::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	auto d = MOVEABLE::DIRECTION[orientation];
 	auto pos = origin + MOVEABLE::DIRECTION[dir];
 	return !gameState.staticWorld.isOccupied(pos, ignore)
-		&& !gameState.staticWorld.isOccupied(pos + d * (1 + anchorIndexPos), ignore)
 		&& !gameState.staticWorld.isOccupied(pos + d * (1 + length), ignore);
 }
 
@@ -128,34 +122,16 @@ bool RailCrane::canFillTracesLocal(GameState& gameState) {
 void RailCrane::fillTracesLocalForced(GameState& gameState) {
 	auto dir = MOVEABLE::DIRECTION[orientation];
 	gameState.staticWorld.leaveTrace(origin, selfHandle);
-	gameState.staticWorld.leaveTrace(origin + dir * (1 + anchorIndexPos), selfHandle);
 	gameState.staticWorld.leaveTrace(origin + dir * (1 + length), selfHandle);
 }
 
 void RailCrane::removeTracesLocalForced(GameState& gameState) {
 	auto dir = MOVEABLE::DIRECTION[orientation];
 	gameState.staticWorld.removeTraceForced(origin);
-	gameState.staticWorld.removeTraceForced(origin + dir * (1 + anchorIndexPos));
 	gameState.staticWorld.removeTraceForced(origin + dir * (1 + length));
 }
 
 void RailCrane::removeActivityTracesLocal(GameState& gameState) {
-	switch (anchorDirection) {
-		case RAILCRANE::LEFT:
-			{
-				glm::ivec2 pos = origin + (2 + anchorIndexPos) * MOVEABLE::DIRECTION[orientation];
-				gameState.staticWorld.removeTraceForced(pos);
-				break;
-			}
-		case RAILCRANE::RIGHT:
-			{
-				glm::ivec2 pos = origin + (0 + anchorIndexPos) * MOVEABLE::DIRECTION[orientation];
-				gameState.staticWorld.removeTraceForced(pos);
-				break;
-			}
-		default:
-			break;
-	}
 }
 
 void RailCrane::leaveActivityTracesLocal(GameState& gameState) {
@@ -164,21 +140,15 @@ void RailCrane::leaveActivityTracesLocal(GameState& gameState) {
 void RailCrane::removeMoveableTracesLocal(GameState& gameState) {
 	auto d = MOVEABLE::DIRECTION[orientation];
 	auto pos = origin + MOVEABLE::DIRECTION[MOVEABLE::REV_DIR[movementDirection]];
-	gameState.staticWorld.removeTraceForced(pos);
-	gameState.staticWorld.removeTraceForced(pos + d * (1 + anchorIndexPos));
-	gameState.staticWorld.removeTraceForced(pos + d * (1 + length));
+	gameState.staticWorld.removeTraceFilter(pos, selfHandle);
+	gameState.staticWorld.removeTraceFilter(pos + d * (1 + length), selfHandle);
 }
 
 void RailCrane::leaveMoveableTracesLocal(GameState& gameState) {
 	auto d = MOVEABLE::DIRECTION[orientation];
 	auto pos = origin + MOVEABLE::DIRECTION[movementDirection];
 	gameState.staticWorld.leaveTrace(pos, selfHandle);
-	gameState.staticWorld.leaveTrace(pos + d * (1 + anchorIndexPos), selfHandle);
 	gameState.staticWorld.leaveTrace(pos + d * (1 + length), selfHandle);
-}
-
-void RailCrane::getTreeMembers(std::vector<Activity*>& members) {
-	members.push_back(this);
 }
 
 ACTIVITY::TYPE RailCrane::getType() {
@@ -193,6 +163,15 @@ bool RailCrane::load(Loader& loader) {
 }
 
 void RailCrane::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+	glm::vec2 d = MOVEABLE::DIRECTION[orientation];
+	glm::vec2 pos = getMovingOrigin(gameState);
+	float size = static_cast<float>(1 + length);
+	if (orientation == MOVEABLE::DIR::UP || orientation == MOVEABLE::DIR::RIGHT) {
+		renderInfo.selectionRenderInfo.addBox(pos, pos + size * d + glm::vec2(1));
+	}
+	else {
+		renderInfo.selectionRenderInfo.addBox(pos + glm::vec2(1), pos + size * d);
+	}
 }
 
 void RailCrane::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {

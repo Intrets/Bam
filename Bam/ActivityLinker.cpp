@@ -18,7 +18,7 @@ ActivityLinker::ActivityLinker() {
 			self->target = maybeTarget.value();
 		}
 		else {
-			if (self->target.get()->getType() == ACTIVITY::PISTON) {
+			if (self->target.get()->getType() == ACTIVITY::PISTON || self->target.get()->getType() == ACTIVITY::RAILCRANE) {
 				Linker::linkPiston(gameState, self->target, maybeTarget.value());
 				self->target.clear();
 			}
