@@ -12,5 +12,8 @@ public:
 	Grouper(Handle self, glm::ivec2 p);
 	virtual bool addChild(WeakReference<Activity, Activity> ref);
 	virtual void getTreeMembers(std::vector<Activity*>& members);
+
+	virtual void save(Saver& saver) override;
+	virtual bool load(Loader& loader) override;
 };
 

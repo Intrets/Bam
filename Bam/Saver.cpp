@@ -36,3 +36,4 @@ Saver::Saver() {
 Saver::~Saver() {
 	close();
 }
+

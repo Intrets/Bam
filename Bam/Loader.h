@@ -19,13 +19,13 @@ public:
 	bool loadGame(GameState& gameState);
 
 	Loader(std::string file);
-	   
+
 	Loader();
 	~Loader();
 };
 
 template<class T>
-inline bool Loader::retrieve(T & t) {
+inline bool Loader::retrieve(T& t) {
 	in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return false;
 }

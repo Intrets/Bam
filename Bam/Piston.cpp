@@ -212,22 +212,18 @@ void Piston::leaveMoveableTracesLocal(GameState& gameState) {
 }
 
 void Piston::save(Saver& saver) {
-	Activity::save(saver);
+	Grouper::save(saver);
 	saver.store<glm::ivec2>(direction);
 	saver.store<MOVEABLE::DIR>(headDir);
 	saver.store<PISTON::DIR>(state);
-	saver.store<int>(child.handle);
 	saver.store<int>(length);
 }
 
 bool Piston::load(Loader& loader) {
-	Activity::load(loader);
+	Grouper::load(loader);
 	loader.retrieve<glm::ivec2>(direction);
 	loader.retrieve<MOVEABLE::DIR>(headDir);
 	loader.retrieve<PISTON::DIR>(state);
-	int handle;
-	loader.retrieve<int>(handle);
-	child.handle = handle;
 	loader.retrieve<int>(length);
 
 	auto s = Locator<BlockIDTextures>::getService();

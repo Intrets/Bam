@@ -23,7 +23,7 @@ public:
 	~Saver();
 };
 
-template <>
+template<>
 inline bool Saver::store(std::string t) {
 	return storeString(t);
 }

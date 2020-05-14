@@ -156,10 +156,26 @@ ACTIVITY::TYPE RailCrane::getType() {
 }
 
 void RailCrane::save(Saver& saver) {
+	Grouper::save(saver);
+	saver.store(orientation);
+	saver.store(anchorDirection);
+	saver.store(length);
+	saver.store(anchorIndexPos);
 }
 
 bool RailCrane::load(Loader& loader) {
-	return false;
+	Grouper::load(loader);
+	loader.retrieve(orientation);
+	loader.retrieve(anchorDirection);
+	loader.retrieve(length);
+	loader.retrieve(anchorIndexPos);
+
+	auto t = Locator<BlockIDTextures>::getService();
+	anchorTex = t->getBlockTextureID("crane_anchor.dds");
+	shaftTex = t->getBlockTextureID("crane_shaft.dds");
+	supportTex = t->getBlockTextureID("crane_support.dds");
+
+	return true;
 }
 
 void RailCrane::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
