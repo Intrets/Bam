@@ -208,31 +208,31 @@ Handle Activity::getRootHandle() {
 
 void Activity::save(Saver& saver) {
 	saver.store(getType());
-	saver.store<int>(parentRef.handle);
-	saver.store<int>(selfHandle);
-	saver.store<int>(activityPace);
+	saver.store(parentRef.handle);
+	saver.store(selfHandle);
+	saver.store(activityPace);
 	saver.store(activityTickStart);
-	saver.store<int>(activityType);
-	saver.store<bool>(active);
-	saver.store<int>(movingPace);
-	saver.store<int>(movingTickStart);
-	saver.store<MOVEABLE::DIR>(movementDirection);
-	saver.store<bool>(moving);
-	saver.store<glm::ivec2>(origin);
+	saver.store(activityType);
+	saver.store(active);
+	saver.store(movingPace);
+	saver.store(movingTickStart);
+	saver.store(movementDirection);
+	saver.store(moving);
+	saver.store(origin);
 }
 
 bool Activity::load(Loader& loader) {
-	loader.retrieve<int>(parentRef.handle);
-	loader.retrieve<int>(selfHandle);
-	loader.retrieve<int>(activityPace);
+	loader.retrieve(parentRef.handle);
+	loader.retrieve(selfHandle);
+	loader.retrieve(activityPace);
 	loader.retrieve(activityTickStart);
-	loader.retrieve<int>(activityType);
-	loader.retrieve<bool>(active);
-	loader.retrieve<int>(movingPace);
-	loader.retrieve<int>(movingTickStart);
-	loader.retrieve<MOVEABLE::DIR>(movementDirection);
-	loader.retrieve<bool>(moving);
-	loader.retrieve<glm::ivec2>(origin);
+	loader.retrieve(activityType);
+	loader.retrieve(active);
+	loader.retrieve(movingPace);
+	loader.retrieve(movingTickStart);
+	loader.retrieve(movementDirection);
+	loader.retrieve(moving);
+	loader.retrieve(origin);
 	return true;
 }
 

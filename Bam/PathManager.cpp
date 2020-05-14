@@ -30,11 +30,22 @@ bool PathManager::openFile(std::ofstream& file, RESOURCE_FILE t) {
 	return file.is_open();
 }
 
+bool PathManager::openSave(std::ifstream& file, std::string name) {
+	file.open(paths[RESOURCE_PATH::SAVE] + name, std::ifstream::binary);
+	return file.is_open();
+}
+
+bool PathManager::openSave(std::ofstream& file, std::string name) {
+	file.open(paths[RESOURCE_PATH::SAVE] + name, std::ofstream::binary);
+	return file.is_open();
+}
+
 PathManager::PathManager() {
 	std::string r = "C:/Users/Intrets/source/Repos/Bam/Bam/";
 	paths[RESOURCE_PATH::CONFIG] = r + "config/";
 	paths[RESOURCE_PATH::GRAPHICS] = r + "Resources/";
 	paths[RESOURCE_PATH::SHADERS] = r;
+	paths[RESOURCE_PATH::SAVE] = r + "saves/";
 	files[RESOURCE_FILE::OPTIONS] = r + "config/options.txt";
 }
 

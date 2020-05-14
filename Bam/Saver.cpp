@@ -27,7 +27,8 @@ void Saver::close() {
 	out.close();
 }
 
-Saver::Saver(std::string file) : out(file, std::ofstream::binary) {
+Saver::Saver(std::string file) {
+	Locator<PathManager>::getService()->openSave(out, file);
 }
 
 Saver::Saver() {

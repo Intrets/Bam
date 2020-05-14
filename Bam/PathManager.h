@@ -5,7 +5,8 @@ typedef enum
 {
 	CONFIG,
 	GRAPHICS,
-	SHADERS
+	SHADERS,
+	SAVE
 } RESOURCE_PATH;
 
 typedef enum
@@ -27,6 +28,8 @@ public:
 	void LoadModelP(std::string& path, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int32_t& indexsize);
 	bool openFile(std::ifstream& file, RESOURCE_FILE t);
 	bool openFile(std::ofstream& file, RESOURCE_FILE t);
+	bool openSave(std::ifstream& file, std::string name);
+	bool openSave(std::ofstream& file, std::string name);
 
 	PathManager();
 	~PathManager();

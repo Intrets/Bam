@@ -54,7 +54,7 @@ void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {
 
 bool StaticWorld::load(Loader& loader) {
 	world.clear();
-	int32_t size;
+	size_t size;
 	loader.retrieve(size);
 	for (int32_t i = 0; i < size; i++) {
 		glm::ivec2 key;

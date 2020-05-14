@@ -12,7 +12,6 @@
 //#include "ScriptManager.h"
 #include "ActivityLoaderHelper.h"
 
-
 bool Loader::retrieveString(std::string& str) {
 	size_t s;
 	retrieve<size_t>(s);
@@ -34,8 +33,8 @@ bool Loader::loadGame(GameState& gameState) {
 	return true;
 }
 
-Loader::Loader(std::string file) : in(file, std::ifstream::binary) {
-
+Loader::Loader(std::string file) {
+	Locator<PathManager>::getService()->openSave(in, file);
 }
 
 Loader::Loader() {
