@@ -86,6 +86,24 @@ bool Activity::activityIdleLocal() {
 	return idleLocal();
 }
 
+float Activity::getMovementScale(int tick) {
+	if (moving) {
+		return static_cast<float>(tick - movingTickStart) / movingPace;
+	}
+	else{
+		return 0.0f;
+	}
+}
+
+float Activity::getActivityScale(int tick) {
+	if (active) {
+		return static_cast<float>(tick - activityTickStart) / activityPace;
+	}
+	else {
+		return 0.0f;
+	}
+}
+
 void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);

@@ -120,6 +120,9 @@ public:
 	virtual bool moveableIdleLocal();
 	virtual bool activityIdleLocal();
 
+	float getMovementScale(int tick);
+	float getActivityScale(int tick);
+
 	// Constructors
 	Activity() = default;
 	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {};
@@ -168,8 +171,8 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
 
 	// Tree Informations
-	WeakReference<Activity, Activity> getRoot();
 	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
+	WeakReference<Activity, Activity> getRoot();
 
 	// Serial
 	virtual ACTIVITY::TYPE getType() = 0;

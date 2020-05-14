@@ -34,7 +34,7 @@ void BlockIDTextures::loadBlockTexture(std::string name) {
 	glViewport(0, 0, 32, 32);
 	glBindFramebuffer(GL_FRAMEBUFFER, textureBuffer.ID);
 	//glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray.ID);
-	
+
 	glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureArray.ID, 0, arrayLayers);
 	texture.set(newTex);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -48,8 +48,7 @@ GLuint BlockIDTextures::getTextureArrayID() {
 BlockIDTextures::BlockIDTextures() :
 	program(Locator<PathManager>::getService()->LoadShadersP("PassthroughArray.vert", "PassthroughArray.frag")),
 	layer("layer", program),
-	texture("texture", program, 0)
-{
+	texture("texture", program, 0) {
 	// The quad's FBO. Used only for visualizing the shadowmap.
 	static const GLfloat g_quad_vertex_buffer_data[] = {
 		-1.0f, -1.0f, 0.0f,
@@ -75,15 +74,15 @@ BlockIDTextures::BlockIDTextures() :
 	);
 	VAO.unbind();
 
-	const std::string textures_raw[] = {"debug.dds", "debug.dds", "sandstone.dds", "dirt.dds",
-		"stone.dds", "gravel.dds", "cobblestone.dds", "gravel2.dds", "mossy_cobblestone.dds", "diorite.dds", "andesite.dds", "podzol.dds", "fruit.dds"};
-	
+	const std::string textures_raw[] = { "debug.dds", "debug.dds", "sandstone.dds", "dirt.dds",
+		"stone.dds", "gravel.dds", "cobblestone.dds", "gravel2.dds", "mossy_cobblestone.dds", "diorite.dds", "andesite.dds", "podzol.dds", "fruit.dds" };
+
 	glGenFramebuffers(1, &textureBuffer.ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, textureBuffer.ID);
 
 	glGenTextures(1, &textureArray.ID);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray.ID);
-	
+
 	glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayLayers);
 	printf("%d", maxArrayLayers);
 	maxArrayLayers = glm::max(1024, maxArrayLayers);
@@ -110,18 +109,18 @@ BlockIDTextures::BlockIDTextures() :
 		loadBlockTexture(s);
 		textures[s] = arrayLayers++;
 	}
-/*
-	program.use();
-	VAO.bind();
+	/*
+		program.use();
+		VAO.bind();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, textureBuffer.ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, textureBuffer.ID);
 
-	glViewport(0, 0, 32, 32);
-	for (size_t i = 0; i < ts.size(); i++) {
-		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureArray.ID, 0, i);
-		layer.set(i);
-		texture.set(ts[i]);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
-	glBindVertexArray(0);*/
+		glViewport(0, 0, 32, 32);
+		for (size_t i = 0; i < ts.size(); i++) {
+			glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureArray.ID, 0, i);
+			layer.set(i);
+			texture.set(ts[i]);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+		glBindVertexArray(0);*/
 }
