@@ -55,6 +55,16 @@ std::stringstream& Piston::getMembers(std::stringstream& out) {
 	return out;
 }
 
+bool Piston::addChild(WeakReference<Activity, Activity> ref) {
+	if (child.isNotNull()) {
+		return false;
+	}
+	else {
+		child = ref;
+	}
+	return true;
+}
+
 ACTIVITY::TYPE Piston::getType() {
 	return ACTIVITY::PISTON;
 }
@@ -235,16 +245,6 @@ bool Piston::load(Loader& loader) {
 	ropeTex = s->getBlockTextureID("rope.dds");
 	cogTex = s->getBlockTextureID("cog.dds");
 
-	return true;
-}
-
-bool Piston::addChild(WeakReference<Activity, Activity> ref) {
-	if (child.isNotNull()) {
-		return false;
-	}
-	else {
-		child = ref;
-	}
 	return true;
 }
 

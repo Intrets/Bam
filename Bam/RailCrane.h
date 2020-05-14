@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Activity.h"
+#include "Grouper.h"
 
 namespace RAILCRANE
 {
@@ -12,7 +12,7 @@ namespace RAILCRANE
 	} DIR;
 }
 
-class RailCrane : public Activity
+class RailCrane : public Grouper 
 {
 public:
 	int supportTex;
@@ -23,6 +23,8 @@ public:
 	RAILCRANE::DIR anchorDirection;
 	int length;
 	int anchorIndexPos;
+
+	WeakReference<Activity, Anchor> child;
 
 	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces = true);
 	RailCrane();
@@ -66,5 +68,8 @@ public:
 	// Modyfing
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
+
+	// Inherited via Grouper
+	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 };
 

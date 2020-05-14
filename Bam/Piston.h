@@ -32,8 +32,6 @@ public:
 	Piston();
 	~Piston();
 
-	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
-
 	// Placement
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
@@ -73,6 +71,10 @@ public:
 	virtual void fillModifyingMap(ModifyerBase& modifier) override;
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
 	virtual std::stringstream& getMembers(std::stringstream& out) override;
+
+
+	// Inherited via Grouper
+	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 
 };
 

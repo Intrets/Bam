@@ -13,8 +13,18 @@ std::stringstream& RailCrane::getMembers(std::stringstream& out) {
 	return out;
 }
 
+bool RailCrane::addChild(WeakReference<Activity, Activity> ref) {
+	if (child.isNotNull()) {
+		return false;
+	}
+	else {
+		child = ref;
+	}
+	return true;
+}
+
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces) :
-	Activity(self, pos) {
+	Grouper(self, pos) {
 	length = 6;
 	orientation = MOVEABLE::DIR::RIGHT;
 	anchorDirection = RAILCRANE::DIR::STATIONARY;
@@ -172,7 +182,7 @@ void RailCrane::getTreeMembers(std::vector<Activity*>& members) {
 }
 
 ACTIVITY::TYPE RailCrane::getType() {
-	return ACTIVITY::TYPE();
+	return ACTIVITY::TYPE::RAILCRANE;
 }
 
 void RailCrane::save(Saver& saver) {

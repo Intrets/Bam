@@ -69,6 +69,7 @@ namespace ACTIVITY
 		GRABBER,
 		PLANT,
 		ACTIVATOR,
+		RAILCRANE,
 		_MAX,
 	} TYPE;
 
@@ -82,6 +83,7 @@ namespace ACTIVITY
 		"grabber",
 		"plant",
 		"activator",
+		"railcrane",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 }
