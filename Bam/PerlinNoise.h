@@ -21,7 +21,7 @@ public:
 
 	void fillTexture(bool fillTexture);
 
-	float dotGridGradient(int ix, int iy, float x, float y);
+	float dotGridGradient(int32_t ix, int32_t iy, float x, float y);
 
 	PerlinNoise() = delete;
 	PerlinNoise(glm::ivec2 pos, glm::ivec2 dpos);
@@ -31,7 +31,7 @@ public:
 class NoiseLayer
 {
 public:
-	int seed;
+	int32_t seed;
 	glm::vec2 pos;
 	glm::vec2 dpos;
 	glm::vec2 scale;
@@ -42,10 +42,10 @@ public:
 
 	float value(float x, float y);
 
-	float dotGridGradient(int ix, int iy, float x, float y);
-	glm::vec2 hashGradient(int x, int y);
+	float dotGridGradient(int32_t ix, int32_t iy, float x, float y);
+	glm::vec2 hashGradient(int32_t x, int32_t y);
 
-	NoiseLayer(int _seed, glm::vec2 _pos, glm::vec2 _dpos, glm::vec2 _scale);
+	NoiseLayer(int32_t _seed, glm::vec2 _pos, glm::vec2 _dpos, glm::vec2 _scale);
 
 	NoiseLayer() = delete;
 	~NoiseLayer() = default;

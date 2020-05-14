@@ -13,7 +13,7 @@ class StaticWorldChunk
 public:
 	glm::ivec2 getPosition();
 
-	void setBlock(glm::ivec2 pos, int blockID, bool occlude);
+	void setBlock(glm::ivec2 pos, int32_t blockID, bool occlude);
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 
 	bool isOccupied(glm::ivec2& pos);

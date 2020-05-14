@@ -5,11 +5,11 @@
 class GLEnabler
 {
 private:
-	std::vector<int> enabled;
-	std::vector<int> disabled;
+	std::vector<int32_t> enabled;
+	std::vector<int32_t> disabled;
 public:
-	GLEnabler& enable(int h);
-	GLEnabler& disable(int h);
+	GLEnabler& enable(int32_t h);
+	GLEnabler& disable(int32_t h);
 
 	GLEnabler() = default;
 	~GLEnabler();

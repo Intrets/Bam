@@ -7,7 +7,7 @@
 //#include "Saver.h"
 //#include "Loader.h"
 
-void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace) {
+void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	movingPace = pace;
 	moving = true;
 	movementDirection = dir;
@@ -55,7 +55,7 @@ bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Ac
 }
 
 glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
-	int tick = gameState.tick;
+	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
@@ -86,7 +86,7 @@ bool Activity::activityIdleLocal() {
 	return idleLocal();
 }
 
-float Activity::getMovementScale(int tick) {
+float Activity::getMovementScale(int32_t tick) {
 	if (moving) {
 		return static_cast<float>(tick - movingTickStart) / movingPace;
 	}
@@ -95,7 +95,7 @@ float Activity::getMovementScale(int tick) {
 	}
 }
 
-float Activity::getActivityScale(int tick) {
+float Activity::getActivityScale(int32_t tick) {
 	if (active) {
 		return static_cast<float>(tick - activityTickStart) / activityPace;
 	}
@@ -131,14 +131,14 @@ void Activity::disconnectFromParent() {
 	}
 }
 
-void Activity::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void Activity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	activityPace = pace;
 	active = true;
 	activityTickStart = gameState.tick;
 	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
 }
 
-bool Activity::applyActivityLocal(GameState& gameState, int useType, int pace) {
+bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t pace) {
 	if (!activityIdleLocal()) {
 		return false;
 	}
@@ -149,7 +149,7 @@ bool Activity::applyActivityLocal(GameState& gameState, int useType, int pace) {
 	return true;
 }
 
-bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int pace) {
+bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);
 
@@ -172,7 +172,7 @@ bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int pace) {
 	return true;
 }
 
-void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int pace) {
+void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	getTreeMembers(members);
 
@@ -181,7 +181,7 @@ void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int pa
 	}
 }
 
-bool Activity::applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int pace) {
+bool Activity::applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	return getRoot().get()->applyMoveUp(gameState, dir, pace);
 }
 

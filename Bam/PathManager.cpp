@@ -15,7 +15,7 @@ GLuint PathManager::LoadShadersP(std::string vertex, std::string fragment) {
 	return LoadShaders(fullPathVertex.c_str(), fullPathFragment.c_str());
 }
 
-void PathManager::LoadModelP(std::string& name, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int& indexsize) {
+void PathManager::LoadModelP(std::string& name, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int32_t& indexsize) {
 	std::string path = paths[RESOURCE_PATH::GRAPHICS] + name;
 	loadModel(path, vertexbuffer, uvbuffer, normalbuffer, indexbuffer, indexsize);
 }

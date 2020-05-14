@@ -52,7 +52,7 @@ void ControlState::cycleStates() {
 std::vector<BindControl> ControlState::getBindControls() {
 	if (!cachedBindControls.has_value()) {
 		cachedBindControls.emplace();
-		for (int i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
+		for (int32_t i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
 			CONTROLS control = static_cast<CONTROLS>(i);
 			CONTROLSTATE state = controlState[i];
 			cachedBindControls->push_back({ control, state });
@@ -61,7 +61,7 @@ std::vector<BindControl> ControlState::getBindControls() {
 	return cachedBindControls.value();
 }
 
-void ControlState::key_callback(GLFWwindow* w, int key, int scancode, int action, int mods) {
+void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
 	// unknown key?
 	if (key == -1) {
 		return;

@@ -78,7 +78,7 @@ public:
 	void cycleStates();
 	std::vector<BindControl> getBindControls();
 
-	void key_callback(GLFWwindow* w, int key, int scancode, int action, int mods);
+	void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 private:
 	std::optional<std::vector<BindControl>> cachedBindControls;
 

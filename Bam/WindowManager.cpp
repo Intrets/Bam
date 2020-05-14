@@ -27,7 +27,7 @@ void WindowManager::focus() {
 	focussed = true;
 }
 
-bool WindowManager::mouseCallback(glm::vec2 pos, int key, int action, int mods) {
+bool WindowManager::mouseCallback(glm::vec2 pos, int32_t key, int32_t action, int32_t mods) {
 	//activeWindow.unset();
 	//unfocus();
 	//auto ref = Locator<ReferenceManager<BaseWindow>>::getService();
@@ -44,7 +44,7 @@ bool WindowManager::mouseCallback(glm::vec2 pos, int key, int action, int mods) 
 	return focussed;
 }
 
-bool WindowManager::key_callback(int key, int scancode, int action, int mods) {
+bool WindowManager::key_callback(int32_t key, int32_t scancode, int32_t action, int32_t mods) {
 	//if (focussed && activeWindow.isValid()) {
 	//	activeWindow.get()->key_callback(key, scancode, action, mods);
 	//	return true;

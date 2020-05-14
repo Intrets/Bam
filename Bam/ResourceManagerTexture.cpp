@@ -2,10 +2,10 @@
 
 #include "ResourceManagerTexture.h"
 
-int ResourceManagerTexture::getIndex(std::string name) {
-	int index;
+int32_t ResourceManagerTexture::getIndex(std::string name) {
+	int32_t index;
 	if (indexMap.count(name) == 0) {
-		index = static_cast<int>(indexMap.size());
+		index = static_cast<int32_t>(indexMap.size());
 		indexMap[name] = index;
 		names.push_back(name);
 		resources.push_back(std::make_unique<TextureStore>(name));
@@ -16,7 +16,7 @@ int ResourceManagerTexture::getIndex(std::string name) {
 	return index;
 }
 
-TextureStore* ResourceManagerTexture::get(int index) {
+TextureStore* ResourceManagerTexture::get(int32_t index) {
 	return resources[index].get();
 }
 

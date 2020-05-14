@@ -1,6 +1,6 @@
 #pragma once
 
-typedef int Handle;
+typedef int32_t Handle;
 class Activity;
 
 class ActivityIgnoringGroup

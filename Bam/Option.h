@@ -151,7 +151,7 @@ inline std::string OptionValue<T>::set(std::string str) {
 }
 
 template<>
-inline std::string OptionValue<int>::type() {
+inline std::string OptionValue<int32_t>::type() {
 	return "int";
 }
 

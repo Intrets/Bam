@@ -27,7 +27,7 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		logicSequence->runBinds(controlState, gameState);
 	}
 
-	for (int i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
+	for (int32_t i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
 		CONTROLS control = static_cast<CONTROLS>(i);
 		CONTROLSTATE state = controlState.controlState[control];
 

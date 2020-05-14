@@ -43,7 +43,7 @@ protected:
 	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {};
 
 public:
-	int test = 0;
+	int32_t test = 0;
 };
 
 inline void LogicSequencer::addBind(BindControl bindControl, BindType bind) {

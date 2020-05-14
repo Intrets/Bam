@@ -14,8 +14,8 @@ public:
 	virtual bool activityIdleLocal() override;
 
 	// Activity
-	virtual bool canActivityLocal(GameState& gameState, int type) override;
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
+	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Traces Activity
 	virtual void removeActivityTracesLocal(GameState& gameState);

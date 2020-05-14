@@ -28,7 +28,7 @@ private:
 	// Need to initialize in initialization list
 	CircularArray<double> lastRenderTimes;
 
-	Option<OPTIONS2::GR_FRAMESYNCMODE, int> frameSyncMode;
+	Option<OPTIONS2::GR_FRAMESYNCMODE, int32_t> frameSyncMode;
 
 	double previousFrameStart;
 	double previousFrameEnd;

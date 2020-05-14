@@ -8,7 +8,7 @@
 #include "Activity.h"
 #include <map>
 
-typedef int Handle;
+typedef int32_t Handle;
 
 class StaticWorldChunk;
 struct RenderInfo;
@@ -34,7 +34,7 @@ public:
 	bool save(Saver& saver);
 
 	//TODO: !
-	StaticWorldChunk* getChunkByIndex(int i, int j);
+	StaticWorldChunk* getChunkByIndex(int32_t i, int32_t j);
 	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
 	Block* getBlockRef(glm::ivec2 pos);
 

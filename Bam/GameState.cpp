@@ -13,7 +13,7 @@ void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
 	double y;
 	glfwGetCursorPos(window, &x, &y);
 
-	int frameSizeX, frameSizeY;
+	int32_t frameSizeX, frameSizeY;
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	x = x / frameSizeX;
 	y = y / frameSizeY;

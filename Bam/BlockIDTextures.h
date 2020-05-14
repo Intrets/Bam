@@ -15,13 +15,13 @@ private:
 	bwo::Uniform1i layer;
 	bwo::UniformTexture2D texture;
 
-	int maxArrayLayers;
-	int arrayLayers = 0;
+	int32_t maxArrayLayers;
+	int32_t arrayLayers = 0;
 
-	std::unordered_map<std::string, int> textures;
+	std::unordered_map<std::string, int32_t> textures;
 
 public:
-	int getBlockTextureID(std::string);
+	int32_t getBlockTextureID(std::string);
 	void loadBlockTexture(std::string);
 	GLuint getTextureArrayID();
 

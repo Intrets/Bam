@@ -23,8 +23,8 @@ public:
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
 	// Activity
-	virtual bool canActivityLocal(GameState & gameState, int type) override;
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+	virtual bool canActivityLocal(GameState & gameState, int32_t type) override;
+	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
 	virtual bool canMoveLocal(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;

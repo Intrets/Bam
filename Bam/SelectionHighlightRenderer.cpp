@@ -92,7 +92,7 @@ void SelectionHighlightRenderer::render(RenderInfo & info, GLuint target) {
 
 	VP.set(info.cameraInfo.VP);
 
-	int drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int>(info.selectionRenderInfo.offsets.size()));
+	int32_t drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int32_t>(info.selectionRenderInfo.offsets.size()));
 
 	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.selectionRenderInfo.offsets)::value_type) * drawCount, &info.selectionRenderInfo.offsets[0]);

@@ -28,7 +28,7 @@ public:
 class ModifyableAddChild : public Modifyable
 {
 public:
-	using SetterType = void (Anchor::*)(int);
+	using SetterType = void (Anchor::*)(int32_t);
 	SetterType setter;
 
 	virtual std::ostream& toStream(void* base_, std::ostream& out) override {
@@ -42,7 +42,7 @@ public:
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) {
 		if (readOnly) return false;
 		Anchor* base = static_cast<Anchor*>(base_);
-		int h;
+		int32_t h;
 		try {
 			h = std::stoi(value[0]);
 		}
@@ -64,19 +64,19 @@ template <class T>
 class ModifyableDoActivity : public Modifyable
 {
 public:
-	using SetterType = bool (T::*)(GameState&, int, int);
+	using SetterType = bool (T::*)(GameState&, int32_t, int32_t);
 
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) {
 		if (readOnly) return false;
 		T* base = static_cast<T*>(base_);
-		int type;
+		int32_t type;
 		try {
 			type = std::stoi(value[0]);
 		}
 		catch (std::exception) {
 			return false;
 		}
-		int pace = 10;
+		int32_t pace = 10;
 		if (value.size() > 1) {
 			try {
 				pace = std::stoi(value[1]);
@@ -99,7 +99,7 @@ template <class T>
 class ModifyableDoRootMove : public Modifyable
 {
 public:
-	using SetterType = bool (T::*)(GameState&, MOVEABLE::DIR, int);
+	using SetterType = bool (T::*)(GameState&, MOVEABLE::DIR, int32_t);
 
 	SetterType setter;
 
@@ -125,7 +125,7 @@ public:
 		else {
 			return false;
 		}
-		int pace = 10;
+		int32_t pace = 10;
 		if (value.size() > 1) {
 			try {
 				pace = std::stoi(value[1]);
@@ -166,7 +166,7 @@ public:
 		if (value.size() == 0) {
 			return false;
 		}
-		int h;
+		int32_t h;
 		try {
 			h = std::stoi(value[0]);
 		}
@@ -199,7 +199,7 @@ public:
 
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) {
 		try {
-			int h = std::stoi(value[0]);
+			int32_t h = std::stoi(value[0]);
 
 			T* base = static_cast<T*>(base_);
 			auto t = static_cast<Member*>(&(base->*ptr));
@@ -226,11 +226,11 @@ template <class T>
 class ModifyableInt : public Modifyable
 {
 public:
-	int T::* ptr;
+	int32_t T::* ptr;
 
 	virtual std::ostream& toStream(void* base_, std::ostream& out) {
 		T* base = static_cast<T*>(base_);
-		auto t = static_cast<int*>(&(base->*ptr));
+		auto t = static_cast<int32_t*>(&(base->*ptr));
 		out << *t;
 		return out;
 	};
@@ -238,7 +238,7 @@ public:
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) override {
 		if (readOnly) return false;
 		T* base = static_cast<T*>(base_);
-		auto t = static_cast<int*>(&(base->*ptr));
+		auto t = static_cast<int32_t*>(&(base->*ptr));
 		try {
 			*t = std::stoi(value[0]);
 			return true;
@@ -247,7 +247,7 @@ public:
 			return false;
 		}
 	};
-	ModifyableInt(int T::* ptr_) : ptr(ptr_) {};
+	ModifyableInt(int32_t T::* ptr_) : ptr(ptr_) {};
 	~ModifyableInt() = default;
 };
 

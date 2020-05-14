@@ -8,7 +8,7 @@ private:
 	double nextStep = 0.0;
 	double stepTime = 1 / 60.0;
 
-	int step = 0;
+	int32_t step = 0;
 
 public:
 	bool ready();

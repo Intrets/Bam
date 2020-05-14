@@ -9,10 +9,10 @@ namespace bwo
 	private:
 		GLuint ID;
 	public:
-		void gen(int count) {
+		void gen(int32_t count) {
 			glGenVertexArrays(1, &ID);
 			bind();
-			for (int i = 0; i < count; i++) {
+			for (int32_t i = 0; i < count; i++) {
 				glEnableVertexAttribArray(i);
 			}
 		};
@@ -107,12 +107,12 @@ namespace bwo
 	class UniformTexture2D
 	{
 	private:
-		int unit;
+		int32_t unit;
 		GLuint location;
 	public:
 		void set(GLuint texture);
 		UniformTexture2D() = default;
-		UniformTexture2D(std::string name, Program& program, int unit);
+		UniformTexture2D(std::string name, Program& program, int32_t unit);
 		~UniformTexture2D() = default;
 	};
 
@@ -153,12 +153,12 @@ namespace bwo
 	{
 	private:
 		GLuint location;
-		int unit;
+		int32_t unit;
 
 	public:
 		void set(GLuint texture);
 		UniformTexture2DArray() = default;
-		UniformTexture2DArray(std::string name, Program& program, int unit);
+		UniformTexture2DArray(std::string name, Program& program, int32_t unit);
 		~UniformTexture2DArray() = default;
 	};
 
@@ -168,7 +168,7 @@ namespace bwo
 		GLuint location;
 
 	public:
-		void set(int i);
+		void set(int32_t i);
 		Uniform1i() = default;
 		Uniform1i(std::string name, Program& program);
 		~Uniform1i() = default;

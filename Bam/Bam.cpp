@@ -14,11 +14,11 @@
 GLFWwindow* window;
 ControlState controlState;
 
-static void key_callback(GLFWwindow* w, int key, int scancode, int action, int mods) {
+static void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
 	controlState.key_callback(w, key, scancode, action, mods);
 }
 
-static void mouse_callback(GLFWwindow* w, int key, int action, int mods) {
+static void mouse_callback(GLFWwindow* w, int32_t key, int32_t action, int32_t mods) {
 	key_callback(w, key + GLFW_KEY_LAST, 0, action, mods);
 }
 

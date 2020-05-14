@@ -48,6 +48,6 @@ void ModelBinder::bind(ModelResource model) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.get()->indexbufferHandle);
 }
 
-ModelBinder::ModelBinder(int vertex_, int uv_, int normal_) :
+ModelBinder::ModelBinder(int32_t vertex_, int32_t uv_, int32_t normal_) :
 	vertex(vertex_), uv(uv_), normal(normal_) {
 }

@@ -59,7 +59,7 @@ ACTIVITY::TYPE Piston::getType() {
 	return ACTIVITY::PISTON;
 }
 
-bool Piston::canActivityLocal(GameState& gameState, int type) {
+bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	switch (type) {
 		case PISTON::EXTEND:
@@ -95,11 +95,11 @@ bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnor
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::ivec2 moveDirection = MOVEABLE::DIRECTION[dir];
 
-	int d = idot(moveDirection, headDirection);
+	int32_t d = idot(moveDirection, headDirection);
 	auto ori = origin + moveDirection;
 	bool blocked = false;
 	if (d == 0) {
-		for (int i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= length + 1; i++) {
 			auto p = ori + i * headDirection;
 			if (gameState.staticWorld.isOccupied(p, ignore)) {
 				blocked = true;
@@ -125,7 +125,7 @@ bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnor
 void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::vec2 moveDirection = MOVEABLE::DIRECTION[movementDirection];
-	int tick = gameState.tick;
+	int32_t tick = gameState.tick;
 	glm::vec2 ori = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
@@ -145,7 +145,7 @@ void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, g
 void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	glm::vec2 moveDirection = MOVEABLE::DIRECTION[movementDirection];
-	int tick = gameState.tick;
+	int32_t tick = gameState.tick;
 	glm::vec2 ori = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
@@ -157,7 +157,7 @@ void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo&
 		grabberPos += (scale - 1) * glm::vec2(direction);
 	}
 	staticWorldRenderInfo.addBlockWithShadow(ori, cogTex);
-	for (int i = 0; i <= length; i++) {
+	for (int32_t i = 0; i <= length; i++) {
 		auto p = ori + static_cast<float>(i) * headDirection;
 		staticWorldRenderInfo.addBlockWithoutShadow(p, ropeTex);
 	}
@@ -173,10 +173,10 @@ void Piston::leaveActivityTracesLocal(GameState& gameState) {
 
 void Piston::removeMoveableTracesLocal(GameState& gameState) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	int d = idot(getDirection(movementDirection), headDirection);
+	int32_t d = idot(getDirection(movementDirection), headDirection);
 	auto ori = origin - getDirection(movementDirection);
 	if (d == 0) {
-		for (int i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= length + 1; i++) {
 			auto p = ori + i * headDirection;
 			gameState.staticWorld.removeTraceFilter(p, selfHandle);
 		}
@@ -193,10 +193,10 @@ void Piston::removeMoveableTracesLocal(GameState& gameState) {
 
 void Piston::leaveMoveableTracesLocal(GameState& gameState) {
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	int d = idot(getDirection(movementDirection), headDirection);
+	int32_t d = idot(getDirection(movementDirection), headDirection);
 	auto ori = origin + getDirection(movementDirection);
 	if (d == 0) {
-		for (int i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= length + 1; i++) {
 			auto p = ori + i * headDirection;
 			gameState.staticWorld.leaveTrace(p, selfHandle);
 		}
@@ -216,7 +216,7 @@ void Piston::save(Saver& saver) {
 	saver.store<glm::ivec2>(direction);
 	saver.store<MOVEABLE::DIR>(headDir);
 	saver.store<PISTON::DIR>(state);
-	saver.store<int>(length);
+	saver.store(length);
 }
 
 bool Piston::load(Loader& loader) {
@@ -224,7 +224,7 @@ bool Piston::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(direction);
 	loader.retrieve<MOVEABLE::DIR>(headDir);
 	loader.retrieve<PISTON::DIR>(state);
-	loader.retrieve<int>(length);
+	loader.retrieve(length);
 
 	auto s = Locator<BlockIDTextures>::getService();
 	headTex = s->getBlockTextureID("grabber.dds");
@@ -239,10 +239,10 @@ void Piston::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - 1);
-			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 1) % 4);
+			headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(headDir + 1) % 4);
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
-			headDir = static_cast<MOVEABLE::DIR>(static_cast<int>(headDir + 3) % 4);
+			headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(headDir + 3) % 4);
 			d = glm::ivec2(-d.y - 1, d.x);
 			break;
 		default:
@@ -253,7 +253,7 @@ void Piston::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 
 void Piston::fillTracesLocalForced(GameState& gameState) {
 	glm::ivec2 pos = origin;
-	for (int i = 0; i < length + 2; i++) {
+	for (int32_t i = 0; i < length + 2; i++) {
 		gameState.staticWorld.leaveTrace(pos, selfHandle);
 		pos += MOVEABLE::DIRECTION[headDir];
 	}
@@ -261,13 +261,13 @@ void Piston::fillTracesLocalForced(GameState& gameState) {
 
 void Piston::removeTracesLocalForced(GameState& gameState) {
 	glm::ivec2 pos = origin;
-	for (int i = 0; i < length + 2; i++) {
+	for (int32_t i = 0; i < length + 2; i++) {
 		gameState.staticWorld.removeTraceForced(pos);
 		pos += MOVEABLE::DIRECTION[headDir];
 	}
 }
 
-void Piston::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
 	switch (type) {
@@ -300,7 +300,7 @@ void Piston::applyActivityLocalForced(GameState& gameState, int type, int pace) 
 
 bool Piston::canFillTracesLocal(GameState& gameState) {
 	glm::ivec2 pos = origin;
-	for (int i = 0; i < length + 2; i++) {
+	for (int32_t i = 0; i < length + 2; i++) {
 		if (gameState.staticWorld.isOccupied(pos)) {
 			return false;
 		}

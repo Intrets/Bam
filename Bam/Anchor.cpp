@@ -55,7 +55,7 @@ void Anchor::removeMoveableTracesLocal(GameState& gameState) {
 void Anchor::leaveMoveableTracesLocal(GameState& gameState) {
 }
 
-bool Anchor::canActivityLocal(GameState& gameState, int useType) {
+bool Anchor::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
 }
 
@@ -70,7 +70,7 @@ void Anchor::save(Saver& saver) {
 	size_t s = children.size();
 	saver.store<size_t>(s);
 	for (auto& child : children) {
-		saver.store<int>(child.handle);
+		saver.store(child.handle);
 	}
 }
 
@@ -78,9 +78,9 @@ bool Anchor::load(Loader& loader) {
 	Activity::load(loader);
 	size_t count;
 	loader.retrieve<size_t>(count);
-	for (int i = 0; i < count; i++) {
-		int handle;
-		loader.retrieve<int>(handle);
+	for (int32_t i = 0; i < count; i++) {
+		int32_t handle;
+		loader.retrieve(handle);
 		children.push_back(WeakReference<Activity, Activity>(handle));
 	}
 	return true;
@@ -130,7 +130,7 @@ void Anchor::fillTracesLocalForced(GameState& gameState) {
 void Anchor::removeTracesLocalForced(GameState& gameState) {
 }
 
-void Anchor::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 }
 

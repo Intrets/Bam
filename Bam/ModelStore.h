@@ -7,7 +7,7 @@ public:
 	GLuint uvbufferHandle;
 	GLuint normalbufferHandle;
 	GLuint indexbufferHandle;
-	int indexbufferSize;
+	int32_t indexbufferSize;
 
 	ModelStore(std::string name);
 	ModelStore() = delete;

@@ -25,7 +25,7 @@ public:
 	bool exit;
 	glm::vec2 playerPos;
 
-	int tick = 0;
+	int32_t tick = 0;
 
 	glm::vec2 getPlayerCursorWorldSpace();
 	void updatePlayerCursorScreenSpace(GLFWwindow* window);

@@ -16,10 +16,10 @@ namespace PISTON
 class Piston : public Grouper
 {
 public:
-	int cogTex;
-	int ropeTex;
-	int headTex;
-	int length;
+	int32_t cogTex;
+	int32_t ropeTex;
+	int32_t headTex;
+	int32_t length;
 
 	glm::ivec2 direction;
 	MOVEABLE::DIR headDir;
@@ -35,8 +35,8 @@ public:
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
 	// Activity
-	virtual bool canActivityLocal(GameState& gameState, int type) override;
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
+	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;

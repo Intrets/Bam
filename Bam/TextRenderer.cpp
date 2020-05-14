@@ -30,7 +30,7 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, GLuint target, CameraI
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
 	glBindBuffer(GL_ARRAY_BUFFER, characters.ID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int) * textRenderInfo.chars.size(), &textRenderInfo.chars[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int32_t) * textRenderInfo.chars.size(), &textRenderInfo.chars[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, characterPositions.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * textRenderInfo.offsets.size(), &textRenderInfo.offsets[0]);
@@ -38,7 +38,7 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, GLuint target, CameraI
 	glBindBuffer(GL_ARRAY_BUFFER, scale.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * textRenderInfo.scales.size(), &textRenderInfo.scales[0]);
 
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<int>(textRenderInfo.chars.size()));
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<int32_t>(textRenderInfo.chars.size()));
 
 	VAO.unbind();
 }
@@ -86,7 +86,7 @@ TextRenderer::TextRenderer(std::string name, glm::ivec2 fontDim, glm::ivec2 grid
 
 	glGenBuffers(1, &characters.ID);
 	glBindBuffer(GL_ARRAY_BUFFER, characters.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * MAX_CHARACTER_DRAW, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(int32_t) * MAX_CHARACTER_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribIPointer(
 		1,                                // attribute
 		1,                                // size

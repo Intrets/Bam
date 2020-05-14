@@ -8,20 +8,20 @@ class Saver;
 class ActivityPaceHandler
 {
 public:
-	int size;
-	int i = 0;
+	int32_t size;
+	int32_t i = 0;
 
 	std::vector<std::vector<WeakReference<Activity, Activity>>> activities;
 
 	void finish(GameState& gameState);
 
 	void cycle();
-	void add(WeakReference<Activity, Activity> m, int duration);
+	void add(WeakReference<Activity, Activity> m, int32_t duration);
 
 	void save(Saver& saver);
 	void load(Loader& loader);
 
-	ActivityPaceHandler(int max);
+	ActivityPaceHandler(int32_t max);
 	ActivityPaceHandler();
 	~ActivityPaceHandler() = default;
 
@@ -31,8 +31,8 @@ public:
 class MovementPaceHandler
 {
 public:
-	int size;
-	int i = 0;
+	int32_t size;
+	int32_t i = 0;
 
 	std::vector<std::vector<WeakReference<Activity, Activity>>> activities;
 
@@ -42,9 +42,9 @@ public:
 	void load(Loader& loader);
 
 	void cycle();
-	void add(WeakReference<Activity, Activity> m, int duration);
+	void add(WeakReference<Activity, Activity> m, int32_t duration);
 
-	MovementPaceHandler(int max);
+	MovementPaceHandler(int32_t max);
 	MovementPaceHandler();
 	~MovementPaceHandler() = default;
 

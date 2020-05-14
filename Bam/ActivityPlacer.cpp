@@ -100,7 +100,7 @@ ActivityPlacer::ActivityPlacer() {
 		auto self = static_cast<ActivityPlacer*>(self_);
 		if (!self->target.isValid()) {
 			self->hoverType++;
-			self->hoverType %= static_cast<int>(HOVERTYPES::HOVERTYPES_MAX);
+			self->hoverType %= static_cast<int32_t>(HOVERTYPES::HOVERTYPES_MAX);
 			self->spawnHover(gameState, gameState.getPlayerCursorWorldSpace());
 		}
 

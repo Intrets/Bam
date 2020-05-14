@@ -42,6 +42,6 @@ bool Block::save(Saver& saver) {
 	return true;
 }
 
-Block::Block(int id) {
+Block::Block(int32_t id) {
 	blockID = id;
 }

@@ -12,23 +12,23 @@
 #include "RenderInfo.h"
 
 void Platform::calculateBlockedDirections() {
-	for (int i = 0; i < 4; i++) {
+	for (int32_t i = 0; i < 4; i++) {
 		blockedDirections[i].clear();
 	}
-	for (int x = 0; x < size.x; x++) {
+	for (int32_t x = 0; x < size.x; x++) {
 		{
-			int y = 0;
+			int32_t y = 0;
 			if (blocks[x][y].isOccupied()) {
 				blockedDirections[MOVEABLE::DOWN].push_back(glm::ivec2(x, y - 1));
 			}
 		}
 		{
-			int y = size.y - 1;
+			int32_t y = size.y - 1;
 			if (blocks[x][y].isOccupied()) {
 				blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
 			}
 		}
-		for (int y = 0; y < size.y - 1; y++) {
+		for (int32_t y = 0; y < size.y - 1; y++) {
 			if (blocks[x][y].isOccupied() && !blocks[x][y + 1].isOccupied()) {
 				blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
 			}
@@ -37,20 +37,20 @@ void Platform::calculateBlockedDirections() {
 			}
 		}
 	}
-	for (int y = 0; y < size.y; y++) {
+	for (int32_t y = 0; y < size.y; y++) {
 		{
-			int x = 0;
+			int32_t x = 0;
 			if (blocks[x][y].isOccupied()) {
 				blockedDirections[MOVEABLE::LEFT].push_back(glm::ivec2(x - 1, y));
 			}
 		}
 		{
-			int x = size.x - 1;
+			int32_t x = size.x - 1;
 			if (blocks[x][y].isOccupied()) {
 				blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
 		}
-		for (int x = 0; x < size.x - 1; x++) {
+		for (int32_t x = 0; x < size.x - 1; x++) {
 			if (blocks[x][y].isOccupied() && !blocks[x + 1][y].isOccupied()) {
 				blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
@@ -65,9 +65,9 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	Activity(self, pos),
 	size(_size),
 	blocks(size[0], std::vector<Block>(size[1], Block(0))) {
-	int textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
+	int32_t textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
+	for (int32_t i = 0; i < size[0]; i++) {
+		for (int32_t j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			blocks[i][j].setID(textureID);
 		}
@@ -89,8 +89,8 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - size.y);
-			for (int i = 0; i < size.x; i++) {
-				for (int j = 0; j < size.y; j++) {
+			for (int32_t i = 0; i < size.x; i++) {
+				for (int32_t j = 0; j < size.y; j++) {
 					blocks[i][j] = old[size.y - 1 - j][i];
 				}
 			}
@@ -98,8 +98,8 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
 			d = glm::ivec2(-d.y - size.x, d.x);
-			for (int i = 0; i < size.x; i++) {
-				for (int j = 0; j < size.y; j++) {
+			for (int32_t i = 0; i < size.x; i++) {
+				for (int32_t j = 0; j < size.y; j++) {
 					blocks[i][j] = old[j][size.x - 1 - i];
 				}
 			}
@@ -112,7 +112,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 }
 
 void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-	int tick = gameState.tick;
+	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
@@ -125,14 +125,14 @@ void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo,
 }
 
 void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	int tick = gameState.tick;
+	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
 		v += scale * glm::vec2(getDirection(movementDirection));
 	}
-	for (int x = 0; x < size.x; x++) {
-		for (int y = 0; y < size.y; y++) {
+	for (int32_t x = 0; x < size.x; x++) {
+		for (int32_t y = 0; y < size.y; y++) {
 			// TODO: remove debugging textures 
 			if (blocks[x][y].isOccupied()) {
 				glm::vec2 p(x, y);
@@ -159,8 +159,8 @@ bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgn
 	std::vector<std::vector<StaticWorldChunk*>> nearChunks(localSize.x, std::vector<StaticWorldChunk*>(localSize.y, nullptr));
 
 	// TODO: move logic of this loop to staticworld?
-	for (int i = p1.x; i <= p2.x; i++) {
-		for (int j = p1.y; j <= p2.y; j++) {
+	for (int32_t i = p1.x; i <= p2.x; i++) {
+		for (int32_t j = p1.y; j <= p2.y; j++) {
 			nearChunks[i - p1.x][j - p1.y] = gameState.staticWorld.getChunkByIndex(i, j);
 		}
 	}
@@ -191,7 +191,7 @@ void Platform::leaveMoveableTracesLocal(GameState& gameState) {
 	}
 }
 
-bool Platform::canActivityLocal(GameState& gameState, int useType) {
+bool Platform::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
 }
 
@@ -211,9 +211,9 @@ bool Platform::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(size);
 
 	blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
-	int textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
-	for (int i = 0; i < size[0]; i++) {
-		for (int j = 0; j < size[1]; j++) {
+	int32_t textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
+	for (int32_t i = 0; i < size[0]; i++) {
+		for (int32_t j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			blocks[i][j].setID(textureID);
 		}
@@ -249,8 +249,8 @@ void Platform::getTreeMembers(std::vector<Activity*>& members) {
 }
 
 bool Platform::canFillTracesLocal(GameState& gameState) {
-	for (int i = 0; i < size.x; i++) {
-		for (int j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < size.x; i++) {
+		for (int32_t j = 0; j < size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			if (gameState.staticWorld.isOccupied(p)) {
 				return false;
@@ -261,8 +261,8 @@ bool Platform::canFillTracesLocal(GameState& gameState) {
 }
 
 void Platform::fillTracesLocalForced(GameState& gameState) {
-	for (int i = 0; i < size.x; i++) {
-		for (int j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < size.x; i++) {
+		for (int32_t j = 0; j < size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.leaveTrace(p, selfHandle);
 		}
@@ -270,14 +270,14 @@ void Platform::fillTracesLocalForced(GameState& gameState) {
 }
 
 void Platform::removeTracesLocalForced(GameState& gameState) {
-	for (int i = 0; i < size.x; i++) {
-		for (int j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < size.x; i++) {
+		for (int32_t j = 0; j < size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.removeTraceForced(p);
 		}
 	}
 }
 
-void Platform::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void Platform::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 }

@@ -19,8 +19,8 @@ class FPSDisplay
 public:
 	double lastTime;
 
-	int nbFrames;
-	int fps;
+	int32_t nbFrames;
+	int32_t fps;
 
 	//ManagedReference<BaseWindow, TextWindow> fpsDisplayWindow;
 	//Option<int> fpsmode2{ "fps_displaymode", 1 };

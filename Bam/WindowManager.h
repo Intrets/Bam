@@ -25,8 +25,8 @@ public:
 	void focus();
 
 	// (-1,1) range
-	bool mouseCallback(glm::vec2 pos, int key, int action, int mods);
-	bool key_callback(int key, int scancode, int action, int mods);
+	bool mouseCallback(glm::vec2 pos, int32_t key, int32_t action, int32_t mods);
+	bool key_callback(int32_t key, int32_t scancode, int32_t action, int32_t mods);
 
 	void addRenderInfo(UIrenderInfo& uiRenderInfo, CameraInfo& cameraInfo, TextRenderer& textRenderer);
 

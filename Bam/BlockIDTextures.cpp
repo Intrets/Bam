@@ -5,7 +5,7 @@
 #include "ShaderLoader.h"
 #include "GLEnableWrapper.h"
 
-int BlockIDTextures::getBlockTextureID(std::string name) {
+int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 	auto search = textures.find(name);
 	if (search == textures.end()) {
 		// TODO : actually make texture loading work

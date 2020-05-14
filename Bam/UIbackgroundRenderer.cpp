@@ -30,7 +30,7 @@ void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, Camer
 	glBindBuffer(GL_ARRAY_BUFFER, colors.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * renderInfo.colors.size(), &renderInfo.colors[0]);
 
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<int>(renderInfo.scales.size()));
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<int32_t>(renderInfo.scales.size()));
 }
 
 UIbackgroundRenderer::UIbackgroundRenderer() :
@@ -62,7 +62,7 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 	glGenBuffers(1, &positions.ID);
 	glBindBuffer(GL_ARRAY_BUFFER, positions.ID);
 	// TODO: limit properly
-	int limit = 100;
+	int32_t limit = 100;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * limit, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(

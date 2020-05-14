@@ -5,7 +5,7 @@ class TextureStore;
 class TextureResource
 {
 private:
-	int index;
+	int32_t index;
 
 public:
 	TextureStore* get();

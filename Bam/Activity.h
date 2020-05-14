@@ -98,13 +98,13 @@ private:
 protected:
 	glm::vec2 getMovingOrigin(GameState& gameState);
 
-	int activityPace = 10;
-	int activityTickStart = 0;
-	int activityType = 0;
+	int32_t activityPace = 10;
+	int32_t activityTickStart = 0;
+	int32_t activityType = 0;
 	bool active = false;
 
-	int movingPace = 20;
-	int movingTickStart = 0;
+	int32_t movingPace = 20;
+	int32_t movingTickStart = 0;
 	MOVEABLE::DIR movementDirection = MOVEABLE::STATIONARY;
 	bool moving = false;
 
@@ -122,8 +122,8 @@ public:
 	virtual bool moveableIdleLocal();
 	virtual bool activityIdleLocal();
 
-	float getMovementScale(int tick);
-	float getActivityScale(int tick);
+	float getMovementScale(int32_t  tick);
+	float getActivityScale(int32_t  tick);
 
 	// Constructors
 	Activity() = default;
@@ -138,19 +138,19 @@ public:
 	void disconnectFromParent();
 
 	// Activity
-	virtual bool canActivityLocal(GameState& gameState, int type) = 0;
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) = 0;
-	bool applyActivityLocal(GameState& gameState, int type, int pace);
+	virtual bool canActivityLocal(GameState& gameState, int32_t type) = 0;
+	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) = 0;
+	bool applyActivityLocal(GameState& gameState, int32_t type, int32_t pace);
 	void stopActivity(GameState& gameState);
 
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
-	virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
 	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir);
 	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore);
-	bool applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int pace);
-	void applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int pace);
-	bool applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int pace);
+	bool applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
+	void applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
+	bool applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
 	void stopMovement(GameState& gameState);
 
 	// Traces Placement
@@ -191,7 +191,7 @@ public:
 	virtual std::ostream& getSimpleInfo(std::ostream& out) override;
 
 	// TODO: move helper function
-	glm::ivec2 getDirection(int i) {
+	glm::ivec2 getDirection(int32_t  i) {
 		return MOVEABLE::DIRECTION[i];
 	}
 };

@@ -18,7 +18,7 @@ void TextRenderInfo::addString(glm::vec2 offset, std::string string, glm::vec2 s
 	}
 }
 
-void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int fontSize, std::string text) {
+void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::string text) {
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
@@ -31,7 +31,7 @@ void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo,
 	addString(start, text, fontScale);
 
 	//glm::vec2 offset = { pos1.x, pos2.y - fontScale.y };
-	//for (int j = view[0]; j <= view[1]; j++) {
+	//for (int32_t j = view[0]; j <= view[1]; j++) {
 	//	auto& line = lines[j];
 	//	offset[0] = pos1.x;
 	//	std::string prefix = "";
@@ -52,7 +52,7 @@ void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo,
 	//}
 }
 
-void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int fontSize, std::vector<std::string>& texts) {
+void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::vector<std::string>& texts) {
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 

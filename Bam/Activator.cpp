@@ -25,11 +25,11 @@ bool Activator::activityIdleLocal() {
 	return !active;
 }
 
-bool Activator::canActivityLocal(GameState& gameState, int type) {
+bool Activator::canActivityLocal(GameState& gameState, int32_t type) {
 	return true;
 }
 
-void Activator::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void Activator::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 	auto maybeTarget = gameState.staticWorld.getActivity(origin + glm::ivec2(1, 0));
 	if (maybeTarget.has_value()) {

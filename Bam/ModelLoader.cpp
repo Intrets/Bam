@@ -109,7 +109,7 @@ bool loadModel(std::string &path,
 	GLuint &uvbuffer,
 	GLuint &normalbuffer,
 	GLuint &indexbuffer,
-	int &indexsize) {
+	int32_t &indexsize) {
 	std::vector< glm::vec3 > vertices;
 	std::vector< glm::vec2 > uvs;
 	std::vector< glm::vec3 > normals; // Won't be used at the moment.

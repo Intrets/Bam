@@ -21,7 +21,7 @@ public:
 	virtual void selectTarget(GameState& gameState) override;
 
 	WeakReference<Activity, Activity> hover;
-	int hoverType;
+	int32_t hoverType;
 
 	void spawnHover(GameState& gameState, glm::ivec2 pos);
 	void rotateHover(MOVEABLE::ROT rot);

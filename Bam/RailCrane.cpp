@@ -44,10 +44,10 @@ void RailCrane::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - 1);
-			orientation = static_cast<MOVEABLE::DIR>(static_cast<int>(orientation + 1) % 4);
+			orientation = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(orientation + 1) % 4);
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
-			orientation = static_cast<MOVEABLE::DIR>(static_cast<int>(orientation + 3) % 4);
+			orientation = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(orientation + 3) % 4);
 			d = glm::ivec2(-d.y - 1, d.x);
 			break;
 		default:
@@ -56,7 +56,7 @@ void RailCrane::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	origin = center + d;
 }
 
-bool RailCrane::canActivityLocal(GameState& gameState, int type) {
+bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
 	switch (type) {
 		case RAILCRANE::LEFT:
 			{
@@ -86,7 +86,7 @@ bool RailCrane::canActivityLocal(GameState& gameState, int type) {
 	return false;
 }
 
-void RailCrane::applyActivityLocalForced(GameState& gameState, int type, int pace) {
+void RailCrane::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 	switch (type) {
 		case RAILCRANE::LEFT:
@@ -198,7 +198,7 @@ void RailCrane::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderIn
 
 	staticWorldRenderInfo.addBlockWithShadow(pos, supportTex);
 
-	for (int i = 0; i < length; i++) {
+	for (int32_t i = 0; i < length; i++) {
 		pos += orientationDir;
 		staticWorldRenderInfo.addBlockWithoutShadow(pos, shaftTex);
 	}

@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <optional>
 
-typedef int Handle;
+typedef int32_t Handle;
 
 template <class B, class T> class ManagedReference;
 class _ManagedReferenceBase;
@@ -62,7 +62,7 @@ private:
 	Handle getFreeHandle();
 
 public:
-	int size;
+	int32_t size;
 	typedef std::unordered_multimap<Handle, _ManagedReferenceBase*> ManagedReferencesType;
 
 	ManagedReferencesType managedReferences;
@@ -90,8 +90,8 @@ public:
 	void deleteReference(Handle h);
 	void deleteReference(_WeakReferenceBase* b);
 
-	ReferenceManager(int size_) : size(size_), usedHandle(size) {
-		for (int i = 1; i < size; i++) {
+	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
+		for (int32_t i = 1; i < size; i++) {
 			freeHandles.insert(i);
 		}
 	};

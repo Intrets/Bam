@@ -9,7 +9,7 @@
 #include "BindHandler.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, WindowManager& windowManager) {
-	int frameSizeX, frameSizeY;
+	int32_t frameSizeX, frameSizeY;
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
 	glm::vec2 viewport(ratio, 1.0f);

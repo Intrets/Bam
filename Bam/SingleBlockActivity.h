@@ -7,7 +7,7 @@ class GameState;
 class SingleBlockActivity : public Activity
 {
 public:
-	int tex;
+	int32_t tex;
 	std::string texName;
 
 	SingleBlockActivity() = default;

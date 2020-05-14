@@ -14,5 +14,5 @@ bool loadModel(std::string &path,
 	GLuint &uvbuffer,
 	GLuint &normalbuffer,
 	GLuint &indexbuffer,
-	int &indexsize
+	int32_t &indexsize
 );

@@ -5,7 +5,7 @@ class ModelStore;
 class ModelResource
 {
 private:
-	int index;
+	int32_t index;
 
 public:
 	ModelStore* get();

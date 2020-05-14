@@ -105,7 +105,7 @@ StaticWorldRenderer::StaticWorldRenderer() :
 
 	glGenBuffers(1, &textureID.ID);
 	glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(int32_t) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		4,                                // attribute
 		1,                                // size
@@ -146,13 +146,13 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 
 	VP.set(cameraInfo.VP);
 
-	int drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int>(info.offsets.size()));
+	int32_t drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int32_t>(info.offsets.size()));
 
 	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.offsets)::value_type) * drawCount, &info.offsets[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int) * drawCount, &info.textureIDs[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int32_t) * drawCount, &info.textureIDs[0]);
 
 	glDrawElementsInstanced(
 		GL_TRIANGLES,      // mode
@@ -186,10 +186,10 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 
 	VP.set(cameraInfo.VP);
 
-	int offseti = 0;
+	int32_t offseti = 0;
 
 	for (auto info : infos) {
-		auto infoSize = static_cast<int>(info->offsets.size());
+		auto infoSize = static_cast<int32_t>(info->offsets.size());
 		bool done = false;
 
 		if (offseti + infoSize > MAX_STATIC_DRAW) {
@@ -201,7 +201,7 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(decltype(info->offsets)::value_type) * offseti, sizeof(glm::vec2) * infoSize, &info->offsets[0]);
 
 		glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeof(int) * offseti, sizeof(int) * infoSize, &info->textureIDs[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, sizeof(int32_t) * offseti, sizeof(int32_t) * infoSize, &info->textureIDs[0]);
 		offseti += infoSize;
 
 		if (done) {

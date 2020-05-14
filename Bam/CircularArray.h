@@ -6,13 +6,13 @@ class CircularArray
 {
 public:
 
-	int index;
-	int size;
+	int32_t index;
+	int32_t size;
 	//double* arr;
 	std::vector<T> arr;
 	T total;
 
-	CircularArray(T, int);
+	CircularArray(T, int32_t);
 
 	void insert(T);
 	T sum(T);
@@ -22,7 +22,7 @@ public:
 };
 
 template<class T>
-CircularArray<T>::CircularArray(T value, int s) {
+CircularArray<T>::CircularArray(T value, int32_t s) {
 	size = s;
 	index = 0;
 	total = s*value;

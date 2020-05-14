@@ -6,7 +6,7 @@
 //#include "Saver.h"
 //#include "Loader.h"
 
-ActivityPaceHandler::ActivityPaceHandler(int max) : activities(max), size(max) {
+ActivityPaceHandler::ActivityPaceHandler(int32_t max) : activities(max), size(max) {
 }
 
 ActivityPaceHandler::ActivityPaceHandler() : ActivityPaceHandler(600) {
@@ -24,7 +24,7 @@ void ActivityPaceHandler::cycle() {
 	i %= size;
 }
 
-void ActivityPaceHandler::add(WeakReference<Activity, Activity> m, int duration) {
+void ActivityPaceHandler::add(WeakReference<Activity, Activity> m, int32_t duration) {
 	activities[(i + duration) % size].push_back(m);
 }
 
@@ -44,10 +44,10 @@ void ActivityPaceHandler::load(Loader & loader) {
 	//loader.retrieve(size);
 	//activities.clear();
 	//activities.resize(size);
-	//for (int i = 0; i < size; i++) {
+	//for (int32_t i = 0; i < size; i++) {
 	//	int size2;
 	//	loader.retrieve(size2);
-	//	for (int j = 0; j < size2; j++) {
+	//	for (int32_t j = 0; j < size2; j++) {
 	//		int h;
 	//		loader.retrieve(h);
 	//		activities[i].push_back(WeakReference<Activity, Activity>(h));
@@ -55,7 +55,7 @@ void ActivityPaceHandler::load(Loader & loader) {
 	//}
 }
 
-MovementPaceHandler::MovementPaceHandler(int max) : activities(max), size(max) {
+MovementPaceHandler::MovementPaceHandler(int32_t max) : activities(max), size(max) {
 }
 
 MovementPaceHandler::MovementPaceHandler() : MovementPaceHandler(600) {
@@ -83,10 +83,10 @@ void MovementPaceHandler::load(Loader & loader) {
 	//loader.retrieve(size);
 	//activities.clear();
 	//activities.resize(size);
-	//for (int i = 0; i < size; i++) {
+	//for (int32_t i = 0; i < size; i++) {
 	//	int size2;
 	//	loader.retrieve(size2);
-	//	for (int j = 0; j < size2; j++) {
+	//	for (int32_t j = 0; j < size2; j++) {
 	//		int h;
 	//		loader.retrieve(h);
 	//		activities[i].push_back(WeakReference<Activity, Activity>(h));
@@ -100,6 +100,6 @@ void MovementPaceHandler::cycle() {
 	i %= size;
 }
 
-void MovementPaceHandler::add(WeakReference<Activity, Activity> m, int duration) {
+void MovementPaceHandler::add(WeakReference<Activity, Activity> m, int32_t duration) {
 	activities[(i + duration) % size].push_back(m);
 }

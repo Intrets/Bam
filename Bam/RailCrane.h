@@ -15,14 +15,14 @@ namespace RAILCRANE
 class RailCrane : public Grouper 
 {
 public:
-	int supportTex;
-	int shaftTex;
-	int anchorTex;
+	int32_t supportTex;
+	int32_t shaftTex;
+	int32_t anchorTex;
 
 	MOVEABLE::DIR orientation;
 	RAILCRANE::DIR anchorDirection;
-	int length;
-	int anchorIndexPos;
+	int32_t length;
+	int32_t anchorIndexPos;
 
 	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces = true);
 	RailCrane();
@@ -32,8 +32,8 @@ public:
 	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
 
 	// Activity
-	virtual bool canActivityLocal(GameState& gameState, int type) override;
-	virtual void applyActivityLocalForced(GameState& gameState, int type, int pace) override;
+	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
+	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;

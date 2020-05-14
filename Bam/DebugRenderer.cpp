@@ -41,7 +41,7 @@ DebugRenderer::DebugRenderer() :
 DebugRenderer::~DebugRenderer() {
 }
 
-void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int type, RenderInfo& renderInfo) {
+void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int32_t type, RenderInfo& renderInfo) {
 	GLEnabler glEnabler;
 
 	glEnabler.disable(GL_DEPTH_TEST).disable(GL_BLEND);
@@ -50,7 +50,7 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int type, RenderI
 		return;
 	}
 
-	int drawtype = 0;
+	int32_t drawtype = 0;
 	// POINTS
 	if (type == 0) {
 		glEnabler.enable(GL_PROGRAM_POINT_SIZE);

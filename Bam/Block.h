@@ -14,7 +14,7 @@ private:
 
 	// 0  = air
 	// 1+ = solid block
-	int blockID = 0;
+	int32_t blockID = 0;
 
 	bool occluded = false;
 
@@ -33,11 +33,11 @@ public:
 
 	bool isActivity();
 
-	void setID(int id) { blockID = id; };
-	int getID() { return blockID; };
+	void setID(int32_t id) { blockID = id; };
+	int32_t getID() { return blockID; };
 	void setM(WeakReference<Activity, Activity> m_) { m = m_; };
 
-	Block(int id);
+	Block(int32_t id);
 
 	Block() = default;
 	~Block() = default;

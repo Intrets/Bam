@@ -25,7 +25,7 @@ void Grouper::getTreeMembers(std::vector<Activity*>& members) {
 
 void Grouper::save(Saver& saver) {
 	Activity::save(saver);
-	saver.store<int>(child.handle);
+	saver.store(child.handle);
 }
 
 bool Grouper::load(Loader& loader) {

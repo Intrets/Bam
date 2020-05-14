@@ -25,8 +25,8 @@ void PerlinNoise::fillTexture(bool fillTexture) {
 		layers.push_back(NoiseLayer(200994617, pos, dpos, glm::vec2(scale)));
 	}
 
-	for (int i = 0; i < dpos.x; i++) {
-		for (int j = 0; j < dpos.y; j++) {
+	for (int32_t i = 0; i < dpos.x; i++) {
+		for (int32_t j = 0; j < dpos.y; j++) {
 			float value = 1.0f;
 			for (size_t k = 0; k < layers.size(); k++) {
 				// TODO: value cant handle big coords?
@@ -71,7 +71,7 @@ void PerlinNoise::fillTexture(bool fillTexture) {
 	}
 }
 
-float PerlinNoise::dotGridGradient(int ix, int iy, float x, float y) {
+float PerlinNoise::dotGridGradient(int32_t ix, int32_t iy, float x, float y) {
 	// Compute the distance vector
 	float dx = x - static_cast<float>(ix);
 	float dy = y - static_cast<float>(iy);
@@ -91,10 +91,10 @@ float NoiseLayer::value(float worldx, float worldy) {
 	float y = (worldy) / scale.y;
 
 	// grid coords
-	int x0 = static_cast<int>(glm::floor(x));
-	int x1 = x0 + 1;
-	int y0 = static_cast<int>(glm::floor(y));
-	int y1 = y0 + 1;
+	int32_t x0 = static_cast<int32_t>(glm::floor(x));
+	int32_t x1 = x0 + 1;
+	int32_t y0 = static_cast<int32_t>(glm::floor(y));
+	int32_t y1 = y0 + 1;
 
 	float sx = x - static_cast<float>(x0);
 	float sy = y - static_cast<float>(y0);
@@ -115,7 +115,7 @@ float NoiseLayer::value(float worldx, float worldy) {
 	return value;
 }
 
-float NoiseLayer::dotGridGradient(int ix, int iy, float x, float y) {
+float NoiseLayer::dotGridGradient(int32_t ix, int32_t iy, float x, float y) {
 	// Compute the distance vector
 	float dx = x - static_cast<float>(ix);
 	float dy = y - static_cast<float>(iy);
@@ -124,9 +124,9 @@ float NoiseLayer::dotGridGradient(int ix, int iy, float x, float y) {
 	return (dx * gradient[ix - ipos.x][iy - ipos.y].x + dy * gradient[ix - ipos.x][iy - ipos.y].y);
 }
 
-glm::vec2 NoiseLayer::hashGradient(int x, int y) {
+glm::vec2 NoiseLayer::hashGradient(int32_t x, int32_t y) {
 	//TODO: make better point hashing?
-	int s = x + seed * y;
+	int32_t s = x + seed * y;
 
 	std::mt19937 step(s);
 
@@ -137,24 +137,24 @@ glm::vec2 NoiseLayer::hashGradient(int x, int y) {
 	return glm::vec2(glm::sin(angle), glm::cos(angle));
 }
 
-NoiseLayer::NoiseLayer(int _seed, glm::vec2 _pos, glm::vec2 _dpos, glm::vec2 _scale) :
+NoiseLayer::NoiseLayer(int32_t _seed, glm::vec2 _pos, glm::vec2 _dpos, glm::vec2 _scale) :
 	seed(_seed),
 	pos(_pos),
 	dpos(_dpos),
 	scale(_scale) {
 
-	di.x = 3 + static_cast<int>(glm::floor(dpos.x / scale.x));
-	di.y = 3 + static_cast<int>(glm::floor(dpos.y / scale.y));
+	di.x = 3 + static_cast<int32_t>(glm::floor(dpos.x / scale.x));
+	di.y = 3 + static_cast<int32_t>(glm::floor(dpos.y / scale.y));
 
-	ipos.x = static_cast<int>(glm::floor(pos.x / scale.x));
-	ipos.y = static_cast<int>(glm::floor(pos.y / scale.y));
+	ipos.x = static_cast<int32_t>(glm::floor(pos.x / scale.x));
+	ipos.y = static_cast<int32_t>(glm::floor(pos.y / scale.y));
 
 	gradient = std::vector<std::vector<glm::vec2>>(di.x, std::vector<glm::vec2>(di.y));
 
-	for (int i = 0; i < di.x; i++) {
+	for (int32_t i = 0; i < di.x; i++) {
 		glm::ivec2 dpos1;
 		dpos1.x = ipos.x + i;
-		for (int j = 0; j < di.y; j++) {
+		for (int32_t j = 0; j < di.y; j++) {
 			dpos1.y = ipos.y + j;
 			gradient[i][j] = hashGradient(dpos1.x, dpos1.y);
 		}

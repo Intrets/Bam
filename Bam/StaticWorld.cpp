@@ -26,8 +26,8 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	auto i0 = glm::ivec2(glm::floor(p0 / size));
 	auto i1 = glm::ivec2(glm::floor(p1 / size));
 
-	for (int ci = i0.x; ci <= i1.x; ci++) {
-		for (int cj = i0.y; cj <= i1.y; cj++) {
+	for (int32_t ci = i0.x; ci <= i1.x; ci++) {
+		for (int32_t cj = i0.y; cj <= i1.y; cj++) {
 			auto staticWorldChunk = getChunkByIndex(ci, cj);
 			staticWorldChunk->appendStaticRenderInfo(renderInfo);
 			if (renderInfo.staticWorldRenderInfo.offsets.size() > MAX_STATIC_DRAW) {
@@ -54,9 +54,9 @@ void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {
 
 bool StaticWorld::load(Loader& loader) {
 	world.clear();
-	int size;
+	int32_t size;
 	loader.retrieve(size);
-	for (int i = 0; i < size; i++) {
+	for (int32_t i = 0; i < size; i++) {
 		glm::ivec2 key;
 		loader.retrieve(key);
 		auto chunk = std::make_unique<StaticWorldChunk>(key * CHUNKSIZE, true);
@@ -75,7 +75,7 @@ bool StaticWorld::save(Saver& saver) {
 	return true;
 }
 
-StaticWorldChunk* StaticWorld::getChunkByIndex(int i, int j) {
+StaticWorldChunk* StaticWorld::getChunkByIndex(int32_t i, int32_t j) {
 	auto search = world.find(glm::ivec2(i, j));
 	StaticWorldChunk* res;
 	if (search == world.end()) {

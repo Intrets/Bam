@@ -36,7 +36,7 @@ void bwo::UniformTexture2D::set(GLuint texture) {
 	glUniform1i(location, unit);
 }
 
-bwo::UniformTexture2D::UniformTexture2D(std::string name, Program & program, int unit_) {
+bwo::UniformTexture2D::UniformTexture2D(std::string name, Program & program, int32_t unit_) {
 	unit = unit_;
 	location = glGetUniformLocation(program.ID, name.c_str());
 }
@@ -63,12 +63,12 @@ void bwo::UniformTexture2DArray::set(GLuint texture) {
 	glUniform1i(location, unit);
 }
 
-bwo::UniformTexture2DArray::UniformTexture2DArray(std::string name, Program & program, int unit_) {
+bwo::UniformTexture2DArray::UniformTexture2DArray(std::string name, Program & program, int32_t unit_) {
 	unit = unit_;
 	location = glGetUniformLocation(program.ID, name.c_str());
 }
 
-void bwo::Uniform1i::set(int i) {
+void bwo::Uniform1i::set(int32_t i) {
 	glUniform1i(location, i);
 }
 

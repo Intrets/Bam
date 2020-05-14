@@ -7,7 +7,7 @@ class GameState;
 class Loader
 {
 public:
-	int loc = 0;
+	int32_t loc = 0;
 
 	std::ifstream in;
 
