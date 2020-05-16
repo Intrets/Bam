@@ -4,7 +4,12 @@
 #include "Activity.h"
 #include "Piston.h"
 #include "RailCrane.h"
+#include <functional>
+
+#ifndef SOL_DEFINE
+#define SOL_DEFINE
 #include "sol/sol.hpp"
+#endif 
 
 class GameState;
 
@@ -18,6 +23,8 @@ public:
 
 	template<class A, class B>
 	bool store(WeakReference<A, B> t);
+
+	bool storeObject(sol::object object, std::unordered_set<size_t>& saved);
 
 	bool storeString(std::string s);
 
@@ -106,23 +113,59 @@ inline bool Saver::store(sol::type type) {
 	return store(static_cast<int32_t>(type));
 }
 
-template<>
-inline bool Saver::store(sol::object t) {
+inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved) {
 	auto type = t.get_type();
-	if (type == sol::type::boolean) {
-		store(type);
-		store(t.as<bool>());
+	store(type);
+
+	bool found = false;
+	// primitive
+	if (t.pointer() == nullptr) {
+		store<bool>(true);
 	}
-	else if (type == sol::type::number) {
-		store(type);
-		storeString(std::to_string(t.as<double>()));
-	}
-	else if (type == sol::type::string) {
-		store(type);
-		storeString(t.as<std::string>());
-	}
+	// reference
 	else {
-		assert(false);
+		store<bool>(false);
+		size_t hash = hashVoidPtr{}(const_cast<void*>(t.pointer()));
+		store(hash);
+		found = saved.count(hash) != 0;
+		saved.insert(hash);
+	}
+
+	if (!found) {
+		if (type == sol::type::boolean) {
+			store(t.as<bool>());
+		}
+		else if (type == sol::type::number) {
+			if (t.is<int>()) {
+				store<bool>(true);
+				store(t.as<int64_t>());
+			}
+			else {
+				store<bool>(false);
+				storeString(std::to_string(t.as<double>()));
+			}
+		}
+		else if (type == sol::type::string) {
+			storeString(t.as<std::string>());
+		}
+		else if (type == sol::type::table) {
+			auto table = t.as<sol::table>();
+			int32_t count = static_cast<int32_t>(std::distance(table.begin(), table.end()));
+			store(count);
+
+			std::vector<std::pair<sol::object, sol::object>> cache;
+			for (auto& e : table) {
+				cache.push_back(e);
+			}
+			for (auto& e : cache) {
+				storeObject(e.first, saved);
+				storeObject(e.second, saved);
+			}
+		}
+		else {
+			assert(false);
+		}
+
 	}
 	return true;
 }

@@ -7,138 +7,59 @@
 #include "lua.h"
 #include "Saver.h"
 #include "Loader.h"
+#include <iostream>
 
-static std::string typeToString(sol::type type) {
+#ifndef SOL_DEFINE
+#define SOL_DEFINE
+#include "sol/sol.hpp"
+#endif 
+
+static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
+	auto type = t.get_type();
 	switch (type) {
-		case sol::type::none:
-			return "none";
-			break;
-		case sol::type::lua_nil:
-			return "lua_nil";
-			break;
-		case sol::type::string:
-			return "string";
-			break;
-		case sol::type::number:
-			return "number";
-			break;
-		case sol::type::thread:
-			return "thread";
-			break;
-		case sol::type::boolean:
-			return "boolean";
-			break;
-		case sol::type::function:
-			return "function";
-			break;
-		case sol::type::userdata:
-			return "userdata";
-			break;
-		case sol::type::lightuserdata:
-			return "lightuserdata";
-			break;
 		case sol::type::table:
-			return "table";
-			break;
+			{
+				size_t hash = hashVoidPtr{}(const_cast<void*>(t.pointer()));
+				if (visited.count(hash) != 0) {
+					return true;
+				}
+				visited.insert(hash);
+				auto table = t.as<sol::table>();
+				std::vector<sol::object> cache;
+				for (auto& kvPair : table) {
+					auto keyName = kvPair.first.as<std::string>();
+					cache.push_back(kvPair.second);
+				}
+				for (auto& value : cache) {
+					if (!isSimpleValue(value, visited)) {
+						return false;
+					}
+				}
+				return true;
+			}
+		case sol::type::string:
+		case sol::type::number:
+		case sol::type::boolean:
+			return true;
+		case sol::type::none:
+		case sol::type::lua_nil:
+		case sol::type::thread:
+		case sol::type::function:
+		case sol::type::userdata:
+		case sol::type::lightuserdata:
 		case sol::type::poly:
-			return "poly";
-			break;
 		default:
-			return "unkown";
-			break;
-	}
-}
-
-static bool isSimpleTable(sol::table& table) {
-	for (auto& e : table) {
-		sol::type t = e.second.get_type();
-		if (t == sol::type::table) {
-			sol::table next = e.second;
-			return isSimpleTable(next);
-		}
-		if (!(t == sol::type::boolean || t == sol::type::number || t == sol::type::string)) {
 			return false;
-		}
 	}
-	return true;
 }
 
-static bool storeTable(Saver& saver, sol::object& table_) {
-	auto table = table_.as<sol::table>();
-	int32_t count = static_cast<int32_t>(std::distance(table.begin(), table.end()));
-
-	saver.store(count);
-
-	for (auto& e : table) {
-		auto typeName = typeToString(e.first.get_type());
-		saver.store<sol::object>(e.first);
-
-		sol::type t = e.second.get_type();
-		if (t == sol::type::table) {
-			sol::table next = e.second;
-			return storeTable(saver, next);
-		}
-		else {
-			saver.store(e.second);
-		}
+static std::string getNameString(sol::object& object) {
+	std::string name = object.as<std::string>();
+	if (!object.is<int>()) {
+		name = "\"" + name + "\"";
 	}
-	return true;
-}
-
-static bool retrieveTable(sol::state& state, Loader& loader, sol::table& table) {
-	int32_t count;
-	loader.retrieve(count);
-
-	for (int32_t i = 0; i < count; i++) {
-		sol::type keyType;
-		loader.retrieve(keyType);
-
-		sol::object key;
-		if (keyType == sol::type::boolean) {
-			bool keyValue;
-			loader.retrieve(keyValue);
-			key = sol::make_object(state, keyValue);
-		}
-		else if (keyType == sol::type::number) {
-			double keyValue;
-			loader.retrieve(keyValue);
-			key = sol::make_object(state, keyValue);
-		}
-		else if (keyType == sol::type::string) {
-			std::string keyValue;
-			loader.retrieve(keyValue);
-			key = sol::make_object(state, keyValue);
-		}
-		else {
-			assert(false);
-		}
-
-		sol::type valueType;
-		loader.retrieve(valueType);
-		sol::object value;
-		if (valueType == sol::type::boolean) {
-			bool valueValue;
-			loader.retrieve(valueValue);
-			value = sol::make_object(state, valueValue);
-		}
-		else if (valueType == sol::type::number) {
-			double valueValue;
-			loader.retrieve(valueValue);
-			value = sol::make_object(state, valueValue);
-		}
-		else if (valueType == sol::type::string) {
-			std::string valueValue;
-			loader.retrieve(valueValue);
-			value = sol::make_object(state, valueValue);
-		}
-		else {
-			assert(false);
-		}
-
-		table[key] = value;
-	}
-	return true;
-}
+	return name;
+};
 
 bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
 	return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
@@ -153,72 +74,47 @@ void ActivityLuaTest::runScript(GameState& gameState) {
 	state["h"] = target.handle;
 }
 
+void ActivityLuaTest::save(Saver& saver) {
+	std::unordered_set<size_t> saved;
+	std::vector<std::pair<sol::object, sol::object>> cache;
+
+	for (auto& global : state.globals()) {
+		std::unordered_set<size_t> visited;
+		if (ignore.find(getNameString(global.first)) == ignore.end() && isSimpleValue(global.second, visited)) {
+			cache.push_back(global);
+		}
+	}
+	saver.store(static_cast<int32_t>(cache.size()));
+
+	for (auto& global : cache) {
+		saver.storeObject(global.first, saved);
+		saver.storeObject(global.second, saved);
+	}
+}
+
+void ActivityLuaTest::load(Loader& loader) {
+	std::unordered_map<size_t, sol::object> cache;
+	int32_t size;
+	loader.retrieve(size);
+
+	for (int i = 0; i < size; i++) {
+		sol::object key = loader.retrieveObject(state, cache);
+		sol::object value = loader.retrieveObject(state, cache);
+		std::cout << "key: " << key.as<std::string>() << " value: " << value.as<std::string>() << "\n";
+		state[key] = value;
+	}
+}
+
 ActivityLuaTest::ActivityLuaTest() {
 	state.open_libraries(sol::lib::base, sol::lib::table);
+	state.script("");
 
-	std::unordered_set<std::string> ignore;
-	for (auto& test : state.globals()) {
-		ignore.insert(test.first.as<std::string>());
-	}
-
-	std::cout << "--------\n";
-	state.script(R"(
-	simpleTable = {
-	[1] = 1,
-	[2] = 2,
-	["1"] = "1",
-	} 
-)");
-
-	{
-		Saver saver("lua_serial.save");
-
-		sol::object table = state["simpleTable"];
-
-		storeTable(saver, table);
-	}
-
-	Loader loader("lua_serial.save");
-	sol::table a = state.create_table();
-	retrieveTable(state, loader, a);
-
-	state["copiedTable"] = a;
-
-	//state.create_named_table("created");
-	//auto tt = state["create"];
-	//tt["1"] = state.create_table();
-
-	for (auto& test : state.globals()) {
-		if (ignore.find(test.first.as<std::string>()) == ignore.end()) {
-			auto name = test.first.as<std::string>();
-			auto val = typeToString(test.second.get_type());
-
-			auto s = state[name].get_type();
-			switch (s) {
-				case sol::type::table:
-					{
-						sol::table r = state[name];
-						std::cout << "table name: " << name << "\n";
-						std::cout << "simple table: " << isSimpleTable(r) << "\n";
-
-						for (auto& i : r) {
-							std::cout << typeToString(i.second.get_type()) << "\n";
-						}
-						break;
-					}
-				default:
-					std::cout << "name: " << name << "\n";
-					std::cout << typeToString(s) << "\n";
-					break;
-			}
-			std::cout << "\n";
-		}
+	for (auto& test : state) {
+		ignore.insert(getNameString(test.first));
 	}
 
 	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
 		auto self = static_cast<ActivityLuaTest*>(self_);
-		//self->state["testCall"] = 
-
 		self->runScript(gameState);
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});

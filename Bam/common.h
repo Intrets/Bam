@@ -1,5 +1,7 @@
 #pragma once
 
+#define SOL_SAFE_NUMERICS 1
+
 #pragma warning(push,0)
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -48,3 +50,10 @@ inline bool indexInVector(size_t i, std::vector<T>& V) {
 inline int32_t idot(glm::ivec2 v1, glm::ivec2 v2) {
 	return v1.x * v2.x + v1.y * v2.y;
 }
+
+struct hashVoidPtr
+{
+	std::size_t operator()(void* const& s) const noexcept {
+		return std::hash<void*>{}(const_cast<void*>(s));
+	}
+};

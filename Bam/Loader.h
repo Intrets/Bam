@@ -4,7 +4,11 @@
 #include "Activity.h"
 #include "Piston.h"
 #include "RailCrane.h"
+
+#ifndef SOL_DEFINE
+#define SOL_DEFINE
 #include "sol/sol.hpp"
+#endif 
 
 class GameState;
 
@@ -20,6 +24,8 @@ public:
 
 	template<class A, class B>
 	bool retrieve(WeakReference<A, B>& m);
+
+	sol::object retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache);
 
 	bool retrieveString(std::string& str);
 

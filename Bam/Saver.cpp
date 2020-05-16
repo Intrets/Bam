@@ -3,7 +3,6 @@
 #include "ReferenceManager.h"
 #include "StaticWorldChunk.h"
 #include "GameState.h"
-//#include "ScriptManager.h"
 #include "ActivitySaverHelper.h"
 
 bool Saver::storeString(std::string s) {
@@ -14,8 +13,6 @@ bool Saver::storeString(std::string s) {
 }
 
 bool Saver::saveGame(GameState& gameState) {
-	//Locator<ScriptManager>::getService()->save(*this);
-
 	auto manager = Locator<ReferenceManager<Activity>>::getService();
 	save(*this, *manager);
 
