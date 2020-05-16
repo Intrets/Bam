@@ -4,6 +4,7 @@
 #include "Activity.h"
 #include "Piston.h"
 #include "RailCrane.h"
+#include "sol/sol.hpp"
 
 class GameState;
 
@@ -98,6 +99,32 @@ inline bool Saver::store(RAILCRANE::DIR t) {
 template<>
 inline bool Saver::store(std::string t) {
 	return storeString(t);
+}
+
+template<>
+inline bool Saver::store(sol::type type) {
+	return store(static_cast<int32_t>(type));
+}
+
+template<>
+inline bool Saver::store(sol::object t) {
+	auto type = t.get_type();
+	if (type == sol::type::boolean) {
+		store(type);
+		store(t.as<bool>());
+	}
+	else if (type == sol::type::number) {
+		store(type);
+		storeString(std::to_string(t.as<double>()));
+	}
+	else if (type == sol::type::string) {
+		store(type);
+		storeString(t.as<std::string>());
+	}
+	else {
+		assert(false);
+	}
+	return true;
 }
 
 template<class T>

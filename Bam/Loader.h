@@ -4,6 +4,7 @@
 #include "Activity.h"
 #include "Piston.h"
 #include "RailCrane.h"
+#include "sol/sol.hpp"
 
 class GameState;
 
@@ -109,6 +110,22 @@ inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 	int32_t s;
 	retrieve(s);
 	t = static_cast<RAILCRANE::DIR>(s);
+	return true;
+}
+
+template<>
+inline bool Loader::retrieve(sol::type& t) {
+	int32_t s;
+	retrieve(s);
+	t = static_cast<sol::type>(s);
+	return true;
+}
+
+template<>
+inline bool Loader::retrieve(double& t) {
+	std::string s;
+	retrieveString(s);
+	t = std::stod(s);
 	return true;
 }
 

@@ -92,6 +92,9 @@
     <Filter Include="Renderer\UI">
       <UniqueIdentifier>{6a5a1940-06dc-40d3-ab11-1d32428ce2ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{b833578e-0c6d-46f3-baf9-226db691cfa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLhelpers.cpp">
@@ -289,13 +292,15 @@
     <ClCompile Include="UIRenderInfo.cpp">
       <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityEditor.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
     <ClCompile Include="Bam.cpp" />
-    <ClCompile Include="InitModifyables.cpp" />
     <ClCompile Include="RailCrane.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="InitModifyables.cpp">
+      <Filter>Program Control\Inits</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityLuaTest.cpp">
+      <Filter>Lua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -506,13 +511,15 @@
     <ClInclude Include="UIRenderInfo.h">
       <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityEditor.h">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
     <ClInclude Include="common.h" />
-    <ClInclude Include="InitModifyables.h" />
     <ClInclude Include="RailCrane.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="InitModifyables.h">
+      <Filter>Program Control\Inits</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityLuaTest.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -76,7 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Users\Intrets\OpenGL64\glew;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Intrets\LUA\src;C:\Users\Intrets\OpenGL64\glew;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -84,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>C:\Users\Intrets\OpenGL64\glew;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Intrets\LUA\src;C:\Users\Intrets\OpenGL64\glew;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,14 +116,14 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Intrets\LUA\;C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;C:\Users\Intrets\LUA\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;C:\Users\Intrets\source\Repos\Bam\x64\Release\Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -165,7 +165,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Intrets\LUA\;C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;C:\Users\Intrets\LUA\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -174,7 +174,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;C:\Users\Intrets\source\Repos\Bam\x64\Release\Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -182,11 +182,11 @@
   <ItemGroup>
     <ClCompile Include="Activator.cpp" />
     <ClCompile Include="Activity.cpp" />
-    <ClCompile Include="ActivityEditor.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
     <ClCompile Include="ActivityInteractor.cpp" />
     <ClCompile Include="ActivityLinker.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
+    <ClCompile Include="ActivityLuaTest.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivityPlacer.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
@@ -253,11 +253,11 @@
   <ItemGroup>
     <ClInclude Include="Activator.h" />
     <ClInclude Include="Activity.h" />
-    <ClInclude Include="ActivityEditor.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
     <ClInclude Include="ActivityInteractor.h" />
     <ClInclude Include="ActivityLinker.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />
+    <ClInclude Include="ActivityLuaTest.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivityPlacer.h" />
     <ClInclude Include="ActivitySaverHelper.h" />

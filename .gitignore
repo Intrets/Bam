@@ -342,3 +342,5 @@ healthchecksdb
 /Bam/config
 /Bam/test.save
 /Bam/saves
+/Lua
+/Bam/LuaTest

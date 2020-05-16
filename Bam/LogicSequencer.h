@@ -41,9 +41,6 @@ private:
 
 protected:
 	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {};
-
-public:
-	int32_t test = 0;
 };
 
 inline void LogicSequencer::addBind(BindControl bindControl, BindType bind) {

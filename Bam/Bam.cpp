@@ -22,7 +22,6 @@ static void mouse_callback(GLFWwindow* w, int32_t key, int32_t action, int32_t m
 	key_callback(w, key + GLFW_KEY_LAST, 0, action, mods);
 }
 
-
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
@@ -78,7 +77,7 @@ static int initGLFW() {
 
 int main() {
 	initGLFW();
-	initManagers();
 	initModifyables();
+	initManagers();
 	mainLoop(window, controlState);
 }
