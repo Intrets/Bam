@@ -8,6 +8,8 @@
 #include "Saver.h"
 #include "Loader.h"
 #include <iostream>
+#include "RenderInfo.h"
+#include "StringHelpers.h"
 
 #ifndef SOL_DEFINE
 #define SOL_DEFINE
@@ -118,4 +120,22 @@ ActivityLuaTest::ActivityLuaTest() {
 		self->runScript(gameState);
 		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
 	});
+}
+
+void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
+	ActivitySelector::appendRenderInfoInternal(gameState, renderInfo);
+	renderInfo.uiRenderInfo.addRectangle({ 1,1 }, { 0.5,-1 }, { 0,0,0,1 });
+	std::vector<std::string> lines;
+	split(0, text, lines, '\n');
+
+	renderInfo.textRenderInfo.addTexts(
+		*renderInfo.textRenderInfo.textRendererRef,
+		renderInfo.cameraInfo,
+		{ 0.5,1 }, 0, 20, lines 
+	);
+}
+
+CONTINUATION ActivityLuaTest::runBinds(ControlState& controlState, GameState& gameState) {
+	text.append(controlState.getCharBuffer());
+	return LogicSequencer::runBinds(controlState, gameState);
 }

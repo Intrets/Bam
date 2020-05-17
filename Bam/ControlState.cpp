@@ -47,6 +47,7 @@ void ControlState::cycleStates() {
 		}
 	}
 	cachedBindControls.reset();
+	charBuffer.clear();
 }
 
 std::vector<BindControl> ControlState::getBindControls() {
@@ -61,10 +62,19 @@ std::vector<BindControl> ControlState::getBindControls() {
 	return cachedBindControls.value();
 }
 
+std::string ControlState::getCharBuffer() {
+	return charBuffer;
+}
+
 void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
 	// unknown key?
 	if (key == -1) {
 		return;
+	}
+
+	if (key == GLFW_KEY_ENTER && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		charBuffer.push_back('-');
+		charBuffer.push_back('\n');
 	}
 
 	if (action == GLFW_RELEASE) {
@@ -74,4 +84,12 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 	}
 
+}
+
+void ControlState::char_callback(GLFWwindow* window, unsigned int character) {
+	if (character > 127) {
+		return;
+	}
+	char c = static_cast<char>(character);
+	charBuffer.push_back(c);
 }

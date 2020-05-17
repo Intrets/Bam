@@ -116,7 +116,9 @@ bool RailCrane::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIg
 }
 
 bool RailCrane::canFillTracesLocal(GameState& gameState) {
-	return true;
+	auto dir = MOVEABLE::DIRECTION[orientation];
+	return !gameState.staticWorld.isOccupied(origin) 
+		&& !gameState.staticWorld.isOccupied(origin + dir * (1 + length));
 }
 
 void RailCrane::fillTracesLocalForced(GameState& gameState) {

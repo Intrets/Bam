@@ -78,7 +78,10 @@ public:
 	void cycleStates();
 	std::vector<BindControl> getBindControls();
 
+	std::string getCharBuffer();
+
 	void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+	void char_callback(GLFWwindow* window, unsigned int character);
 private:
 	std::optional<std::vector<BindControl>> cachedBindControls;
 
@@ -86,5 +89,6 @@ private:
 	friend class BindHandler;
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
 	std::array<CONTROLSTATE, CONTROLS::CONTROLS_MAX> controlState;
+	std::string charBuffer;
 };
 

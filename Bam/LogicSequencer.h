@@ -25,7 +25,7 @@ public:
 
 	using BindType = std::function<MaybeSequencer(GameState&, LogicSequencer*)>;
 
-	CONTINUATION runBinds(ControlState& controlState, GameState& gameState);
+	virtual CONTINUATION runBinds(ControlState& controlState, GameState& gameState);
 
 	void addBind(BindControl bindControl, BindType bind);
 

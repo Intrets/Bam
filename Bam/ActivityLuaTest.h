@@ -14,6 +14,7 @@ class Loader;
 class ActivityLuaTest : public ActivitySelector 
 {
 public:
+	std::string text;
 	sol::state state;
 	GameState* gameStateRef;
 
@@ -27,5 +28,9 @@ public:
 
 	ActivityLuaTest();
 	~ActivityLuaTest() = default;
+
+protected:
+	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) override;
+	CONTINUATION runBinds(ControlState& controlState, GameState& gameState);
 };
 
