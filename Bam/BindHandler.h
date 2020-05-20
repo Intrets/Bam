@@ -3,6 +3,8 @@
 #include "ControlState.h"
 #include <functional>
 
+#include "UIOController.h"
+
 class GameState;
 class LogicSequencer;
 struct RenderInfo;
@@ -20,6 +22,8 @@ public:
 
 private:
 	std::vector<std::unique_ptr<LogicSequencer>> logicSequences;
+
+	std::unique_ptr<UIOController> UI;
 
 	using CallbackVector = std::vector<std::function<void(GameState&)>>;
 	std::array<std::array<CallbackVector, CONTROLSTATE::CONTROLSTATE_MAX>, CONTROLS::CONTROLS_MAX > binds;

@@ -17,6 +17,13 @@ void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo)
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
 	}
+
+	ScreenRectangle r;
+	r.screenPixels = renderInfo.cameraInfo.viewPort;
+	r.set({ 0.0f,0.0f }, { 0.5f, 0.5f });
+
+	UI->updateSizeUp(r);
+	UI->addRenderInfo(renderInfo);
 }
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
@@ -32,6 +39,8 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 			bind(gameState);
 		}
 	}
+	UI->clickTest(gameState.getPlayerCursorScreenSpace(), gameState.getPlayerCursorScreenSpaceD());
+	std::cout << gameState.getPlayerCursorScreenSpace().x << " " << gameState.getPlayerCursorScreenSpace().y << "\n";
 }
 
 void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<void(GameState&)> f) {
@@ -39,6 +48,52 @@ void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<vo
 }
 
 BindHandler::BindHandler() {
+	auto tileTest = std::make_unique<UIOWindowTileTest>();
+	tileTest->nextRow();
+
+	for (int i = 0; i < 4; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest->add(std::move(n));
+	}
+	tileTest->nextRow();
+
+	for (int i = 0; i < 8; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest->add(std::move(n));
+	}
+
+	tileTest->nextRow();
+	for (int i = 0; i < 3; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest->add(std::move(n));
+	}
+
+	auto tileTest2 = std::make_unique<UIOWindowTileTest>();
+	tileTest2->nextRow();
+
+	for (int i = 0; i < 4; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest2->add(std::move(n));
+	}
+	tileTest2->nextRow();
+
+	for (int i = 0; i < 8; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest2->add(std::move(n));
+	}
+
+	tileTest2->nextRow();
+	for (int i = 0; i < 3; i++) {
+		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
+		tileTest2->add(std::move(n));
+	}
+
+	tileTest->add(std::move(tileTest2));
+	//UI = std::move(tileTest);
+
+	auto s = std::make_unique<UIOWindowResize>(std::move(tileTest));
+	UI = std::move(s);
+
 	auto tools = std::make_unique<LogicSequencer>();
 
 	auto placerTool = [](GameState& gameState, LogicSequencer* logicSequencer) {

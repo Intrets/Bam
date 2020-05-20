@@ -328,6 +328,7 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
+    <ClCompile Include="UIOController.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
+    <ClInclude Include="UIOController.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />
     <ClInclude Include="WindowManager.h" />

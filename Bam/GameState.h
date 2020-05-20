@@ -21,6 +21,9 @@ private:
 	glm::vec2 playerCursorScreenSpace;
 	glm::vec2 playerCursorWorldSpace;
 
+	glm::vec2 playerCursorScreenSpaceD;
+	glm::vec2 playerCursorWorldSpaceD;
+
 public:
 	bool exit;
 	glm::vec2 playerPos;
@@ -28,6 +31,9 @@ public:
 	int32_t tick = 0;
 
 	glm::vec2 getPlayerCursorWorldSpace();
+	glm::vec2 getPlayerCursorScreenSpace();
+	glm::vec2 getPlayerCursorWorldSpaceD();
+	glm::vec2 getPlayerCursorScreenSpaceD();
 	void updatePlayerCursorScreenSpace(GLFWwindow* window);
 	//GameObject* cam;
 	//GameObject* player;

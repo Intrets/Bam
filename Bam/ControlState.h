@@ -53,6 +53,21 @@ typedef enum
 	CONTROLSTATE_MAX
 } CONTROLSTATE;
 
+typedef enum
+{
+	CONTROLSTATE_RELEASED_MASK = 1 << 0,
+	CONTROLSTATE_PRESSED_MASK = 1 << 1,
+	CONTROLSTATE_DOWN_MASK = 1 << 2,
+	CONTROLSTATE_UP_MASK = 1 << 3,
+} CONTROLSTATE_MASK;
+
+typedef enum
+{
+	CONSUMED_NOTHING = 0,
+	MOUSEPRESS = 1 << 0,
+	KEYPRESS = 1 << 1,
+} CONSUMED;
+
 struct BindControl
 {
 	CONTROLS control;

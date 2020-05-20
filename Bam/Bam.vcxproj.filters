@@ -95,6 +95,9 @@
     <Filter Include="Lua">
       <UniqueIdentifier>{b833578e-0c6d-46f3-baf9-226db691cfa7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Logic\User IO Controllers">
+      <UniqueIdentifier>{d9c04c5c-c591-4522-af49-e80a906e11d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLhelpers.cpp">
@@ -301,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOController.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOController.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
