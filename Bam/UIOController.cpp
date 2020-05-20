@@ -27,9 +27,6 @@ UIOWindowTest::~UIOWindowTest() {
 }
 
 void UIOWindowTest::clickTest(glm::vec2 pos, glm::vec2 change) {
-	if (screenRectangle.contains(pos)) {
-		std::cout << "clicked\n";
-	}
 }
 
 ScreenRectangle UIOWindowTest::updateSizeUp(ScreenRectangle newScreenRectangle) {
@@ -105,9 +102,6 @@ UIOWindowTileTest::~UIOWindowTileTest() {
 }
 
 void UIOWindowTileTest::clickTest(glm::vec2 pos, glm::vec2 change) {
-	if (screenRectangle.contains(pos)) {
-		std::cout << "clicked\n";
-	}
 	for (auto& element : elements) {
 		element->clickTest(pos, change);
 	}

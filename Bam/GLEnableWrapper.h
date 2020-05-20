@@ -14,5 +14,5 @@ public:
 	GLEnabler() = default;
 	~GLEnabler();
 
-	deleteDefaults(GLEnabler);
+	NOCOPYMOVE(GLEnabler);
 };

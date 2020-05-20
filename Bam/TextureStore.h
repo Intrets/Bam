@@ -10,5 +10,5 @@ public:
 	TextureStore() = delete;
 	~TextureStore();
 
-	deleteDefaults(TextureStore);
+	NOCOPYMOVE(TextureStore);
 };

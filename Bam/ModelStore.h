@@ -13,5 +13,5 @@ public:
 	ModelStore() = delete;
 	~ModelStore();
 
-	deleteDefaults(ModelStore);
+	NOCOPYMOVE(ModelStore);
 };

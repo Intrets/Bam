@@ -25,7 +25,7 @@ public:
 	void loadBlockTexture(std::string);
 	GLuint getTextureArrayID();
 
-	deleteDefaults(BlockIDTextures);
+	NOCOPYMOVE(BlockIDTextures);
 
 	BlockIDTextures();
 	~BlockIDTextures() = default;

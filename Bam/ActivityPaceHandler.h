@@ -24,7 +24,7 @@ public:
 	ActivityPaceHandler();
 	~ActivityPaceHandler() = default;
 
-	deleteDefaults(ActivityPaceHandler);
+	NOCOPYMOVE(ActivityPaceHandler);
 };
 
 class MovementPaceHandler
@@ -46,5 +46,5 @@ public:
 	MovementPaceHandler();
 	~MovementPaceHandler() = default;
 
-	deleteDefaults(MovementPaceHandler);
+	NOCOPYMOVE(MovementPaceHandler);
 };

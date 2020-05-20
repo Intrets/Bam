@@ -19,7 +19,7 @@ namespace bwo
 		void bind() { glBindVertexArray(ID); };
 		void unbind() { glBindVertexArray(0); };
 
-		deleteDefaults(VertexArrayObject);
+		NOCOPYMOVE(VertexArrayObject);
 		VertexArrayObject() = default;
 		~VertexArrayObject();
 	};
@@ -29,7 +29,7 @@ namespace bwo
 	public:
 		GLuint ID;
 
-		deleteDefaults(Buffer);
+		NOCOPYMOVE(Buffer);
 		Buffer() = default;
 		Buffer(GLuint ID_) : ID(ID_) {};
 		~Buffer();
@@ -39,7 +39,7 @@ namespace bwo
 	{
 	public:
 		GLuint ID;
-		deleteDefaults(Texture);
+		NOCOPYMOVE(Texture);
 		Texture() = default;
 		Texture(GLuint ID_) : ID(ID_) {};
 		~Texture();
@@ -64,7 +64,7 @@ namespace bwo
 	public:
 		void use();
 
-		deleteDefaults(Program);
+		NOCOPYMOVE(Program);
 		Program() = default;
 		Program(GLuint ID_) : ID(ID_) {};
 		~Program();

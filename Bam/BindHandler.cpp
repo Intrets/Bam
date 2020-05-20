@@ -40,7 +40,6 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		}
 	}
 	UI->clickTest(gameState.getPlayerCursorScreenSpace(), gameState.getPlayerCursorScreenSpaceD());
-	std::cout << gameState.getPlayerCursorScreenSpace().x << " " << gameState.getPlayerCursorScreenSpace().y << "\n";
 }
 
 void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<void(GameState&)> f) {

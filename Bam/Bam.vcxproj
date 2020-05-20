@@ -414,6 +414,7 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="DebugLine.frag" />
     <None Include="DebugLine.vert" />
     <None Include="HighlightShader.frag" />

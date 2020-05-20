@@ -1,14 +1,14 @@
 #include "common.h"
 #include "ReferenceManager.h"
 
-void _ManagedReferenceBase::validate() {
+void ManagedReferenceBase::validate() {
 	valid = true;
 }
 
-void _ManagedReferenceBase::invalidate() {
+void ManagedReferenceBase::invalidate() {
 	valid = false;
 }
 
-bool _ManagedReferenceBase::isValid() {
+bool ManagedReferenceBase::isValid() {
 	return valid;
 }

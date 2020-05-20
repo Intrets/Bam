@@ -1,17 +1,19 @@
 #pragma once
 
 #include "common.h"
+
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
 #include <type_traits>
 #include <optional>
+#include <iostream>
 
 typedef int32_t Handle;
 
 template <class B, class T> class ManagedReference;
-class _ManagedReferenceBase;
+class ManagedReferenceBase;
 
 class WeakReferenceBase
 {
@@ -19,10 +21,6 @@ public:
 	Handle handle = 0;
 
 	void clear() { handle = 0; };
-
-	//explicit operator bool() const {
-	//	return handle != 0;
-	//};
 
 	bool isNotNull() { return handle != 0; };
 	bool isNull() { return handle == 0; };
@@ -52,8 +50,45 @@ public:
 template<class B, class T>
 class DestructWeakReference : public WeakReference<B, T>
 {
+public:
+	DestructWeakReference(Handle h) : WeakReference<B, T>(h) {};
+	DestructWeakReference() = default;
+	virtual ~DestructWeakReference();
 
-	virtual ~DestructWeakReference() {};
+	DestructWeakReference(DestructWeakReference&& other);
+	DestructWeakReference<B, T>& operator= (DestructWeakReference&& other);
+
+	NOCOPY(DestructWeakReference);
+};
+
+
+class ManagedReferenceBase
+{
+public:
+	Handle handle = 0;
+	bool valid = false;
+	bool isValid();
+
+	void validate();
+	void invalidate();
+};
+
+template <class B, class T>
+class ManagedReference : public ManagedReferenceBase
+{
+	static_assert(std::is_base_of<B, T>::value, "WeakReference constructor, not a super class");
+public:
+	T* get();
+
+	void unset();
+	void set(Handle h);
+
+	void set(WeakReference<B, T>& r);
+
+	ManagedReference(Handle h);
+	ManagedReference() = default;
+	~ManagedReference();
+	NOCOPYMOVE(ManagedReference);
 };
 
 // base class, like window and activity
@@ -66,7 +101,7 @@ private:
 
 public:
 	int32_t size;
-	typedef std::unordered_multimap<Handle, _ManagedReferenceBase*> ManagedReferencesType;
+	typedef std::unordered_multimap<Handle, ManagedReferenceBase*> ManagedReferencesType;
 
 	ManagedReferencesType managedReferences;
 	std::unordered_map<std::string, Handle> indexMap;
@@ -101,59 +136,6 @@ public:
 	ReferenceManager() : ReferenceManager(1024) {};
 	~ReferenceManager() = default;
 };
-
-class _ManagedReferenceBase
-{
-public:
-	Handle handle = 0;
-	bool valid = false;
-	bool isValid();
-
-	void validate();
-	void invalidate();
-};
-
-template <class B, class T>
-class ManagedReference : public _ManagedReferenceBase
-{
-public:
-	T* get();
-
-	void unset();
-	void set(Handle h);
-
-	void set(WeakReference<B, T>& r);
-
-	ManagedReference(Handle h);
-	ManagedReference() = default;
-	~ManagedReference();
-	deleteDefaults(ManagedReference);
-
-private:
-	void __staticAssertions() {
-		static_assert(std::is_base_of<B, T>::value, "WeakReference constructor, not a super class");
-	};
-};
-
-template <class B, class T>
-class ManagedNamedReference : public ManagedReference<B, T>
-{
-public:
-	std::string name;
-
-	bool isValid();
-
-	void unset() = delete;
-	void set(Handle h) = delete;
-	void set(WeakReference<B, T>& r) = delete;
-
-	ManagedNamedReference(std::string name_);
-	ManagedNamedReference() = delete;
-	~ManagedNamedReference() = default;
-
-	deleteDefaults(ManagedNamedReference);
-};
-
 
 template<class B, class T>
 inline T* WeakReference<B, T>::get() {
@@ -238,7 +220,7 @@ inline void ReferenceManager<B>::unsubscribe(ManagedReference<B, T>& managedRefe
 	auto it = range.first;
 	auto end = range.second;
 	for (; it != end; it++) {
-		if (it->second == static_cast<_ManagedReferenceBase*>(&managedReference)) {
+		if (it->second == static_cast<ManagedReferenceBase*>(&managedReference)) {
 			managedReferences.erase(it);
 			break;
 		}
@@ -298,24 +280,23 @@ inline Handle ReferenceManager<B>::getFreeHandle() {
 }
 
 template<class B, class T>
-inline bool ManagedNamedReference<B, T>::isValid() {
-	if (!_ManagedReferenceBase::valid) {
-		return false;
-	}
-	if (_ManagedReferenceBase::handle == 0) {
-		ReferenceManager<B>* t = Locator<ReferenceManager<B>>::getService();
-		auto it = t->indexMap.find(name);
-		if (it == t->indexMap.end()) {
-			_ManagedReferenceBase::valid = false;
-			return false;
-		}
-		_ManagedReferenceBase::handle = it->second;
-	}
-	return true;
+inline DestructWeakReference<B, T>::~DestructWeakReference() {
+	std::cout << "deleting DestructWeakReference\n";
+	WeakReference<B, T>::deleteObject();
 }
 
 template<class B, class T>
-inline ManagedNamedReference<B, T>::ManagedNamedReference(std::string name_) :
-	name(name_) {
-	_ManagedReferenceBase::validate();
+inline DestructWeakReference<B, T>::DestructWeakReference(DestructWeakReference&& other) {
+	WeakReferenceBase::handle = other.handle;
+	other.handle = 0;
+}
+
+template<class B, class T>
+inline DestructWeakReference<B, T>& DestructWeakReference<B, T>::operator=(DestructWeakReference&& other) {
+	if (this != &other) {
+		WeakReference<B, T>::deleteObject();
+		WeakReference<B, T>::handle = other.handle;
+		other.handle = 0;
+	}
+	return *this;
 }
