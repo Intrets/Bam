@@ -42,25 +42,25 @@ public:
 
 	void deleteObject();
 
+	WeakReference(T* t);
 	WeakReference(Handle h) { handle = h; };
 	WeakReference() = default;
 	virtual ~WeakReference() = default;
 };
 
 template<class B, class T>
-class DestructWeakReference : public WeakReference<B, T>
+class UniqueReference : public WeakReference<B, T>
 {
 public:
-	DestructWeakReference(Handle h) : WeakReference<B, T>(h) {};
-	DestructWeakReference() = default;
-	virtual ~DestructWeakReference();
+	UniqueReference(Handle h) : WeakReference<B, T>(h) {};
+	UniqueReference() = default;
+	virtual ~UniqueReference();
 
-	DestructWeakReference(DestructWeakReference&& other);
-	DestructWeakReference<B, T>& operator= (DestructWeakReference&& other);
+	UniqueReference(UniqueReference&& other);
+	UniqueReference<B, T>& operator= (UniqueReference&& other);
 
-	NOCOPY(DestructWeakReference);
+	NOCOPY(UniqueReference);
 };
-
 
 class ManagedReferenceBase
 {
@@ -71,6 +71,7 @@ public:
 
 	void validate();
 	void invalidate();
+	virtual ~ManagedReferenceBase() = default;
 };
 
 template <class B, class T>
@@ -82,12 +83,12 @@ public:
 
 	void unset();
 	void set(Handle h);
-
 	void set(WeakReference<B, T>& r);
 
 	ManagedReference(Handle h);
+	ManagedReference(WeakReference<B, T>& r);
 	ManagedReference() = default;
-	~ManagedReference();
+	virtual ~ManagedReference();
 	NOCOPYMOVE(ManagedReference);
 };
 
@@ -128,6 +129,9 @@ public:
 	void deleteReference(Handle h);
 	void deleteReference(WeakReferenceBase* b);
 
+	Handle storeObject(B* obj);
+
+
 	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
 		for (int32_t i = 1; i < size; i++) {
 			freeHandles.insert(i);
@@ -147,6 +151,11 @@ template<class B, class T>
 inline void WeakReference<B, T>::deleteObject() {
 	Locator<ReferenceManager<B>>::getService()->deleteReference(handle);
 	handle = 0;
+}
+
+template<class B, class T>
+inline WeakReference<B, T>::WeakReference(T* t) {
+	handle = Locator<ReferenceManager<B>>::getService()->storeObject(t);
 }
 
 template<class B, class T>
@@ -181,6 +190,11 @@ inline void ManagedReference<B, T>::set(WeakReference<B, T>& r) {
 template<class B, class T>
 inline ManagedReference<B, T>::ManagedReference(Handle h) {
 	set(h);
+}
+
+template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T>& r) {
+	set(r);
 }
 
 template<class B, class T>
@@ -265,6 +279,14 @@ inline void ReferenceManager<B>::deleteReference(WeakReferenceBase* b) {
 }
 
 template<class B>
+inline Handle ReferenceManager<B>::storeObject(B* obj) {
+	Handle h = getFreeHandle();
+	data[h] = std::unique_ptr<B>(obj);
+	usedHandle[h] = true;
+	return h;
+}
+
+template<class B>
 inline void ReferenceManager<B>::freeData(Handle h) {
 	data.erase(h);
 	usedHandle[h] = false;
@@ -280,19 +302,19 @@ inline Handle ReferenceManager<B>::getFreeHandle() {
 }
 
 template<class B, class T>
-inline DestructWeakReference<B, T>::~DestructWeakReference() {
-	std::cout << "deleting DestructWeakReference\n";
+inline UniqueReference<B, T>::~UniqueReference() {
+	std::cout << "deleting UniqueReference\n";
 	WeakReference<B, T>::deleteObject();
 }
 
 template<class B, class T>
-inline DestructWeakReference<B, T>::DestructWeakReference(DestructWeakReference&& other) {
+inline UniqueReference<B, T>::UniqueReference(UniqueReference&& other) {
 	WeakReferenceBase::handle = other.handle;
 	other.handle = 0;
 }
 
 template<class B, class T>
-inline DestructWeakReference<B, T>& DestructWeakReference<B, T>::operator=(DestructWeakReference&& other) {
+inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference&& other) {
 	if (this != &other) {
 		WeakReference<B, T>::deleteObject();
 		WeakReference<B, T>::handle = other.handle;

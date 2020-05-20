@@ -4,6 +4,8 @@
 #include "RenderInfo.h"
 #include "Option.h"
 
+#include "Platform.h"
+
 glm::vec2 GameState::getPlayerCursorWorldSpace() {
 	return playerCursorWorldSpace;
 }
@@ -71,6 +73,7 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 }
 
 GameState::GameState() {
+	WeakReference<Activity, Platform>(new Platform(0, *this, glm::vec2(3), glm::vec2(3)));
 }
 
 
