@@ -308,6 +308,8 @@
     <ClCompile Include="UIOController.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="UIOBase.cpp" />
+    <ClCompile Include="ScreenRectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -530,6 +532,8 @@
     <ClInclude Include="UIOController.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="UIOBase.h" />
+    <ClInclude Include="ScreenRectangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

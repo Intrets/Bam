@@ -314,6 +314,7 @@
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
     <ClCompile Include="Saver.cpp" />
+    <ClCompile Include="ScreenRectangle.cpp" />
     <ClCompile Include="SelectionHighlightRenderer.cpp" />
     <ClCompile Include="SelectionRenderInfo.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -328,6 +329,7 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
+    <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="UIOController.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
@@ -375,6 +377,7 @@
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="Saver.h" />
+    <ClInclude Include="ScreenRectangle.h" />
     <ClInclude Include="SelectionHighlightRenderer.h" />
     <ClInclude Include="SelectionRenderInfo.h" />
     <ClInclude Include="SingleBlockActivity.h" />
@@ -404,6 +407,7 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
+    <ClInclude Include="UIOBase.h" />
     <ClInclude Include="UIOController.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />

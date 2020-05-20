@@ -13,7 +13,7 @@ typedef int32_t Handle;
 template <class B, class T> class ManagedReference;
 class _ManagedReferenceBase;
 
-class _WeakReferenceBase
+class WeakReferenceBase
 {
 public:
 	Handle handle = 0;
@@ -26,10 +26,12 @@ public:
 
 	bool isNotNull() { return handle != 0; };
 	bool isNull() { return handle == 0; };
+
+	virtual ~WeakReferenceBase() {};
 };
 
 template <class B, class T>
-class WeakReference : public _WeakReferenceBase
+class WeakReference : public WeakReferenceBase
 {
 public:
 	T* get();
@@ -44,18 +46,19 @@ public:
 
 	WeakReference(Handle h) { handle = h; };
 	WeakReference() = default;
-	~WeakReference() = default;
-
+	virtual ~WeakReference() = default;
 };
 
-class _ReferenceManagerBase
+template<class B, class T>
+class DestructWeakReference : public WeakReference<B, T>
 {
 
+	virtual ~DestructWeakReference() {};
 };
 
 // base class, like window and activity
 template <class B>
-class ReferenceManager : public _ReferenceManagerBase
+class ReferenceManager
 {
 private:
 	void freeData(Handle h);
@@ -88,7 +91,7 @@ public:
 	void unsubscribe(ManagedReference<B, T>& managedReference);
 
 	void deleteReference(Handle h);
-	void deleteReference(_WeakReferenceBase* b);
+	void deleteReference(WeakReferenceBase* b);
 
 	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
 		for (int32_t i = 1; i < size; i++) {
@@ -274,7 +277,7 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 }
 
 template<class B>
-inline void ReferenceManager<B>::deleteReference(_WeakReferenceBase* b) {
+inline void ReferenceManager<B>::deleteReference(WeakReferenceBase* b) {
 	deleteReference(b->handle);
 	b->handle = 0;
 }
