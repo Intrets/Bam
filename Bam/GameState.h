@@ -24,8 +24,6 @@ private:
 	glm::vec2 playerCursorScreenSpaceD;
 	glm::vec2 playerCursorWorldSpaceD;
 
-	UniqueReference<Activity, Platform> uniqueTest;
-
 public:
 	bool exit;
 	glm::vec2 playerPos;

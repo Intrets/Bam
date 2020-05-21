@@ -12,11 +12,14 @@
 #include "DebugRenderer.h"
 #include "BlockIDTextures.h"
 #include "Activity.h"
+#include "UIOBase.h"
 
 void initManagers() {
 	//Locator<CommandHandler>::provide(new CommandHandler());
 	//Locator<ReferenceManager<BaseWindow>>::provide(new ReferenceManager<BaseWindow>());
 	//Locator<ScriptManager>::provide(new ScriptManager());
+
+	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
 
 	BindHandler* bindHandler = new BindHandler();
 	initBinds(*bindHandler);

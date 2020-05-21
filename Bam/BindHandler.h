@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "UIOController.h"
+#include "UIOBase.h"
 
 class GameState;
 class LogicSequencer;
@@ -24,6 +25,7 @@ private:
 	std::vector<std::unique_ptr<LogicSequencer>> logicSequences;
 
 	std::unique_ptr<UIOController> UI;
+	UniqueReference<UIOBase, UIOBase> UI2;
 
 	using CallbackVector = std::vector<std::function<void(GameState&)>>;
 	std::array<std::array<CallbackVector, CONTROLSTATE::CONTROLSTATE_MAX>, CONTROLS::CONTROLS_MAX > binds;

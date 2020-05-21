@@ -14,7 +14,7 @@ void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, Camer
 	program.use();
 
 	GLEnabler glEnabler;
-	glEnabler.disable(GL_DEPTH_TEST).enable(GL_BLEND);
+	glEnabler.enable(GL_DEPTH_TEST).enable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -62,7 +62,7 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 	glGenBuffers(1, &positions.ID);
 	glBindBuffer(GL_ARRAY_BUFFER, positions.ID);
 	// TODO: limit properly
-	int32_t limit = 100;
+	int32_t limit = 1000;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * limit, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(
@@ -101,6 +101,7 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 		0,								  // stride
 		(void*) 0                         // array buffer offset
 	);
+
 	glVertexAttribDivisor(3, 1);
 }
 

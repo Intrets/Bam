@@ -13,6 +13,9 @@
 #include "RenderInfo.h"
 #include "ActivityLuaTest.h"
 
+#include "UIOBasicWindow.h"
+#include "UIOWindowTile.h"
+
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
@@ -23,7 +26,12 @@ void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo)
 	r.set({ 0.0f,0.0f }, { 0.5f, 0.5f });
 
 	UI->updateSizeUp(r);
-	UI->addRenderInfo(renderInfo);
+	//UI->addRenderInfo(renderInfo);
+
+	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
+
+	UI2.get()->updateSize(r);
+	UI2.get()->addRenderInfo(renderInfo, 0);
 }
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
@@ -92,6 +100,41 @@ BindHandler::BindHandler() {
 
 	auto s = std::make_unique<UIOWindowResize>(std::move(tileTest));
 	UI = std::move(s);
+
+	// ----------------
+
+
+	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
+	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
+	auto tilePtr = tile.get();
+
+	tilePtr->nextRow();
+
+	for (int i = 0; i < 5; i++) {
+		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
+	}
+
+	tilePtr->nextRow();
+
+	for (int i = 0; i < 2; i++) {
+		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
+	}
+
+	tilePtr->nextRow();
+
+	for (int i = 0; i < 4; i++) {
+		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
+	}
+
+	tilePtr->nextRow();
+
+	for (int i = 0; i < 3; i++) {
+		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
+	}
+
+
+	UI2 = std::move(tile);
+
 
 	auto tools = std::make_unique<LogicSequencer>();
 

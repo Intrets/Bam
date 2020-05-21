@@ -61,8 +61,11 @@ public:
 	UniqueReference(Handle h);
 	virtual ~UniqueReference();
 
-	UniqueReference(UniqueReference&& other);
-	UniqueReference<B, T>& operator= (UniqueReference&& other);
+	template<class N>
+	UniqueReference(UniqueReference<B, N>&& other);
+
+	template<class N>
+	UniqueReference<B, T>& operator= (UniqueReference<B, N>&& other);
 
 	NOCOPY(UniqueReference);
 };
@@ -314,7 +317,7 @@ inline Handle ReferenceManager<B>::getFreeHandle() {
 }
 
 template<class B, class T>
-inline UniqueReference<B, T>::UniqueReference(Handle h) : WeakReference<B,T>(h) {
+inline UniqueReference<B, T>::UniqueReference(Handle h) : WeakReference<B, T>(h) {
 }
 
 template<class B, class T>
@@ -324,18 +327,23 @@ inline UniqueReference<B, T>::~UniqueReference() {
 }
 
 template<class B, class T>
-inline UniqueReference<B, T>::UniqueReference(UniqueReference&& other) {
+template<class N>
+inline UniqueReference<B, T>::UniqueReference(UniqueReference<B, N>&& other) {
 	WeakReferenceBase::handle = other.handle;
 	other.handle = 0;
 }
 
 template<class B, class T>
-inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference&& other) {
-	if (this != &other) {
-		WeakReference<B, T>::deleteObject();
-		WeakReference<B, T>::handle = other.handle;
-		other.handle = 0;
+template<class N>
+inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B, N>&& other) {
+	if constexpr (std::is_same<T, N>::value) {
+		if (this == &other) {
+			return *this;
+		}
 	}
+	WeakReference<B, T>::deleteObject();
+	WeakReference<B, T>::handle = other.handle;
+	other.handle = 0;
 	return *this;
 }
 

@@ -310,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="ScreenRectangle.cpp" />
+    <ClCompile Include="UIOBasicWindow.cpp" />
+    <ClCompile Include="UIOWindowTile.cpp" />
+    <ClCompile Include="UIOScaling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -534,6 +537,9 @@
     </ClInclude>
     <ClInclude Include="UIOBase.h" />
     <ClInclude Include="ScreenRectangle.h" />
+    <ClInclude Include="UIOBasicWindow.h" />
+    <ClInclude Include="UIOWindowTile.h" />
+    <ClInclude Include="UIOScaling.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

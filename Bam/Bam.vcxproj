@@ -330,7 +330,10 @@
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
     <ClCompile Include="UIOBase.cpp" />
+    <ClCompile Include="UIOBasicWindow.cpp" />
     <ClCompile Include="UIOController.cpp" />
+    <ClCompile Include="UIOScaling.cpp" />
+    <ClCompile Include="UIOWindowTile.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
@@ -408,7 +411,10 @@
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
     <ClInclude Include="UIOBase.h" />
+    <ClInclude Include="UIOBasicWindow.h" />
     <ClInclude Include="UIOController.h" />
+    <ClInclude Include="UIOScaling.h" />
+    <ClInclude Include="UIOWindowTile.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />
     <ClInclude Include="WindowManager.h" />
