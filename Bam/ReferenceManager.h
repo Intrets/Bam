@@ -42,9 +42,9 @@ public:
 
 	void deleteObject();
 
+	WeakReference() = default;
 	WeakReference(T* t);
 	WeakReference(Handle h) { handle = h; };
-	WeakReference() = default;
 	virtual ~WeakReference() = default;
 };
 
@@ -52,8 +52,13 @@ template<class B, class T>
 class UniqueReference : public WeakReference<B, T>
 {
 public:
-	UniqueReference(Handle h) : WeakReference<B, T>(h) {};
+	operator WeakReference<B, T>() const {
+		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
+		return WeakReference<B, T>(WeakReference<B, T>::handle);
+	};
+
 	UniqueReference() = default;
+	UniqueReference(T* t) : WeakReference<B, T>(t) {};
 	virtual ~UniqueReference();
 
 	UniqueReference(UniqueReference&& other);
@@ -77,19 +82,24 @@ public:
 template <class B, class T>
 class ManagedReference : public ManagedReferenceBase
 {
-	static_assert(std::is_base_of<B, T>::value, "WeakReference constructor, not a super class");
 public:
 	T* get();
 
-	void unset();
 	void set(Handle h);
-	void set(WeakReference<B, T>& r);
+	void set(WeakReference<B, T> r);
+	void unset();
 
-	ManagedReference(Handle h);
-	ManagedReference(WeakReference<B, T>& r);
 	ManagedReference() = default;
+	ManagedReference(Handle h);
+	ManagedReference(WeakReference<B, T> r);
+
+	ManagedReference(ManagedReference&& other);
+	ManagedReference<B, T>& operator= (ManagedReference&& other);
+
+	ManagedReference(const ManagedReference&);
+	ManagedReference& operator=(const ManagedReference&);
+
 	virtual ~ManagedReference();
-	NOCOPYMOVE(ManagedReference);
 };
 
 // base class, like window and activity
@@ -105,7 +115,6 @@ public:
 	typedef std::unordered_multimap<Handle, ManagedReferenceBase*> ManagedReferencesType;
 
 	ManagedReferencesType managedReferences;
-	std::unordered_map<std::string, Handle> indexMap;
 	std::unordered_map<Handle, std::unique_ptr<B>> data;
 	std::set<Handle> freeHandles;
 	bool freeHandlesSorted = true;
@@ -116,13 +125,11 @@ public:
 
 	template <class T, class... Args>
 	WeakReference<B, T> makeRef(Args&&... args);
-	template <class T, class... Args>
-	WeakReference<B, T> makeNamedRef(std::string name, Args&&... args);
 
 	bool storeReference(Handle h, B* ref);
 
 	template<class T>
-	void subscribe(ManagedReference<B, T>& toManage, Handle h);
+	void subscribe(ManagedReference<B, T>& toManage);
 	template<class T>
 	void unsubscribe(ManagedReference<B, T>& managedReference);
 
@@ -130,7 +137,6 @@ public:
 	void deleteReference(WeakReferenceBase* b);
 
 	Handle storeObject(B* obj);
-
 
 	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
 		for (int32_t i = 1; i < size; i++) {
@@ -173,28 +179,45 @@ inline void ManagedReference<B, T>::unset() {
 }
 
 template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(Handle h) {
+	set(h);
+}
+
+template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T> r) {
+	set(r);
+}
+
+template<class B, class T>
 inline void ManagedReference<B, T>::set(Handle h) {
 	if (isValid()) {
 		Locator<ReferenceManager<B>>::getService()->unsubscribe(*this);
 	}
 	handle = h;
 	validate();
-	Locator<ReferenceManager<B>>::getService()->subscribe(*this, h);
+	Locator<ReferenceManager<B>>::getService()->subscribe(*this);
 }
 
 template<class B, class T>
-inline void ManagedReference<B, T>::set(WeakReference<B, T>& r) {
+inline void ManagedReference<B, T>::set(WeakReference<B, T> r) {
 	set(r.handle);
 }
 
 template<class B, class T>
-inline ManagedReference<B, T>::ManagedReference(Handle h) {
-	set(h);
+inline ManagedReference<B, T>::ManagedReference(const ManagedReference& other) {
+	if (other.isValid()) {
+		set(other.handle);
+	}
 }
 
 template<class B, class T>
-inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T>& r) {
-	set(r);
+inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(const ManagedReference& other) {
+	if (this != &other) {
+		if (other.isValid()) {
+			set(other.handle);
+		}
+	}
+	return *this;
 }
 
 template<class B, class T>
@@ -214,17 +237,9 @@ inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args&& ...args) {
 }
 
 template<class B>
-template<class T, class ...Args>
-inline WeakReference<B, T> ReferenceManager<B>::makeNamedRef(std::string name, Args&& ...args) {
-	WeakReference<B, T> ref = makeRef<T>(std::forward<Args>(args)...);
-	indexMap[name] = ref.handle;
-	return ref;
-}
-
-template<class B>
 template<class T>
-inline void ReferenceManager<B>::subscribe(ManagedReference<B, T>& toManage, Handle h) {
-	managedReferences.insert(std::make_pair(h, &toManage));
+inline void ReferenceManager<B>::subscribe(ManagedReference<B, T>& toManage) {
+	managedReferences.insert(std::make_pair(toManage.handle, &toManage));
 }
 
 template<class B>
@@ -322,3 +337,23 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference&&
 	}
 	return *this;
 }
+
+template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(ManagedReference&& other) {
+	if (other.isValid()) {
+		this->set(other.handle);
+	}
+	other.unset();
+}
+
+template<class B, class T>
+inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(ManagedReference&& other) {
+	if (this != &other) {
+		if (other.isValid()) {
+			this->set(other.handle);
+		}
+		other.unset();
+	}
+	return *this;
+}
+
