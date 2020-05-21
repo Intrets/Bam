@@ -43,7 +43,7 @@ public:
 	void deleteObject();
 
 	WeakReference() = default;
-	WeakReference(T* t);
+
 	WeakReference(Handle h) { handle = h; };
 	virtual ~WeakReference() = default;
 };
@@ -58,7 +58,7 @@ public:
 	};
 
 	UniqueReference() = default;
-	UniqueReference(T* t) : WeakReference<B, T>(t) {};
+	UniqueReference(Handle h);
 	virtual ~UniqueReference();
 
 	UniqueReference(UniqueReference&& other);
@@ -126,6 +126,9 @@ public:
 	template <class T, class... Args>
 	WeakReference<B, T> makeRef(Args&&... args);
 
+	template <class T, class... Args>
+	UniqueReference<B, T> makeUniqueRef(Args&&... args);
+
 	bool storeReference(Handle h, B* ref);
 
 	template<class T>
@@ -135,8 +138,6 @@ public:
 
 	void deleteReference(Handle h);
 	void deleteReference(WeakReferenceBase* b);
-
-	Handle storeObject(B* obj);
 
 	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
 		for (int32_t i = 1; i < size; i++) {
@@ -157,11 +158,6 @@ template<class B, class T>
 inline void WeakReference<B, T>::deleteObject() {
 	Locator<ReferenceManager<B>>::getService()->deleteReference(handle);
 	handle = 0;
-}
-
-template<class B, class T>
-inline WeakReference<B, T>::WeakReference(T* t) {
-	handle = Locator<ReferenceManager<B>>::getService()->storeObject(t);
 }
 
 template<class B, class T>
@@ -237,6 +233,15 @@ inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args&& ...args) {
 }
 
 template<class B>
+template<class T, class ...Args>
+inline UniqueReference<B, T> ReferenceManager<B>::makeUniqueRef(Args&& ...args) {
+	Handle h = getFreeHandle();
+	data[h] = std::make_unique<T>(h, std::forward<Args>(args)...);
+	usedHandle[h] = true;
+	return UniqueReference<B, T>(h);
+}
+
+template<class B>
 template<class T>
 inline void ReferenceManager<B>::subscribe(ManagedReference<B, T>& toManage) {
 	managedReferences.insert(std::make_pair(toManage.handle, &toManage));
@@ -294,14 +299,6 @@ inline void ReferenceManager<B>::deleteReference(WeakReferenceBase* b) {
 }
 
 template<class B>
-inline Handle ReferenceManager<B>::storeObject(B* obj) {
-	Handle h = getFreeHandle();
-	data[h] = std::unique_ptr<B>(obj);
-	usedHandle[h] = true;
-	return h;
-}
-
-template<class B>
 inline void ReferenceManager<B>::freeData(Handle h) {
 	data.erase(h);
 	usedHandle[h] = false;
@@ -314,6 +311,10 @@ inline Handle ReferenceManager<B>::getFreeHandle() {
 	Handle h = *it;
 	freeHandles.erase(it);
 	return h;
+}
+
+template<class B, class T>
+inline UniqueReference<B, T>::UniqueReference(Handle h) : WeakReference<B,T>(h) {
 }
 
 template<class B, class T>

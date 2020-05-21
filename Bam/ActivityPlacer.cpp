@@ -55,6 +55,7 @@ void ActivityPlacer::spawnHover(GameState& gameState, glm::ivec2 pos) {
 	switch (static_cast<HOVERTYPES>(hoverType)) {
 		case HOVERTYPES::PLATFORM:
 			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
+			//hover = WeakReference<Activity, Activity>(new Platform(0, gameState, glm::ivec2(6,5), pos, false));
 			break;
 		case HOVERTYPES::PISTON:
 			hover = Locator<ReferenceManager<Activity>>::getService()->makeRef<Piston>(gameState, pos, MOVEABLE::UP, false);
