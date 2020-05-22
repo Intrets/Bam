@@ -11,21 +11,25 @@ class GameState;
 
 class UIOBase;
 
+typedef std::function<bool(GameState& gameState, ControlState& controlState, UIOBase* self)> CallBack;
+
 class UIOBase
 {
 protected:
 	Handle selfHandle;
-	ScreenRectangle screenRectangle;
 
 	std::vector<UniqueReference<UIOBase, UIOBase>> elements;
 
-	using CallBack = std::function<bool(GameState& gameState, UIOBase* self)>;
 	using Bind = std::pair<BindControl, CallBack>;
 
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
 	std::list<Bind> binds;
 
 public:
+	ScreenRectangle screenRectangle;
+
+	void translate(glm::vec2 p);
+	void moveTopLeftTo(glm::vec2 p);
 	void scale(glm::vec2 s);
 	bool contains(glm::vec2 p);
 	void addBind(BindControl bindControl, CallBack callBack);

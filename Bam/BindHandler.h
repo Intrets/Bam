@@ -3,7 +3,6 @@
 #include "ControlState.h"
 #include <functional>
 
-#include "UIOController.h"
 #include "UIOBase.h"
 
 class GameState;

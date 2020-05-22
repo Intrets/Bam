@@ -4,16 +4,13 @@
 
 class UIOButton;
 
-class UIOScaling : public UIOBase
+class UIOMoving : public UIOBase
 {
 public:
-	bool scaling;
+	UIOBase* main;
+	UIOButton* topBar;
 
-	UIOBase* center;
-	UIOButton* bottomBar;
-	UIOButton* rightBar;
-
-	UIOScaling(Handle self, UniqueReference<UIOBase, UIOBase> center_);
+	UIOMoving(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(RenderInfo& renderInfo, int32_t depth) override;

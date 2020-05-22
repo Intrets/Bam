@@ -16,6 +16,7 @@
 #include "UIOBasicWindow.h"
 #include "UIOWindowTile.h"
 #include "UIOScaling.h"
+#include "UIOMoving.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
@@ -76,14 +77,18 @@ BindHandler::BindHandler() {
 	}
 
 	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(tile));
+	auto test2 = refMan->makeUniqueRef<UIOMoving>(std::move(test));
 
-	UI = std::move(test);
+	UI = std::move(test2);
 
 	ScreenRectangle r;
 
 	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
 
 	UI.get()->updateSize(r);
+
+
+
 
 	auto tools = std::make_unique<LogicSequencer>();
 

@@ -6,6 +6,17 @@ void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	elements.push_back(std::move(element));
 }
 
+void UIOBase::translate(glm::vec2 p) {
+	screenRectangle.translate(p);
+	for (auto& element : elements) {
+		element.get()->translate(p);
+	}
+}
+
+void UIOBase::moveTopLeftTo(glm::vec2 p) {
+	translate(p - screenRectangle.topLeft());
+}
+
 void UIOBase::scale(glm::vec2 s) {
 	screenRectangle.scaleAnchorTopLeft(s);
 	updateSize(screenRectangle);
@@ -16,13 +27,13 @@ bool UIOBase::contains(glm::vec2 p) {
 }
 
 void UIOBase::addBind(BindControl bindControl, CallBack callBack) {
-	binds.push_back(std::make_pair(bindControl, callBack));
+	binds.push_front(std::make_pair(bindControl, callBack));
 }
 
 void UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
 	for (auto it = binds.begin(); it != binds.end();) {
 		auto& bind = *it;
-		if (controlState.activated(bind.first) && bind.second(gameState, this)) {
+		if (controlState.activated(bind.first) && bind.second(gameState, controlState, this)) {
 			it = binds.erase(it);
 		}
 		else {

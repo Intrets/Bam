@@ -7,7 +7,7 @@
 
 UIOBasicWindow::UIOBasicWindow(Handle self) {
 	selfHandle = self;
-	UIOBase::CallBack onClick = [](GameState& gameState, UIOBase* self) -> bool {
+	CallBack onClick = [](GameState& gameState, ControlState& controlState, UIOBase* self) -> bool {
 		if (self->contains(gameState.getPlayerCursorScreenSpace())) {
 			std::cout << "click anywyere\n";
 		}

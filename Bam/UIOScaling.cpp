@@ -3,34 +3,44 @@
 #include "UIOScaling.h"
 #include "UIOBasicWindow.h"
 #include "RenderInfo.h"
+#include "UIOButton.h"
+#include "GameState.h"
 
 UIOScaling::UIOScaling(Handle self, UniqueReference<UIOBase, UIOBase> center_) {
 	selfHandle = self;
 	center = center_.get();
 	addElement(std::move(center_));
 
-	auto b = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOBasicWindow>();
+	auto b = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOButton>();
 	bottomBar = b.get();
 	addElement(std::move(b));
 
-	auto r = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOBasicWindow>();
+	auto r = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOButton>();
 	rightBar = r.get();
 	addElement(std::move(r));
 
-	auto onClick = [&](GameState& gameState, UIOBase* self) -> bool {
-		this->scale(glm::vec2(0.9f));
-		std::cout << "resize\n";
+	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+		if (bottomBar->down) {
+			auto bottomRight = self_->screenRectangle.bottomRight();
+			bottomRight.y = gameState.getPlayerCursorScreenSpace().y;
+			self_->screenRectangle.setBottomRight(bottomRight);
+			self_->updateSize(self_->screenRectangle);
+		}
 		return false;
 	};
 
-	auto onClickR = [&](GameState& gameState, UIOBase* self) -> bool {
-		this->scale(glm::vec2(1/0.9f));
-		std::cout << "resize\n";
+	auto scaleHorizontal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+		if (rightBar->down) {
+			auto bottomRight = self_->screenRectangle.bottomRight();
+			bottomRight.x = gameState.getPlayerCursorScreenSpace().x;
+			self_->screenRectangle.setBottomRight(bottomRight);
+			self_->updateSize(self_->screenRectangle);
+		}
 		return false;
 	};
 
-	rightBar->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_DOWN }, onClick);
-	rightBar->addBind({ CONTROLS::ACTION2, CONTROLSTATE::CONTROLSTATE_DOWN }, onClickR);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, scaleVertical);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, scaleHorizontal);
 
 }
 
@@ -41,17 +51,17 @@ ScreenRectangle UIOScaling::updateSize(ScreenRectangle newScreenRectangle) {
 	glm::vec2 top = screenRectangle.topLeft();
 
 	ScreenRectangle b = screenRectangle;
-	b.setTopLeft(top + glm::vec2(0, 0.9f*screenSize.y));
+	b.setTopLeft(top + glm::vec2(0, 0.95f * screenSize.y));
 
 	bottomBar->updateSize(b);
-	
+
 	ScreenRectangle r = screenRectangle;
-	r.setTopLeft(top + glm::vec2(0.9f * screenSize.x, 0));
+	r.setTopLeft(top + glm::vec2(0.95f * screenSize.x, 0));
 
 	rightBar->updateSize(r);
 
 	ScreenRectangle c = screenRectangle;
-	c.setBottomRight(top + 0.9f * screenSize);
+	c.setBottomRight(top + 0.95f * screenSize);
 	center->updateSize(c);
 
 	return screenRectangle;

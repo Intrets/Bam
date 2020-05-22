@@ -10,6 +10,10 @@ glm::vec2 ScreenRectangle::bottomRight() {
 	return glm::vec2(top.x, bot.y);
 }
 
+glm::vec2 ScreenRectangle::topRight() {
+	return top;
+}
+
 glm::ivec2 ScreenRectangle::getPixelSize() {
 	// TODO
 	assert(false);
@@ -48,5 +52,10 @@ void ScreenRectangle::setTopLeft(glm::vec2 p) {
 void ScreenRectangle::setBottomRight(glm::vec2 p) {
 	bot.y = p.y;
 	top.x = p.x;
+}
+
+void ScreenRectangle::translate(glm::vec2 p) {
+	bot += p;
+	top += p;
 }
 

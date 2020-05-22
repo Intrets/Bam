@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sstream>
+
 // vec2
 
 inline std::ostream & operator<<(std::ostream & out, const glm::vec2 & v) {

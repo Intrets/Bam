@@ -305,14 +305,25 @@
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="UIOController.cpp">
+    <ClCompile Include="ScreenRectangle.cpp" />
+    <ClCompile Include="UIOBase.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOBase.cpp" />
-    <ClCompile Include="ScreenRectangle.cpp" />
-    <ClCompile Include="UIOBasicWindow.cpp" />
-    <ClCompile Include="UIOWindowTile.cpp" />
-    <ClCompile Include="UIOScaling.cpp" />
+    <ClCompile Include="UIOBasicWindow.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOButton.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOMoving.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOScaling.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOWindowTile.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -532,14 +543,25 @@
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="UIOController.h">
+    <ClInclude Include="ScreenRectangle.h" />
+    <ClInclude Include="UIOWindowTile.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOBase.h" />
-    <ClInclude Include="ScreenRectangle.h" />
-    <ClInclude Include="UIOBasicWindow.h" />
-    <ClInclude Include="UIOWindowTile.h" />
-    <ClInclude Include="UIOScaling.h" />
+    <ClInclude Include="UIOBase.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOBasicWindow.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOButton.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOMoving.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOScaling.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
