@@ -75,8 +75,8 @@ bool loadOBJ(
 		}
 		else {
 			// Probably a comment, eat up the rest of the line
-			char stupidBuffer[1000];
-			fgets(stupidBuffer, 1000, file);
+			char sBuffer[1000];
+			fgets(sBuffer, 1000, file);
 		}
 
 	}

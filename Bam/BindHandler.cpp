@@ -15,23 +15,14 @@
 
 #include "UIOBasicWindow.h"
 #include "UIOWindowTile.h"
+#include "UIOScaling.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
 	}
 
-	ScreenRectangle r;
-	r.screenPixels = renderInfo.cameraInfo.viewPort;
-	r.set({ 0.0f,0.0f }, { 0.5f, 0.5f });
-
-	UI->updateSizeUp(r);
-	//UI->addRenderInfo(renderInfo);
-
-	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
-
-	UI2.get()->updateSize(r);
-	UI2.get()->addRenderInfo(renderInfo, 0);
+	UI.get()->addRenderInfo(renderInfo, 0);
 }
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
@@ -47,7 +38,8 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 			bind(gameState);
 		}
 	}
-	UI->clickTest(gameState.getPlayerCursorScreenSpace(), gameState.getPlayerCursorScreenSpaceD());
+
+	UI.get()->runBinds(controlState, gameState);
 }
 
 void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<void(GameState&)> f) {
@@ -55,55 +47,6 @@ void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<vo
 }
 
 BindHandler::BindHandler() {
-	auto tileTest = std::make_unique<UIOWindowTileTest>();
-	tileTest->nextRow();
-
-	for (int i = 0; i < 4; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest->add(std::move(n));
-	}
-	tileTest->nextRow();
-
-	for (int i = 0; i < 8; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest->add(std::move(n));
-	}
-
-	tileTest->nextRow();
-	for (int i = 0; i < 3; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest->add(std::move(n));
-	}
-
-	auto tileTest2 = std::make_unique<UIOWindowTileTest>();
-	tileTest2->nextRow();
-
-	for (int i = 0; i < 4; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest2->add(std::move(n));
-	}
-	tileTest2->nextRow();
-
-	for (int i = 0; i < 8; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest2->add(std::move(n));
-	}
-
-	tileTest2->nextRow();
-	for (int i = 0; i < 3; i++) {
-		std::unique_ptr<UIOWindowTest> n = std::make_unique<UIOWindowTest>();
-		tileTest2->add(std::move(n));
-	}
-
-	tileTest->add(std::move(tileTest2));
-	//UI = std::move(tileTest);
-
-	auto s = std::make_unique<UIOWindowResize>(std::move(tileTest));
-	UI = std::move(s);
-
-	// ----------------
-
-
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
 	auto tilePtr = tile.get();
@@ -132,9 +75,15 @@ BindHandler::BindHandler() {
 		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
 	}
 
+	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(tile));
 
-	UI2 = std::move(tile);
+	UI = std::move(test);
 
+	ScreenRectangle r;
+
+	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
+
+	UI.get()->updateSize(r);
 
 	auto tools = std::make_unique<LogicSequencer>();
 

@@ -40,3 +40,13 @@ void ScreenRectangle::set(glm::vec2 p1, glm::vec2 p2) {
 	top = glm::max(p1, p2);
 }
 
+void ScreenRectangle::setTopLeft(glm::vec2 p) {
+	bot.x = p.x;
+	top.y = p.y;
+}
+
+void ScreenRectangle::setBottomRight(glm::vec2 p) {
+	bot.y = p.y;
+	top.x = p.x;
+}
+

@@ -5,7 +5,6 @@
 class UIOBasicWindow : public UIOBase
 {
 public:
-
 	UIOBasicWindow(Handle self);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;

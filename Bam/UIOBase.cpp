@@ -6,6 +6,34 @@ void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	elements.push_back(std::move(element));
 }
 
+void UIOBase::scale(glm::vec2 s) {
+	screenRectangle.scaleAnchorTopLeft(s);
+	updateSize(screenRectangle);
+}
+
+bool UIOBase::contains(glm::vec2 p) {
+	return screenRectangle.contains(p);
+}
+
+void UIOBase::addBind(BindControl bindControl, CallBack callBack) {
+	binds.push_back(std::make_pair(bindControl, callBack));
+}
+
+void UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
+	for (auto it = binds.begin(); it != binds.end();) {
+		auto& bind = *it;
+		if (controlState.activated(bind.first) && bind.second(gameState, this)) {
+			it = binds.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+	for (auto& element : elements) {
+		element.get()->runBinds(controlState, gameState);
+	}
+}
+
 int32_t UIOBase::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	int32_t maxDepth = 0;
 	for (auto& element : elements) {
