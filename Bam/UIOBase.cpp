@@ -13,6 +13,13 @@ void UIOBase::translate(glm::vec2 p) {
 	}
 }
 
+void UIOBase::setScreenPixels(glm::ivec2 px) {
+	screenRectangle.screenPixels = px;
+	for (auto& element : elements) {
+		element.get()->setScreenPixels(px);
+	}
+}
+
 void UIOBase::moveTopLeftTo(glm::vec2 p) {
 	translate(p - screenRectangle.topLeft());
 }

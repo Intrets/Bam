@@ -93,7 +93,7 @@ void ActivityPlacer::deleteHover() {
 }
 
 ActivityPlacer::ActivityPlacer() {
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, &updateHoverPos);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, ~CONTROLSTATE::CONTROLSTATE_DOWN }, &updateHoverPos);
 
 	addBind({ CONTROLS::ACTION2, CONTROLSTATE::CONTROLSTATE_PRESSED }, &pickUpActivity);
 

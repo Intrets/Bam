@@ -18,5 +18,7 @@ struct ScreenRectangle
 	glm::vec2 topLeft();
 	glm::vec2 bottomRight();
 	glm::vec2 topRight();
+	glm::vec2 size();
+	float width();
 };
 

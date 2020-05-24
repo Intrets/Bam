@@ -14,6 +14,14 @@ glm::vec2 ScreenRectangle::topRight() {
 	return top;
 }
 
+glm::vec2 ScreenRectangle::size() {
+	return glm::abs(bot - top);
+}
+
+float ScreenRectangle::width() {
+	return top.y - bot.y;
+}
+
 glm::ivec2 ScreenRectangle::getPixelSize() {
 	// TODO
 	assert(false);

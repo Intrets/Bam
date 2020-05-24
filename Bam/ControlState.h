@@ -41,37 +41,25 @@ typedef enum
 	TOOL_2,
 	TOOL_3,
 	TOOL_4,
-	CONTROLS_MAX
+	BACKSPACE,
+	DELETE,
+	TAB,
+	CHAR_BUFFER_CHANGED,
+	CONTROLS_MAX,
 } CONTROLS;
 
 typedef enum
 {
-	CONTROLSTATE_RELEASED,
-	CONTROLSTATE_PRESSED,
-	CONTROLSTATE_DOWN,
-	CONTROLSTATE_UP,
-	CONTROLSTATE_MAX
+	CONTROLSTATE_RELEASED = 1 << 0,
+	CONTROLSTATE_PRESSED = 1 << 1,
+	CONTROLSTATE_DOWN = 1 << 2,
+	CONTROLSTATE_REPEAT = 1 << 3,
 } CONTROLSTATE;
-
-typedef enum
-{
-	CONTROLSTATE_RELEASED_MASK = 1 << 0,
-	CONTROLSTATE_PRESSED_MASK = 1 << 1,
-	CONTROLSTATE_DOWN_MASK = 1 << 2,
-	CONTROLSTATE_UP_MASK = 1 << 3,
-} CONTROLSTATE_MASK;
-
-typedef enum
-{
-	CONSUMED_NOTHING = 0,
-	MOUSEPRESS = 1 << 0,
-	KEYPRESS = 1 << 1,
-} CONSUMED;
 
 struct BindControl
 {
 	CONTROLS control;
-	CONTROLSTATE state;
+	int32_t state;
 
 	bool operator== (const BindControl& other) const {
 		return this->control == other.control && this->state == other.state;
@@ -91,7 +79,6 @@ public:
 	ControlState();
 
 	void cycleStates();
-	std::vector<BindControl> getBindControls();
 
 	std::string getCharBuffer();
 
@@ -99,13 +86,12 @@ public:
 
 	void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 	void char_callback(GLFWwindow* window, unsigned int character);
-private:
-	std::optional<std::vector<BindControl>> cachedBindControls;
 
 private:
 	friend class BindHandler;
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
-	std::array<CONTROLSTATE, CONTROLS::CONTROLS_MAX> controlState;
+	std::array<int32_t, CONTROLS::CONTROLS_MAX> controlState;
 	std::string charBuffer;
+
 };
 

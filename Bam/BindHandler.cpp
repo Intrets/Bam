@@ -17,11 +17,16 @@
 #include "UIOWindowTile.h"
 #include "UIOScaling.h"
 #include "UIOMoving.h"
+#include "UIOTextEdit.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
 	}
+
+	auto r = UI.get()->screenRectangle;
+
+	r.screenPixels = renderInfo.frameSize;
 
 	UI.get()->addRenderInfo(renderInfo, 0);
 }
@@ -31,52 +36,14 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		logicSequence->runBinds(controlState, gameState);
 	}
 
-	for (int32_t i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
-		CONTROLS control = static_cast<CONTROLS>(i);
-		CONTROLSTATE state = controlState.controlState[control];
-
-		for (auto& bind : binds[control][state]) {
-			bind(gameState);
-		}
-	}
-
 	UI.get()->runBinds(controlState, gameState);
-}
-
-void BindHandler::addBind(CONTROLS control, CONTROLSTATE state, std::function<void(GameState&)> f) {
-	binds[control][state].push_back(f);
 }
 
 BindHandler::BindHandler() {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
-	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
-	auto tilePtr = tile.get();
+	auto text = refMan->makeUniqueRef<UIOTextEdit>();
 
-	tilePtr->nextRow();
-
-	for (int i = 0; i < 5; i++) {
-		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
-	}
-
-	tilePtr->nextRow();
-
-	for (int i = 0; i < 2; i++) {
-		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
-	}
-
-	tilePtr->nextRow();
-
-	for (int i = 0; i < 4; i++) {
-		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
-	}
-
-	tilePtr->nextRow();
-
-	for (int i = 0; i < 3; i++) {
-		tilePtr->add(refMan->makeUniqueRef<UIOBasicWindow>());
-	}
-
-	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(tile));
+	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
 	auto test2 = refMan->makeUniqueRef<UIOMoving>(std::move(test));
 
 	UI = std::move(test2);
@@ -86,8 +53,6 @@ BindHandler::BindHandler() {
 	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
 
 	UI.get()->updateSize(r);
-
-
 
 
 	auto tools = std::make_unique<LogicSequencer>();

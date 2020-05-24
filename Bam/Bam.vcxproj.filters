@@ -305,7 +305,6 @@
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenRectangle.cpp" />
     <ClCompile Include="UIOBase.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
@@ -324,6 +323,10 @@
     <ClCompile Include="UIOWindowTile.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenRectangle.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -543,7 +546,6 @@
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenRectangle.h" />
     <ClInclude Include="UIOWindowTile.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
@@ -562,6 +564,10 @@
     <ClInclude Include="UIOScaling.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenRectangle.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextEdit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

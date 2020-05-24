@@ -29,31 +29,6 @@ CONTINUATION LogicSequencer::runBinds(ControlState& controlState, GameState& gam
 				break;
 		}
 	}
-	for (BindControl bindControl : controlState.getBindControls()) {
-		auto bind = binds.find(bindControl);
-		if (bind == binds.end()) {
-			continue;
-		}
-
-		auto bindResult = bind->second(gameState, this);
-		switch (bindResult.first) {
-			case CONTINUATION::EXIT:
-				return CONTINUATION::EXIT;
-				break;
-			case CONTINUATION::STOP:
-				return CONTINUATION::STOP;
-				break;
-			case CONTINUATION::CONTINUE:
-				break;
-			default:
-				break;
-		}
-
-		if (bindResult.second.has_value()) {
-			next = std::move(bindResult.second);
-			return CONTINUATION::STOP;
-		}
-	}
 	return CONTINUATION::STOP;
 }
 

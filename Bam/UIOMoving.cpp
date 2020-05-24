@@ -20,7 +20,7 @@ UIOMoving::UIOMoving(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return false;
 	};
 
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, move);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
 }
 
 ScreenRectangle UIOMoving::updateSize(ScreenRectangle newScreenRectangle) {

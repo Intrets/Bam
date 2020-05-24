@@ -5,7 +5,7 @@
 #include <iostream>
 
 ControlState::ControlState() {
-	controlState.fill(CONTROLSTATE::CONTROLSTATE_UP);
+	controlState.fill(0);
 
 	keyToControl[GLFW_KEY_A] = CONTROLS::LEFT;
 	keyToControl[GLFW_KEY_D] = CONTROLS::RIGHT;
@@ -34,32 +34,19 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_X] = CONTROLS::ACTION4;
 	keyToControl[GLFW_KEY_C] = CONTROLS::ACTION5;
 	keyToControl[GLFW_KEY_V] = CONTROLS::ACTION6;
-
+	keyToControl[GLFW_KEY_BACKSPACE] = CONTROLS::BACKSPACE;
+	keyToControl[GLFW_KEY_DELETE] = CONTROLS::DELETE;
+	keyToControl[GLFW_KEY_TAB] = CONTROLS::TAB;
 }
 
 void ControlState::cycleStates() {
 	for (auto& state : controlState) {
-		if (state == CONTROLSTATE::CONTROLSTATE_PRESSED) {
-			state = CONTROLSTATE::CONTROLSTATE_DOWN;
-		}
-		else if (state == CONTROLSTATE::CONTROLSTATE_RELEASED) {
-			state = CONTROLSTATE::CONTROLSTATE_UP;
-		}
+		state &= ~CONTROLSTATE::CONTROLSTATE_PRESSED;
+		state &= ~CONTROLSTATE::CONTROLSTATE_RELEASED;
+		state &= ~CONTROLSTATE::CONTROLSTATE_REPEAT;
 	}
-	cachedBindControls.reset();
 	charBuffer.clear();
-}
-
-std::vector<BindControl> ControlState::getBindControls() {
-	if (!cachedBindControls.has_value()) {
-		cachedBindControls.emplace();
-		for (int32_t i = 0; i < CONTROLS::CONTROLS_MAX; i++) {
-			CONTROLS control = static_cast<CONTROLS>(i);
-			CONTROLSTATE state = controlState[i];
-			cachedBindControls->push_back({ control, state });
-		}
-	}
-	return cachedBindControls.value();
+	controlState[CONTROLS::MOUSE_POS_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 }
 
 std::string ControlState::getCharBuffer() {
@@ -67,7 +54,7 @@ std::string ControlState::getCharBuffer() {
 }
 
 bool ControlState::activated(BindControl bindControl) {
-	return controlState[bindControl.control] == bindControl.state;
+	return controlState[bindControl.control] & bindControl.state;
 }
 
 void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
@@ -77,23 +64,32 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 	}
 
 	if (key == GLFW_KEY_ENTER && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-		charBuffer.push_back('-');
 		charBuffer.push_back('\n');
+		controlState[CHAR_BUFFER_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 	}
 
-	if (action == GLFW_RELEASE) {
-		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_RELEASED;
+	switch (action) {
+		case GLFW_REPEAT:
+			controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_REPEAT;
+			break;
+		case GLFW_PRESS:
+			controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_DOWN;
+			controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_PRESSED;
+			break;
+		case GLFW_RELEASE:
+			controlState[keyToControl[key]] &= ~CONTROLSTATE::CONTROLSTATE_DOWN;
+			controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_RELEASED;
+			break;
+		default:
+			break;
 	}
-	else if (action == GLFW_PRESS) {
-		controlState[keyToControl[key]] = CONTROLSTATE::CONTROLSTATE_PRESSED;
-	}
-
 }
 
 void ControlState::char_callback(GLFWwindow* window, unsigned int character) {
 	if (character > 127) {
 		return;
 	}
+	controlState[CHAR_BUFFER_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 	char c = static_cast<char>(character);
 	charBuffer.push_back(c);
 }

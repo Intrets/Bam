@@ -15,6 +15,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 	glm::vec2 viewport(ratio, 1.0f);
 	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
 	viewport *= viewportScale.getVal();
+	renderInfo.frameSize = { frameSizeX, frameSizeY };
 	renderInfo.cameraInfo = { frameSizeX, frameSizeY, gameState.playerPos, glm::vec3(viewport, 200.0f) };
 	renderInfo.textRenderInfo.textRendererRef = &textRenderer;
 
@@ -118,6 +119,9 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	//);
 
 	selectionRenderer.render(renderInfo, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, 0, renderInfo.cameraInfo);
 	textRenderer.render(renderInfo.textRenderInfo, 0, renderInfo.cameraInfo);

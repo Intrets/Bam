@@ -39,8 +39,8 @@ UIOScaling::UIOScaling(Handle self, UniqueReference<UIOBase, UIOBase> center_) {
 		return false;
 	};
 
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, scaleVertical);
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_UP }, scaleHorizontal);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
 
 }
 

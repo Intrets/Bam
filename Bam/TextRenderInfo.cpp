@@ -56,7 +56,7 @@ void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
-	glm::vec2 start = { pos.x, pos.y - fontScale.y };
+	glm::vec2 start = pos;
 
 	for (auto& text : texts) {
 		addText(textRenderer, cameraInfo, start, width, fontSize, text);

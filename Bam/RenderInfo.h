@@ -12,6 +12,7 @@
 
 struct RenderInfo
 {
+	glm::ivec2 frameSize;
 	CameraInfo cameraInfo;
 	StaticWorldRenderInfo staticWorldRenderInfo;
 	DebugRenderInfo debugRenderInfo;
