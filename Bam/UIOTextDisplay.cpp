@@ -1,0 +1,72 @@
+#include "common.h"
+
+#include "UIOTextDisplay.h"
+#include "StringHelpers.h"
+#include "RenderInfo.h"
+#include "GameState.h"
+#include "TextRenderer.h"
+
+UIOTextDisplay::UIOTextDisplay(Handle self) {
+	selfHandle = self;
+
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+		hover = screenRectangle.contains(gameState.getPlayerCursorScreenSpace());
+		return false;
+	});
+}
+
+void UIOTextDisplay::setText(std::string text_) {
+	split(0, text_, text, '\n', true);
+}
+
+ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
+	screenRectangle = newScreenRectangle;
+	return screenRectangle;
+}
+
+int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
+	glm::vec4 color;
+	glm::vec2 top = screenRectangle.topLeft();
+	glm::vec2 bot;
+
+	auto& cameraInfo = renderInfo.cameraInfo;
+	int fontSize = 16;
+	auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;
+
+	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
+	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
+
+	if (hover) {
+		color = { 0.3,0.3,0.3,1.0 };
+		int32_t m = 0;
+		for (auto& t : text) {
+			m = glm::max(m, static_cast<int32_t>(t.size()));
+		}
+		glm::vec2 s = glm::vec2(fontScale.x * m, -fontScale.y * text.size());
+		std::string test;
+		bot = top + s;
+		renderInfo.textRenderInfo.addTexts(
+			*renderInfo.textRenderInfo.textRendererRef,
+			renderInfo.cameraInfo,
+			screenRectangle.topLeft(),
+			screenRectangle.top.x - screenRectangle.bot.x,
+			16,
+			text
+		);
+	}
+	else {
+		color = { 0.2,0.2,0.2,1.0 };
+		glm::vec2 s = glm::vec2(fontScale.x * text[0].size(), -fontScale.y);
+		bot = top + s;
+		renderInfo.textRenderInfo.addText(
+			*renderInfo.textRenderInfo.textRendererRef,
+			renderInfo.cameraInfo,
+			screenRectangle.topLeft(),
+			screenRectangle.top.x - screenRectangle.bot.x,
+			16,
+			text[0]
+		);
+	}
+	renderInfo.uiRenderInfo.addRectangle(bot, top, color, depth + 1);
+	return depth + 1;
+}

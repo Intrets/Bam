@@ -4,7 +4,7 @@
 
 // split string on spaces
 // maximum number of n splits, n <= 0 -> no limit
-inline void split(size_t n, std::string& in, std::vector<std::string>& out, char c = ' ') {
+inline void split(size_t n, std::string& in, std::vector<std::string>& out, char c = ' ', bool emptySegments = false) {
 	if (n <= 0) {
 		n = in.size() + 1;
 	}
@@ -12,6 +12,9 @@ inline void split(size_t n, std::string& in, std::vector<std::string>& out, char
 	while (i < in.size()) {
 		while (i < in.size() && in[i] == c) {
 			i++;
+			if (emptySegments) {
+				break;
+			}
 		}
 		auto first = i;
 		while (i < in.size() && in[i] != c) {

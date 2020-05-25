@@ -64,6 +64,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -249,6 +250,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -334,6 +336,7 @@
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOMoving.cpp" />
     <ClCompile Include="UIOScaling.cpp" />
+    <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOTextEdit.cpp" />
     <ClCompile Include="UIOWindowTile.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
@@ -417,6 +420,7 @@
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOMoving.h" />
     <ClInclude Include="UIOScaling.h" />
+    <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOTextEdit.h" />
     <ClInclude Include="UIOWindowTile.h" />
     <ClInclude Include="UIRenderInfo.h" />

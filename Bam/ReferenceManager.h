@@ -322,7 +322,6 @@ inline UniqueReference<B, T>::UniqueReference(Handle h) : WeakReference<B, T>(h)
 
 template<class B, class T>
 inline UniqueReference<B, T>::~UniqueReference() {
-	std::cout << "deleting UniqueReference\n";
 	WeakReference<B, T>::deleteObject();
 }
 

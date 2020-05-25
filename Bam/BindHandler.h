@@ -21,8 +21,8 @@ public:
 private:
 	std::vector<std::unique_ptr<LogicSequencer>> logicSequences;
 
-	UniqueReference<UIOBase, UIOBase> UI;
+	//UniqueReference<UIOBase, UIOBase> UI;
+	std::vector<UniqueReference<UIOBase, UIOBase>> UIs;
 
-	ManagedReference<UIOBase, UIOBase> focus;
 };
 

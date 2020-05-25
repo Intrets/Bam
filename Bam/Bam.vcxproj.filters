@@ -326,7 +326,10 @@
     <ClCompile Include="ScreenRectangle.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextEdit.cpp" />
+    <ClCompile Include="UIOTextEdit.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextDisplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -567,7 +570,10 @@
     <ClInclude Include="ScreenRectangle.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOTextEdit.h" />
+    <ClInclude Include="UIOTextEdit.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextDisplay.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

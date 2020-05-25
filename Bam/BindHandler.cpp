@@ -18,17 +18,20 @@
 #include "UIOScaling.h"
 #include "UIOMoving.h"
 #include "UIOTextEdit.h"
+#include "UIOTextDisplay.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
 	}
 
-	auto r = UI.get()->screenRectangle;
+	//auto r = UI.get()->screenRectangle; 
+	//r.screenPixels = renderInfo.frameSize;
 
-	r.screenPixels = renderInfo.frameSize;
-
-	UI.get()->addRenderInfo(renderInfo, 0);
+	int32_t depth = 0;
+	for (auto& UI : UIs) {
+		depth = UI.get()->addRenderInfo(renderInfo, depth);
+	}
 }
 
 void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
@@ -36,7 +39,9 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		logicSequence->runBinds(controlState, gameState);
 	}
 
-	UI.get()->runBinds(controlState, gameState);
+	for (auto& UI : UIs) {
+		UI.get()->runBinds(controlState, gameState);
+	}
 }
 
 BindHandler::BindHandler() {
@@ -46,13 +51,23 @@ BindHandler::BindHandler() {
 	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
 	auto test2 = refMan->makeUniqueRef<UIOMoving>(std::move(test));
 
-	UI = std::move(test2);
-
 	ScreenRectangle r;
-
 	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
 
-	UI.get()->updateSize(r);
+	test2.get()->updateSize(r);
+
+	UIs.push_back(std::move(test2));
+
+	auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
+	textDisplay.get()->setText("tesg 123\n\n\n12323");
+
+	auto t2 = refMan->makeUniqueRef<UIOMoving>(std::move(textDisplay));
+
+	r.set({ -1.0f, 0.0f }, { 0.0f, -1.0f });
+
+	t2.get()->updateSize(r);
+
+	UIs.push_back(std::move(t2));
 
 
 	auto tools = std::make_unique<LogicSequencer>();

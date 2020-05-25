@@ -123,11 +123,6 @@ int32_t UIOTextEdit::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	relativeCursorPos.y -= 1;
 	renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f));
 
-	//for (auto& text : lines) {
-		//renderInaddText(textRenderer, cameraInfo, start, width, fontSize, text);
-		//start.y -= fontScale.y;
-	//}
-	//renderInfo.uiRenderInfo.addRectangle()
 	return depth;
 }
 
@@ -155,14 +150,9 @@ void UIOTextEdit::moveCursor(glm::ivec2 p) {
 		int32_t d = cursor.y - viewVertical[0];
 		viewVertical += d;
 	}
-	std::cout << "cursor pos: " << cursor.x << " " << cursor.y << "\n";
-	std::cout << "horizontal: " << viewHorizontal.x << " - " << viewHorizontal.y << "\n";
-	std::cout << "vertical: " << viewVertical.x << " - " << viewVertical.y << "\n\n\n";
-
 }
 
 void UIOTextEdit::insertText(std::string text) {
-	//lines[cursor.y].insert(cursor.x, text);
 	for (auto c : text) {
 		if (c == '\n') {
 			auto first = std::string(lines[cursor.y].begin(), lines[cursor.y].begin() + cursor.x);
