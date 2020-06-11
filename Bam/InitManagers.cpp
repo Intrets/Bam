@@ -14,14 +14,14 @@
 #include "Activity.h"
 #include "UIOBase.h"
 
-void initManagers() {
+void initManagers(GLFWwindow* window) {
 	//Locator<CommandHandler>::provide(new CommandHandler());
 	//Locator<ReferenceManager<BaseWindow>>::provide(new ReferenceManager<BaseWindow>());
 	//Locator<ScriptManager>::provide(new ScriptManager());
 
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
 
-	BindHandler* bindHandler = new BindHandler();
+	BindHandler* bindHandler = new BindHandler(window);
 	initBinds(*bindHandler);
 	Locator<BindHandler>::provide(bindHandler);
 

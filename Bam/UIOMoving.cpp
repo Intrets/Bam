@@ -29,15 +29,14 @@ ScreenRectangle UIOMoving::updateSize(ScreenRectangle newScreenRectangle) {
 	glm::vec2 screenSize = screenRectangle.bottomRight() - screenRectangle.topLeft();
 	//glm::vec2 top = screenRectangle.topLeft();
 
+	ScreenRectangle mainRectangle = screenRectangle;
+	mainRectangle.setTopLeft(screenRectangle.topLeft() + glm::vec2(0, 0.05f * screenSize.y));
+	mainRectangle = main->updateSize(mainRectangle);
+
 	ScreenRectangle b = screenRectangle;
-	b.setBottomRight(screenRectangle.topRight() + glm::vec2(0, 0.05f * screenSize.y));
+	b.setBottomRight(mainRectangle.topRight());
 
 	topBar->updateSize(b);
-
-	b = screenRectangle;
-	b.setTopLeft(screenRectangle.topLeft() + glm::vec2(0, 0.05f * screenSize.y));
-
-	main->updateSize(b);
 
 	return screenRectangle;
 }

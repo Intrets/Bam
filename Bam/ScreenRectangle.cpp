@@ -67,3 +67,11 @@ void ScreenRectangle::translate(glm::vec2 p) {
 	top += p;
 }
 
+void ScreenRectangle::setHeight(float h) {
+	bot.y = top.y - h;
+}
+
+void ScreenRectangle::setWidth(float w) {
+	top.x = bot.x + w;
+}
+

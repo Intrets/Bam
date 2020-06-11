@@ -15,7 +15,7 @@ public:
 	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
 	void runBinds(ControlState& controlState, GameState& gameState);
 
-	BindHandler();
+	BindHandler(GLFWwindow* window);
 	~BindHandler();
 
 private:

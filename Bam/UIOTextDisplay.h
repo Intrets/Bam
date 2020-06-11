@@ -6,6 +6,7 @@ class UIOTextDisplay : public UIOBase
 {
 public:
 	bool hover;
+	int32_t fontSize = 16;
 
 	std::vector<std::string> text;
 

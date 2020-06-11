@@ -20,7 +20,12 @@ void UIOTextDisplay::setText(std::string text_) {
 }
 
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
+	float fontHeight = 2 * static_cast<float>(fontSize) / newScreenRectangle.screenPixels.y;
+
 	screenRectangle = newScreenRectangle;
+
+	screenRectangle.setHeight(fontHeight);
+
 	return screenRectangle;
 }
 
@@ -30,7 +35,6 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	glm::vec2 bot;
 
 	auto& cameraInfo = renderInfo.cameraInfo;
-	int fontSize = 16;
 	auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;
 
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
@@ -56,8 +60,7 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	}
 	else {
 		color = { 0.2,0.2,0.2,1.0 };
-		glm::vec2 s = glm::vec2(fontScale.x * text[0].size(), -fontScale.y);
-		bot = top + s;
+		bot = screenRectangle.bottomRight();
 		renderInfo.textRenderInfo.addText(
 			*renderInfo.textRenderInfo.textRendererRef,
 			renderInfo.cameraInfo,

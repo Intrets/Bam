@@ -14,6 +14,8 @@ struct ScreenRectangle
 	void setTopLeft(glm::vec2 p);
 	void setBottomRight(glm::vec2 p);
 	void translate(glm::vec2 p);
+	void setHeight(float h);
+	void setWidth(float w);
 
 	glm::vec2 topLeft();
 	glm::vec2 bottomRight();

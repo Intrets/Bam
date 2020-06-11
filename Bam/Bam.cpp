@@ -82,6 +82,6 @@ static int initGLFW() {
 int main() {
 	initGLFW();
 	initModifyables();
-	initManagers();
+	initManagers(window);
 	mainLoop(window, controlState);
 }

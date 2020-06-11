@@ -44,7 +44,7 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 	}
 }
 
-BindHandler::BindHandler() {
+BindHandler::BindHandler(GLFWwindow* window) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 	auto text = refMan->makeUniqueRef<UIOTextEdit>();
 
@@ -53,6 +53,10 @@ BindHandler::BindHandler() {
 
 	ScreenRectangle r;
 	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
+	int32_t x;
+	int32_t y;
+	glfwGetWindowSize(window, &x, &y);
+	r.screenPixels = glm::ivec2(x, y);
 
 	test2.get()->updateSize(r);
 
