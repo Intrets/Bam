@@ -314,12 +314,6 @@
     <ClCompile Include="UIOButton.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOMoving.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOScaling.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="UIOWindowTile.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
@@ -330,6 +324,7 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
     <ClCompile Include="UIOTextDisplay.cpp" />
+    <ClCompile Include="UIOWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -561,12 +556,6 @@
     <ClInclude Include="UIOButton.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOMoving.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOScaling.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="ScreenRectangle.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
@@ -574,6 +563,7 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="UIOTextDisplay.h" />
+    <ClInclude Include="UIOWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

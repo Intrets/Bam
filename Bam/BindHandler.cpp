@@ -15,10 +15,9 @@
 
 #include "UIOBasicWindow.h"
 #include "UIOWindowTile.h"
-#include "UIOScaling.h"
-#include "UIOMoving.h"
 #include "UIOTextEdit.h"
 #include "UIOTextDisplay.h"
+#include "UIOWindow.h"
 
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
@@ -48,8 +47,8 @@ BindHandler::BindHandler(GLFWwindow* window) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 	auto text = refMan->makeUniqueRef<UIOTextEdit>();
 
-	auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
-	auto test2 = refMan->makeUniqueRef<UIOMoving>(std::move(test));
+	//auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
+	auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
 
 	ScreenRectangle r;
 	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
@@ -65,7 +64,7 @@ BindHandler::BindHandler(GLFWwindow* window) {
 	auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
 	textDisplay.get()->setText("tesg 123\n\n\n12323");
 
-	auto t2 = refMan->makeUniqueRef<UIOMoving>(std::move(textDisplay));
+	auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay));
 
 	r.set({ -1.0f, 0.0f }, { 0.0f, -1.0f });
 
