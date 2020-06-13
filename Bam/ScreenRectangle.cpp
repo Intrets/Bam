@@ -18,12 +18,16 @@ glm::vec2 ScreenRectangle::getBottomLeft() {
 	return bot;
 }
 
-glm::vec2 ScreenRectangle::size() {
-	return glm::abs(bot - top);
+float ScreenRectangle::getWidth() {
+	return top.x - bot.x;
 }
 
-float ScreenRectangle::width() {
+float ScreenRectangle::getHeight() {
 	return top.y - bot.y;
+}
+
+glm::vec2 ScreenRectangle::size() {
+	return glm::abs(bot - top);
 }
 
 glm::ivec2 ScreenRectangle::getPixelSize() {

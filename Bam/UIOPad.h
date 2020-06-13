@@ -7,8 +7,10 @@ class UIOPad : public UIOBase
 public:
 	UIOBase* main;
 
-	glm::ivec2 top;
-	glm::ivec2 bot;
+	std::optional<std::variant<int32_t, float>> top;
+	std::optional<std::variant<int32_t, float>> bottom;
+	std::optional<std::variant<int32_t, float>> left;
+	std::optional<std::variant<int32_t, float>> right;
 
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 

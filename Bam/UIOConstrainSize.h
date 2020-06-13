@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
+#include <variant>
 
 enum class CONSTRAIN_ALIGNMENT
 {
@@ -20,8 +21,8 @@ class UIOConstrainSize : public UIOBase
 public:
 	UIOBase* main;
 
-	std::optional<int32_t> height;
-	std::optional<int32_t> width;
+	std::optional<std::variant<int32_t, float>> height;
+	std::optional<std::variant<int32_t, float>> width;
 
 	CONSTRAIN_ALIGNMENT alignment;
 

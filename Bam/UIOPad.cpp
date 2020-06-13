@@ -9,11 +9,35 @@ UIOPad::UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 }
 
 ScreenRectangle UIOPad::updateSize(ScreenRectangle newScreenRectangle) {
-	auto b = glm::vec2(bot) / glm::vec2(newScreenRectangle.getPixelSize());
-	newScreenRectangle.setBottomLeft(newScreenRectangle.getBottomLeft() + b);
+	glm::vec2 b;
 
-	auto t = glm::vec2(top) / glm::vec2(newScreenRectangle.getPixelSize());
-	newScreenRectangle.setTopRight(newScreenRectangle.getTopRight() - t);
+	static auto getScale = [](std::optional<std::variant<int32_t, float>>& maybeVal, int32_t pixels) -> float {
+		float res = 0.0f;
+		if (maybeVal) {
+			auto val = maybeVal.value();
+			if (std::holds_alternative<int32_t>(val)) {
+				res = static_cast<float>(std::get<int32_t>(val)) / pixels;
+			}
+			else {
+				res = std::get<float>(val);
+			}
+		}
+		return res;
+	};
+
+	glm::vec2 botScale = { 
+		getScale(left, screenRectangle.getPixelSize().x), 
+		getScale(bottom, screenRectangle.getPixelSize().y) 
+	};
+
+	glm::vec2 topScale = { 
+		getScale(right, screenRectangle.getPixelSize().x), 
+		getScale(top, screenRectangle.getPixelSize().y) 
+	};
+
+	newScreenRectangle.setBottomLeft(newScreenRectangle.getBottomLeft() + botScale);
+	newScreenRectangle.setTopRight(newScreenRectangle.getTopRight() - topScale);
+
 	screenRectangle = newScreenRectangle;
 	main->updateSize(screenRectangle);
 	return screenRectangle;
