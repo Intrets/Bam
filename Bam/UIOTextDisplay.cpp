@@ -55,7 +55,8 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 			screenRectangle.getTopLeft(),
 			screenRectangle.top.x - screenRectangle.bot.x,
 			16,
-			text
+			text,
+			depth
 		);
 	}
 	else {
@@ -67,9 +68,10 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 			screenRectangle.getTopLeft(),
 			screenRectangle.top.x - screenRectangle.bot.x,
 			16,
-			text[0]
+			text[0],
+			depth
 		);
 	}
-	renderInfo.uiRenderInfo.addRectangle(bot, top, color, depth + 1);
+	renderInfo.uiRenderInfo.addRectangle(bot, top, color, depth);
 	return depth + 1;
 }

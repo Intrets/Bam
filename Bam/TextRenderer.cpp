@@ -22,7 +22,8 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, GLuint target, CameraI
 	texture.set(fontTexture.ID);
 
 	GLEnabler glEnabler;
-	glEnabler.enable(GL_BLEND).disable(GL_DEPTH_TEST);
+	glEnabler.enable(GL_BLEND).enable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

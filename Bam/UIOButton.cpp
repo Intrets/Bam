@@ -23,8 +23,8 @@ int32_t UIOButton::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	else {
 		color = glm::vec4(1.0f);
 	}
-	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, color);
-	return depth;
+	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, color, depth);
+	return depth + 1;
 }
 
 bool onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {

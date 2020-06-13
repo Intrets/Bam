@@ -15,6 +15,7 @@ void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, Camer
 
 	GLEnabler glEnabler;
 	glEnabler.enable(GL_DEPTH_TEST).enable(GL_BLEND);
+	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

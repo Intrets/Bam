@@ -32,19 +32,20 @@ void UIOBase::addBind(BindControl bindControl, CallBack callBack) {
 	binds.push_front(std::make_pair(bindControl, callBack));
 }
 
-void UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
-	for (auto it = binds.begin(); it != binds.end();) {
+bool UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
+	bool focus = false;
+	for (auto it = binds.begin(); it != binds.end(); ++it) {
 		auto& bind = *it;
 		if (controlState.activated(bind.first) && bind.second(gameState, controlState, this)) {
-			it = binds.erase(it);
-		}
-		else {
-			++it;
+			focus = true;
 		}
 	}
 	for (auto& element : elements) {
-		element.get()->runBinds(controlState, gameState);
+		if (element.get()->runBinds(controlState, gameState)) {
+			focus = true;
+		}
 	}
+	return focus;
 }
 
 int32_t UIOBase::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
@@ -52,5 +53,5 @@ int32_t UIOBase::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	for (auto& element : elements) {
 		maxDepth = glm::max(maxDepth, element.get()->addRenderInfo(renderInfo, depth));
 	}
-	return maxDepth;
+	return 1 + maxDepth;
 }

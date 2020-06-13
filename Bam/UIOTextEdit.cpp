@@ -113,7 +113,7 @@ int32_t UIOTextEdit::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 
 		for (int j = jstart; j < jend; j++) {
 			//auto pos = 
-			renderInfo.textRenderInfo.addChar(pos, line[j], fontScale);
+			renderInfo.textRenderInfo.addChar(pos, line[j], fontScale, depth);
 			pos.x += fontScale.x;
 		}
 	}
@@ -121,9 +121,10 @@ int32_t UIOTextEdit::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	auto relativeCursorPos = cursor - glm::ivec2(viewHorizontal[0], viewVertical[0]);
 	relativeCursorPos.y *= -1;
 	relativeCursorPos.y -= 1;
-	renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f));
+	renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f), depth);
+	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 0.5f,0.5f,0.5f, 1.0f }, depth);
 
-	return depth;
+	return depth + 1;
 }
 
 void UIOTextEdit::moveCursor(glm::ivec2 p) {
@@ -172,7 +173,7 @@ void UIOTextEdit::insertText(std::string text) {
 }
 
 void UIOTextEdit::backspaceChar() {
-	if ( cursor == glm::ivec2(0)) {
+	if (cursor == glm::ivec2(0)) {
 		return;
 	}
 	if (cursor.x == 0) {
@@ -190,7 +191,7 @@ void UIOTextEdit::backspaceChar() {
 
 void UIOTextEdit::deleteChar() {
 	auto test = glm::ivec2(lines[cursor.y].size(), lines.size() - 1);
-	if (cursor == test){ 
+	if (cursor == test) {
 		return;
 	}
 	if (cursor.x == lines[cursor.y].size()) {

@@ -33,7 +33,7 @@ public:
 	void moveTopLeftTo(glm::vec2 p);
 	bool contains(glm::vec2 p);
 	void addBind(BindControl bindControl, CallBack callBack);
-	void runBinds(ControlState& controlState, GameState& gameState);
+	bool runBinds(ControlState& controlState, GameState& gameState);
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
 	virtual int32_t addRenderInfo(RenderInfo& renderInfo, int32_t depth);

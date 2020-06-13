@@ -5,20 +5,20 @@
 #include "CameraInfo.h"
 #include "StringHelpers.h"
 
-void TextRenderInfo::addChar(glm::vec2 offset, char c, glm::vec2 scale) {
+void TextRenderInfo::addChar(glm::vec2 offset, char c, glm::vec2 scale, int32_t depth) {
 	chars.push_back(c);
-	offsets.push_back(glm::vec3(offset, 0));
+	offsets.push_back(glm::vec3(offset, static_cast<float>(depth) / 1000.0f));
 	scales.push_back(scale);
 }
 
-void TextRenderInfo::addString(glm::vec2 offset, std::string string, glm::vec2 scale) {
+void TextRenderInfo::addString(glm::vec2 offset, std::string string, glm::vec2 scale, int32_t depth) {
 	for (auto c : string) {
-		addChar(offset, c, scale);
+		addChar(offset, c, scale, depth);
 		offset.x += scale.x;
 	}
 }
 
-void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::string text) {
+void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::string text, int32_t depth) {
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
@@ -28,7 +28,7 @@ void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo,
 
 	glm::vec2 start = { pos.x, pos.y - fontScale.y };
 
-	addString(start, text, fontScale);
+	addString(start, text, fontScale, depth);
 
 	//glm::vec2 offset = { pos1.x, pos2.y - fontScale.y };
 	//for (int32_t j = view[0]; j <= view[1]; j++) {
@@ -52,14 +52,14 @@ void TextRenderInfo::addText(TextRenderer& textRenderer, CameraInfo& cameraInfo,
 	//}
 }
 
-void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::vector<std::string>& texts) {
+void TextRenderInfo::addTexts(TextRenderer& textRenderer, CameraInfo& cameraInfo, glm::vec2 pos, float width, int32_t fontSize, std::vector<std::string>& texts, int32_t depth) {
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
 	glm::vec2 start = pos;
 
 	for (auto& text : texts) {
-		addText(textRenderer, cameraInfo, start, width, fontSize, text);
+		addText(textRenderer, cameraInfo, start, width, fontSize, text, depth);
 		start.y -= fontScale.y;
 	}
 }

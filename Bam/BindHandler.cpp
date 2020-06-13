@@ -20,14 +20,14 @@
 #include "UIOWindow.h"
 
 void BindHandler::updateWindowSize(GLFWwindow* window) {
-	ScreenRectangle r ;
+	ScreenRectangle r;
 	int32_t x;
 	int32_t y;
 	glfwGetWindowSize(window, &x, &y);
-	
+
 	for (auto& UI : UIs) {
 		r = UI.get()->screenRectangle;
-	r.screenPixels = glm::ivec2(x, y);
+		r.screenPixels = glm::ivec2(x, y);
 		UI.get()->updateSize(r);
 	}
 }
@@ -36,9 +36,6 @@ void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo)
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);
 	}
-
-	//auto r = UI.get()->screenRectangle; 
-	//r.screenPixels = renderInfo.frameSize;
 
 	int32_t depth = 0;
 	for (auto& UI : UIs) {
@@ -51,8 +48,14 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 		logicSequence->runBinds(controlState, gameState);
 	}
 
-	for (auto& UI : UIs) {
-		UI.get()->runBinds(controlState, gameState);
+	for (auto it = UIs.begin(); it != UIs.end(); it++) {
+		auto& UI = *it;
+		if (UI.get()->runBinds(controlState, gameState)) {
+			auto temp = std::move(UI);
+			UIs.erase(it);
+			UIs.push_front(std::move(temp));
+			break;
+		}
 	}
 }
 

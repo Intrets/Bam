@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "UIOBase.h"
+#include <deque>
 
 class GameState;
 class LogicSequencer;
@@ -23,7 +24,9 @@ private:
 	std::vector<std::unique_ptr<LogicSequencer>> logicSequences;
 
 	//UniqueReference<UIOBase, UIOBase> UI;
-	std::vector<UniqueReference<UIOBase, UIOBase>> UIs;
+	std::deque<UniqueReference<UIOBase, UIOBase>> UIs;
+	//std::vector<UniqueReference<UIOBase, UIOBase>> UIs;
+	//ManagedReference<UIOBase, UIOBase> focus;
 
 };
 
