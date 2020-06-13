@@ -97,7 +97,7 @@ int32_t UIOTextEdit::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	viewVertical[1] = viewVertical[0] + viewSize.y;
 
 
-	glm::vec2 start = screenRectangle.topLeft();
+	glm::vec2 start = screenRectangle.getTopLeft();
 
 	int32_t istart = glm::max(0, viewVertical[0]);
 	int32_t iend = glm::min(static_cast<int32_t>(lines.size()), viewVertical[1]);

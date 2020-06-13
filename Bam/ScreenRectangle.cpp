@@ -2,16 +2,20 @@
 
 #include "ScreenRectangle.h"
 
-glm::vec2 ScreenRectangle::topLeft() {
+glm::vec2 ScreenRectangle::getTopLeft() {
 	return glm::vec2(bot.x, top.y);
 }
 
-glm::vec2 ScreenRectangle::bottomRight() {
+glm::vec2 ScreenRectangle::getBottomRight() {
 	return glm::vec2(top.x, bot.y);
 }
 
-glm::vec2 ScreenRectangle::topRight() {
+glm::vec2 ScreenRectangle::getTopRight() {
 	return top;
+}
+
+glm::vec2 ScreenRectangle::getBottomLeft() {
+	return bot;
 }
 
 glm::vec2 ScreenRectangle::size() {
@@ -23,9 +27,7 @@ float ScreenRectangle::width() {
 }
 
 glm::ivec2 ScreenRectangle::getPixelSize() {
-	// TODO
-	assert(false);
-	return glm::ivec2(0);
+	return screenPixels;
 }
 
 glm::ivec2 ScreenRectangle::getPixelPos() {
@@ -39,8 +41,8 @@ bool ScreenRectangle::contains(glm::vec2 p) {
 }
 
 void ScreenRectangle::scaleAnchorTopLeft(glm::vec2 s) {
-	glm::vec2 v1 = topLeft();
-	glm::vec2 v2 = bottomRight();
+	glm::vec2 v1 = getTopLeft();
+	glm::vec2 v2 = getBottomRight();
 	//s.y *= -1.0f;
 	glm::vec2 diag = (v2 - v1) * s;
 
@@ -60,6 +62,14 @@ void ScreenRectangle::setTopLeft(glm::vec2 p) {
 void ScreenRectangle::setBottomRight(glm::vec2 p) {
 	bot.y = p.y;
 	top.x = p.x;
+}
+
+void ScreenRectangle::setTopRight(glm::vec2 p) {
+	top = p;
+}
+
+void ScreenRectangle::setBottomLeft(glm::vec2 p) {
+	bot = p;
 }
 
 void ScreenRectangle::translate(glm::vec2 p) {

@@ -20,16 +20,16 @@ ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
 	screenRectangle = newScreenRectangle;
 
 	//float spacing = 0.05f;
-	glm::vec2 screenSize = screenRectangle.bottomRight() - screenRectangle.topLeft();
+	glm::vec2 screenSize = screenRectangle.getBottomRight() - screenRectangle.getTopLeft();
 
-	float y = screenRectangle.topLeft().y;
+	float y = screenRectangle.getTopLeft().y;
 	float dy = screenSize.y / static_cast<float>(rows.size());
 
 	for (auto& row : rows) {
 		if (row.empty()) {
 			continue;
 		}
-		float x = screenRectangle.topLeft().x;
+		float x = screenRectangle.getTopLeft().x;
 		float dx = screenSize.x / static_cast<float>(row.size());
 		glm::vec2 size = { dx, dy };
 		for (auto element : row) {

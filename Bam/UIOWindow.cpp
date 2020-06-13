@@ -1,20 +1,32 @@
 #include "common.h"
 
 #include "UIOWindow.h"
+#include "UIOConstrainSize.h"
+#include "UIOPad.h"
 #include "GameState.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
+	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 	selfHandle = self;
+
 	main = main_.get();
-	addElement(std::move(main_));
 
-	auto top = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOButton>();
+	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(main_));
+	mainPad.get()->top = { 30,30 };
+	mainPad.get()->bot.y = 30;
+
+	addElement(std::move(mainPad));
+
+	auto top = refMan->makeUniqueRef<UIOButton>();
 	topBar = top.get();
-	addElement(std::move(top));
 
+	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(top));
+	topConstrain.get()->height = 30;
+
+	addElement(std::move(topConstrain));
 
 	auto setMoveOrigin = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
-		mousePressedPosOffset = screenRectangle.topLeft() - gameState.getPlayerCursorScreenSpace();
+		this->mousePressedPosOffset = screenRectangle.getTopLeft() - gameState.getPlayerCursorScreenSpace();
 		return false;
 	};
 
@@ -25,30 +37,40 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return false;
 	};
 
-	auto b = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOButton>();
+	auto b = refMan->makeUniqueRef<UIOButton>();
 	bottomBar = b.get();
-	addElement(std::move(b));
 
-	auto r = Locator<ReferenceManager<UIOBase>>::getService()->makeUniqueRef<UIOButton>();
+	auto botConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
+	botConstrain.get()->height = 30;
+	botConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+
+	addElement(std::move(botConstrain));
+
+	auto r = refMan->makeUniqueRef<UIOButton>();
 	rightBar = r.get();
-	addElement(std::move(r));
+
+	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(r));
+	rightConstrain.get()->width = 30;
+	rightConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+
+	addElement(std::move(rightConstrain));
 
 	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
 		if (bottomBar->down) {
-			auto bottomRight = self_->screenRectangle.bottomRight();
+			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.y = gameState.getPlayerCursorScreenSpace().y;
-			self_->screenRectangle.setBottomRight(bottomRight);
-			self_->updateSize(self_->screenRectangle);
+			this->screenRectangle.setBottomRight(bottomRight);
+			this->updateSize(this->screenRectangle);
 		}
 		return false;
 	};
 
 	auto scaleHorizontal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
 		if (rightBar->down) {
-			auto bottomRight = self_->screenRectangle.bottomRight();
+			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.x = gameState.getPlayerCursorScreenSpace().x;
-			self_->screenRectangle.setBottomRight(bottomRight);
-			self_->updateSize(self_->screenRectangle);
+			this->screenRectangle.setBottomRight(bottomRight);
+			this->updateSize(this->screenRectangle);
 		}
 		return false;
 	};
@@ -62,31 +84,9 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 	screenRectangle = newScreenRectangle;
 
-	glm::vec2 screenSize = screenRectangle.bottomRight() - screenRectangle.topLeft();
-	glm::vec2 top = screenRectangle.topLeft();
-	glm::vec2 bot = screenRectangle.bottomRight();
-
-	{
-		ScreenRectangle b = screenRectangle;
-		b.set(top, { bot.x, top.y + 0.05f * screenSize.y });
-		topBar->updateSize(b);
+	for (auto& element : elements) {
+		element.get()->updateSize(newScreenRectangle);
 	}
-	{
-		ScreenRectangle b = screenRectangle;
-		b.setTopLeft({ top.x + 0.95f * screenSize.x, top.y + 0.05f * screenSize.y });
-		rightBar->updateSize(b);
-	}
-	{
-		ScreenRectangle b = screenRectangle;
-		b.setTopLeft({ top.x, top.y + 0.95f * screenSize.y });
-		bottomBar->updateSize(b);
-	}
-	{
-		ScreenRectangle b = screenRectangle;
-		b.set({ top.x, top.y + 0.05f * screenSize.y }, top + 0.95f * screenSize);
-		main->updateSize(b);
-	}
-
 	return screenRectangle;
 }
 

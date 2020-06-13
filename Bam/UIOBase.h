@@ -31,7 +31,6 @@ public:
 	void translate(glm::vec2 p);
 	void setScreenPixels(glm::ivec2 px);
 	void moveTopLeftTo(glm::vec2 p);
-	void scale(glm::vec2 s);
 	bool contains(glm::vec2 p);
 	void addBind(BindControl bindControl, CallBack callBack);
 	void runBinds(ControlState& controlState, GameState& gameState);

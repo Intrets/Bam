@@ -323,8 +323,18 @@
     <ClCompile Include="UIOTextEdit.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextDisplay.cpp" />
-    <ClCompile Include="UIOWindow.cpp" />
+    <ClCompile Include="UIOWindow.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextDisplay.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstrainSize.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOPad.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -562,8 +572,18 @@
     <ClInclude Include="UIOTextEdit.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOTextDisplay.h" />
-    <ClInclude Include="UIOWindow.h" />
+    <ClInclude Include="UIOWindow.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextDisplay.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstrainSize.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOPad.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

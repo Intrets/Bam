@@ -12,6 +12,7 @@ struct RenderInfo;
 class BindHandler
 {
 public:
+	void updateWindowSize(GLFWwindow* window);
 	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
 	void runBinds(ControlState& controlState, GameState& gameState);
 

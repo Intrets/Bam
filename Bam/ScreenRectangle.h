@@ -11,16 +11,23 @@ struct ScreenRectangle
 	void scaleAnchorTopLeft(glm::vec2 s);
 
 	void set(glm::vec2 p1, glm::vec2 p2);
+
 	void setTopLeft(glm::vec2 p);
 	void setBottomRight(glm::vec2 p);
+	void setTopRight(glm::vec2 p);
+	void setBottomLeft(glm::vec2 p);
+
 	void translate(glm::vec2 p);
 	void setHeight(float h);
 	void setWidth(float w);
 
-	glm::vec2 topLeft();
-	glm::vec2 bottomRight();
-	glm::vec2 topRight();
+	glm::vec2 getTopLeft();
+	glm::vec2 getBottomRight();
+	glm::vec2 getTopRight();
+	glm::vec2 getBottomLeft();
+
 	glm::vec2 size();
+
 	float width();
 };
 

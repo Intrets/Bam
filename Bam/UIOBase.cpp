@@ -21,12 +21,7 @@ void UIOBase::setScreenPixels(glm::ivec2 px) {
 }
 
 void UIOBase::moveTopLeftTo(glm::vec2 p) {
-	translate(p - screenRectangle.topLeft());
-}
-
-void UIOBase::scale(glm::vec2 s) {
-	screenRectangle.scaleAnchorTopLeft(s);
-	updateSize(screenRectangle);
+	translate(p - screenRectangle.getTopLeft());
 }
 
 bool UIOBase::contains(glm::vec2 p) {

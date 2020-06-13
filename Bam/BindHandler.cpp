@@ -19,6 +19,19 @@
 #include "UIOTextDisplay.h"
 #include "UIOWindow.h"
 
+void BindHandler::updateWindowSize(GLFWwindow* window) {
+	ScreenRectangle r ;
+	int32_t x;
+	int32_t y;
+	glfwGetWindowSize(window, &x, &y);
+	
+	for (auto& UI : UIs) {
+		r = UI.get()->screenRectangle;
+	r.screenPixels = glm::ivec2(x, y);
+		UI.get()->updateSize(r);
+	}
+}
+
 void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	for (auto& logicSequence : logicSequences) {
 		logicSequence->appendRenderInfo(gameState, renderInfo);

@@ -31,7 +31,7 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 
 int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 color;
-	glm::vec2 top = screenRectangle.topLeft();
+	glm::vec2 top = screenRectangle.getTopLeft();
 	glm::vec2 bot;
 
 	auto& cameraInfo = renderInfo.cameraInfo;
@@ -52,7 +52,7 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 		renderInfo.textRenderInfo.addTexts(
 			*renderInfo.textRenderInfo.textRendererRef,
 			renderInfo.cameraInfo,
-			screenRectangle.topLeft(),
+			screenRectangle.getTopLeft(),
 			screenRectangle.top.x - screenRectangle.bot.x,
 			16,
 			text
@@ -60,11 +60,11 @@ int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	}
 	else {
 		color = { 0.2,0.2,0.2,1.0 };
-		bot = screenRectangle.bottomRight();
+		bot = screenRectangle.getBottomRight();
 		renderInfo.textRenderInfo.addText(
 			*renderInfo.textRenderInfo.textRendererRef,
 			renderInfo.cameraInfo,
-			screenRectangle.topLeft(),
+			screenRectangle.getTopLeft(),
 			screenRectangle.top.x - screenRectangle.bot.x,
 			16,
 			text[0]

@@ -40,6 +40,7 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 
 			gameState.updatePlayerCursorScreenSpace(window);
 
+			Locator<BindHandler>::getService()->updateWindowSize(window);
 			Locator<BindHandler>::getService()->runBinds(controlState, gameState);
 
 			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
