@@ -12,9 +12,9 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	main = main_.get();
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(main_));
-	mainPad.get()->top = 30;
-	mainPad.get()->right = 20;
-	mainPad.get()->bottom = 20;
+	mainPad.get()->top = { UIOSizeType::PX, 30 };
+	mainPad.get()->right = { UIOSizeType::PX, 20 };
+	mainPad.get()->bottom = { UIOSizeType::PX, 20 };
 
 	addElement(std::move(mainPad));
 
@@ -22,7 +22,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	topBar = top.get();
 
 	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(top));
-	topConstrain.get()->height = 30;
+	topConstrain.get()->maybeHeight = { UIOSizeType::PX, 30 };
 	topConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::TOP;
 
 	addElement(std::move(topConstrain));
@@ -43,17 +43,16 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	bottomBar = b.get();
 
 	auto botConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
-	botConstrain.get()->height = 20;
+	botConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
 	botConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
 
 	addElement(std::move(botConstrain));
-
 
 	auto r = refMan->makeUniqueRef<UIOButton>();
 	rightBar = r.get();
 
 	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(r));
-	rightConstrain.get()->width = 20;
+	rightConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
 	rightConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
 
 	addElement(std::move(rightConstrain));

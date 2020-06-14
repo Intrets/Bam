@@ -8,6 +8,7 @@ UIOButton::UIOButton(Handle self) {
 	selfHandle = self;
 
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, &onPress);
+	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, &onRelease);
 }
 
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
@@ -31,7 +32,6 @@ bool onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {
 	auto* self = static_cast<UIOButton*>(self_);
 	if (self->contains(gameState.getPlayerCursorScreenSpace())) {
 		self->down = true;
-		self->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, &onRelease);
 		return true;
 	}
 	return false;
@@ -40,6 +40,5 @@ bool onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {
 bool onRelease(GameState& gameState, ControlState& controlState, UIOBase* self_) {
 	auto* self = static_cast<UIOButton*>(self_);
 	self->down = false;
-	self->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, &onPress);
-	return true;
+	return false;
 }

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "UIOBase.h"
-#include <variant>
+
+#include "UIOSizeType.h"
 
 enum class CONSTRAIN_ALIGNMENT
 {
@@ -15,28 +16,13 @@ enum class CONSTRAIN_ALIGNMENT
 	BOTTOMRIGHT,
 };
 
-namespace uio
-{
-	struct sizetype
-	{
-		enum { PX, HEIGHT, WIDTH };
-		union
-		{
-			int32_t pix;
-			float height;
-			float width;
-		};
-	};
-}
-
-
 class UIOConstrainSize : public UIOBase
 {
 public:
 	UIOBase* main;
 
-	std::optional<std::variant<int32_t, float>> height;
-	std::optional<std::variant<int32_t, float>> width;
+	std::optional<UIOSizeType> maybeHeight;
+	std::optional<UIOSizeType> maybeWidth;
 
 	CONSTRAIN_ALIGNMENT alignment;
 

@@ -14,6 +14,7 @@ void UIOWindowTile::add(UniqueReference<UIOBase, UIOBase> c) {
 
 UIOWindowTile::UIOWindowTile(Handle self) {
 	selfHandle = self;
+	nextRow();
 }
 
 ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
@@ -35,9 +36,10 @@ ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
 		for (auto element : row) {
 
 			ScreenRectangle newRectangle;
+			newRectangle.screenPixels = newScreenRectangle.screenPixels;
 			newRectangle.set(
 				glm::vec2(x, y),
-				glm::vec2(glm::vec2(x + dx * 0.9f, y + dy * 0.9f))
+				glm::vec2(glm::vec2(x + dx, y + dy))
 			);
 			element->updateSize(newRectangle);
 			x += dx;
@@ -49,11 +51,12 @@ ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOWindowTile::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
-	renderInfo.uiRenderInfo.addRectangle(
-		screenRectangle.top,
-		screenRectangle.bot,
-		{ 1,1,1,0.5 },
-		depth
-	);
-	return UIOBase::addRenderInfo(renderInfo, depth + 1);
+	depth = UIOBase::addRenderInfo(renderInfo, depth);
+	//renderInfo.uiRenderInfo.addRectangle(
+	//	screenRectangle.top,
+	//	screenRectangle.bot,
+	//	{ 1,1,1,0.5 },
+	//	depth 
+	//);
+	return depth + 1;
 }

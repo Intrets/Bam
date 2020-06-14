@@ -335,6 +335,9 @@
     <ClCompile Include="UIOBasicWindow.cpp" />
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
+    <ClCompile Include="UIOFreeSize.cpp" />
+    <ClCompile Include="UIOHotbar.cpp" />
+    <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOTextEdit.cpp" />
     <ClCompile Include="UIOWindow.cpp" />
@@ -420,6 +423,9 @@
     <ClInclude Include="UIOBasicWindow.h" />
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />
+    <ClInclude Include="UIOFreeSize.h" />
+    <ClInclude Include="UIOHotbar.h" />
+    <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOTextEdit.h" />
     <ClInclude Include="UIOWindow.h" />

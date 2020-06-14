@@ -18,16 +18,20 @@
 #include "UIOTextEdit.h"
 #include "UIOTextDisplay.h"
 #include "UIOWindow.h"
+#include "UIOConstrainSize.h"
+#include "UIOFreeSize.h"
+#include "UIOPad.h"
+#include "UIOHotbar.h"
 
 void BindHandler::updateWindowSize(GLFWwindow* window) {
-	ScreenRectangle r;
 	int32_t x;
 	int32_t y;
 	glfwGetWindowSize(window, &x, &y);
 
+	ScreenRectangle r;
+	r.screenPixels = glm::ivec2(x, y);
+	r.set({ -1,-1 }, { 1,1 });
 	for (auto& UI : UIs) {
-		r = UI.get()->screenRectangle;
-		r.screenPixels = glm::ivec2(x, y);
 		UI.get()->updateSize(r);
 	}
 }
@@ -60,33 +64,81 @@ void BindHandler::runBinds(ControlState& controlState, GameState& gameState) {
 }
 
 BindHandler::BindHandler(GLFWwindow* window) {
-	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
-	auto text = refMan->makeUniqueRef<UIOTextEdit>();
-
-	//auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
-	auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
-
 	ScreenRectangle r;
-	r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
+	r.set({ -1,-1 }, { 1,1 });
 	int32_t x;
 	int32_t y;
 	glfwGetWindowSize(window, &x, &y);
 	r.screenPixels = glm::ivec2(x, y);
 
-	test2.get()->updateSize(r);
+	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 
-	UIs.push_back(std::move(test2));
+	{
+		auto text = refMan->makeUniqueRef<UIOTextEdit>();
 
-	auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
-	textDisplay.get()->setText("tesg 123\n\n\n12323");
+		//auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
+		test2.get()->screenRectangle.setWidth(0.4f);
+		test2.get()->screenRectangle.setHeight(0.4f);
 
-	auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay));
+		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
 
-	r.set({ -1.0f, 0.0f }, { 0.0f, -1.0f });
+		test3.get()->updateSize(r);
 
-	t2.get()->updateSize(r);
+		UIs.push_back(std::move(test3));
+	}
 
-	UIs.push_back(std::move(t2));
+	{
+		auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
+		textDisplay.get()->setText("tesg 123\n\n\n12323");
+
+		auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay));
+		t2.get()->screenRectangle.setWidth(0.4f);
+		t2.get()->screenRectangle.setHeight(0.4f);
+
+		auto t3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(t2));
+
+		t3.get()->updateSize(r);
+
+		UIs.push_back(std::move(t3));
+	}
+	// hotbar
+	{
+		//auto tile = refMan->makeUniqueRef<UIOWindowTile>();
+		//for (int i = 0; i < 10; i++) {
+		//	auto e = refMan->makeUniqueRef<UIOPad>(refMan->makeUniqueRef<UIOButton>());
+		//	e.get()->bottom = { UIOSizeType::PX, 5 };
+		//	e.get()->top = { UIOSizeType::PX, 5 };
+		//	e.get()->left = { UIOSizeType::PX, 5 };
+		//	e.get()->right = { UIOSizeType::PX, 5 };
+		//	tile.get()->add(std::move(e));
+		//}
+
+		//auto sized = refMan->makeUniqueRef<UIOConstrainSize>(std::move(tile));
+		//sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.09f };
+		//sized.get()->maybeWidth = { UIOSizeType::RELATIVE_WIDTH, 0.9f };
+		//sized.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOM;
+
+		//r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
+		////r.set({ -0.25f,-0.25f }, { 0.25f, 0.25f });
+		//sized.get()->updateSize(r);
+
+		//UIs.push_back(std::move(sized));
+	}
+
+	{
+		auto hotbar = refMan->makeUniqueRef<UIOHotbar>();
+
+		auto sized = refMan->makeUniqueRef<UIOConstrainSize>(std::move(hotbar));
+		sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.09f };
+		sized.get()->maybeWidth = { UIOSizeType::RELATIVE_WIDTH, 0.9f };
+		sized.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOM;
+
+		r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
+		sized.get()->updateSize(r);
+
+		UIs.push_back(std::move(sized));
+	}
 
 
 	auto tools = std::make_unique<LogicSequencer>();

@@ -335,6 +335,9 @@
     <ClCompile Include="UIOPad.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="UIOSizeType.cpp" />
+    <ClCompile Include="UIOFreeSize.cpp" />
+    <ClCompile Include="UIOHotbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -584,6 +587,9 @@
     <ClInclude Include="UIOPad.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="UIOSizeType.h" />
+    <ClInclude Include="UIOFreeSize.h" />
+    <ClInclude Include="UIOHotbar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -10,25 +10,11 @@ UIOConstrainSize::UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase
 
 ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle) {
 	screenRectangle = newScreenRectangle;
-	if (width) {
-		float widthS;
-		if (std::holds_alternative<int32_t>(width.value())) {
-			widthS = static_cast<float>(std::get<int32_t>(width.value())) / screenRectangle.getPixelSize().x;
-		}
-		else {
-			widthS = std::get<float>(width.value());
-		}
-		screenRectangle.setWidth(widthS);
+	if (maybeWidth) {
+		screenRectangle.setWidth(maybeWidth.value().getWidth(screenRectangle));
 	}
-	if (height) {
-		float heightS;
-		if (std::holds_alternative<int32_t>(height.value())) {
-			heightS = static_cast<float>(std::get<int32_t>(height.value())) / screenRectangle.getPixelSize().y;
-		}
-		else {
-			heightS = std::get<float>(height.value());
-		}
-		screenRectangle.setHeight(heightS);
+	if (maybeHeight) {
+		screenRectangle.setHeight(maybeHeight.value().getHeight(screenRectangle));
 	}
 
 	glm::vec2 p;
