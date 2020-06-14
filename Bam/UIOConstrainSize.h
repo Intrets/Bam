@@ -15,6 +15,20 @@ enum class CONSTRAIN_ALIGNMENT
 	BOTTOMRIGHT,
 };
 
+namespace uio
+{
+	struct sizetype
+	{
+		enum { PX, HEIGHT, WIDTH };
+		union
+		{
+			int32_t pix;
+			float height;
+			float width;
+		};
+	};
+}
+
 
 class UIOConstrainSize : public UIOBase
 {

@@ -18,10 +18,10 @@ ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 int32_t UIOButton::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 color;
 	if (down) {
-		color = { 0.5f,0.5f,0.5f,1 };
+		color = pressedColor;
 	}
 	else {
-		color = glm::vec4(1.0f);
+		color = unpressedColor;
 	}
 	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, color, depth);
 	return depth + 1;
