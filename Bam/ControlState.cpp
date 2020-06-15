@@ -26,10 +26,18 @@ ControlState::ControlState() {
 	keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 	keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
 	keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::TEST_EXIT;
-	keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_1;
-	keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_2;
-	keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_3;
-	keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_4;
+
+	keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_0;
+	keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_1;
+	keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_2;
+	keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_3;
+	keyToControl[GLFW_KEY_5] = CONTROLS::TOOL_4;
+	keyToControl[GLFW_KEY_6] = CONTROLS::TOOL_5;
+	keyToControl[GLFW_KEY_7] = CONTROLS::TOOL_6;
+	keyToControl[GLFW_KEY_8] = CONTROLS::TOOL_7;
+	keyToControl[GLFW_KEY_9] = CONTROLS::TOOL_8;
+	keyToControl[GLFW_KEY_9] = CONTROLS::TOOL_9;
+
 	keyToControl[GLFW_KEY_Z] = CONTROLS::ACTION3;
 	keyToControl[GLFW_KEY_X] = CONTROLS::ACTION4;
 	keyToControl[GLFW_KEY_C] = CONTROLS::ACTION5;
@@ -46,6 +54,7 @@ void ControlState::cycleStates() {
 		state &= ~CONTROLSTATE::CONTROLSTATE_REPEAT;
 	}
 	charBuffer.clear();
+	scrollDistance = 0;
 	controlState[CONTROLS::MOUSE_POS_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 }
 
@@ -92,4 +101,26 @@ void ControlState::char_callback(GLFWwindow* window, unsigned int character) {
 	controlState[CHAR_BUFFER_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
 	char c = static_cast<char>(character);
 	charBuffer.push_back(c);
+}
+
+void ControlState::scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
+	if (yoffset < 0) {
+		scrollDistance -= static_cast<int32_t>(floor(glm::abs(yoffset)));
+	}
+	else if (yoffset > 0) {
+		scrollDistance += static_cast<int32_t>(floor(glm::abs(yoffset)));
+	}
+
+	if (scrollDistance < 0) {
+		controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+		controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_UP;
+	}
+	else if (scrollDistance > 0) {
+		controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+		controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_UP;
+	}
+	else {
+		controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_UP;
+		controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_UP;
+	}
 }

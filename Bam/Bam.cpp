@@ -26,6 +26,10 @@ void char_callback(GLFWwindow* w, unsigned int character) {
 	controlState.char_callback(w, character);
 }
 
+void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
+	controlState.scroll_callback(w, xoffset, yoffset);
+}
+
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
@@ -62,6 +66,7 @@ static int initGLFW() {
 	glfwSetCharCallback(window, char_callback);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	// constrain cursor to window
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

@@ -7,9 +7,26 @@
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "UIOShell.h"
+#include "ControlState.h"
 
 UIOHotbar::UIOHotbar(Handle self) {
 	selfHandle = self;
+
+	addBind({ CONTROLS::SCROLL_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState& controlState, UIOBase*) -> bool {
+		if (this->selected > 0) {
+			selected += controlState.scrollDistance;
+			selected = glm::clamp(selected, 0, 9);
+		}
+		return true;
+	});
+
+	addBind({ CONTROLS::SCROLL_UP, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState& controlState, UIOBase*) -> bool {
+		if (this->selected < this->slots.size() - 1) {
+			selected += controlState.scrollDistance;
+			selected = glm::clamp(selected, 0, 9);
+		}
+		return true;
+	});
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 
@@ -42,6 +59,56 @@ UIOHotbar::UIOHotbar(Handle self) {
 
 		tile.get()->add(std::move(shell));
 	}
+
+	slots[0]->addBind({ CONTROLS::TOOL_0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 0;
+		return true;
+	});
+
+	slots[1]->addBind({ CONTROLS::TOOL_1, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 1;
+		return true;
+	});
+
+	slots[2]->addBind({ CONTROLS::TOOL_2, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 2;
+		return true;
+	});
+
+	slots[3]->addBind({ CONTROLS::TOOL_3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 3;
+		return true;
+	});
+
+	slots[4]->addBind({ CONTROLS::TOOL_4, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 4;
+		return true;
+	});
+
+	slots[5]->addBind({ CONTROLS::TOOL_5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 5;
+		return true;
+	});
+
+	slots[6]->addBind({ CONTROLS::TOOL_6, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 6;
+		return true;
+	});
+
+	slots[7]->addBind({ CONTROLS::TOOL_7, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 7;
+		return true;
+	});
+
+	slots[8]->addBind({ CONTROLS::TOOL_8, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 8;
+		return true;
+	});
+
+	slots[9]->addBind({ CONTROLS::TOOL_9, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState&, ControlState&, UIOBase*) -> bool {
+		this->selected = 9;
+		return true;
+	});
 
 	addElement(std::move(tile));
 }

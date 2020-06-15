@@ -37,10 +37,18 @@ typedef enum
 	TOGGLE_DEBUG,
 	MOUSE_POS_CHANGED,
 	ACTION2,
+	TOOL_0,
 	TOOL_1,
 	TOOL_2,
 	TOOL_3,
 	TOOL_4,
+	TOOL_5,
+	TOOL_6,
+	TOOL_7,
+	TOOL_8,
+	TOOL_9,
+	SCROLL_UP,
+	SCROLL_DOWN,
 	BACKSPACE,
 	DELETE,
 	TAB,
@@ -50,6 +58,7 @@ typedef enum
 
 typedef enum
 {
+	CONTROLSTATE_UP = 0,
 	CONTROLSTATE_RELEASED = 1 << 0,
 	CONTROLSTATE_PRESSED = 1 << 1,
 	CONTROLSTATE_DOWN = 1 << 2,
@@ -81,11 +90,13 @@ public:
 	void cycleStates();
 
 	std::string getCharBuffer();
+	int32_t scrollDistance;
 
 	bool activated(BindControl bindControl);
 
 	void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 	void char_callback(GLFWwindow* window, unsigned int character);
+	void scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
 
 private:
 	friend class BindHandler;
