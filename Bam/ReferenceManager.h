@@ -75,7 +75,7 @@ class ManagedReferenceBase
 public:
 	Handle handle = 0;
 	bool valid = false;
-	bool isValid();
+	bool isValid() const;
 
 	void validate();
 	void invalidate();

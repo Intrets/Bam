@@ -50,8 +50,8 @@ ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
 	return newScreenRectangle;
 }
 
-int32_t UIOWindowTile::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
-	depth = UIOBase::addRenderInfo(renderInfo, depth);
+int32_t UIOWindowTile::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	//renderInfo.uiRenderInfo.addRectangle(
 	//	screenRectangle.top,
 	//	screenRectangle.bot,

@@ -22,6 +22,7 @@
 #include "UIOFreeSize.h"
 #include "UIOPad.h"
 #include "UIOHotbar.h"
+#include "UIOActivitySelector.h"
 
 void BindHandler::updateWindowSize(GLFWwindow* window) {
 	int32_t x;
@@ -43,7 +44,7 @@ void BindHandler::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo)
 
 	int32_t depth = 0;
 	for (auto& UI : UIs) {
-		depth = UI.get()->addRenderInfo(renderInfo, depth);
+		depth = UI.get()->addRenderInfo(gameState, renderInfo, depth);
 	}
 }
 
@@ -72,6 +73,10 @@ BindHandler::BindHandler(GLFWwindow* window) {
 	r.screenPixels = glm::ivec2(x, y);
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
+
+	{
+		UIs.push_back(refMan->makeUniqueRef<UIOActivitySelector>());
+	}
 
 	{
 		auto text = refMan->makeUniqueRef<UIOTextEdit>();

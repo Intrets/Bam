@@ -21,7 +21,7 @@ ScreenRectangle UIOBasicWindow::updateSize(ScreenRectangle newScreenRectangle) {
 	return screenRectangle;
 }
 
-int32_t UIOBasicWindow::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOBasicWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 1,0,0,1 }, depth);
-	return UIOBase::addRenderInfo(renderInfo, depth + 1);
+	return UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
 }

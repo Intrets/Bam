@@ -9,6 +9,6 @@ void ManagedReferenceBase::invalidate() {
 	valid = false;
 }
 
-bool ManagedReferenceBase::isValid() {
+bool ManagedReferenceBase::isValid() const {
 	return valid;
 }

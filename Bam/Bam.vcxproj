@@ -331,6 +331,7 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
+    <ClCompile Include="UIOActivitySelector.cpp" />
     <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="UIOBasicWindow.cpp" />
     <ClCompile Include="UIOButton.cpp" />
@@ -420,6 +421,7 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
+    <ClInclude Include="UIOActivitySelector.h" />
     <ClInclude Include="UIOBase.h" />
     <ClInclude Include="UIOBasicWindow.h" />
     <ClInclude Include="UIOButton.h" />

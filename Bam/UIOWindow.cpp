@@ -99,6 +99,6 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 	return screenRectangle;
 }
 
-int32_t UIOWindow::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
-	return UIOBase::addRenderInfo(renderInfo, depth + 1);
+int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	return UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
 }

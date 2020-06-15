@@ -81,7 +81,7 @@ ScreenRectangle UIOTextEdit::updateSize(ScreenRectangle newScreenRectangle) {
 	return screenRectangle;
 }
 
-int32_t UIOTextEdit::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	auto& cameraInfo = renderInfo.cameraInfo;
 	int fontSize = 16;
 	auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;

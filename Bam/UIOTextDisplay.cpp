@@ -29,7 +29,7 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	return screenRectangle;
 }
 
-int32_t UIOTextDisplay::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 color;
 	glm::vec2 top = screenRectangle.getTopLeft();
 	glm::vec2 bot;

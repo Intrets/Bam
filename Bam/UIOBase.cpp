@@ -48,10 +48,10 @@ bool UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
 	return focus;
 }
 
-int32_t UIOBase::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOBase::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t maxDepth = 0;
 	for (auto& element : elements) {
-		maxDepth = glm::max(maxDepth, element.get()->addRenderInfo(renderInfo, depth));
+		maxDepth = glm::max(maxDepth, element.get()->addRenderInfo(gameState, renderInfo, depth));
 	}
 	return 1 + maxDepth;
 }

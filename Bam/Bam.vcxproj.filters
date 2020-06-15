@@ -339,6 +339,7 @@
     <ClCompile Include="UIOFreeSize.cpp" />
     <ClCompile Include="UIOHotbar.cpp" />
     <ClCompile Include="UIOShell.cpp" />
+    <ClCompile Include="UIOActivitySelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -592,6 +593,7 @@
     <ClInclude Include="UIOFreeSize.h" />
     <ClInclude Include="UIOHotbar.h" />
     <ClInclude Include="UIOShell.h" />
+    <ClInclude Include="UIOActivitySelector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

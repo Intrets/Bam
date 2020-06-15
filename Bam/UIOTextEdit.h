@@ -5,7 +5,7 @@
 class UIOTextEdit : public UIOBase
 {
 public:
-	bool focus; 
+	bool focus;
 
 	std::vector<std::string> lines;
 	glm::ivec2 cursor;
@@ -19,7 +19,7 @@ public:
 	UIOTextEdit(Handle self);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
-	virtual int32_t addRenderInfo(RenderInfo& renderInfo, int32_t depth) override;
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
 	void moveCursor(glm::ivec2 p);
 	void insertText(std::string text);

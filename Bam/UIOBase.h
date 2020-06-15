@@ -36,7 +36,7 @@ public:
 	bool runBinds(ControlState& controlState, GameState& gameState);
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
-	virtual int32_t addRenderInfo(RenderInfo& renderInfo, int32_t depth);
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
 	virtual ~UIOBase() = default;
 };
 
