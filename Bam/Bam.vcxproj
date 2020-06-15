@@ -337,6 +337,7 @@
     <ClCompile Include="UIOConstrainSize.cpp" />
     <ClCompile Include="UIOFreeSize.cpp" />
     <ClCompile Include="UIOHotbar.cpp" />
+    <ClCompile Include="UIOShell.cpp" />
     <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOTextEdit.cpp" />
@@ -425,6 +426,7 @@
     <ClInclude Include="UIOConstrainSize.h" />
     <ClInclude Include="UIOFreeSize.h" />
     <ClInclude Include="UIOHotbar.h" />
+    <ClInclude Include="UIOShell.h" />
     <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOTextEdit.h" />

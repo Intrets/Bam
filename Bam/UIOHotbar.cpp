@@ -6,6 +6,7 @@
 #include "UIOWindowTile.h"
 #include "GameState.h"
 #include "RenderInfo.h"
+#include "UIOShell.h"
 
 UIOHotbar::UIOHotbar(Handle self) {
 	selfHandle = self;
@@ -15,7 +16,11 @@ UIOHotbar::UIOHotbar(Handle self) {
 	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
 
 	for (int32_t i = 0; i < 10; i++) {
-		auto e = refMan->makeUniqueRef<UIOPad>(refMan->makeUniqueRef<UIOButton>());
+		auto but = refMan->makeUniqueRef<UIOButton>();
+
+		slots.push_back(but.get());
+
+		auto e = refMan->makeUniqueRef<UIOPad>(std::move(but));
 		e.get()->bottom = { UIOSizeType::PX, 5 };
 		e.get()->top = { UIOSizeType::PX, 5 };
 		e.get()->left = { UIOSizeType::PX, 5 };
@@ -31,9 +36,13 @@ UIOHotbar::UIOHotbar(Handle self) {
 
 		e.get()->main->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, select);
 
-		slots.push_back(e.get());
-		tile.get()->add(std::move(e));
+		auto shell = refMan->makeUniqueRef<UIOShell>(std::move(e));
+
+		slotSize.push_back(shell.get());
+
+		tile.get()->add(std::move(shell));
 	}
+
 	addElement(std::move(tile));
 }
 
@@ -48,10 +57,16 @@ ScreenRectangle UIOHotbar::updateSize(ScreenRectangle newScreenRectangle) {
 int32_t UIOHotbar::addRenderInfo(RenderInfo& renderInfo, int32_t depth) {
 	depth = UIOBase::addRenderInfo(renderInfo, depth);
 	renderInfo.uiRenderInfo.addRectangle(
-		slots[selected]->screenRectangle.top + glm::vec2(0.01f, 0.01f),
-		slots[selected]->screenRectangle.bot - glm::vec2(0.01f, 0.01f),
+		screenRectangle.top,
+		screenRectangle.bot,
+		{ 0.5f,0.5f,0.5f,1 },
+		depth + 1
+	);
+	renderInfo.uiRenderInfo.addRectangle(
+		slotSize[selected]->screenRectangle.top,
+		slotSize[selected]->screenRectangle.bot,
 		{ 1,0,0,1 },
 		depth
 	);
-	return depth + 1;
+	return depth + 2;
 }
