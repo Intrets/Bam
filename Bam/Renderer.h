@@ -15,6 +15,7 @@ struct RenderInfo;
 class FPSLimiter;
 class GameState;
 class WindowManager;
+class UIState;
 
 class Renderer
 {
@@ -45,7 +46,7 @@ private:
 	//LightScreenBuffer lightScreenBufferFinal;
 
 public:
-	void prepareRender(GLFWwindow* window, RenderInfo& target, GameState& gameState, WindowManager& windowManager);
+	void prepareRender(GLFWwindow* window, RenderInfo& target, GameState& gameState, UIState& uiState);
 
 	void render(GLFWwindow* window, RenderInfo& renderInfo);
 

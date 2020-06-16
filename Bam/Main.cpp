@@ -4,21 +4,22 @@
 #include "GameLogic.h"
 #include "Renderer.h"
 #include "FPSLimiter.h"
-#include "WindowManager.h"
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "ControlState.h"
 #include <thread>
-#include "BindHandler.h"
 #include "FPSDisplay.h"
+#include "UIState.h"
 
 void mainLoop(GLFWwindow* window, ControlState& controlState) {
 	FPSLimiter fpsLimiter;
 	FPSDisplay fpsDisplay;
-	WindowManager windowManager;
 
 	GameState gameState;
 	GameLogic gameLogic;
+
+	UIState uiState;
+	uiState.updateSize(window);
 
 	Renderer renderer;
 
@@ -30,7 +31,8 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 		bool rendering = fpsLimiter.ready();
 
 		if (rendering) {
-			renderer.prepareRender(window, renderInfo, gameState, windowManager);
+			uiState.updateSize(window);
+			renderer.prepareRender(window, renderInfo, gameState, uiState);
 		}
 
 		bool logic = gameLogic.ready();
@@ -40,8 +42,7 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 
 			gameState.updatePlayerCursorScreenSpace(window);
 
-			Locator<BindHandler>::getService()->updateWindowSize(window);
-			Locator<BindHandler>::getService()->runBinds(controlState, gameState);
+			uiState.run(gameState, controlState);
 
 			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
 		}

@@ -12,14 +12,6 @@ glm::vec2 GameState::getPlayerCursorScreenSpace() {
 	return playerCursorScreenSpace;
 }
 
-glm::vec2 GameState::getPlayerCursorWorldSpaceD() {
-	return playerCursorWorldSpaceD;
-}
-
-glm::vec2 GameState::getPlayerCursorScreenSpaceD() {
-	return playerCursorScreenSpaceD;
-}
-
 void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
 	double x;
 	double y;
@@ -39,11 +31,9 @@ void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
 	viewport *= viewportScale.getVal();
 
 	auto newScreenSpace = glm::vec2(x, y);
-	playerCursorScreenSpaceD = newScreenSpace - playerCursorScreenSpace;
 	playerCursorScreenSpace = newScreenSpace;
 
 	playerCursorWorldSpace = playerPos + playerCursorScreenSpace * viewport;
-	playerCursorWorldSpaceD = playerPos + playerCursorScreenSpaceD * viewport;
 }
 
 bool GameState::load(Loader& loader) {

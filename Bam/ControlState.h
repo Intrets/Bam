@@ -99,10 +99,8 @@ public:
 	void scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
 
 private:
-	friend class BindHandler;
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
 	std::array<int32_t, CONTROLS::CONTROLS_MAX> controlState;
 	std::string charBuffer;
-
 };
 

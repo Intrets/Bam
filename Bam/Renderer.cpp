@@ -6,9 +6,9 @@
 #include "FPSLimiter.h"
 //#include "GameObject.h"
 #include "RenderInfo.h"
-#include "BindHandler.h"
+#include "UIState.h"
 
-void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, WindowManager& windowManager) {
+void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, UIState& uiState) {
 	int32_t frameSizeX, frameSizeY;
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
@@ -35,10 +35,9 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
-	Locator<BindHandler>::getService()->appendRenderInfo(gameState, renderInfo);
-
 	gameState.appendStaticRenderInfo(renderInfo);
-	//windowManager.addRenderInfo(target.uiRenderInfo, target.cameraInfo, textRenderer);
+
+	uiState.appendRenderInfo(gameState, renderInfo);
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {

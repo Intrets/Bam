@@ -98,6 +98,9 @@
     <Filter Include="Game\Logic\User IO Controllers">
       <UniqueIdentifier>{d9c04c5c-c591-4522-af49-e80a906e11d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Control\Game Control">
+      <UniqueIdentifier>{eaa05948-0b35-4027-95c1-b89e7902dafe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLhelpers.cpp">
@@ -160,9 +163,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
@@ -176,9 +176,6 @@
       <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
     <ClCompile Include="ControlState.cpp">
-      <Filter>Game\Control</Filter>
-    </ClCompile>
-    <ClCompile Include="BindHandler.cpp">
       <Filter>Game\Control</Filter>
     </ClCompile>
     <ClCompile Include="GLEnableWrapper.cpp">
@@ -234,9 +231,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Program Control</Filter>
-    </ClCompile>
-    <ClCompile Include="InitBinds.cpp">
-      <Filter>Program Control\Inits</Filter>
     </ClCompile>
     <ClCompile Include="GameLogic.cpp">
       <Filter>Game\Logic</Filter>
@@ -335,11 +329,25 @@
     <ClCompile Include="UIOPad.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOSizeType.cpp" />
-    <ClCompile Include="UIOFreeSize.cpp" />
-    <ClCompile Include="UIOHotbar.cpp" />
-    <ClCompile Include="UIOShell.cpp" />
-    <ClCompile Include="UIOActivitySelector.cpp" />
+    <ClCompile Include="UIOActivityLinker.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOActivitySelector.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOFreeSize.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOHotbar.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOShell.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOSizeType.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -402,9 +410,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="WindowManager.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="PerlinNoise.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -424,9 +429,6 @@
       <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
     <ClInclude Include="ControlState.h">
-      <Filter>Game\Control</Filter>
-    </ClInclude>
-    <ClInclude Include="BindHandler.h">
       <Filter>Game\Control</Filter>
     </ClInclude>
     <ClInclude Include="StringHelpers.h">
@@ -488,9 +490,6 @@
     </ClInclude>
     <ClInclude Include="Main.h">
       <Filter>Program Control</Filter>
-    </ClInclude>
-    <ClInclude Include="InitBinds.h">
-      <Filter>Program Control\Inits</Filter>
     </ClInclude>
     <ClInclude Include="GameLogic.h">
       <Filter>Game\Logic</Filter>
@@ -589,11 +588,25 @@
     <ClInclude Include="UIOPad.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOSizeType.h" />
-    <ClInclude Include="UIOFreeSize.h" />
-    <ClInclude Include="UIOHotbar.h" />
-    <ClInclude Include="UIOShell.h" />
-    <ClInclude Include="UIOActivitySelector.h" />
+    <ClInclude Include="UIOActivityLinker.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOActivitySelector.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOFreeSize.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOHotbar.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOShell.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOSizeType.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

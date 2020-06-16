@@ -57,7 +57,6 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	addElement(std::move(rightConstrain));
 
-
 	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
 		if (bottomBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();

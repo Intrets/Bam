@@ -277,7 +277,6 @@
     <ClCompile Include="ActivitySelector.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
-    <ClCompile Include="BindHandler.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
@@ -290,7 +289,6 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
     <ClCompile Include="Grouper.cpp" />
-    <ClCompile Include="InitBinds.cpp" />
     <ClCompile Include="InitManagers.cpp" />
     <ClCompile Include="InitModifyables.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
@@ -310,6 +308,7 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -331,6 +330,7 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
+    <ClCompile Include="UIOActivityLinker.cpp" />
     <ClCompile Include="UIOActivitySelector.cpp" />
     <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="UIOBasicWindow.cpp" />
@@ -347,7 +347,6 @@
     <ClCompile Include="UIOPad.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
-    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activator.h" />
@@ -362,7 +361,6 @@
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySelector.h" />
     <ClInclude Include="Anchor.h" />
-    <ClInclude Include="BindHandler.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
     <ClInclude Include="BufferWrappers.h" />
@@ -377,7 +375,6 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
     <ClInclude Include="Grouper.h" />
-    <ClInclude Include="InitBinds.h" />
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="InitModifyables.h" />
     <ClInclude Include="Linker.h" />
@@ -388,6 +385,7 @@
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="Saver.h" />
@@ -421,6 +419,7 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
+    <ClInclude Include="UIOActivityLinker.h" />
     <ClInclude Include="UIOActivitySelector.h" />
     <ClInclude Include="UIOBase.h" />
     <ClInclude Include="UIOBasicWindow.h" />
@@ -437,7 +436,6 @@
     <ClInclude Include="UIOPad.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />
-    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

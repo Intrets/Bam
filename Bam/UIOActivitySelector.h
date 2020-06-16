@@ -22,6 +22,7 @@ public:
 	void selectTarget(GameState& gameState);
 	void expandTarget();
 	void spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);
+	void rotateHover(MOVEABLE::ROT rot);
 
 	UIOActivitySelector(Handle self);
 

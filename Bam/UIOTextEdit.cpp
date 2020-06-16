@@ -18,8 +18,8 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
 			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
-		focus = self_->contains(gameState.getPlayerCursorScreenSpace());
-		return false;
+		focus = this->contains(gameState.getPlayerCursorScreenSpace());
+		return focus;
 	});
 
 	addBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },

@@ -2,9 +2,6 @@
 
 #include "InitManagers.h"
 
-#include "InitBinds.h"
-#include "BindHandler.h"
-
 #include "DebugRenderInfo.h"
 #include "ResourceManagerModel.h"
 #include "ResourceManagerTexture.h"
@@ -20,10 +17,6 @@ void initManagers(GLFWwindow* window) {
 	//Locator<ScriptManager>::provide(new ScriptManager());
 
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
-
-	BindHandler* bindHandler = new BindHandler(window);
-	initBinds(*bindHandler);
-	Locator<BindHandler>::provide(bindHandler);
 
 	Locator<PathManager>::provide(new PathManager());
 	Locator<ResourceManagerModel>::provide(new ResourceManagerModel());

@@ -32,6 +32,14 @@ void UIOActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIV
 	}
 }
 
+void UIOActivitySelector::rotateHover(MOVEABLE::ROT rot) {
+	if (this->type == SELECTION_TYPE::HOVERING && this->target.isValid()) {
+		auto t = this->target.get();
+		auto center = t->getOrigin(); 
+		t->rotateForcedUp(center, rot);
+	}
+}
+
 UIOActivitySelector::UIOActivitySelector(Handle self) {
 	selfHandle = self;
 
@@ -90,6 +98,17 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 		return false;
 	});
 
+	this->addBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&
+	](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+		this->rotateHover(MOVEABLE::COUNTERCLOCKWISE);
+		return false;
+	});
+
+	this->addBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&
+	](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+		this->rotateHover(MOVEABLE::CLOCKWISE);
+		return false;
+	});
 }
 
 ScreenRectangle UIOActivitySelector::updateSize(ScreenRectangle newScreenRectangle) {
