@@ -39,6 +39,9 @@ CallBackBindResult UIOBase::runBinds(ControlState& controlState, GameState& game
 		if (controlState.activated(bind.first)) {
 			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
 			sumResult |= bindResult;
+			if (bindResult & BIND_RESULT::CONSUME) {
+				controlState.consumeControl(bind.first.control);
+			}
 			if (sumResult & BIND_RESULT::STOP) {
 				return sumResult;
 			}

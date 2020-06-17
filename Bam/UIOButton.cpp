@@ -7,8 +7,18 @@
 UIOButton::UIOButton(Handle self) {
 	selfHandle = self;
 
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, &onPress);
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, &onRelease);
+	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		if (this->contains(gameState.getPlayerCursorScreenSpace())) {
+			this->down = true;
+			return BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+		}
+		return BIND_RESULT::CONTINUE;
+	});
+
+	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		this->down = false;
+		return BIND_RESULT::CONTINUE;
+	});
 }
 
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
@@ -28,17 +38,3 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	return depth + 1;
 }
 
-CallBackBindResult onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {
-	auto* self = static_cast<UIOButton*>(self_);
-	if (self->contains(gameState.getPlayerCursorScreenSpace())) {
-		self->down = true;
-		return BIND_RESULT::FOCUS;
-	}
-	return BIND_RESULT::CONTINUE;
-}
-
-CallBackBindResult onRelease(GameState& gameState, ControlState& controlState, UIOBase* self_) {
-	auto* self = static_cast<UIOButton*>(self_);
-	self->down = false;
-	return BIND_RESULT::CONTINUE;
-}

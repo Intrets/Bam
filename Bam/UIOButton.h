@@ -2,10 +2,6 @@
 
 #include "UIOBase.h"
 
-
-static CallBackBindResult onPress(GameState& gameState, ControlState& controlState, UIOBase* self);
-static CallBackBindResult onRelease(GameState& gameState, ControlState& controlState, UIOBase* self);
-
 class UIOButton : public UIOBase
 {
 public:

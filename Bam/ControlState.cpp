@@ -64,8 +64,17 @@ std::string ControlState::getCharBuffer() {
 	return charBuffer;
 }
 
+void ControlState::consumeControl(CONTROLS control) {
+	consumed[control] = true;
+}
+
 bool ControlState::activated(BindControl bindControl) {
-	return controlState[bindControl.control] & bindControl.state;
+	if (consumed[bindControl.control]) {
+		return false;
+	}
+	else {
+		return controlState[bindControl.control] & bindControl.state;
+	}
 }
 
 void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
