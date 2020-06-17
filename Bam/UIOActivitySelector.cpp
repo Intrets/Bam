@@ -35,7 +35,7 @@ void UIOActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIV
 void UIOActivitySelector::rotateHover(MOVEABLE::ROT rot) {
 	if (this->type == SELECTION_TYPE::HOVERING && this->target.isValid()) {
 		auto t = this->target.get();
-		auto center = t->getOrigin(); 
+		auto center = t->getOrigin();
 		t->rotateForcedUp(center, rot);
 	}
 }
@@ -43,7 +43,7 @@ void UIOActivitySelector::rotateHover(MOVEABLE::ROT rot) {
 UIOActivitySelector::UIOActivitySelector(Handle self) {
 	selfHandle = self;
 
-	this->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_)->bool {
+	this->addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		switch (this->type) {
 			case SELECTION_TYPE::NOTHING:
 				{
@@ -87,27 +87,25 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 			default:
 				break;
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_)->bool {
+	this->addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (this->type == SELECTION_TYPE::HOVERING) {
 			auto pos = glm::ivec2(glm::floor(gameState.getPlayerCursorWorldSpace()));
 			this->target.get()->forceMoveOriginUp(pos - this->target.get()->getOrigin());
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&
-	](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	this->addBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->rotateHover(MOVEABLE::COUNTERCLOCKWISE);
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&
-	](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	this->addBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->rotateHover(MOVEABLE::CLOCKWISE);
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 }
 

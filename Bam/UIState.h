@@ -7,7 +7,7 @@ class UIState
 public:
 	WeakReference<UIOBase, UIOActivitySelector> selector;
 
-	std::deque<UniqueReference<UIOBase, UIOBase>> UIs;
+	std::list<UniqueReference<UIOBase, UIOBase>> UIs;
 	
 	void run(GameState& gameState, ControlState& controlState);
 	void updateSize(GLFWwindow* window);

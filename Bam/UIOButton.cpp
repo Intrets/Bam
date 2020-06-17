@@ -28,17 +28,17 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	return depth + 1;
 }
 
-bool onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {
+CallBackBindResult onPress(GameState& gameState, ControlState& controlState, UIOBase* self_) {
 	auto* self = static_cast<UIOButton*>(self_);
 	if (self->contains(gameState.getPlayerCursorScreenSpace())) {
 		self->down = true;
-		return true;
+		return BIND_RESULT::FOCUS;
 	}
-	return false;
+	return BIND_RESULT::CONTINUE;
 }
 
-bool onRelease(GameState& gameState, ControlState& controlState, UIOBase* self_) {
+CallBackBindResult onRelease(GameState& gameState, ControlState& controlState, UIOBase* self_) {
 	auto* self = static_cast<UIOButton*>(self_);
 	self->down = false;
-	return false;
+	return BIND_RESULT::CONTINUE;
 }

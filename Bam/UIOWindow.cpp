@@ -27,16 +27,16 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	addElement(std::move(topConstrain));
 
-	auto setMoveOrigin = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	auto setMoveOrigin = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->mousePressedPosOffset = screenRectangle.getTopLeft() - gameState.getPlayerCursorScreenSpace();
-		return false;
+		return BIND_RESULT::CONTINUE;
 	};
 
-	auto move = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	auto move = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (topBar->down) {
 			this->moveTopLeftTo(gameState.getPlayerCursorScreenSpace() + this->mousePressedPosOffset);
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	};
 
 	auto b = refMan->makeUniqueRef<UIOButton>();
@@ -57,7 +57,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	addElement(std::move(rightConstrain));
 
-	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (bottomBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.y = gameState.getPlayerCursorScreenSpace().y;
@@ -67,10 +67,10 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 			this->screenRectangle.setBottomRight(bottomRight);
 			this->updateSize(this->screenRectangle);
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleHorizontal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+	auto scaleHorizontal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (rightBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.x = gameState.getPlayerCursorScreenSpace().x;
@@ -80,7 +80,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 			this->screenRectangle.setBottomRight(bottomRight);
 			this->updateSize(this->screenRectangle);
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	};
 
 	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);

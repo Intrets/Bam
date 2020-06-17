@@ -56,6 +56,8 @@ void ControlState::cycleStates() {
 	charBuffer.clear();
 	scrollDistance = 0;
 	controlState[CONTROLS::MOUSE_POS_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+
+	consumed.fill(false);
 }
 
 std::string ControlState::getCharBuffer() {

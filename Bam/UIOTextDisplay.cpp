@@ -9,9 +9,9 @@
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	selfHandle = self;
 
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
-		hover = screenRectangle.contains(gameState.getPlayerCursorScreenSpace());
-		return false;
+	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		this->hover = this->screenRectangle.contains(gameState.getPlayerCursorScreenSpace());
+		return BIND_RESULT::CONTINUE;
 	});
 }
 

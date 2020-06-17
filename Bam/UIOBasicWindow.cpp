@@ -7,13 +7,6 @@
 
 UIOBasicWindow::UIOBasicWindow(Handle self) {
 	selfHandle = self;
-	CallBack onClick = [](GameState& gameState, ControlState& controlState, UIOBase* self) -> bool {
-		if (self->contains(gameState.getPlayerCursorScreenSpace())) {
-			std::cout << "click anywyere\n";
-		}
-		return false;
-	};
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, onClick);
 }
 
 ScreenRectangle UIOBasicWindow::updateSize(ScreenRectangle newScreenRectangle) {

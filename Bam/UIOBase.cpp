@@ -32,20 +32,26 @@ void UIOBase::addBind(BindControl bindControl, CallBack callBack) {
 	binds.push_front(std::make_pair(bindControl, callBack));
 }
 
-bool UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
-	bool focus = false;
+CallBackBindResult UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
+	CallBackBindResult sumResult = 0;
 	for (auto it = binds.begin(); it != binds.end(); ++it) {
 		auto& bind = *it;
-		if (controlState.activated(bind.first) && bind.second(gameState, controlState, this)) {
-			focus = true;
+		if (controlState.activated(bind.first)) {
+			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
+			sumResult |= bindResult;
+			if (sumResult & BIND_RESULT::STOP) {
+				return sumResult;
+			}
 		}
 	}
 	for (auto& element : elements) {
-		if (element.get()->runBinds(controlState, gameState)) {
-			focus = true;
+		CallBackBindResult elementResult = element.get()->runBinds(controlState, gameState);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
 		}
 	}
-	return focus;
+	return sumResult;
 }
 
 int32_t UIOBase::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

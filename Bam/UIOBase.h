@@ -11,7 +11,17 @@ class GameState;
 
 class UIOBase;
 
-typedef std::function<bool(GameState& gameState, ControlState& controlState, UIOBase* self)> CallBack;
+enum BIND_RESULT
+{
+	CONTINUE = 1 << 0,
+	CLOSE = 1 << 1,
+	STOP = 1 << 2,
+	FOCUS = 1 << 3,
+};
+
+typedef int32_t CallBackBindResult;
+
+typedef std::function<CallBackBindResult(GameState& gameState, ControlState& controlState, UIOBase* self)> CallBack;
 
 class UIOBase
 {
@@ -33,7 +43,7 @@ public:
 	void moveTopLeftTo(glm::vec2 p);
 	bool contains(glm::vec2 p);
 	void addBind(BindControl bindControl, CallBack callBack);
-	bool runBinds(ControlState& controlState, GameState& gameState);
+	virtual CallBackBindResult runBinds(ControlState& controlState, GameState& gameState);
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);

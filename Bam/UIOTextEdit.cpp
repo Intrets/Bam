@@ -17,62 +17,67 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 	lines.push_back("71234567890");
 
 	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		focus = this->contains(gameState.getPlayerCursorScreenSpace());
-		return focus;
+		if (focus) {
+			return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
+		}
+		else {
+			return BIND_RESULT::CONTINUE;
+		}
 	});
 
 	addBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 0,-1 });
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 	addBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 0,1 });
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 	addBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ -1,0 });
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 	addBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 1,0 });
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
 	addBind({ CONTROLS::CHAR_BUFFER_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (focus) {
 			insertText(controlState.getCharBuffer());
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
 	addBind({ CONTROLS::BACKSPACE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (focus) {
 			backspaceChar();
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
 	addBind({ CONTROLS::DELETE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (focus) {
 			deleteChar();
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 
 	addBind({ CONTROLS::TAB, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> bool {
+			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (focus) {
 			insertText("    ");
 		}
-		return false;
+		return BIND_RESULT::CONTINUE;
 	});
 }
 
@@ -95,7 +100,6 @@ int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo,
 	viewSize = screenRectangle.size() / fontScale;
 	viewHorizontal[1] = viewHorizontal[0] + viewSize.x;
 	viewVertical[1] = viewVertical[0] + viewSize.y;
-
 
 	glm::vec2 start = screenRectangle.getTopLeft();
 

@@ -101,6 +101,7 @@ public:
 private:
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
 	std::array<int32_t, CONTROLS::CONTROLS_MAX> controlState;
+	std::array<bool, CONTROLS::CONTROLS_MAX> consumed;
 	std::string charBuffer;
 };
 

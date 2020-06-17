@@ -9,13 +9,19 @@
 #include "UIOTextDisplay.h"
 
 void UIState::run(GameState& gameState, ControlState& controlState) {
-	for (auto it = UIs.begin(); it != UIs.end(); it++) {
+	for (auto it = UIs.begin(); it != UIs.end();) {
 		auto& UI = *it;
-		if (UI.get()->runBinds(controlState, gameState)) {
+		CallBackBindResult uiResult = UI.get()->runBinds(controlState, gameState);
+		if (uiResult & BIND_RESULT::CLOSE) {
+			it = UIs.erase(it);
+		}
+		else if (uiResult & BIND_RESULT::FOCUS) {
 			auto temp = std::move(UI);
-			UIs.erase(it);
+			it = UIs.erase(it);
 			UIs.push_front(std::move(temp));
-			break;
+		}
+		else {
+			++it;
 		}
 	}
 }
@@ -43,10 +49,6 @@ void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 UIState::UIState() {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
 
-	UniqueReference<UIOBase, UIOActivitySelector> sel = refMan->makeUniqueRef<UIOActivitySelector>();
-
-	this->selector = sel;
-	this->UIs.push_back(std::move(sel));
 
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
@@ -92,5 +94,12 @@ UIState::UIState() {
 		t3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(t3));
+	}
+
+	{
+		UniqueReference<UIOBase, UIOActivitySelector> sel = refMan->makeUniqueRef<UIOActivitySelector>();
+
+		this->selector = sel;
+		this->UIs.push_back(std::move(sel));
 	}
 }
