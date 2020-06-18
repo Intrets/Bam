@@ -348,6 +348,7 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
     <ClCompile Include="UIState.cpp" />
+    <ClCompile Include="UIOInvisible.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -607,6 +608,7 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="UIState.h" />
+    <ClInclude Include="UIOInvisible.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

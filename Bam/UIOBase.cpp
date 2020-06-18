@@ -28,13 +28,17 @@ bool UIOBase::contains(glm::vec2 p) {
 	return screenRectangle.contains(p);
 }
 
-void UIOBase::addBind(BindControl bindControl, CallBack callBack) {
-	binds.push_front(std::make_pair(bindControl, callBack));
+void UIOBase::addGlobalBind(BindControl bindControl, CallBack callBack) {
+	globalBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
-CallBackBindResult UIOBase::runBinds(ControlState& controlState, GameState& gameState) {
+void UIOBase::addFocussedBind(BindControl bindControl, CallBack callBack) {
+	focussedBinds.push_back(std::make_pair(bindControl, callBack));
+}
+
+CallBackBindResult UIOBase::runGlobalBinds(ControlState& controlState, GameState& gameState) {
 	CallBackBindResult sumResult = 0;
-	for (auto it = binds.begin(); it != binds.end(); ++it) {
+	for (auto it = globalBinds.begin(); it != globalBinds.end(); ++it) {
 		auto& bind = *it;
 		if (controlState.activated(bind.first)) {
 			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
@@ -48,7 +52,31 @@ CallBackBindResult UIOBase::runBinds(ControlState& controlState, GameState& game
 		}
 	}
 	for (auto& element : elements) {
-		CallBackBindResult elementResult = element.get()->runBinds(controlState, gameState);
+		CallBackBindResult elementResult = element.get()->runGlobalBinds(controlState, gameState);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+	return sumResult;
+}
+
+CallBackBindResult UIOBase::runFocussedBinds(ControlState& controlState, GameState& gameState) {
+	CallBackBindResult sumResult = 0;
+	for (auto it = focussedBinds.begin(); it != focussedBinds.end(); ++it) {
+		auto& bind = *it;
+		if (controlState.activated(bind.first)) {
+			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
+			sumResult |= bindResult;
+			if (sumResult & BIND_RESULT::STOP) {
+				controlState.consumeControl(bind.first.control);
+				return sumResult;
+			}
+		}
+		controlState.consumeControl(bind.first.control);
+	}
+	for (auto& element : elements) {
+		CallBackBindResult elementResult = element.get()->runFocussedBinds(controlState, gameState);
 		sumResult |= elementResult;
 		if (sumResult & BIND_RESULT::STOP) {
 			return sumResult;

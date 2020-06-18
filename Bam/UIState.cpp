@@ -7,11 +7,19 @@
 #include "UIOWindow.h"
 #include "UIOFreeSize.h"
 #include "UIOTextDisplay.h"
+#include "UIOInvisible.h"
+#include "ControlState.h"
+#include "GameState.h"
 
 void UIState::run(GameState& gameState, ControlState& controlState) {
+	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(controlState, gameState);
+	if (focussedResult & BIND_RESULT::CLOSE) {
+		UIs.pop_front();
+	}
+
 	for (auto it = UIs.begin(); it != UIs.end();) {
 		auto& UI = *it;
-		CallBackBindResult uiResult = UI.get()->runBinds(controlState, gameState);
+		CallBackBindResult uiResult = UI.get()->runGlobalBinds(controlState, gameState);
 		if (uiResult & BIND_RESULT::CLOSE) {
 			it = UIs.erase(it);
 		}
@@ -53,6 +61,7 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
+	// Hotbar
 	{
 		auto hotbar = refMan->makeUniqueRef<UIOHotbar>();
 
@@ -66,6 +75,7 @@ UIState::UIState() {
 		this->UIs.push_back(std::move(sized));
 	}
 
+	// text edit test window
 	{
 		auto text = refMan->makeUniqueRef<UIOTextEdit>();
 
@@ -81,6 +91,7 @@ UIState::UIState() {
 		this->UIs.push_back(std::move(test3));
 	}
 
+	// text display test window
 	{
 		auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
 		textDisplay.get()->setText("tesg 123\n\n\n12323");
@@ -96,10 +107,37 @@ UIState::UIState() {
 		this->UIs.push_back(std::move(t3));
 	}
 
+	// Activity selector
 	{
 		UniqueReference<UIOBase, UIOActivitySelector> sel = refMan->makeUniqueRef<UIOActivitySelector>();
-
 		this->selector = sel;
 		this->UIs.push_back(std::move(sel));
+	}
+
+	// wasd movement in world
+	{
+		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
+
+		movement.get()->addGlobalBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+			gameState.playerPos.x -= 1.0f;
+			return BIND_RESULT::CONTINUE;
+		});
+
+		movement.get()->addGlobalBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+			gameState.playerPos.x += 1.0f;
+			return BIND_RESULT::CONTINUE;
+		});
+
+		movement.get()->addGlobalBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+			gameState.playerPos.y -= 1.0f;
+			return BIND_RESULT::CONTINUE;
+		});
+
+		movement.get()->addGlobalBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+			gameState.playerPos.y += 1.0f;
+			return BIND_RESULT::CONTINUE;
+		});
+
+		this->UIs.push_back(std::move(movement));
 	}
 }

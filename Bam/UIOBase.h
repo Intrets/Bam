@@ -34,7 +34,8 @@ protected:
 	using Bind = std::pair<BindControl, CallBack>;
 
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
-	std::list<Bind> binds;
+	std::vector<Bind> globalBinds;
+	std::vector<Bind> focussedBinds;
 
 public:
 	ScreenRectangle screenRectangle;
@@ -43,8 +44,13 @@ public:
 	void setScreenPixels(glm::ivec2 px);
 	void moveTopLeftTo(glm::vec2 p);
 	bool contains(glm::vec2 p);
-	void addBind(BindControl bindControl, CallBack callBack);
-	virtual CallBackBindResult runBinds(ControlState& controlState, GameState& gameState);
+
+	void addGlobalBind(BindControl bindControl, CallBack callBack);
+	void addFocussedBind(BindControl bindControl, CallBack callBack);
+
+	CallBackBindResult runGlobalBinds(ControlState& controlState, GameState& gameState);
+	CallBackBindResult runFocussedBinds(ControlState& controlState, GameState& gameState);
+
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);

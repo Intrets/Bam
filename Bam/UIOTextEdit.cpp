@@ -16,68 +16,60 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 	lines.push_back("61234567890");
 	lines.push_back("71234567890");
 
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
+				  [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		focus = this->contains(gameState.getPlayerCursorScreenSpace());
 		if (focus) {
-			return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
+			return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 		}
 		else {
 			return BIND_RESULT::CONTINUE;
 		}
 	});
 
-	addBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addFocussedBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 0,-1 });
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	addBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addFocussedBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 0,1 });
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	addBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addFocussedBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ -1,0 });
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	addBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addFocussedBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->moveCursor({ 1,0 });
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	addBind({ CONTROLS::CHAR_BUFFER_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		if (focus) {
-			insertText(controlState.getCharBuffer());
-		}
-		return BIND_RESULT::CONTINUE;
+	addFocussedBind({ CONTROLS::CHAR_BUFFER_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		insertText(controlState.getCharBuffer());
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	addBind({ CONTROLS::BACKSPACE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		if (focus) {
-			backspaceChar();
-		}
-		return BIND_RESULT::CONTINUE;
+	addFocussedBind({ CONTROLS::BACKSPACE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		backspaceChar();
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	addBind({ CONTROLS::DELETE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		if (focus) {
-			deleteChar();
-		}
-		return BIND_RESULT::CONTINUE;
+	addFocussedBind({ CONTROLS::DELETE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		deleteChar();
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	addBind({ CONTROLS::TAB, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
-			[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		if (focus) {
-			insertText("    ");
-		}
-		return BIND_RESULT::CONTINUE;
+	addFocussedBind({ CONTROLS::TAB, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+					[&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		insertText("    ");
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 }
 

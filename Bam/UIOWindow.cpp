@@ -39,6 +39,18 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
+	{
+		auto br = refMan->makeUniqueRef<UIOButton>();
+		bottomRightBar = br.get();
+
+		auto brConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(br));
+		brConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
+		brConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
+		brConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+
+		addElement(std::move(brConstrain));
+	}
+
 	auto b = refMan->makeUniqueRef<UIOButton>();
 	bottomBar = b.get();
 
@@ -83,10 +95,26 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
-	addBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, setMoveOrigin);
+	auto scaleDiagonal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+		if (bottomRightBar->down) {
+			auto bottomRight = gameState.getPlayerCursorScreenSpace();
+			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
+				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
+			}
+			if (this->screenRectangle.top.y - bottomRight.y < 0.2f) {
+				bottomRight.y = this->screenRectangle.top.y - 0.2f;
+			}
+			this->screenRectangle.setBottomRight(bottomRight);
+			this->updateSize(this->screenRectangle);
+		}
+		return BIND_RESULT::CONTINUE;
+	};
+
+	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
+	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
+	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
+	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleDiagonal);
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, setMoveOrigin);
 }
 
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {

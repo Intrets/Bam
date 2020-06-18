@@ -11,6 +11,7 @@ public:
 	UIOButton* topBar;
 	UIOButton* bottomBar;
 	UIOButton* rightBar;
+	UIOButton* bottomRightBar;
 
 	glm::vec2 mousePressedPosOffset;
 

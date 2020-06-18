@@ -7,7 +7,7 @@
 UIOButton::UIOButton(Handle self) {
 	selfHandle = self;
 
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		if (this->contains(gameState.getPlayerCursorScreenSpace())) {
 			this->down = true;
 			return BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
@@ -15,7 +15,7 @@ UIOButton::UIOButton(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
 		this->down = false;
 		return BIND_RESULT::CONTINUE;
 	});
