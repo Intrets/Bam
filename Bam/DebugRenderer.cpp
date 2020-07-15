@@ -15,6 +15,13 @@ void DebugRenderer::render(GLuint target, RenderInfo& renderInfo) {
 	for (auto& line : renderInfo.debugRenderInfo.lines) {
 		renderVector(line, 1, renderInfo);
 	}
+
+	RenderInfo screenRenderInfo;
+	screenRenderInfo.cameraInfo.VP = glm::mat4(1.0f);
+
+	for (auto& line : renderInfo.debugRenderInfo.linesScreen) {
+		renderVector(line, 1, screenRenderInfo);
+	}
 }
 
 DebugRenderer::DebugRenderer() :

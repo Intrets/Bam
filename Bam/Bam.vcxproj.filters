@@ -349,6 +349,8 @@
     </ClCompile>
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="UIOCallBackParams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -609,6 +611,8 @@
     </ClInclude>
     <ClInclude Include="UIState.h" />
     <ClInclude Include="UIOInvisible.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="UIOCallBackParams.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

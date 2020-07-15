@@ -4,6 +4,7 @@
 #include "UIOConstrainSize.h"
 #include "UIOPad.h"
 #include "GameState.h"
+#include "State.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
@@ -27,14 +28,14 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	addElement(std::move(topConstrain));
 
-	auto setMoveOrigin = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		this->mousePressedPosOffset = screenRectangle.getTopLeft() - gameState.getPlayerCursorScreenSpace();
+	auto setMoveOrigin = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		this->mousePressedPosOffset = screenRectangle.getTopLeft() - state.gameState.getPlayerCursorScreenSpace();
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto move = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	auto move = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (topBar->down) {
-			this->moveTopLeftTo(gameState.getPlayerCursorScreenSpace() + this->mousePressedPosOffset);
+			this->moveTopLeftTo(state.gameState.getPlayerCursorScreenSpace() + this->mousePressedPosOffset);
 		}
 		return BIND_RESULT::CONTINUE;
 	};
@@ -69,10 +70,10 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	addElement(std::move(rightConstrain));
 
-	auto scaleVertical = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	auto scaleVertical = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (bottomBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
-			bottomRight.y = gameState.getPlayerCursorScreenSpace().y;
+			bottomRight.y = state.gameState.getPlayerCursorScreenSpace().y;
 			if (this->screenRectangle.top.y - bottomRight.y < 0.2f) {
 				bottomRight.y = this->screenRectangle.top.y - 0.2f;
 			}
@@ -82,10 +83,10 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleHorizontal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	auto scaleHorizontal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (rightBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
-			bottomRight.x = gameState.getPlayerCursorScreenSpace().x;
+			bottomRight.x = state.gameState.getPlayerCursorScreenSpace().x;
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
 			}
@@ -95,9 +96,9 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleDiagonal = [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	auto scaleDiagonal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (bottomRightBar->down) {
-			auto bottomRight = gameState.getPlayerCursorScreenSpace();
+			auto bottomRight = state.gameState.getPlayerCursorScreenSpace();
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
 			}

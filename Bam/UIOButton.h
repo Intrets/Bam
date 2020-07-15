@@ -5,6 +5,9 @@
 class UIOButton : public UIOBase
 {
 public:
+	CallBack onPress;
+	CallBack onRelease;
+
 	bool down = false;
 	glm::vec4 pressedColor = { 0.5f, 0.5f, 0.5f, 1.0f };
 	glm::vec4 unpressedColor = { 1.0f, 1.0f, 1.0f, 1.0f };

@@ -10,6 +10,7 @@ struct RenderInfo;
 class GameState;
 
 class UIOBase;
+struct State;
 
 enum BIND_RESULT
 {
@@ -22,7 +23,9 @@ enum BIND_RESULT
 
 typedef int32_t CallBackBindResult;
 
-typedef std::function<CallBackBindResult(GameState& gameState, ControlState& controlState, UIOBase* self)> CallBack;
+typedef State UIOCallBackParams;
+
+typedef std::function<CallBackBindResult(UIOCallBackParams& UIOCallBackParams, UIOBase* self)> CallBack;
 
 class UIOBase
 {
@@ -48,8 +51,8 @@ public:
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
 
-	CallBackBindResult runGlobalBinds(ControlState& controlState, GameState& gameState);
-	CallBackBindResult runFocussedBinds(ControlState& controlState, GameState& gameState);
+	CallBackBindResult runGlobalBinds(State& state);
+	CallBackBindResult runFocussedBinds(State& state);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 

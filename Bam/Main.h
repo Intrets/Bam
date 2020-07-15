@@ -1,5 +1,5 @@
 #pragma once
 
-class ControlState;
+struct State;
 
-void mainLoop(GLFWwindow* window, ControlState& controlState);
+void mainLoop(GLFWwindow* window);

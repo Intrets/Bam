@@ -308,6 +308,8 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
@@ -386,6 +388,8 @@
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />

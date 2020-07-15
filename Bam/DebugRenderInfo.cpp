@@ -1,6 +1,15 @@
 #include "common.h"
 #include "DebugRenderInfo.h"
 
+void DebugRenderInfo::addBoxScreen(glm::vec2 u, glm::vec2 d) {
+	linesScreen.push_back(std::vector<glm::vec2>());
+	linesScreen.back().push_back(u);
+	linesScreen.back().push_back({ u.x, d.y });
+	linesScreen.back().push_back(d);
+	linesScreen.back().push_back({ d.x, u.y });
+	linesScreen.back().push_back(u);
+}
+
 void DebugRenderInfo::addBox(glm::vec2 u, glm::vec2 d) {
 	lines.push_back(std::vector<glm::vec2>());
 	lines.back().push_back(u);

@@ -3,6 +3,7 @@
 #include "UIOActivitySelector.h"
 #include "GameState.h"
 #include "Platform.h"
+#include "UIOCallBackParams.h"
 
 void UIOActivitySelector::selectTarget(GameState& gameState) {
 	if (this->type == SELECTION_TYPE::NOTHING) {
@@ -43,18 +44,18 @@ void UIOActivitySelector::rotateHover(MOVEABLE::ROT rot) {
 UIOActivitySelector::UIOActivitySelector(Handle self) {
 	selfHandle = self;
 
-	this->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		switch (this->type) {
 			case SELECTION_TYPE::NOTHING:
 				{
-					auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+					auto maybeTarget = state.gameState.staticWorld.getActivity(glm::floor(state.gameState.getPlayerCursorWorldSpace()));
 					if (maybeTarget.has_value()) {
 						this->type = SELECTION_TYPE::SELECTED;
 						this->target.set(maybeTarget.value());
 					}
 					else {
 						this->type = SELECTION_TYPE::HOVERING;
-						this->spawnHover(gameState, glm::ivec2(gameState.getPlayerCursorWorldSpace()), ACTIVITY::TYPE::PLATFORM);
+						this->spawnHover(state.gameState, glm::ivec2(state.gameState.getPlayerCursorWorldSpace()), ACTIVITY::TYPE::PLATFORM);
 					}
 					break;
 				}
@@ -64,16 +65,16 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 						this->target.unset();
 						this->type = SELECTION_TYPE::NOTHING;
 					}
-					else if (this->target.get()->fillTracesUp(gameState)) {
+					else if (this->target.get()->fillTracesUp(state.gameState)) {
 						this->type = SELECTION_TYPE::SELECTED;
 					}
 					break;
 				}
 			case SELECTION_TYPE::SELECTED:
 				{
-					auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+					auto maybeTarget = state.gameState.staticWorld.getActivity(glm::floor(state.gameState.getPlayerCursorWorldSpace()));
 					if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.handle) {
-						if (this->target.get()->removeTracesUp(gameState)) {
+						if (this->target.get()->removeTracesUp(state.gameState)) {
 							this->target.set(maybeTarget.value());
 							type = SELECTION_TYPE::HOVERING;
 						}
@@ -90,20 +91,20 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (this->type == SELECTION_TYPE::HOVERING) {
-			auto pos = glm::ivec2(glm::floor(gameState.getPlayerCursorWorldSpace()));
+			auto pos = glm::ivec2(glm::floor(state.gameState.getPlayerCursorWorldSpace()));
 			this->target.get()->forceMoveOriginUp(pos - this->target.get()->getOrigin());
 		}
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		this->rotateHover(MOVEABLE::COUNTERCLOCKWISE);
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		this->rotateHover(MOVEABLE::CLOCKWISE);
 		return BIND_RESULT::CONTINUE;
 	});

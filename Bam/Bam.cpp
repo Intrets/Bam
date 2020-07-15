@@ -12,23 +12,6 @@
 #include "InitModifyables.h"
 
 GLFWwindow* window;
-ControlState controlState;
-
-static void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
-	controlState.key_callback(w, key, scancode, action, mods);
-}
-
-static void mouse_callback(GLFWwindow* w, int32_t key, int32_t action, int32_t mods) {
-	key_callback(w, key + GLFW_KEY_LAST, 0, action, mods);
-}
-
-void char_callback(GLFWwindow* w, unsigned int character) {
-	controlState.char_callback(w, character);
-}
-
-void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
-	controlState.scroll_callback(w, xoffset, yoffset);
-}
 
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
@@ -63,11 +46,6 @@ static int initGLFW() {
 	printf("OpenGL version supported by this platform (%s): \n",
 		   glGetString(GL_VERSION));
 
-	glfwSetCharCallback(window, char_callback);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetMouseButtonCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-
 	// constrain cursor to window
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -86,5 +64,5 @@ int main() {
 	initGLFW();
 	initModifyables();
 	initManagers(window);
-	mainLoop(window, controlState);
+	mainLoop(window);
 }

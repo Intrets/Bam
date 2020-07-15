@@ -5,12 +5,13 @@
 #include "RenderInfo.h"
 #include "GameState.h"
 #include "TextRenderer.h"
+#include "UIOCallBackParams.h"
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	selfHandle = self;
 
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-		this->hover = this->screenRectangle.contains(gameState.getPlayerCursorScreenSpace());
+	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		this->hover = this->screenRectangle.contains(state.gameState.getPlayerCursorScreenSpace());
 		return BIND_RESULT::CONTINUE;
 	});
 }

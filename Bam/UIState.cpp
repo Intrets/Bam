@@ -10,16 +10,17 @@
 #include "UIOInvisible.h"
 #include "ControlState.h"
 #include "GameState.h"
+#include "State.h"
 
-void UIState::run(GameState& gameState, ControlState& controlState) {
-	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(controlState, gameState);
+void UIState::run(State& state) {
+	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(state);
 	if (focussedResult & BIND_RESULT::CLOSE) {
 		UIs.pop_front();
 	}
 
 	for (auto it = UIs.begin(); it != UIs.end();) {
 		auto& UI = *it;
-		CallBackBindResult uiResult = UI.get()->runGlobalBinds(controlState, gameState);
+		CallBackBindResult uiResult = UI.get()->runGlobalBinds(state);
 		if (uiResult & BIND_RESULT::CLOSE) {
 			it = UIs.erase(it);
 		}
@@ -56,7 +57,6 @@ void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 
 UIState::UIState() {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
-
 
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
@@ -118,23 +118,23 @@ UIState::UIState() {
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-			gameState.playerPos.x -= 1.0f;
+		movement.get()->addGlobalBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			state.gameState.playerPos.x -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-			gameState.playerPos.x += 1.0f;
+		movement.get()->addGlobalBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			state.gameState.playerPos.x += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-			gameState.playerPos.y -= 1.0f;
+		movement.get()->addGlobalBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			state.gameState.playerPos.y -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](GameState& gameState, ControlState& controlState, UIOBase* self_) -> CallBackBindResult {
-			gameState.playerPos.y += 1.0f;
+		movement.get()->addGlobalBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			state.gameState.playerPos.y += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 

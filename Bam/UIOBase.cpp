@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "UIOBase.h"
+#include "State.h"
 
 void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	elements.push_back(std::move(element));
@@ -36,15 +37,15 @@ void UIOBase::addFocussedBind(BindControl bindControl, CallBack callBack) {
 	focussedBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
-CallBackBindResult UIOBase::runGlobalBinds(ControlState& controlState, GameState& gameState) {
+CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 	CallBackBindResult sumResult = 0;
 	for (auto it = globalBinds.begin(); it != globalBinds.end(); ++it) {
 		auto& bind = *it;
-		if (controlState.activated(bind.first)) {
-			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
+		if (state.controlState.activated(bind.first)) {
+			CallBackBindResult bindResult = bind.second(state, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND_RESULT::CONSUME) {
-				controlState.consumeControl(bind.first.control);
+				state.controlState.consumeControl(bind.first.control);
 			}
 			if (sumResult & BIND_RESULT::STOP) {
 				return sumResult;
@@ -52,7 +53,7 @@ CallBackBindResult UIOBase::runGlobalBinds(ControlState& controlState, GameState
 		}
 	}
 	for (auto& element : elements) {
-		CallBackBindResult elementResult = element.get()->runGlobalBinds(controlState, gameState);
+		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
 		sumResult |= elementResult;
 		if (sumResult & BIND_RESULT::STOP) {
 			return sumResult;
@@ -61,22 +62,22 @@ CallBackBindResult UIOBase::runGlobalBinds(ControlState& controlState, GameState
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runFocussedBinds(ControlState& controlState, GameState& gameState) {
+CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 	CallBackBindResult sumResult = 0;
 	for (auto it = focussedBinds.begin(); it != focussedBinds.end(); ++it) {
 		auto& bind = *it;
-		if (controlState.activated(bind.first)) {
-			CallBackBindResult bindResult = bind.second(gameState, controlState, this);
+		if (state.controlState.activated(bind.first)) {
+			CallBackBindResult bindResult = bind.second(state, this);
 			sumResult |= bindResult;
 			if (sumResult & BIND_RESULT::STOP) {
-				controlState.consumeControl(bind.first.control);
+				state.controlState.consumeControl(bind.first.control);
 				return sumResult;
 			}
 		}
-		controlState.consumeControl(bind.first.control);
+		state.controlState.consumeControl(bind.first.control);
 	}
 	for (auto& element : elements) {
-		CallBackBindResult elementResult = element.get()->runFocussedBinds(controlState, gameState);
+		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
 		sumResult |= elementResult;
 		if (sumResult & BIND_RESULT::STOP) {
 			return sumResult;

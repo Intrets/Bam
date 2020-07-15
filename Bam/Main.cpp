@@ -10,16 +10,39 @@
 #include <thread>
 #include "FPSDisplay.h"
 #include "UIState.h"
+#include "State.h"
 
-void mainLoop(GLFWwindow* window, ControlState& controlState) {
+ControlState controlState;
+
+static void key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
+	controlState.key_callback(w, key, scancode, action, mods);
+}
+
+static void mouse_callback(GLFWwindow* w, int32_t key, int32_t action, int32_t mods) {
+	key_callback(w, key + GLFW_KEY_LAST, 0, action, mods);
+}
+
+void char_callback(GLFWwindow* w, unsigned int character) {
+	controlState.char_callback(w, character);
+}
+
+void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
+	controlState.scroll_callback(w, xoffset, yoffset);
+}
+
+void mainLoop(GLFWwindow* window) {
+	glfwSetCharCallback(window, char_callback);
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
+	State state(controlState);
+	state.uiState.updateSize(window);
+
 	FPSLimiter fpsLimiter;
 	FPSDisplay fpsDisplay;
 
-	GameState gameState;
 	GameLogic gameLogic;
-
-	UIState uiState;
-	uiState.updateSize(window);
 
 	Renderer renderer;
 
@@ -31,20 +54,20 @@ void mainLoop(GLFWwindow* window, ControlState& controlState) {
 		bool rendering = fpsLimiter.ready();
 
 		if (rendering) {
-			uiState.updateSize(window);
-			renderer.prepareRender(window, renderInfo, gameState, uiState);
+			state.uiState.updateSize(window);
+			renderer.prepareRender(window, renderInfo, state.gameState, state.uiState);
 		}
 
 		bool logic = gameLogic.ready();
 		if (logic) {
-			controlState.cycleStates();
+			state.controlState.cycleStates();
 			glfwPollEvents();
 
-			gameState.updatePlayerCursorScreenSpace(window);
+			state.gameState.updatePlayerCursorScreenSpace(window);
 
-			uiState.run(gameState, controlState);
+			state.uiState.run(state);
 
-			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(gameState));
+			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
 		}
 
 		if (rendering) {
