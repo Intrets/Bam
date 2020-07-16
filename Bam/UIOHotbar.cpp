@@ -130,5 +130,32 @@ int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 		{ 1,0,0,1 },
 		depth
 	);
-	return depth + 2;
+
+	depth += 2;
+
+	auto& maybeSelected = this->tools[this->selected];
+	if (maybeSelected) {
+		depth = maybeSelected.value().get()->addRenderInfo(gameState, renderInfo, depth);
+	}
+
+	depth += 1;
+	return depth;
+}
+
+CallBackBindResult UIOHotbar::runGlobalBinds(State& state) {
+	auto& maybeSelected = this->tools[this->selected];
+	CallBackBindResult res = UIOBase::runGlobalBinds(state);
+	if (maybeSelected) {
+		res |= maybeSelected.value().get()->runGlobalBinds(state);
+	}
+	return res;
+}
+
+CallBackBindResult UIOHotbar::runFocussedBinds(State& state) {
+	auto& maybeSelected = this->tools[this->selected];
+	CallBackBindResult res = UIOBase::runFocussedBinds(state);
+	if (maybeSelected) {
+		res |= maybeSelected.value().get()->runFocussedBinds(state);
+	}
+	return res;
 }

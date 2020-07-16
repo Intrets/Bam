@@ -7,7 +7,7 @@ struct State;
 class UIState
 {
 public:
-	WeakReference<UIOBase, UIOActivitySelector> selector;
+	UniqueReference<UIOBase, UIOActivitySelector> selector;
 
 	std::list<UniqueReference<UIOBase, UIOBase>> UIs;
 	

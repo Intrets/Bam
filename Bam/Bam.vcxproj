@@ -311,6 +311,7 @@
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
+    <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOInvisible.h" />
+    <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />

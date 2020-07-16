@@ -51,8 +51,8 @@ public:
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
 
-	CallBackBindResult runGlobalBinds(State& state);
-	CallBackBindResult runFocussedBinds(State& state);
+	virtual CallBackBindResult runGlobalBinds(State& state);
+	virtual CallBackBindResult runFocussedBinds(State& state);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 

@@ -11,6 +11,8 @@
 #include "ControlState.h"
 #include "GameState.h"
 #include "State.h"
+#include "UIOProxy.h"
+#include "UIOActivityLinker.h"
 
 void UIState::run(State& state) {
 	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(state);
@@ -61,9 +63,25 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
+	// Activity selector
+	{
+		this->selector = refMan->makeUniqueRef<UIOActivitySelector>();
+		//this->UIs.push_back(std::move(sel));
+	}
+
 	// Hotbar
 	{
 		auto hotbar = refMan->makeUniqueRef<UIOHotbar>();
+
+		// selector
+		auto proxy = refMan->makeUniqueRef<UIOProxy>();
+		proxy.get()->main.set(this->selector);
+
+		hotbar.get()->tools[0] = std::move(proxy);
+
+		// linker
+		auto linker = refMan->makeUniqueRef<UIOActivityLinker>();
+		hotbar.get()->tools[1] = std::move(linker);
 
 		auto sized = refMan->makeUniqueRef<UIOConstrainSize>(std::move(hotbar));
 		sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.09f };
@@ -105,13 +123,6 @@ UIState::UIState() {
 		t3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(t3));
-	}
-
-	// Activity selector
-	{
-		UniqueReference<UIOBase, UIOActivitySelector> sel = refMan->makeUniqueRef<UIOActivitySelector>();
-		this->selector = sel;
-		this->UIs.push_back(std::move(sel));
 	}
 
 	// wasd movement in world

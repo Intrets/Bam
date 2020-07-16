@@ -92,6 +92,12 @@ public:
 	void set(WeakReference<B, T> r);
 	void unset();
 
+	template<typename N>
+	operator WeakReference<B, N>() const {
+		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
+		return WeakReference<B, N>(handle);
+	};
+
 	ManagedReference() = default;
 	ManagedReference(Handle h);
 	ManagedReference(WeakReference<B, T> r);

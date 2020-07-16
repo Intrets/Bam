@@ -2,17 +2,27 @@
 
 #include "UIOActivityLinker.h"
 
+#include "UIOCallBackParams.h"
 #include "GameState.h"
 #include "Linker.h"
-
-static CallBackBindResult link(UIOCallBackParams& state, UIOBase* self_) {
-	return BIND_RESULT::CONTINUE;
-}  
 
 UIOActivityLinker::UIOActivityLinker(Handle self) {
 	this->selfHandle = self;
 
-	addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, link);
+	addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
+					[&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		if (!params.uiState.selector.get()->target.isValid()) {
+			return BIND_RESULT::CONTINUE;
+		}
+		auto cursor = params.gameState.getPlayerCursorWorldSpace();
+		auto maybeTarget = params.gameState.staticWorld.getActivity(glm::floor(cursor));
+		if (maybeTarget) {
+			auto& target = maybeTarget.value();
+			std::cout << Linker::link(params.gameState, params.uiState.selector.get()->target, target) << "\n";
+		}
+		return BIND_RESULT::CONTINUE;
+	}
+	);
 }
 
 ScreenRectangle UIOActivityLinker::updateSize(ScreenRectangle newScreenRectangle) {

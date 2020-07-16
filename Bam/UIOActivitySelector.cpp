@@ -44,6 +44,22 @@ void UIOActivitySelector::rotateHover(MOVEABLE::ROT rot) {
 UIOActivitySelector::UIOActivitySelector(Handle self) {
 	selfHandle = self;
 
+	this->addGlobalBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		this->expandTarget();
+		return BIND_RESULT::CONTINUE;
+	});
+	
+	this->addGlobalBind({ CONTROLS::ACTION6, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		while (!this->history.empty() && !this->history.back().isValid()) {
+			this->history.pop_back();
+		}
+		if (!this->history.empty()) {
+			this->target.set(this->history.back().handle);
+			this->history.pop_back();
+		}
+		return BIND_RESULT::CONTINUE;
+	});
+
 	this->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		switch (this->type) {
 			case SELECTION_TYPE::NOTHING:
