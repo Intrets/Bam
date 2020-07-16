@@ -2,68 +2,114 @@
 
 #include "ActivitySelector.h"
 #include "GameState.h"
-#include "LogicSequencer.h"
 #include "RenderInfo.h"
 #include <sstream>
 #include "StringHelpers.h"
+#include "Platform.h"
 
 ActivitySelector::ActivitySelector() {
-	addBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-		auto self = static_cast<ActivitySelector*>(self_);
-		self->selectTarget(gameState);
-		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
-	});
-	// expand selection
-	addBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-		auto self = static_cast<ActivitySelector*>(self_);
-		self->expandTarget();
-		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
-	});
-	// shrink selection
-	addBind({ CONTROLS::ACTION6, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-		auto self = static_cast<ActivitySelector*>(self_);
-		while (!self->history.empty() && !self->history.back()->isValid()) {
-			self->history.pop_back();
+	std::cout << "Created\n";
+}
+
+int32_t ActivitySelector::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	if (this->target.isValid()) {
+		glm::vec4 color;
+		if (this->target.get()->canFillTracesLocal(gameState)) {
+			color = { 0.5, 1, 0.5, 0.5 };
 		}
-		if (!self->history.empty()) {
-			self->target.set(self->history.back()->handle);
-			self->history.pop_back();
+		else {
+			color = { 1, 0.5, 0.5, 0.5 };
 		}
-		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
-	});
+		this->target.get()->appendSelectionInfo(gameState, renderInfo, color);
+	}
+	return depth;
 }
 
 void ActivitySelector::selectTarget(GameState& gameState) {
-	auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
-	if (maybeTarget.has_value()) {
-		target.set(maybeTarget.value());
+	switch (this->type) {
+		case SELECTION_TYPE::NOTHING:
+			{
+				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+				if (maybeTarget.has_value()) {
+					this->type = SELECTION_TYPE::SELECTED;
+					this->target.set(maybeTarget.value());
+				}
+				else {
+					this->type = SELECTION_TYPE::HOVERING;
+					this->spawnHover(gameState, glm::ivec2(gameState.getPlayerCursorWorldSpace()), ACTIVITY::TYPE::PLATFORM);
+				}
+				break;
+			}
+		case SELECTION_TYPE::HOVERING:
+			{
+				if (!this->target.isValid()) {
+					this->target.unset();
+					this->type = SELECTION_TYPE::NOTHING;
+				}
+				else if (this->target.get()->fillTracesUp(gameState)) {
+					this->type = SELECTION_TYPE::SELECTED;
+				}
+				break;
+			}
+		case SELECTION_TYPE::SELECTED:
+			{
+				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+				if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.handle) {
+					if (this->target.get()->removeTracesUp(gameState)) {
+						this->target.set(maybeTarget.value());
+						type = SELECTION_TYPE::HOVERING;
+					}
+				}
+				else {
+					this->target.unset();
+					this->type = SELECTION_TYPE::NOTHING;
+				}
+				break;
+			}
+		default:
+			break;
+	}
+	if (this->type == SELECTION_TYPE::NOTHING) {
+		auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+		if (maybeTarget.has_value()) {
+			this->target.set(maybeTarget.value());
+		}
 	}
 }
 
 void ActivitySelector::expandTarget() {
-	if (target.isValid()) {
-		if (target.get()->parentRef.isNotNull()) {
-			history.push_back(std::make_unique<ManagedReference<Activity, Activity>>(target.handle));
-			WeakReference<Activity, Activity> newTarget = target.get()->parentRef;
-			target.set(newTarget);
+	if (this->target.isValid()) {
+		if (this->target.get()->parentRef.isNotNull()) {
+			this->history.push_back(ManagedReference<Activity, Activity>(this->target.handle));
+			this->target.set(this->target.get()->parentRef);
 		}
 	}
 }
 
-void ActivitySelector::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
-	if (target.isValid()) {
-		target.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,1,0.5 });
-		renderInfo.uiRenderInfo.addRectangle({ -1,1 }, { -0.5,-1 }, { 0,0,0,1 });
-		std::stringstream ss;
-		target.get()->getMembers(ss);
-		auto s = ss.str();
-		std::vector<std::string> texts;
-		split(0, s, texts, '\n');
+void ActivitySelector::shrinkTarget() {
+	while (!this->history.empty() && !this->history.back().isValid()) {
+		this->history.pop_back();
+	}
+	if (!this->history.empty()) {
+		this->target.set(this->history.back().handle);
+		this->history.pop_back();
+	}
+}
 
-		renderInfo.textRenderInfo.addTexts(
-			*renderInfo.textRenderInfo.textRendererRef,
-			renderInfo.cameraInfo,
-			{ -1,1 }, 0, 20, texts
-		);
+void ActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
+	switch (activityType) {
+		case ACTIVITY::PLATFORM:
+			this->target.set(Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false));
+			break;
+		default:
+			break;
+	}
+}
+
+void ActivitySelector::rotateHover(MOVEABLE::ROT rot) {
+	if (this->type == SELECTION_TYPE::HOVERING && this->target.isValid()) {
+		auto t = this->target.get();
+		auto center = t->getOrigin();
+		t->rotateForcedUp(center, rot);
 	}
 }

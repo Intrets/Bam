@@ -131,14 +131,8 @@ int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 		depth
 	);
 
-	depth += 2;
-
-	auto& maybeSelected = this->tools[this->selected];
-	if (maybeSelected) {
-		depth = maybeSelected.value().get()->addRenderInfo(gameState, renderInfo, depth);
-	}
-
 	depth += 1;
+
 	return depth;
 }
 

@@ -68,12 +68,12 @@ bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
 }
 
 void ActivityLuaTest::runScript(GameState& gameState) {
-	if (!target.isValid()) {
-		std::cout << "no target\n";
-		return;
-	}
-	gameStateRef = &gameState;
-	state["h"] = target.handle;
+	//if (!target.isValid()) {
+	//	std::cout << "no target\n";
+	//	return;
+	//}
+	//gameStateRef = &gameState;
+	//state["h"] = target.handle;
 }
 
 void ActivityLuaTest::save(Saver& saver) {
@@ -115,15 +115,15 @@ ActivityLuaTest::ActivityLuaTest() {
 		ignore.insert(getNameString(test.first));
 	}
 
-	addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-		auto self = static_cast<ActivityLuaTest*>(self_);
-		self->runScript(gameState);
-		return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
-	});
+	//addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
+	//	auto self = static_cast<ActivityLuaTest*>(self_);
+	//	self->runScript(gameState);
+	//	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
+	//});
 }
 
 void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
-	ActivitySelector::appendRenderInfoInternal(gameState, renderInfo);
+	//ActivitySelector::appendRenderInfoInternal(gameState, renderInfo);
 	renderInfo.uiRenderInfo.addRectangle({ 1,1 }, { 0.5,-1 }, { 0,0,0,1 });
 	std::vector<std::string> lines;
 	split(0, text, lines, '\n');
@@ -137,5 +137,6 @@ void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo&
 
 CONTINUATION ActivityLuaTest::runBinds(ControlState& controlState, GameState& gameState) {
 	text.append(controlState.getCharBuffer());
-	return LogicSequencer::runBinds(controlState, gameState);
+	//return LogicSequencer::runBinds(controlState, gameState);
+	return CONTINUATION::CONTINUE;
 }

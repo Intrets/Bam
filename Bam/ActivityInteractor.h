@@ -2,7 +2,7 @@
 
 #include "ActivitySelector.h"
 
-class ActivityInteractor : public ActivitySelector
+class ActivityInteractor 
 {
 public:
 	ActivityInteractor();

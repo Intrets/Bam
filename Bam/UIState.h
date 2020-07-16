@@ -7,8 +7,6 @@ struct State;
 class UIState
 {
 public:
-	UniqueReference<UIOBase, UIOActivitySelector> selector;
-
 	std::list<UniqueReference<UIOBase, UIOBase>> UIs;
 	
 	void run(State& state);

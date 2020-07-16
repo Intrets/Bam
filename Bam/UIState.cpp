@@ -63,26 +63,18 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-	// Activity selector
-	{
-		this->selector = refMan->makeUniqueRef<UIOActivitySelector>();
-		//this->UIs.push_back(std::move(sel));
-	}
-
 	// Hotbar
 	{
 		auto hotbar = refMan->makeUniqueRef<UIOHotbar>();
 
 		// selector
-		auto proxy = refMan->makeUniqueRef<UIOProxy>();
-		proxy.get()->main.set(this->selector);
-
-		hotbar.get()->tools[0] = std::move(proxy);
+		hotbar.get()->tools[0] = refMan->makeUniqueRef<UIOActivitySelector>();
 
 		// linker
 		auto linker = refMan->makeUniqueRef<UIOActivityLinker>();
 		hotbar.get()->tools[1] = std::move(linker);
 
+		//
 		auto sized = refMan->makeUniqueRef<UIOConstrainSize>(std::move(hotbar));
 		sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.09f };
 		sized.get()->maybeWidth = { UIOSizeType::RELATIVE_WIDTH, 0.9f };

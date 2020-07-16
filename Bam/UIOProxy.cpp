@@ -6,8 +6,9 @@ ScreenRectangle UIOProxy::updateSize(ScreenRectangle newScreenRectangle) {
     return ScreenRectangle();
 }
 
-UIOProxy::UIOProxy(Handle self) {
+UIOProxy::UIOProxy(Handle self, WeakReference<UIOBase,UIOBase> m) {
     this->selfHandle = self;
+    this->main.set(m);
 }
 
 CallBackBindResult UIOProxy::runGlobalBinds(State& state) {

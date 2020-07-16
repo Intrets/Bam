@@ -241,9 +241,6 @@
     <ClCompile Include="Linker.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityPlacer.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
     <ClCompile Include="ActivityLinker.cpp">
       <Filter>Game\Logic\Seqs</Filter>
     </ClCompile>
@@ -352,6 +349,7 @@
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -504,9 +502,6 @@
     <ClInclude Include="Linker.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityPlacer.h">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
     <ClInclude Include="ActivityInteractor.h">
       <Filter>Game\Logic\Seqs</Filter>
     </ClInclude>
@@ -615,6 +610,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOProxy.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

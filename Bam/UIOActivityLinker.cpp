@@ -11,14 +11,14 @@ UIOActivityLinker::UIOActivityLinker(Handle self) {
 
 	addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
 					[&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-		if (!params.uiState.selector.get()->target.isValid()) {
+		if (!params.player.selection.target.isValid()) {
 			return BIND_RESULT::CONTINUE;
 		}
 		auto cursor = params.gameState.getPlayerCursorWorldSpace();
 		auto maybeTarget = params.gameState.staticWorld.getActivity(glm::floor(cursor));
 		if (maybeTarget) {
 			auto& target = maybeTarget.value();
-			std::cout << Linker::link(params.gameState, params.uiState.selector.get()->target, target) << "\n";
+			std::cout << Linker::link(params.gameState, params.player.selection.target, target) << "\n";
 		}
 		return BIND_RESULT::CONTINUE;
 	}

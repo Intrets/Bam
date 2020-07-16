@@ -55,7 +55,7 @@ void mainLoop(GLFWwindow* window) {
 
 		if (rendering) {
 			state.uiState.updateSize(window);
-			renderer.prepareRender(window, renderInfo, state.gameState, state.uiState);
+			renderer.prepareRender(window, renderInfo, state);
 		}
 
 		bool logic = gameLogic.ready();

@@ -11,11 +11,10 @@
 #include "DebugRenderer.h"
 #include "SelectionHighlightRenderer.h"
 
+struct State;
 struct RenderInfo;
 class FPSLimiter;
-class GameState;
 class WindowManager;
-class UIState;
 
 class Renderer
 {
@@ -46,7 +45,7 @@ private:
 	//LightScreenBuffer lightScreenBufferFinal;
 
 public:
-	void prepareRender(GLFWwindow* window, RenderInfo& target, GameState& gameState, UIState& uiState);
+	void prepareRender(GLFWwindow* window, RenderInfo& target, State& state);
 
 	void render(GLFWwindow* window, RenderInfo& renderInfo);
 

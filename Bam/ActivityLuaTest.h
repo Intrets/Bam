@@ -11,7 +11,7 @@ class GameState;
 class Saver;
 class Loader;
 
-class ActivityLuaTest : public ActivitySelector 
+class ActivityLuaTest 
 {
 public:
 	std::string text;
@@ -30,7 +30,7 @@ public:
 	~ActivityLuaTest() = default;
 
 protected:
-	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) override;
+	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo);
 	CONTINUATION runBinds(ControlState& controlState, GameState& gameState);
 };
 

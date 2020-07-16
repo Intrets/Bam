@@ -4,19 +4,31 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 
-class ActivitySelector : public LogicSequencer
+enum class SELECTION_TYPE
+{
+	NOTHING,
+	HOVERING,
+	SELECTED,
+};
+
+class ActivitySelector 
 {
 public:
-	std::vector<std::unique_ptr<ManagedReference<Activity, Activity>>> history;
+	SELECTION_TYPE type = SELECTION_TYPE::NOTHING;
+
+	std::vector<ManagedReference<Activity, Activity>> history;
+
 	ManagedReference<Activity, Activity> target;
 
-	virtual void selectTarget(GameState& gameState);
+	void selectTarget(GameState& gameState);
 	void expandTarget();
+	void shrinkTarget();
+	void spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);
+	void rotateHover(MOVEABLE::ROT rot);
 
 	ActivitySelector();
 	~ActivitySelector() = default;
 
-protected:
-	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) override;
+	int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
 };
 

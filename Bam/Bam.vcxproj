@@ -272,7 +272,6 @@
     <ClCompile Include="ActivityLoaderHelper.cpp" />
     <ClCompile Include="ActivityLuaTest.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
-    <ClCompile Include="ActivityPlacer.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
     <ClCompile Include="ActivitySelector.cpp" />
     <ClCompile Include="Anchor.cpp" />
@@ -308,6 +307,7 @@
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
@@ -361,7 +361,6 @@
     <ClInclude Include="ActivityLoaderHelper.h" />
     <ClInclude Include="ActivityLuaTest.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
-    <ClInclude Include="ActivityPlacer.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySelector.h" />
     <ClInclude Include="Anchor.h" />
@@ -389,6 +388,7 @@
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOInvisible.h" />

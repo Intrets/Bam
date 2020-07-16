@@ -1,14 +1,16 @@
 #include "common.h"
 #include "Renderer.h"
-#include "GameState.h"
 #include "CameraInfo.h"
 //#include "WindowManager.h"
 #include "FPSLimiter.h"
 //#include "GameObject.h"
 #include "RenderInfo.h"
-#include "UIState.h"
+#include "State.h"
 
-void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameState& gameState, UIState& uiState) {
+void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
+	auto& gameState = state.gameState;
+	auto& uiState = state.uiState;
+
 	int32_t frameSizeX, frameSizeY;
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
@@ -31,6 +33,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, GameSta
 	//if (res.first == 1) {
 	//	res.second.get()->appendSelectionInfo(gameState, target);
 	//}
+
+	state.player.selection.addRenderInfo(gameState, renderInfo, 0);
 
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
