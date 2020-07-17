@@ -20,7 +20,7 @@ public:
 
 	ManagedReference<Activity, Activity> target;
 
-	void selectTarget(GameState& gameState);
+	void selectTarget(GameState& gameState, glm::vec2 pos);
 	void expandTarget();
 	void shrinkTarget();
 	void spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);

@@ -25,18 +25,18 @@ int32_t ActivitySelector::addRenderInfo(GameState& gameState, RenderInfo& render
 	return depth;
 }
 
-void ActivitySelector::selectTarget(GameState& gameState) {
+void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 	switch (this->type) {
 		case SELECTION_TYPE::NOTHING:
 			{
-				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
 				if (maybeTarget.has_value()) {
 					this->type = SELECTION_TYPE::SELECTED;
 					this->target.set(maybeTarget.value());
 				}
 				else {
 					this->type = SELECTION_TYPE::HOVERING;
-					this->spawnHover(gameState, glm::ivec2(gameState.getPlayerCursorWorldSpace()), ACTIVITY::TYPE::PLATFORM);
+					this->spawnHover(gameState, glm::ivec2(pos), ACTIVITY::TYPE::PLATFORM);
 				}
 				break;
 			}
@@ -53,7 +53,7 @@ void ActivitySelector::selectTarget(GameState& gameState) {
 			}
 		case SELECTION_TYPE::SELECTED:
 			{
-				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
 				if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.handle) {
 					if (this->target.get()->removeTracesUp(gameState)) {
 						this->target.set(maybeTarget.value());
@@ -70,7 +70,7 @@ void ActivitySelector::selectTarget(GameState& gameState) {
 			break;
 	}
 	if (this->type == SELECTION_TYPE::NOTHING) {
-		auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(gameState.getPlayerCursorWorldSpace()));
+		auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
 		if (maybeTarget.has_value()) {
 			this->target.set(maybeTarget.value());
 		}

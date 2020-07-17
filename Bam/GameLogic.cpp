@@ -7,7 +7,7 @@ bool GameLogic::ready() {
 	return glfwGetTime() > nextStep;
 }
 
-void GameLogic::runStep(GameState& gameState) {
+int GameLogic::runStep(GameState& gameState) {
 	gameState.tick++;
 	nextStep += stepTime;
 	step++;
@@ -17,4 +17,6 @@ void GameLogic::runStep(GameState& gameState) {
 
 	gameState.activityPaceHandler.finish(gameState);
 	gameState.activityPaceHandler.cycle();
+
+	return 0;
 }

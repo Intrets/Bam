@@ -13,6 +13,6 @@ private:
 public:
 	bool ready();
 
-	void runStep(GameState& gameState);
+	int runStep(GameState& gameState);
 };
 

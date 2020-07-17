@@ -4,38 +4,6 @@
 #include "RenderInfo.h"
 #include "Option.h"
 
-glm::vec2 GameState::getPlayerCursorWorldSpace() {
-	return playerCursorWorldSpace;
-}
-
-glm::vec2 GameState::getPlayerCursorScreenSpace() {
-	return playerCursorScreenSpace;
-}
-
-void GameState::updatePlayerCursorScreenSpace(GLFWwindow* window) {
-	double x;
-	double y;
-	glfwGetCursorPos(window, &x, &y);
-
-	int32_t frameSizeX, frameSizeY;
-	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
-	x = x / frameSizeX;
-	y = y / frameSizeY;
-	y = 1 - y;
-	x = 2 * x - 1;
-	y = 2 * y - 1;
-
-	float ratio = frameSizeX / static_cast<float>(frameSizeY);
-	glm::vec2 viewport(ratio, 1.0f);
-	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
-	viewport *= viewportScale.getVal();
-
-	auto newScreenSpace = glm::vec2(x, y);
-	playerCursorScreenSpace = newScreenSpace;
-
-	playerCursorWorldSpace = playerPos + playerCursorScreenSpace * viewport;
-}
-
 bool GameState::load(Loader& loader) {
 	loader.retrieve(tick);
 	staticWorld.load(loader);

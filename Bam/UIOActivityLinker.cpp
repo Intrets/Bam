@@ -14,7 +14,7 @@ UIOActivityLinker::UIOActivityLinker(Handle self) {
 		if (!params.player.selection.target.isValid()) {
 			return BIND_RESULT::CONTINUE;
 		}
-		auto cursor = params.gameState.getPlayerCursorWorldSpace();
+		auto cursor = params.uiState.getCursorPositionWorld();
 		auto maybeTarget = params.gameState.staticWorld.getActivity(glm::floor(cursor));
 		if (maybeTarget) {
 			auto& target = maybeTarget.value();

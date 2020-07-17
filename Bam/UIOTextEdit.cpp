@@ -19,8 +19,8 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 	lines.push_back("71234567890");
 
 	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
-				  [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		this->focus = this->contains(state.gameState.getPlayerCursorScreenSpace());
+				  [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		this->focus = this->contains(params.uiState.getCursorPositionScreen());
 		if (this->focus) {
 			return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 		}

@@ -101,6 +101,9 @@
     <Filter Include="Game\Control\Game Control">
       <UniqueIdentifier>{eaa05948-0b35-4027-95c1-b89e7902dafe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="States">
+      <UniqueIdentifier>{5a7c42d5-94e7-46ca-8b9a-a764b41e8cbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLhelpers.cpp">
@@ -159,9 +162,6 @@
     </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>Game\StaticWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>Misc</Filter>
@@ -344,12 +344,27 @@
     <ClCompile Include="UIOSizeType.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIState.cpp" />
-    <ClCompile Include="UIOInvisible.cpp" />
-    <ClCompile Include="State.cpp" />
-    <ClCompile Include="UIOCallBackParams.cpp" />
-    <ClCompile Include="UIOProxy.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="UIOInvisible.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOProxy.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOCallBackParams.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="UIState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -408,9 +423,6 @@
     </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>Game\StaticWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
       <Filter>Misc</Filter>
@@ -605,12 +617,27 @@
     <ClInclude Include="UIOSizeType.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIState.h" />
-    <ClInclude Include="UIOInvisible.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="UIOCallBackParams.h" />
-    <ClInclude Include="UIOProxy.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="UIOProxy.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOCallBackParams.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOInvisible.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="UIState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

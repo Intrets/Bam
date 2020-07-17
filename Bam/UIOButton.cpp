@@ -17,7 +17,7 @@ UIOButton::UIOButton(Handle self) {
 	selfHandle = self;
 
 	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->contains(state.gameState.getPlayerCursorScreenSpace())) {
+		if (this->contains(state.uiState.getCursorPositionScreen())) {
 			this->down = true;
 			return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 		}

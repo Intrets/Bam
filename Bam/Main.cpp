@@ -58,12 +58,11 @@ void mainLoop(GLFWwindow* window) {
 			renderer.prepareRender(window, renderInfo, state);
 		}
 
-		bool logic = gameLogic.ready();
-		if (logic) {
+		if (gameLogic.ready()) {
 			state.controlState.cycleStates();
 			glfwPollEvents();
 
-			state.gameState.updatePlayerCursorScreenSpace(window);
+			state.uiState.updateCursor(window, state.player.getCameraPosition());
 
 			state.uiState.run(state);
 
@@ -84,7 +83,7 @@ void mainLoop(GLFWwindow* window) {
 		{
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR) {
-				std::cout << std::hex << err << std::dec << std::endl;
+				std::cout << "OpenGL ERROR: " << std::hex << err << std::dec << "\n";
 			}
 		}
 

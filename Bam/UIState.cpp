@@ -13,6 +13,15 @@
 #include "State.h"
 #include "UIOProxy.h"
 #include "UIOActivityLinker.h"
+#include "Option.h"
+
+glm::vec2 UIState::getCursorPositionWorld() {
+	return cursorWorld;
+}
+
+glm::vec2 UIState::getCursorPositionScreen() {
+	return cursorScreen;
+}
 
 void UIState::run(State& state) {
 	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(state);
@@ -48,6 +57,28 @@ void UIState::updateSize(GLFWwindow* window) {
 	for (auto& UI : UIs) {
 		UI.get()->updateSize(r);
 	}
+}
+
+void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
+	double x;
+	double y;
+	glfwGetCursorPos(window, &x, &y);
+
+	int32_t frameSizeX, frameSizeY;
+	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
+	x = x / frameSizeX;
+	y = y / frameSizeY;
+	y = 1 - y;
+	x = 2 * x - 1;
+	y = 2 * y - 1;
+
+	float ratio = frameSizeX / static_cast<float>(frameSizeY);
+	glm::vec2 viewport(ratio, 1.0f);
+	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
+	viewport *= viewportScale.getVal();
+
+	this->cursorScreen = glm::vec2(x, y);
+	this->cursorWorld = cam + this->cursorScreen * viewport;
 }
 
 void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
@@ -122,22 +153,22 @@ UIState::UIState() {
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
 
 		movement.get()->addGlobalBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			state.gameState.playerPos.x -= 1.0f;
+			state.player.pos.x -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			state.gameState.playerPos.x += 1.0f;
+			state.player.pos.x += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			state.gameState.playerPos.y -= 1.0f;
+			state.player.pos.y -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			state.gameState.playerPos.y += 1.0f;
+			state.player.pos.y += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 

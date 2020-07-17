@@ -18,7 +18,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
 	viewport *= viewportScale.getVal();
 	renderInfo.frameSize = { frameSizeX, frameSizeY };
-	renderInfo.cameraInfo = { frameSizeX, frameSizeY, gameState.playerPos, glm::vec3(viewport, 200.0f) };
+	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.player.getCameraPosition(), glm::vec3(viewport, 200.0f) };
 	renderInfo.textRenderInfo.textRendererRef = &textRenderer;
 
 	//for (auto& object : gameState.objects) {

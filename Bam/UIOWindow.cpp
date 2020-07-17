@@ -29,13 +29,13 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	addElement(std::move(topConstrain));
 
 	auto setMoveOrigin = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		this->mousePressedPosOffset = screenRectangle.getTopLeft() - state.gameState.getPlayerCursorScreenSpace();
+		this->mousePressedPosOffset = screenRectangle.getTopLeft() - state.uiState.getCursorPositionScreen();
 		return BIND_RESULT::CONTINUE;
 	};
 
 	auto move = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (topBar->down) {
-			this->moveTopLeftTo(state.gameState.getPlayerCursorScreenSpace() + this->mousePressedPosOffset);
+			this->moveTopLeftTo(state.uiState.getCursorPositionScreen() + this->mousePressedPosOffset);
 		}
 		return BIND_RESULT::CONTINUE;
 	};
@@ -73,7 +73,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	auto scaleVertical = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (bottomBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
-			bottomRight.y = state.gameState.getPlayerCursorScreenSpace().y;
+			bottomRight.y = state.uiState.getCursorPositionScreen().y;
 			if (this->screenRectangle.top.y - bottomRight.y < 0.2f) {
 				bottomRight.y = this->screenRectangle.top.y - 0.2f;
 			}
@@ -86,7 +86,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	auto scaleHorizontal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (rightBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
-			bottomRight.x = state.gameState.getPlayerCursorScreenSpace().x;
+			bottomRight.x = state.uiState.getCursorPositionScreen().x;
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
 			}
@@ -98,7 +98,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	auto scaleDiagonal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (bottomRightBar->down) {
-			auto bottomRight = state.gameState.getPlayerCursorScreenSpace();
+			auto bottomRight = state.uiState.getCursorPositionScreen();
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
 			}
