@@ -36,7 +36,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 
 	state.player.selection.addRenderInfo(gameState, renderInfo, 0);
 
-	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::getService();
+	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::get();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
 	gameState.appendStaticRenderInfo(renderInfo);

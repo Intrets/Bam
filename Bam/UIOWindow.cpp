@@ -7,7 +7,7 @@
 #include "State.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
-	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
+	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	selfHandle = self;
 
 	main = main_.get();

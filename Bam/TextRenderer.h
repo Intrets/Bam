@@ -7,6 +7,7 @@ constexpr auto MAX_CHARACTER_DRAW = 1 << 16;
 struct TextRenderInfo;
 struct CameraInfo;
 
+// TODO: different fonts different renderers.
 class TextRenderer
 {
 public:

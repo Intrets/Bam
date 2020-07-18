@@ -25,7 +25,7 @@ void DebugRenderer::render(GLuint target, RenderInfo& renderInfo) {
 }
 
 DebugRenderer::DebugRenderer() :
-	program(Locator<PathManager>::getService()->LoadShadersP("DebugLine.vert", "DebugLine.frag")),
+	program(Locator<PathManager>::get()->LoadShadersP("DebugLine.vert", "DebugLine.frag")),
 	VP("VP", program) {
 
 	VAO.gen(1);

@@ -19,7 +19,7 @@ int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 }
 
 void BlockIDTextures::loadBlockTexture(std::string name) {
-	GLuint newTex = Locator<PathManager>::getService()->LoadTextureP(name);
+	GLuint newTex = Locator<PathManager>::get()->LoadTextureP(name);
 	// Failed to load texture
 	if (newTex == 0) {
 		printf("Failed to load texture: %s\n\n", name.c_str());
@@ -46,7 +46,7 @@ GLuint BlockIDTextures::getTextureArrayID() {
 }
 
 BlockIDTextures::BlockIDTextures() :
-	program(Locator<PathManager>::getService()->LoadShadersP("PassthroughArray.vert", "PassthroughArray.frag")),
+	program(Locator<PathManager>::get()->LoadShadersP("PassthroughArray.vert", "PassthroughArray.frag")),
 	layer("layer", program),
 	texture("texture", program, 0) {
 	// The quad's FBO. Used only for visualizing the shadowmap.

@@ -47,9 +47,6 @@
     <Filter Include="Renderer\Shaders">
       <UniqueIdentifier>{c9a5c9eb-0128-466f-bed4-b2ffc68f9a97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Control">
-      <UniqueIdentifier>{3f74bb0e-1c23-4a9b-8e47-7d4ce69a65fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\StaticWorld\Activities">
       <UniqueIdentifier>{7595f977-ac93-4f8c-b1d9-973d439139b0}</UniqueIdentifier>
     </Filter>
@@ -97,9 +94,6 @@
     </Filter>
     <Filter Include="Game\Logic\User IO Controllers">
       <UniqueIdentifier>{d9c04c5c-c591-4522-af49-e80a906e11d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Control\Game Control">
-      <UniqueIdentifier>{eaa05948-0b35-4027-95c1-b89e7902dafe}</UniqueIdentifier>
     </Filter>
     <Filter Include="States">
       <UniqueIdentifier>{5a7c42d5-94e7-46ca-8b9a-a764b41e8cbf}</UniqueIdentifier>
@@ -174,9 +168,6 @@
     </ClCompile>
     <ClCompile Include="DebugRenderInfo.cpp">
       <Filter>Renderer\RenderInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlState.cpp">
-      <Filter>Game\Control</Filter>
     </ClCompile>
     <ClCompile Include="GLEnableWrapper.cpp">
       <Filter>GLWrappers</Filter>
@@ -365,6 +356,10 @@
     <ClCompile Include="GameState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="ControlState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -441,9 +436,6 @@
     </ClInclude>
     <ClInclude Include="DebugRenderInfo.h">
       <Filter>Renderer\RenderInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="ControlState.h">
-      <Filter>Game\Control</Filter>
     </ClInclude>
     <ClInclude Include="StringHelpers.h">
       <Filter>Misc</Filter>
@@ -638,6 +630,10 @@
     <ClInclude Include="GameState.h">
       <Filter>States</Filter>
     </ClInclude>
+    <ClInclude Include="ControlState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

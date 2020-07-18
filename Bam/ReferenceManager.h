@@ -159,25 +159,25 @@ public:
 
 template<class B, class T>
 inline T* WeakReference<B, T>::get() {
-	auto& t = Locator<ReferenceManager<B>>::getService()->data;
+	auto& t = Locator<ReferenceManager<B>>::get()->data;
 	return static_cast<T*>(t[handle].get());
 }
 
 template<class B, class T>
 inline void WeakReference<B, T>::deleteObject() {
-	Locator<ReferenceManager<B>>::getService()->deleteReference(handle);
+	Locator<ReferenceManager<B>>::get()->deleteReference(handle);
 	handle = 0;
 }
 
 template<class B, class T>
 inline T* ManagedReference<B, T>::get() {
-	return static_cast<T*>(Locator<ReferenceManager<B>>::getService()->data[handle].get());
+	return static_cast<T*>(Locator<ReferenceManager<B>>::get()->data[handle].get());
 }
 
 template<class B, class T>
 inline void ManagedReference<B, T>::unset() {
 	if (isValid()) {
-		Locator<ReferenceManager<B>>::getService()->unsubscribe(*this);
+		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
 	}
 	invalidate();
 	handle = 0;
@@ -196,11 +196,11 @@ inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T> r) {
 template<class B, class T>
 inline void ManagedReference<B, T>::set(Handle h) {
 	if (isValid()) {
-		Locator<ReferenceManager<B>>::getService()->unsubscribe(*this);
+		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
 	}
 	handle = h;
 	validate();
-	Locator<ReferenceManager<B>>::getService()->subscribe(*this);
+	Locator<ReferenceManager<B>>::get()->subscribe(*this);
 }
 
 template<class B, class T>
@@ -228,7 +228,7 @@ inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(const ManagedRe
 template<class B, class T>
 inline ManagedReference<B, T>::~ManagedReference() {
 	if (isValid()) {
-		Locator<ReferenceManager<B>>::getService()->unsubscribe(*this);
+		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
 	}
 }
 

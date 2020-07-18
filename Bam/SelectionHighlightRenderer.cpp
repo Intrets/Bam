@@ -6,7 +6,7 @@
 
 
 SelectionHighlightRenderer::SelectionHighlightRenderer() :
-	program(Locator<PathManager>::getService()->LoadShadersP("HighlightShader.vert", "HighlightShader.frag")),
+	program(Locator<PathManager>::get()->LoadShadersP("HighlightShader.vert", "HighlightShader.frag")),
 	VP("VP", program) {
 	VAO.gen(4);
 

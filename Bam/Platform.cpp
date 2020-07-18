@@ -65,7 +65,7 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	Activity(self, pos),
 	size(_size),
 	blocks(size[0], std::vector<Block>(size[1], Block(0))) {
-	int32_t textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
+	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < size[0]; i++) {
 		for (int32_t j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
@@ -211,7 +211,7 @@ bool Platform::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(size);
 
 	blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
-	int32_t textureID = Locator<BlockIDTextures>::getService()->getBlockTextureID("mossy_cobblestone.dds");
+	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < size[0]; i++) {
 		for (int32_t j = 0; j < size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
@@ -228,7 +228,7 @@ void Platform::fillModifyingMap(ModifyerBase& modifyer) {
 }
 
 void Platform::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Platform>>::getService()->modifyables;
+	auto& modifyer = Locator<Modifyer<Platform>>::get()->modifyables;
 	if (modifyer.count(name) != 0) {
 		modifyer[name]->modify(this, gameState, value);
 	}
@@ -236,7 +236,7 @@ void Platform::modifyMember(GameState& gameState, std::string& name, std::vector
 
 std::stringstream& Platform::getMembers(std::stringstream& out) {
 	out << "^ Platform members: ^\n";
-	for (auto& member : Locator<Modifyer<Platform>>::getService()->modifyables) {
+	for (auto& member : Locator<Modifyer<Platform>>::get()->modifyables) {
 		out << member.first << ": ";
 		member.second->toStream(this, out) << "\n";
 	}

@@ -33,12 +33,12 @@ public:
 
 template<OPTIONS2 A, class T>
 inline T Option<A, T>::getVal() {
-	return Locator<OptionManager>::getService()->getVal<T>(A);
+	return Locator<OptionManager>::get()->getVal<T>(A);
 }
 
 template<OPTIONS2 A, class T>
 inline void Option<A, T>::setVal(T val) {
-	Locator<OptionManager>::getService()->setVal(A, val);
+	Locator<OptionManager>::get()->setVal(A, val);
 }
 
 class _OptionValueBase

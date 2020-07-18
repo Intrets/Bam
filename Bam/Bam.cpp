@@ -11,6 +11,8 @@
 #include "InitManagers.h"
 #include "InitModifyables.h"
 
+#include "Log.h"
+
 GLFWwindow* window;
 
 static int initGLFW() {

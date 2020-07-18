@@ -49,7 +49,7 @@ public:
 		catch (std::exception) {
 			return false;
 		}
-		auto ref = Locator<ReferenceManager<Activity>>::getService()->getRef(h);
+		auto ref = Locator<ReferenceManager<Activity>>::get()->getRef(h);
 		if (ref) {
 			(base->*setter)(h);
 		}
@@ -204,7 +204,7 @@ public:
 			T* base = static_cast<T*>(base_);
 			auto t = static_cast<Member*>(&(base->*ptr));
 
-			auto ref = Locator<ReferenceManager<Activity>>::getService()->getRef(h);
+			auto ref = Locator<ReferenceManager<Activity>>::get()->getRef(h);
 
 			if (ref) {
 				*t = ref.value();

@@ -4,7 +4,8 @@ template<class T>
 class Locator
 {
 public:
-	static T* getService() { return object; };
+	static T* get() { return object; };
+	static T& ref() { return *object; };
 
 	static void provide(T* obj) {
 		if (object != nullptr) {

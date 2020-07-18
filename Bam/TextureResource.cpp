@@ -4,9 +4,9 @@
 #include "ResourceManagerTexture.h"
 
 TextureStore* TextureResource::get() {
-	return Locator<ResourceManagerTexture>::getService()->get(index);
+	return Locator<ResourceManagerTexture>::get()->get(index);
 }
 
 TextureResource::TextureResource(std::string name) {
-	index = Locator<ResourceManagerTexture>::getService()->getIndex(name);
+	index = Locator<ResourceManagerTexture>::get()->getIndex(name);
 }

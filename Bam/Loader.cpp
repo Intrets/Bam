@@ -98,7 +98,7 @@ bool Loader::loadGame(GameState& gameState) {
 }
 
 Loader::Loader(std::string file) {
-	Locator<PathManager>::getService()->openSave(in, file);
+	Locator<PathManager>::get()->openSave(in, file);
 }
 
 Loader::Loader() {

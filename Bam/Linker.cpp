@@ -16,7 +16,7 @@ std::string Linker::linkAnchors(GameState& gameState, WeakReference<Activity, An
 		r1.get()->children.push_back(r);
 		r.get()->parentRef = r1;
 	}
-	Locator<ReferenceManager<Activity>>::getService()->deleteReference(&toDelete);
+	Locator<ReferenceManager<Activity>>::get()->deleteReference(&toDelete);
 	return "Successfully linked";
 }
 
@@ -35,7 +35,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Gr
 		target = a2->parentRef;
 	}
 	else {
-		target = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		target = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
 		target.get()->addChild(a2->selfHandle);
 		a2->parentRef = target;
 	}
@@ -45,7 +45,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Gr
 		head = a11->child;
 	}
 	else {
-		head = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		head = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
 		head.get()->parentRef = r1;
 		a11->addChild(head);
 	}
@@ -66,7 +66,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 		g1 = r1;
 	}
 	else if (a1->parentRef.isNull()) {
-		g1 = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		g1 = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
 		g1.get()->addChild(a1->selfHandle);
 		a1->parentRef = g1;
 	}
@@ -77,7 +77,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 		g2 = r2;
 	}
 	else if (a2->parentRef.isNull()) {
-		g2 = Locator<ReferenceManager<Activity>>::getService()->makeRef<Anchor>();
+		g2 = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
 		g2.get()->addChild(a2->selfHandle);
 		a2->parentRef = g2;
 	}

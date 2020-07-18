@@ -14,7 +14,7 @@
 #include "ModelStore.h"
 
 StaticWorldRenderer::StaticWorldRenderer() :
-	program(Locator<PathManager>::getService()->LoadShadersP("StaticWorldShader.vert", "StaticWorldShader.frag")),
+	program(Locator<PathManager>::get()->LoadShadersP("StaticWorldShader.vert", "StaticWorldShader.frag")),
 	texture("myTextureSampler", program, 0),
 	VP("VP", program)
 {
@@ -138,7 +138,7 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y); 
 
-	texture.set(Locator<BlockIDTextures>::getService()->getTextureArrayID());
+	texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
 
 	if (info.offsets.size() == 0) {
 		return;
@@ -178,7 +178,7 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
-	texture.set(Locator<BlockIDTextures>::getService()->getTextureArrayID());
+	texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
 
 	if (infos.size() == 0) {
 		return;

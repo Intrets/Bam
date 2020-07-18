@@ -29,7 +29,7 @@ UIOHotbar::UIOHotbar(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
+	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
 

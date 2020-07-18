@@ -48,11 +48,11 @@ TextRenderer::TextRenderer(std::string name, glm::ivec2 fontDim, glm::ivec2 grid
 	fontDimension(fontDim),
 	gridDimension(gridDim),
 	fontWidth(fontDim.y / static_cast<float>(fontDim.x)),
-	program(Locator<PathManager>::getService()->LoadShadersP("Text.vert", "Text.frag")),
+	program(Locator<PathManager>::get()->LoadShadersP("Text.vert", "Text.frag")),
 	fontDimensionUniform("fontDim", program),
 	gridDimensionUniform("texDim", program),
 	texture("texture", program, 0) {
-	fontTexture.ID = Locator<PathManager>::getService()->LoadTextureP(name);
+	fontTexture.ID = Locator<PathManager>::get()->LoadTextureP(name);
 
 	glBindTexture(GL_TEXTURE_2D, fontTexture.ID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

@@ -12,7 +12,7 @@
 #include "ActivityIgnoringGroup.h"
 
 SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name, bool leaveTrace) : Activity(self, pos) {
-	auto t = Locator<BlockIDTextures>::getService();
+	auto t = Locator<BlockIDTextures>::get();
 	tex = t->getBlockTextureID(name);
 	texName = name;
 	if (leaveTrace) {
@@ -80,7 +80,7 @@ bool SingleBlockActivity::load(Loader& loader) {
 	loader.retrieveString(texName);
 
 	// TODO: fix up make consistent with constructor
-	auto t = Locator<BlockIDTextures>::getService();
+	auto t = Locator<BlockIDTextures>::get();
 	tex = t->getBlockTextureID(texName);
 	return true;
 }

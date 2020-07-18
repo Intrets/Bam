@@ -10,6 +10,7 @@
 #include "BlockIDTextures.h"
 #include "Activity.h"
 #include "UIOBase.h"
+#include "Log.h"
 
 void initManagers(GLFWwindow* window) {
 	//Locator<CommandHandler>::provide(new CommandHandler());
@@ -26,4 +27,6 @@ void initManagers(GLFWwindow* window) {
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+
+	Locator<Log>::provide(new Log());
 }

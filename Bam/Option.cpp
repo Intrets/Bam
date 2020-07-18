@@ -16,7 +16,7 @@ void OptionManager::defaultValues() {
 void OptionManager::readFromFile() {
 	std::ifstream file;
 
-	if (Locator<PathManager>::getService()->openFile(file, RESOURCE_FILE::OPTIONS)) {
+	if (Locator<PathManager>::get()->openFile(file, RESOURCE_FILE::OPTIONS)) {
 		std::string line;
 		while (std::getline(file, line)) {
 			std::vector<std::string> parts;
@@ -43,7 +43,7 @@ void OptionManager::readFromFile() {
 
 void OptionManager::writeToFile() {
 	std::ofstream file;
-	if (Locator<PathManager>::getService()->openFile(file, RESOURCE_FILE::OPTIONS)) {
+	if (Locator<PathManager>::get()->openFile(file, RESOURCE_FILE::OPTIONS)) {
 		for (auto& obj : data) {
 			file << obj->toString() << "\n";
 		}

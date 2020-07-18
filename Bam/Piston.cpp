@@ -20,7 +20,7 @@ Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, MOVEABLE::DIR 
 		fillTracesLocalForced(gameState);
 	}
 
-	auto t = Locator<BlockIDTextures>::getService();
+	auto t = Locator<BlockIDTextures>::get();
 	headTex = t->getBlockTextureID("grabber.dds");
 	ropeTex = t->getBlockTextureID("rope.dds");
 	cogTex = t->getBlockTextureID("cog.dds");
@@ -39,7 +39,7 @@ void Piston::fillModifyingMap(ModifyerBase& modifier) {
 }
 
 void Piston::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Piston>>::getService()->modifyables;
+	auto& modifyer = Locator<Modifyer<Piston>>::get()->modifyables;
 	if (modifyer.count(name) != 0) {
 		modifyer[name]->modify(this, gameState, value);
 	}
@@ -47,7 +47,7 @@ void Piston::modifyMember(GameState& gameState, std::string& name, std::vector<s
 
 std::stringstream& Piston::getMembers(std::stringstream& out) {
 	out << "^ Piston members: ^\n";
-	for (auto& member : Locator<Modifyer<Piston>>::getService()->modifyables) {
+	for (auto& member : Locator<Modifyer<Piston>>::get()->modifyables) {
 		out << member.first << ": ";
 		member.second->toStream(this, out) << "\n";
 	}
@@ -226,7 +226,7 @@ bool Piston::load(Loader& loader) {
 	loader.retrieve<PISTON::DIR>(state);
 	loader.retrieve(length);
 
-	auto s = Locator<BlockIDTextures>::getService();
+	auto s = Locator<BlockIDTextures>::get();
 	headTex = s->getBlockTextureID("grabber.dds");
 	ropeTex = s->getBlockTextureID("rope.dds");
 	cogTex = s->getBlockTextureID("cog.dds");

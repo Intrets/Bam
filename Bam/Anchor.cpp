@@ -93,7 +93,7 @@ void Anchor::fillModifyingMap(ModifyerBase& modifyer) {
 }
 
 void Anchor::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Anchor>>::getService()->modifyables;
+	auto& modifyer = Locator<Modifyer<Anchor>>::get()->modifyables;
 	if (modifyer.count(name) != 0) {
 		modifyer[name]->modify(this, gameState, value);
 	}
@@ -101,7 +101,7 @@ void Anchor::modifyMember(GameState& gameState, std::string& name, std::vector<s
 
 std::stringstream& Anchor::getMembers(std::stringstream& out) {
 	out << "^ Anchor members: ^\n";
-	for (auto& member : Locator<Modifyer<Anchor>>::getService()->modifyables) {
+	for (auto& member : Locator<Modifyer<Anchor>>::get()->modifyables) {
 		out << member.first << ": ";
 		member.second->toStream(this, out) << "\n";
 	}

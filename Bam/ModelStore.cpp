@@ -3,7 +3,7 @@
 
 
 ModelStore::ModelStore(std::string name) {
-	Locator<PathManager>::getService()->LoadModelP(name, vertexbufferHandle, uvbufferHandle, normalbufferHandle, indexbufferHandle, indexbufferSize);
+	Locator<PathManager>::get()->LoadModelP(name, vertexbufferHandle, uvbufferHandle, normalbufferHandle, indexbufferHandle, indexbufferSize);
 }
 
 ModelStore::~ModelStore() {

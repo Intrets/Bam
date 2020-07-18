@@ -13,7 +13,7 @@ bool Saver::storeString(std::string s) {
 }
 
 bool Saver::saveGame(GameState& gameState) {
-	auto manager = Locator<ReferenceManager<Activity>>::getService();
+	auto manager = Locator<ReferenceManager<Activity>>::get();
 	save(*this, *manager);
 
 	gameState.save(*this);
@@ -25,7 +25,7 @@ void Saver::close() {
 }
 
 Saver::Saver(std::string file) {
-	Locator<PathManager>::getService()->openSave(out, file);
+	Locator<PathManager>::get()->openSave(out, file);
 }
 
 Saver::Saver() {

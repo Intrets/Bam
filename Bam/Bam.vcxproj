@@ -294,6 +294,7 @@
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="LogicSequencer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
@@ -381,6 +382,7 @@
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="InitModifyables.h" />
     <ClInclude Include="Linker.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="LogicSequencer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />

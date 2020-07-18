@@ -27,7 +27,7 @@ RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool lea
 		fillTracesLocalForced(gameState);
 	}
 
-	auto t = Locator<BlockIDTextures>::getService();
+	auto t = Locator<BlockIDTextures>::get();
 	anchorTex = t->getBlockTextureID("crane_anchor.dds");
 	shaftTex = t->getBlockTextureID("crane_shaft.dds");
 	supportTex = t->getBlockTextureID("crane_support.dds");
@@ -172,7 +172,7 @@ bool RailCrane::load(Loader& loader) {
 	loader.retrieve(length);
 	loader.retrieve(anchorIndexPos);
 
-	auto t = Locator<BlockIDTextures>::getService();
+	auto t = Locator<BlockIDTextures>::get();
 	anchorTex = t->getBlockTextureID("crane_anchor.dds");
 	shaftTex = t->getBlockTextureID("crane_shaft.dds");
 	supportTex = t->getBlockTextureID("crane_support.dds");

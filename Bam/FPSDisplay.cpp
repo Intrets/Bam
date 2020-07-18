@@ -9,7 +9,7 @@ FPSDisplay::FPSDisplay() :
 	nbFrames(0),
 	fps(0),
 	lastTime(glfwGetTime()) {
-	//auto windowRefManager = Locator<ReferenceManager<BaseWindow>>::getService();
+	//auto windowRefManager = Locator<ReferenceManager<BaseWindow>>::get();
 	//auto t = windowRefManager->makeRef<TextWindow>(glm::vec2(0.9, 0.9), glm::vec2(1, 1));
 	//fpsDisplayWindow.set(t);
 

@@ -99,7 +99,7 @@ void ActivitySelector::shrinkTarget() {
 void ActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
 	switch (activityType) {
 		case ACTIVITY::PLATFORM:
-			this->target.set(Locator<ReferenceManager<Activity>>::getService()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false));
+			this->target.set(Locator<ReferenceManager<Activity>>::get()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false));
 			break;
 		default:
 			break;

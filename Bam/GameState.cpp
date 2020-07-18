@@ -22,7 +22,7 @@ bool GameState::save(Saver& saver) {
 
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	staticWorld.appendStaticRenderInfo(renderInfo);
-	auto activityManager = Locator<ReferenceManager<Activity>>::getService();
+	auto activityManager = Locator<ReferenceManager<Activity>>::get();
 	for (auto& p : activityManager->data) {
 		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
 	}
@@ -30,7 +30,6 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 
 GameState::GameState() {
 }
-
 
 GameState::~GameState() {
 }

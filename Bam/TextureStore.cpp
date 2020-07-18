@@ -2,7 +2,7 @@
 #include "TextureStore.h"
 
 TextureStore::TextureStore(std::string name) {
-	textureHandle = Locator<PathManager>::getService()->LoadTextureP(name);
+	textureHandle = Locator<PathManager>::get()->LoadTextureP(name);
 }
 
 TextureStore::~TextureStore() {

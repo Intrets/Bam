@@ -89,7 +89,7 @@ void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 }
 
 UIState::UIState() {
-	auto refMan = Locator<ReferenceManager<UIOBase>>::getService();
+	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });

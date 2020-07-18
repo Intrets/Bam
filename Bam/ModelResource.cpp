@@ -3,9 +3,9 @@
 #include "ResourceManagerModel.h"
 
 ModelStore* ModelResource::get() {
-	return Locator<ResourceManagerModel>::getService()->get(index);
+	return Locator<ResourceManagerModel>::get()->get(index);
 }
 
 ModelResource::ModelResource(std::string name) {
-	index = Locator<ResourceManagerModel>::getService()->getIndex(name);
+	index = Locator<ResourceManagerModel>::get()->getIndex(name);
 }
