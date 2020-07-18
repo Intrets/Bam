@@ -89,12 +89,12 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 		return "two groups already with parents";
 	}
 	if (g1.get()->parentRef.isNotNull()) {
-		linkAnchors(gameState, g1, g2);
+		return linkAnchors(gameState, g1, g2);
 	}
 	else {
-		linkAnchors(gameState, g2, g1);
+		return linkAnchors(gameState, g2, g1);
 	}
 
-	return "Successfully linked";
+	//return "Successfully linked";
 }
 

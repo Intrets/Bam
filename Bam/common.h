@@ -23,6 +23,7 @@
 #include "Locator.h"
 #include "PathManager.h"
 #include "DebugRenderInfo.h"
+#include "Log.h"
 
 inline int32_t floordiv(int32_t x, int32_t y) {
 	return (x + (x < 0)) / y - (x < 0);

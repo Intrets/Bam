@@ -41,38 +41,27 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
 	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
-	if (hover) {
-		color = { 0.3,0.3,0.3,1.0 };
-		int32_t m = 0;
-		for (auto& t : text) {
-			m = glm::max(m, static_cast<int32_t>(t.size()));
-		}
-		glm::vec2 s = glm::vec2(fontScale.x * m, -fontScale.y * text.size());
-		std::string test;
-		bot = top + s;
-		renderInfo.textRenderInfo.addTexts(
-			*renderInfo.textRenderInfo.textRendererRef,
-			renderInfo.cameraInfo,
-			screenRectangle.getTopLeft(),
-			screenRectangle.top.x - screenRectangle.bot.x,
-			16,
-			text,
-			depth
-		);
+	if (this->text.empty()) {
+		this->text.push_back("empty");
 	}
-	else {
-		color = { 0.2,0.2,0.2,1.0 };
-		bot = screenRectangle.getBottomRight();
-		renderInfo.textRenderInfo.addText(
-			*renderInfo.textRenderInfo.textRendererRef,
-			renderInfo.cameraInfo,
-			screenRectangle.getTopLeft(),
-			screenRectangle.top.x - screenRectangle.bot.x,
-			16,
-			text[0],
-			depth
-		);
+
+	color = { 0.3,0.3,0.3,1.0 };
+	int32_t m = 0;
+	for (auto& t : text) {
+		m = glm::max(m, static_cast<int32_t>(t.size()));
 	}
+	glm::vec2 s = glm::vec2(fontScale.x * m, -fontScale.y * text.size());
+	std::string test;
+	bot = top + s;
+	renderInfo.textRenderInfo.addTexts(
+		*renderInfo.textRenderInfo.textRendererRef,
+		renderInfo.cameraInfo,
+		screenRectangle.getTopLeft(),
+		screenRectangle.top.x - screenRectangle.bot.x,
+		16,
+		text,
+		depth
+	);
 	renderInfo.uiRenderInfo.addRectangle(bot, top, color, depth);
 	return depth + 1;
 }

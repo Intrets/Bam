@@ -2,11 +2,14 @@
 
 #include "Log.h"
 
-//void Log::append(std::string message) {
-//	lines.push_back(message);
-//}
+void Log::putLine(std::string str) {
+	std::lock_guard<std::mutex> lock(this->mtx);
+	lines.push_back(str);
+}
 
-void Log::flush() {
-	this->lines.push_back(this->buffer.str());
-	this->buffer = std::ostringstream();
+std::vector<std::string> Log::getLines() {
+	std::lock_guard<std::mutex> lock(this->mtx);
+	auto res = this->lines;
+	this->lines.clear();
+	return res;
 }

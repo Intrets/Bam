@@ -69,7 +69,7 @@ bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
 
 void ActivityLuaTest::runScript(GameState& gameState) {
 	//if (!target.isValid()) {
-	//	std::cout << "no target\n";
+	//	Locator<Log>::ref() << "no target\n";
 	//	return;
 	//}
 	//gameStateRef = &gameState;
@@ -102,7 +102,7 @@ void ActivityLuaTest::load(Loader& loader) {
 	for (int i = 0; i < size; i++) {
 		sol::object key = loader.retrieveObject(state, cache);
 		sol::object value = loader.retrieveObject(state, cache);
-		std::cout << "key: " << key.as<std::string>() << " value: " << value.as<std::string>() << "\n";
+		Locator<Log>::ref() << Log::OPEN{} << "key: " << key.as<std::string>() << " value: " << value.as<std::string>() << "\n" << Log::CLOSE{};
 		state[key] = value;
 	}
 }
@@ -131,7 +131,7 @@ void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo&
 	renderInfo.textRenderInfo.addTexts(
 		*renderInfo.textRenderInfo.textRendererRef,
 		renderInfo.cameraInfo,
-		{ 0.5,1 }, 0, 20, lines 
+		{ 0.5,1 }, 0, 20, lines
 	);
 }
 

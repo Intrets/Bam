@@ -8,7 +8,6 @@
 #include "Platform.h"
 
 ActivitySelector::ActivitySelector() {
-	std::cout << "Created\n";
 }
 
 int32_t ActivitySelector::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

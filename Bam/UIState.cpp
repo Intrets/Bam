@@ -135,7 +135,13 @@ UIState::UIState() {
 	// text display test window
 	{
 		auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
-		textDisplay.get()->setText("tesg 123\n\n\n12323");
+
+		textDisplay.get()->addGlobalBind({ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+			auto self = static_cast<UIOTextDisplay*>(self_);
+			auto newLines = Locator<Log>::ref().getLines();
+			self->text.insert(self->text.begin(), newLines.begin(), newLines.end());
+			return BIND_RESULT::CONTINUE;
+		});
 
 		auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay));
 		t2.get()->screenRectangle.setWidth(0.4f);

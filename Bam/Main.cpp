@@ -83,7 +83,7 @@ void mainLoop(GLFWwindow* window) {
 		{
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR) {
-				std::cout << "OpenGL ERROR: " << std::hex << err << std::dec << "\n";
+				Locator<Log>::ref() << Log::OPEN{} << "OpenGL ERROR: " << std::hex << err << std::dec << "\n" << Log::CLOSE{};
 			}
 		}
 

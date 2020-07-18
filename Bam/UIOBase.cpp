@@ -68,13 +68,14 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 		auto& bind = *it;
 		if (state.controlState.activated(bind.first)) {
 			CallBackBindResult bindResult = bind.second(state, this);
+			if (bindResult & BIND_RESULT::CONSUME) {
+				state.controlState.consumeControl(bind.first.control);
+			}
 			sumResult |= bindResult;
 			if (sumResult & BIND_RESULT::STOP) {
-				state.controlState.consumeControl(bind.first.control);
 				return sumResult;
 			}
 		}
-		state.controlState.consumeControl(bind.first.control);
 	}
 	for (auto& element : elements) {
 		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
