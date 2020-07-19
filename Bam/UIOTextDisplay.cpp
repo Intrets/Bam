@@ -9,11 +9,6 @@
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	selfHandle = self;
-
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		this->hover = this->screenRectangle.contains(state.uiState.getCursorPositionScreen());
-		return BIND_RESULT::CONTINUE;
-	});
 }
 
 void UIOTextDisplay::setText(std::string text_) {
