@@ -11,6 +11,7 @@
 #include "Activity.h"
 #include "UIOBase.h"
 #include "Log.h"
+#include "PassThroughRenderer.h"
 
 void initManagers(GLFWwindow* window) {
 	//Locator<CommandHandler>::provide(new CommandHandler());
@@ -24,6 +25,8 @@ void initManagers(GLFWwindow* window) {
 	Locator<ResourceManagerTexture>::provide(new ResourceManagerTexture());
 	Locator<OptionManager>::provide(new OptionManager());
 	Locator<DebugRenderer>::provide(new DebugRenderer());
+
+	Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());

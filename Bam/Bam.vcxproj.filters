@@ -360,6 +360,8 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Fonts.cpp" />
+    <ClCompile Include="PassThroughRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGLhelpers.h">
@@ -634,6 +636,8 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="Log.h" />
+    <ClInclude Include="Fonts.h" />
+    <ClInclude Include="PassThroughRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
@@ -673,5 +677,11 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="cpp.hint" />
+    <None Include="Passthrough.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="Passthrough.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

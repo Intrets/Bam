@@ -1,13 +1,13 @@
 #pragma once
 #include <unordered_map>
 
-typedef enum
-{
-	CONFIG,
-	GRAPHICS,
-	SHADERS,
-	SAVE
-} RESOURCE_PATH;
+//typedef enum
+//{
+//	CONFIG,
+//	GRAPHICS,
+//	SHADERS,
+//	SAVE
+//} RESOURCE_PATH;
 
 typedef enum
 {
@@ -23,8 +23,21 @@ private:
 	std::unordered_map<int32_t, std::string> files;
 
 public:
+
+	enum RESOURCE_PATH
+	{
+		CONFIG,
+		GRAPHICS,
+		SHADERS,
+		SAVE,
+		FONTS,
+	};
+
+	GLuint LoadFont(std::string name);
 	GLuint LoadTextureP(std::string name);
 	GLuint LoadShadersP(std::string vertex, std::string fragment);
+	GLuint LoadShadersP(std::string name);
+
 	void LoadModelP(std::string& path, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int32_t& indexsize);
 	bool openFile(std::ifstream& file, RESOURCE_FILE t);
 	bool openFile(std::ofstream& file, RESOURCE_FILE t);

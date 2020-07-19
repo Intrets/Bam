@@ -9,7 +9,7 @@ layout(location = 3) in vec2 scale;
 uniform ivec2 fontDim;
 uniform ivec2 texDim;
 uniform mat4 VP;
-uniform sampler2D texture;
+uniform sampler2D texture_t;
 
 // Output data ; will be interpolated for each fragment.
 out vec2 UV;
@@ -17,7 +17,7 @@ out vec2 UV;
 
 
 void main(){
-	vec2 tSize = vec2(textureSize(texture,0));
+	vec2 tSize = vec2(textureSize(texture_t, 0));
 	vec2 ratio = vec2(1, fontDim.y / float(fontDim.x));
 	//vec2 tSize = vec2(1,1);
 	//gl_Layer = layer;

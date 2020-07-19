@@ -7,13 +7,8 @@
 class BlockIDTextures
 {
 private:
-	bwo::VertexArrayObject VAO;
-	bwo::Program program;
-	bwo::Buffer quad;
 	bwo::Texture textureArray;
 	bwo::Buffer textureBuffer;
-	bwo::Uniform1i layer;
-	bwo::UniformTexture2D texture;
 
 	int32_t maxArrayLayers;
 	int32_t arrayLayers = 0;

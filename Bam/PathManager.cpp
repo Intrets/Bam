@@ -5,6 +5,10 @@
 #include "ModelLoader.h"
 #include <fstream>
 
+GLuint PathManager::LoadFont(std::string name) {
+	return loadTexture(paths[RESOURCE_PATH::FONTS] + name);
+}
+
 GLuint PathManager::LoadTextureP(std::string name) {
 	return loadTexture(paths[RESOURCE_PATH::GRAPHICS] + name);
 }
@@ -13,6 +17,10 @@ GLuint PathManager::LoadShadersP(std::string vertex, std::string fragment) {
 	std::string fullPathVertex = paths[RESOURCE_PATH::SHADERS] + vertex;
 	std::string fullPathFragment = paths[RESOURCE_PATH::SHADERS] + fragment;
 	return LoadShaders(fullPathVertex.c_str(), fullPathFragment.c_str());
+}
+
+GLuint PathManager::LoadShadersP(std::string name) {
+	return this->LoadShadersP(name + ".vert", name + ".frag");
 }
 
 void PathManager::LoadModelP(std::string& name, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int32_t& indexsize) {
@@ -47,6 +55,7 @@ PathManager::PathManager() {
 	paths[RESOURCE_PATH::SHADERS] = r;
 	paths[RESOURCE_PATH::SAVE] = r + "saves/";
 	files[RESOURCE_FILE::OPTIONS] = r + "config/options.txt";
+	paths[RESOURCE_PATH::FONTS] = r + "Resources/";
 }
 
 PathManager::~PathManager() {

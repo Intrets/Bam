@@ -282,6 +282,7 @@
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
+    <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="FPSDisplay.cpp" />
     <ClCompile Include="FPSLimiter.cpp" />
     <ClCompile Include="GameLogic.cpp" />
@@ -304,6 +305,7 @@
     <ClCompile Include="ModifyingInterface.cpp" />
     <ClCompile Include="OGLhelpers.cpp" />
     <ClCompile Include="Option.cpp" />
+    <ClCompile Include="PassThroughRenderer.cpp" />
     <ClCompile Include="PathManager.cpp" />
     <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Piston.cpp" />
@@ -373,6 +375,7 @@
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
+    <ClInclude Include="Fonts.h" />
     <ClInclude Include="FPSDisplay.h" />
     <ClInclude Include="FPSLimiter.h" />
     <ClInclude Include="GameLogic.h" />
@@ -388,6 +391,7 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modifyables.h" />
     <ClInclude Include="ModifyingInterface.h" />
+    <ClInclude Include="PassThroughRenderer.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
@@ -453,6 +457,8 @@
     <None Include="DebugLine.vert" />
     <None Include="HighlightShader.frag" />
     <None Include="HighlightShader.vert" />
+    <None Include="Passthrough.frag" />
+    <None Include="Passthrough.vert" />
     <None Include="PassthroughArray.frag" />
     <None Include="PassthroughArray.vert" />
     <None Include="StaticWorldShader.frag" />
