@@ -22,6 +22,7 @@ int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 
 void BlockIDTextures::loadBlockTexture(std::string name) {
 	GLuint newTex = Locator<PathManager>::get()->LoadTextureP(name);
+
 	// Failed to load texture
 	if (newTex == 0) {
 		printf("Failed to load texture: %s\n\n", name.c_str());
@@ -40,9 +41,6 @@ GLuint BlockIDTextures::getTextureArrayID() {
 BlockIDTextures::BlockIDTextures() {
 	const std::string textures_raw[] = { "debug.dds", "debug.dds", "sandstone.dds", "dirt.dds",
 		"stone.dds", "gravel.dds", "cobblestone.dds", "gravel2.dds", "mossy_cobblestone.dds", "diorite.dds", "andesite.dds", "podzol.dds", "fruit.dds" };
-
-	glGenFramebuffers(1, &textureBuffer.ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, textureBuffer.ID);
 
 	glGenTextures(1, &textureArray.ID);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray.ID);

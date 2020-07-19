@@ -8,7 +8,6 @@ class BlockIDTextures
 {
 private:
 	bwo::Texture textureArray;
-	bwo::Buffer textureBuffer;
 
 	int32_t maxArrayLayers;
 	int32_t arrayLayers = 0;
