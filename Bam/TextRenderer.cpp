@@ -8,6 +8,7 @@
 #include "GLEnableWrapper.h"
 #include "CameraInfo.h"
 #include "TextRenderInfo.h"
+#include "Fonts.h"
 
 void TextRenderer::render(TextRenderInfo& textRenderInfo, GLuint target, CameraInfo& cameraInfo) {
 	if (textRenderInfo.offsets.size() == 0) {
