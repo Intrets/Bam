@@ -88,6 +88,10 @@ void bwo::Uniform2iv::set(glm::ivec2 vec) {
 	glUniform2iv(location, 1, &vec[0]);
 }
 
+void bwo::Uniform2iv::set(std::vector<glm::ivec2>& vecs) {
+	glUniform2iv(location, static_cast<GLsizei>(vecs.size()), &vecs[0][0]);
+}
+
 bwo::Uniform2iv::Uniform2iv(std::string name, Program & program) {
 	location = glGetUniformLocation(program.ID, name.c_str());
 }

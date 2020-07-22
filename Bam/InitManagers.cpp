@@ -13,6 +13,7 @@
 #include "Log.h"
 #include "PassThroughRenderer.h"
 #include "Fonts.h"
+#include "BlitRenderer.h"
 
 void initManagers(GLFWwindow* window) {
 	//Locator<CommandHandler>::provide(new CommandHandler());
@@ -31,6 +32,7 @@ void initManagers(GLFWwindow* window) {
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+	Locator<BlitRenderer>::provide(new BlitRenderer());
 	Locator<Fonts>::provide(new Fonts());
 
 	Locator<Log>::provide(new Log());

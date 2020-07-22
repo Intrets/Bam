@@ -76,6 +76,7 @@ namespace bwo
 		GLuint location;
 	public:
 		void set(glm::ivec2 vec);
+		void set(std::vector<glm::ivec2>& vecs);
 		Uniform2iv() = default;
 		Uniform2iv(std::string name, Program& program);
 		~Uniform2iv() = default;

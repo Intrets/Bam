@@ -128,11 +128,11 @@ void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo&
 	std::vector<std::string> lines;
 	split(0, text, lines, '\n');
 
-	renderInfo.textRenderInfo.addTexts(
-		*renderInfo.textRenderInfo.textRendererRef,
-		renderInfo.cameraInfo,
-		{ 0.5,1 }, 0, 20, lines
-	);
+	//renderInfo.textRenderInfo.addTexts(
+	//	*renderInfo.textRenderInfo.textRendererRef,
+	//	renderInfo.cameraInfo,
+	//	{ 0.5,1 }, 0, 20, lines
+	//);
 }
 
 CONTINUATION ActivityLuaTest::runBinds(ControlState& controlState, GameState& gameState) {

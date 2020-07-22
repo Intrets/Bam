@@ -20,8 +20,6 @@ struct RenderInfo
 	TextRenderInfo textRenderInfo;
 	UIRenderInfo uiRenderInfo;
 
-	//RenderState renderState;
-
 	//TODO: add buffering of options
 	// eg OptionInteger blurRender;
 };

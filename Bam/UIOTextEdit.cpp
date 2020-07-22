@@ -105,46 +105,49 @@ ScreenRectangle UIOTextEdit::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	auto& cameraInfo = renderInfo.cameraInfo;
-	int fontSize = 16;
-	auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;
+	//TODO: new text rendering
 
-	fontWidth = textRenderer.fontWidth;
+	//auto& cameraInfo = renderInfo.cameraInfo;
+	//int fontSize = 16;
 
-	glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
-	glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
+	//auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;
 
-	// TODO: seperate font class/manager
-	viewSize = screenRectangle.size() / fontScale;
-	viewHorizontal[1] = viewHorizontal[0] + viewSize.x;
-	viewVertical[1] = viewVertical[0] + viewSize.y;
+	//fontWidth = textRenderer.fontWidth;
 
-	glm::vec2 start = screenRectangle.getTopLeft();
+	//glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
+	//glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
 
-	int32_t istart = glm::max(0, viewVertical[0]);
-	int32_t iend = glm::min(static_cast<int32_t>(lines.size()), viewVertical[1]);
+	//// TODO: seperate font class/manager
+	//viewSize = screenRectangle.size() / fontScale;
+	//viewHorizontal[1] = viewHorizontal[0] + viewSize.x;
+	//viewVertical[1] = viewVertical[0] + viewSize.y;
 
-	auto pos = start;
-	for (int i = istart; i < iend; i++) {
-		pos.x = start.x;
-		pos.y -= fontScale.y;
-		auto& line = lines[i];
+	//glm::vec2 start = screenRectangle.getTopLeft();
 
-		int32_t jstart = glm::max(0, viewHorizontal[0]);
-		int32_t jend = glm::min(static_cast<int32_t>(line.size()), viewHorizontal[1]);
+	//int32_t istart = glm::max(0, viewVertical[0]);
+	//int32_t iend = glm::min(static_cast<int32_t>(lines.size()), viewVertical[1]);
 
-		for (int j = jstart; j < jend; j++) {
-			//auto pos = 
-			renderInfo.textRenderInfo.addChar(pos, line[j], fontScale, depth);
-			pos.x += fontScale.x;
-		}
-	}
+	//auto pos = start;
+	//for (int i = istart; i < iend; i++) {
+	//	pos.x = start.x;
+	//	pos.y -= fontScale.y;
+	//	auto& line = lines[i];
 
-	auto relativeCursorPos = cursor - glm::ivec2(viewHorizontal[0], viewVertical[0]);
-	relativeCursorPos.y *= -1;
-	relativeCursorPos.y -= 1;
-	renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f), depth);
-	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 0.5f,0.5f,0.5f, 1.0f }, depth);
+	//	int32_t jstart = glm::max(0, viewHorizontal[0]);
+	//	int32_t jend = glm::min(static_cast<int32_t>(line.size()), viewHorizontal[1]);
+
+	//	for (int j = jstart; j < jend; j++) {
+	//		//auto pos = 
+	//		renderInfo.textRenderInfo.addChar(pos, line[j], fontScale, depth);
+	//		pos.x += fontScale.x;
+	//	}
+	//}
+
+	//auto relativeCursorPos = cursor - glm::ivec2(viewHorizontal[0], viewVertical[0]);
+	//relativeCursorPos.y *= -1;
+	//relativeCursorPos.y -= 1;
+	//renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f), depth);
+	//renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 0.5f,0.5f,0.5f, 1.0f }, depth);
 
 	return depth + 1;
 }

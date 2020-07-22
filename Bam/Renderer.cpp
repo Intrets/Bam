@@ -6,6 +6,8 @@
 //#include "GameObject.h"
 #include "RenderInfo.h"
 #include "State.h"
+#include "BlitRenderer.h"
+#include "Fonts.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;
@@ -19,7 +21,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	viewport *= viewportScale.getVal();
 	renderInfo.frameSize = { frameSizeX, frameSizeY };
 	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.player.getCameraPosition(), glm::vec3(viewport, 200.0f) };
-	renderInfo.textRenderInfo.textRendererRef = &textRenderer;
+
+	//renderInfo.textRenderInfo.textRendererRef = &textRenderer;
 
 	//for (auto& object : gameState.objects) {
 	//	object->renderPrepare(target.renderState);
@@ -127,11 +130,14 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, 0, renderInfo.cameraInfo);
-	textRenderer.render(renderInfo.textRenderInfo, 0, renderInfo.cameraInfo);
+
+	textRenderer.render(renderInfo.textRenderInfo, Locator<Fonts>::ref(), 0, renderInfo.cameraInfo);
 
 	if (debugOption.getVal()) {
 		debugRenderer.render(0, renderInfo);
 	}
+
+	Locator<BlitRenderer>::ref().render({ 0,0,1,1 }, { -1,-1,2,2 }, 0, { 0,512,512,512 }, Locator<Fonts>::ref().fontAtlas.ID, false);
 
 	//if (uiOption) {
 	//	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, screen.get()->ID, renderInfo.cameraInfo);

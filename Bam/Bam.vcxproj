@@ -276,6 +276,7 @@
     <ClCompile Include="ActivitySelector.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
+    <ClCompile Include="BlitRenderer.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
@@ -367,6 +368,7 @@
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySelector.h" />
     <ClInclude Include="Anchor.h" />
+    <ClInclude Include="BlitRenderer.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
     <ClInclude Include="BufferWrappers.h" />
@@ -452,6 +454,8 @@
     <ClInclude Include="vboindexer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Blit.frag" />
+    <None Include="Blit.vert" />
     <None Include="cpp.hint" />
     <None Include="DebugLine.frag" />
     <None Include="DebugLine.vert" />
@@ -463,8 +467,6 @@
     <None Include="PassthroughArray.vert" />
     <None Include="StaticWorldShader.frag" />
     <None Include="StaticWorldShader.vert" />
-    <None Include="Text.frag" />
-    <None Include="Text.vert" />
     <None Include="UIbg.frag" />
     <None Include="UIbg.vert" />
   </ItemGroup>

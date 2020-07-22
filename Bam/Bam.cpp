@@ -27,7 +27,7 @@ static int initGLFW() {
 	}
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(1000, 1000, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(1024, 1024, "Hello World", NULL, NULL);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glfwSetWindowPos(window, 500, 40);

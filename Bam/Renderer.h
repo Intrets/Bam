@@ -19,7 +19,6 @@ class WindowManager;
 class Renderer
 {
 private:
-
 	//Option<bool> shadowOption{ "render_shadow", true };
 	//Option<glm::ivec2> blurOption{ "render_blur", { 1, 2 } };
 	//Option<bool> uiOption{ "render_ui" , true };
@@ -34,7 +33,7 @@ private:
 	//PassthroughRenderer passthroughRenderer;
 
 	StaticWorldRenderer staticWorldRenderer;
-	TextRenderer textRenderer{ "font_kaiser_90x199_22x6.dds", { 90, 199 }, { 22, 6 } };
+	TextRenderer textRenderer;
 	UIbackgroundRenderer uiBackgroundRenderer;
 	SelectionHighlightRenderer selectionRenderer;
 
