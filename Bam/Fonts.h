@@ -39,8 +39,6 @@ public:
 
 	FontInfo& getFont(Font font);
 
-	//void addString(WindowTextRenderInfo& target, std::string text, Font& font, int32_t px);
-
 	Fonts();
 	~Fonts();
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
+#include "TextRenderInfo.h"	
 
 class UIOTextDisplay : public UIOBase
 {
@@ -8,6 +9,8 @@ public:
 	int32_t fontSize = 16;
 
 	std::vector<std::string> text;
+
+	std::optional<WindowTextRenderInfo> cachedText;
 
 	UIOTextDisplay(Handle self);
 

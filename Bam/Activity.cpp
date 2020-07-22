@@ -8,17 +8,17 @@
 //#include "Loader.h"
 
 void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
-	movingPace = pace;
-	moving = true;
-	movementDirection = dir;
-	movingTickStart = gameState.tick;
-	gameState.movementPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
-	leaveMoveableTracesLocal(gameState);
+	this->movingPace = pace;
+	this->moving = true;
+	this->movementDirection = dir;
+	this->movingTickStart = gameState.tick;
+	gameState.movementPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
+	this->leaveMoveableTracesLocal(gameState);
 }
 
 bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 
 	for (auto member : members) {
 		if (!member->moveableIdleLocal()) {
@@ -37,7 +37,7 @@ bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
 
 bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 
 	for (auto member : members) {
 		if (!member->moveableIdleLocal()) {
@@ -56,16 +56,17 @@ bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Ac
 
 glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
 	int32_t tick = gameState.tick;
-	glm::vec2 v = glm::vec2(origin);
-	if (moving) {
-		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-		v += scale * glm::vec2(getDirection(movementDirection));
+	glm::vec2 v = glm::vec2(this->origin);
+	if (this->moving) {
+		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
+		v += scale * glm::vec2(getDirection(this->movementDirection));
 	}
 	return v;
 }
 
 bool Activity::idleUp() {
 	std::vector<Activity*> members;
+	this->getTreeMembers(members);
 	for (auto& member : members) {
 		if (!member->idleLocal()) {
 			return false;
@@ -75,29 +76,29 @@ bool Activity::idleUp() {
 }
 
 bool Activity::idleLocal() {
-	return !moving && !active;
+	return !this->moving && !this->active;
 }
 
 bool Activity::moveableIdleLocal() {
-	return idleLocal();
+	return this->idleLocal();
 }
 
 bool Activity::activityIdleLocal() {
-	return idleLocal();
+	return this->idleLocal();
 }
 
 float Activity::getMovementScale(int32_t tick) {
-	if (moving) {
-		return static_cast<float>(tick - movingTickStart) / movingPace;
+	if (this->moving) {
+		return static_cast<float>(tick - this->movingTickStart) / this->movingPace;
 	}
-	else{
+	else {
 		return 0.0f;
 	}
 }
 
 float Activity::getActivityScale(int32_t tick) {
-	if (active) {
-		return static_cast<float>(tick - activityTickStart) / activityPace;
+	if (this->active) {
+		return static_cast<float>(tick - this->activityTickStart) / this->activityPace;
 	}
 	else {
 		return 0.0f;
@@ -106,7 +107,7 @@ float Activity::getActivityScale(int32_t tick) {
 
 void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 	for (auto member : members) {
 		member->rotateForcedLocal(center, rotation);
 	}
@@ -114,16 +115,16 @@ void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
 
 void Activity::forceMoveOriginUp(glm::ivec2 d) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 	for (auto& member : members) {
 		member->forceMoveOriginLocal(d);
 	}
 }
 
 void Activity::disconnectFromParent() {
-	if (parentRef.isNotNull()) {
-		auto anchor = parentRef.get();
-		if (anchor->removeChild(selfHandle)) {
+	if (this->parentRef.isNotNull()) {
+		auto anchor = this->parentRef.get();
+		if (anchor->removeChild(this->selfHandle)) {
 			anchor->disconnectFromParent();
 			parentRef.deleteObject();
 		}
@@ -132,26 +133,26 @@ void Activity::disconnectFromParent() {
 }
 
 void Activity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	activityPace = pace;
-	active = true;
-	activityTickStart = gameState.tick;
-	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(selfHandle), pace);
+	this->activityPace = pace;
+	this->active = true;
+	this->activityTickStart = gameState.tick;
+	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
 }
 
 bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t pace) {
-	if (!activityIdleLocal()) {
+	if (!this->activityIdleLocal()) {
 		return false;
 	}
-	if (!canActivityLocal(gameState, useType)) {
+	if (!this->canActivityLocal(gameState, useType)) {
 		return false;
 	}
-	applyActivityLocalForced(gameState, useType, pace);
+	this->applyActivityLocalForced(gameState, useType, pace);
 	return true;
 }
 
 bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 
 	for (auto member : members) {
 		if (!member->moveableIdleLocal()) {
@@ -174,7 +175,7 @@ bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace
 
 void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 
 	for (auto member : members) {
 		member->applyMoveLocalForced(gameState, dir, pace);
@@ -182,57 +183,57 @@ void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_
 }
 
 bool Activity::applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
-	return getRoot().get()->applyMoveUp(gameState, dir, pace);
+	return this->getRoot().get()->applyMoveUp(gameState, dir, pace);
 }
 
 void Activity::stopMovement(GameState& gameState) {
-	origin += getDirection(movementDirection);
-	removeMoveableTracesLocal(gameState);
-	movementDirection = MOVEABLE::STATIONARY;
-	moving = false;
+	this->origin += this->getDirection(this->movementDirection);
+	this->removeMoveableTracesLocal(gameState);
+	this->movementDirection = MOVEABLE::STATIONARY;
+	this->moving = false;
 }
 
 WeakReference<Activity, Activity> Activity::getRoot() {
-	return WeakReference<Activity, Activity>(getRootHandle());
+	return WeakReference<Activity, Activity>(this->getRootHandle());
 }
 
 Handle Activity::getRootHandle() {
-	if (parentRef.isNotNull()) {
-		return parentRef.get()->getRootHandle();
+	if (this->parentRef.isNotNull()) {
+		return this->parentRef.get()->getRootHandle();
 	}
 	else {
-		return selfHandle;
+		return this->selfHandle;
 	}
 
 }
 
 void Activity::save(Saver& saver) {
-	saver.store(getType());
-	saver.store(parentRef.handle);
-	saver.store(selfHandle);
-	saver.store(activityPace);
-	saver.store(activityTickStart);
-	saver.store(activityType);
-	saver.store(active);
-	saver.store(movingPace);
-	saver.store(movingTickStart);
-	saver.store(movementDirection);
-	saver.store(moving);
-	saver.store(origin);
+	saver.store(this->getType());
+	saver.store(this->parentRef.handle);
+	saver.store(this->selfHandle);
+	saver.store(this->activityPace);
+	saver.store(this->activityTickStart);
+	saver.store(this->activityType);
+	saver.store(this->active);
+	saver.store(this->movingPace);
+	saver.store(this->movingTickStart);
+	saver.store(this->movementDirection);
+	saver.store(this->moving);
+	saver.store(this->origin);
 }
 
 bool Activity::load(Loader& loader) {
-	loader.retrieve(parentRef.handle);
-	loader.retrieve(selfHandle);
-	loader.retrieve(activityPace);
-	loader.retrieve(activityTickStart);
-	loader.retrieve(activityType);
-	loader.retrieve(active);
-	loader.retrieve(movingPace);
-	loader.retrieve(movingTickStart);
-	loader.retrieve(movementDirection);
-	loader.retrieve(moving);
-	loader.retrieve(origin);
+	loader.retrieve(this->parentRef.handle);
+	loader.retrieve(this->selfHandle);
+	loader.retrieve(this->activityPace);
+	loader.retrieve(this->activityTickStart);
+	loader.retrieve(this->activityType);
+	loader.retrieve(this->active);
+	loader.retrieve(this->movingPace);
+	loader.retrieve(this->movingTickStart);
+	loader.retrieve(this->movementDirection);
+	loader.retrieve(this->moving);
+	loader.retrieve(this->origin);
 	return true;
 }
 
@@ -250,20 +251,20 @@ void Activity::fillModifyingMap(ModifyerBase& modifyer) {
 }
 
 std::ostream& Activity::getSimpleInfo(std::ostream& out) {
-	std::string typeName = ACTIVITY::TYPE_NAMES[getType()];
-	out << typeName << ": " << selfHandle;
+	std::string typeName = ACTIVITY::TYPE_NAMES[this->getType()];
+	out << typeName << ": " << this->selfHandle;
 	return out;
 }
 
 void Activity::stopActivity(GameState& gameState) {
-	activityType = 0;
-	active = false;
-	removeActivityTracesLocal(gameState);
+	this->activityType = 0;
+	this->active = false;
+	this->removeActivityTracesLocal(gameState);
 }
 
 void Activity::fillTracesUpForced(GameState& gameState) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 	for (auto member : members) {
 		member->fillTracesLocalForced(gameState);
 	}
@@ -271,7 +272,7 @@ void Activity::fillTracesUpForced(GameState& gameState) {
 
 bool Activity::fillTracesUp(GameState& gameState) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 	for (auto member : members) {
 		if (!member->canFillTracesLocal(gameState)) {
 			return false;
@@ -289,7 +290,7 @@ void Activity::removeTracesUpForced(GameState& gameState) {
 
 bool Activity::removeTracesUp(GameState& gameState) {
 	std::vector<Activity*> members;
-	getTreeMembers(members);
+	this->getTreeMembers(members);
 	for (auto member : members) {
 		if (!member->idleLocal()) {
 			return false;

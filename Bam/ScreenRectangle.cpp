@@ -89,3 +89,7 @@ void ScreenRectangle::setWidth(float w) {
 	top.x = bot.x + w;
 }
 
+bool ScreenRectangle::equals(ScreenRectangle& other) {
+	return this->bot == other.bot && this->top == other.top && this->screenPixels == other.screenPixels;
+}
+

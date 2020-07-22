@@ -17,6 +17,9 @@ void UIOTextDisplay::setText(std::string text_) {
 }
 
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
+	if (!newScreenRectangle.equals(this->screenRectangle)) {
+		cachedText = std::nullopt;
+	}
 	screenRectangle = newScreenRectangle;
 
 	return screenRectangle;
@@ -27,50 +30,24 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 	glm::vec2 top = screenRectangle.getTopLeft();
 	glm::vec2 bot;
 
-	WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
+	if (!cachedText.has_value()) {
+		WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
 
-	for (int32_t i = 0; i < 100; i++) {
-		textInfo.addChar('u');
-		textInfo.addChar('u');
-		textInfo.addChar(' ');
-		textInfo.addChar('r');
-		textInfo.addChar('r');
-		textInfo.newLine();
-		textInfo.addString("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\] ^ _`abcdefghijklmnopqrstuvwxyz{|}~");
+		for (int32_t i = 0; i < 100; i++) {
+			textInfo.addChar('u');
+			textInfo.addChar('u');
+			textInfo.addChar(' ');
+			textInfo.addChar('r');
+			textInfo.addChar('r');
+			textInfo.newLine();
+			textInfo.addString("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\] ^ _`abcdefghijklmnopqrstuvwxyz{|}~");
+		}
+
+		cachedText = textInfo;
 	}
 
+	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(cachedText.value());
 
-	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textInfo);
-
-	// TODO: new text rendering
-
-	//auto& cameraInfo = renderInfo.cameraInfo;
-	//auto& textRenderer = *renderInfo.textRenderInfo.textRendererRef;
-
-	//glm::vec2 fontSize2 = { 2 * fontSize / textRenderer.fontWidth,  2 * fontSize };
-	//glm::vec2 fontScale = fontSize2 / glm::vec2(cameraInfo.x, cameraInfo.y);
-
-	//if (this->text.empty()) {
-	//	this->text.push_back("empty");
-	//}
-
-	//color = { 0.3,0.3,0.3,1.0 };
-	//int32_t m = 0;
-	//for (auto& t : text) {
-	//	m = glm::max(m, static_cast<int32_t>(t.size()));
-	//}
-	//glm::vec2 s = glm::vec2(fontScale.x * m, -fontScale.y * text.size());
-	//std::string test;
-	//bot = top + s;
-	//renderInfo.textRenderInfo.addTexts(
-	//	*renderInfo.textRenderInfo.textRendererRef,
-	//	renderInfo.cameraInfo,
-	//	screenRectangle.getTopLeft(),
-	//	screenRectangle.top.x - screenRectangle.bot.x,
-	//	16,
-	//	text,
-	//	depth
-	//);
-	//renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.7f), depth);
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.9f, 0.9f, 0.9f, 1.0f), depth);
 	return depth + 1;
 }

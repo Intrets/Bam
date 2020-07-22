@@ -8,8 +8,9 @@ void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 }
 
 void UIOBase::translate(glm::vec2 p) {
-	screenRectangle.translate(p);
-	for (auto& element : elements) {
+	this->screenRectangle.translate(p);
+	this->updateSize(this->screenRectangle);
+	for (auto& element : this->elements) {
 		element.get()->translate(p);
 	}
 }

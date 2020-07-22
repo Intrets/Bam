@@ -18,11 +18,11 @@ Activator::Activator(Handle self, GameState& gameState, glm::ivec2 pos, std::str
 }
 
 bool Activator::moveableIdleLocal() {
-	return !moving;
+	return !this->moving;
 }
 
 bool Activator::activityIdleLocal() {
-	return !active;
+	return !this->active;
 }
 
 bool Activator::canActivityLocal(GameState& gameState, int32_t type) {
@@ -30,15 +30,15 @@ bool Activator::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Activator::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	Activity::applyActivityLocalForced(gameState, type, pace);
-	auto maybeTarget = gameState.staticWorld.getActivity(origin + glm::ivec2(1, 0));
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
+	auto maybeTarget = gameState.staticWorld.getActivity(this->origin + glm::ivec2(1, 0));
 	if (maybeTarget.has_value()) {
 		maybeTarget->get()->applyActivityLocal(gameState, type, pace - 1);
 	}
 }
 
 void Activator::removeActivityTracesLocal(GameState& gameState) {
-	applyActivityLocal(gameState, 2, 60);
+	this->applyActivityLocal(gameState, 2, 60);
 }
 
 void Activator::leaveActivityTracesLocal(GameState& gameState) {
@@ -49,10 +49,10 @@ ACTIVITY::TYPE Activator::getType() {
 }
 
 void Activator::save(Saver& saver) {
-	SingleBlockActivity::save(saver);
+	this->SingleBlockActivity::save(saver);
 }
 
 bool Activator::load(Loader& loader) {
-	SingleBlockActivity::load(loader);
+	this->SingleBlockActivity::load(loader);
 	return true;
 }

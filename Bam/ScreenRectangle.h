@@ -21,6 +21,8 @@ struct ScreenRectangle
 	void setHeight(float h);
 	void setWidth(float w);
 
+	bool equals(ScreenRectangle& other);
+
 	glm::vec2 getTopLeft();
 	glm::vec2 getBottomRight();
 	glm::vec2 getTopRight();

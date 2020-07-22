@@ -16,10 +16,6 @@
 #include "BlitRenderer.h"
 
 void initManagers(GLFWwindow* window) {
-	//Locator<CommandHandler>::provide(new CommandHandler());
-	//Locator<ReferenceManager<BaseWindow>>::provide(new ReferenceManager<BaseWindow>());
-	//Locator<ScriptManager>::provide(new ScriptManager());
-
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
 
 	Locator<PathManager>::provide(new PathManager());
