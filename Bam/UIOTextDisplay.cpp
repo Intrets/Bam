@@ -9,28 +9,28 @@
 #include "TextRenderInfo.h"
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
-	selfHandle = self;
+	this->selfHandle = self;
 }
 
 void UIOTextDisplay::setText(std::string text_) {
-	split(0, text_, text, '\n', true);
+	split(0, text_, this->text, '\n', true);
 }
 
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
-		cachedText = std::nullopt;
+		this->cachedText = std::nullopt;
 	}
-	screenRectangle = newScreenRectangle;
+	this->screenRectangle = newScreenRectangle;
 
-	return screenRectangle;
+	return this->screenRectangle;
 }
 
 int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 color;
-	glm::vec2 top = screenRectangle.getTopLeft();
+	glm::vec2 top = this->screenRectangle.getTopLeft();
 	glm::vec2 bot;
 
-	if (!cachedText.has_value()) {
+	if (!this->cachedText.has_value()) {
 		WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
 
 		for (int32_t i = 0; i < 100; i++) {
@@ -43,10 +43,10 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 			textInfo.addString("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\] ^ _`abcdefghijklmnopqrstuvwxyz{|}~");
 		}
 
-		cachedText = textInfo;
+		this->cachedText = textInfo;
 	}
 
-	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(cachedText.value());
+	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(this->cachedText.value());
 
 	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.9f, 0.9f, 0.9f, 1.0f), depth);
 	return depth + 1;

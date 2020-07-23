@@ -3,6 +3,7 @@
 #include "Grouper.h"
 #include "Activity.h"
 
+// TODO: move into class
 namespace PISTON
 {
 	typedef enum

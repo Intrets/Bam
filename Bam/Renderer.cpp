@@ -1,9 +1,7 @@
 #include "common.h"
 #include "Renderer.h"
 #include "CameraInfo.h"
-//#include "WindowManager.h"
 #include "FPSLimiter.h"
-//#include "GameObject.h"
 #include "RenderInfo.h"
 #include "State.h"
 #include "BlitRenderer.h"
@@ -36,19 +34,19 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);
+	this->staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);
 
-	selectionRenderer.render(renderInfo, 0);
+	this->selectionRenderer.render(renderInfo, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	uiBackgroundRenderer.render(renderInfo.uiRenderInfo, 0, renderInfo.cameraInfo);
+	this->uiBackgroundRenderer.render(renderInfo.uiRenderInfo, 0, renderInfo.cameraInfo);
 
-	textRenderer.render(renderInfo.textRenderInfo, Locator<Fonts>::ref(), 0, renderInfo.cameraInfo);
+	this->textRenderer.render(renderInfo.textRenderInfo, Locator<Fonts>::ref(), 0, renderInfo.cameraInfo);
 
-	if (debugOption.getVal()) {
-		debugRenderer.render(0, renderInfo);
+	if (this->debugOption.getVal()) {
+		this->debugRenderer.render(0, renderInfo);
 	}
 
 	glfwSwapBuffers(window);

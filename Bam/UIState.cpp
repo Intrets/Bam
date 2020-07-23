@@ -13,32 +13,33 @@
 #include "State.h"
 #include "UIOProxy.h"
 #include "UIOActivityLinker.h"
+#include "UIOActivitySelector.h"
 #include "Option.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
-	return cursorWorld;
+	return this->cursorWorld;
 }
 
 glm::vec2 UIState::getCursorPositionScreen() {
-	return cursorScreen;
+	return this->cursorScreen;
 }
 
 void UIState::run(State& state) {
-	CallBackBindResult focussedResult = UIs.front().get()->runFocussedBinds(state);
+	CallBackBindResult focussedResult = this->UIs.front().get()->runFocussedBinds(state);
 	if (focussedResult & BIND_RESULT::CLOSE) {
-		UIs.pop_front();
+		this->UIs.pop_front();
 	}
 
-	for (auto it = UIs.begin(); it != UIs.end();) {
+	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
 		auto& UI = *it;
 		CallBackBindResult uiResult = UI.get()->runGlobalBinds(state);
 		if (uiResult & BIND_RESULT::CLOSE) {
-			it = UIs.erase(it);
+			it = this->UIs.erase(it);
 		}
 		else if (uiResult & BIND_RESULT::FOCUS) {
 			auto temp = std::move(UI);
-			it = UIs.erase(it);
-			UIs.push_front(std::move(temp));
+			it = this->UIs.erase(it);
+			this->UIs.push_front(std::move(temp));
 		}
 		else {
 			++it;
@@ -54,7 +55,7 @@ void UIState::updateSize(GLFWwindow* window) {
 	ScreenRectangle r;
 	r.screenPixels = glm::ivec2(x, y);
 	r.set({ -1,-1 }, { 1,1 });
-	for (auto& UI : UIs) {
+	for (auto& UI : this->UIs) {
 		UI.get()->updateSize(r);
 	}
 }
@@ -83,7 +84,7 @@ void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
 
 void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 	int32_t depth = 0;
-	for (auto& UI : UIs) {
+	for (auto& UI : this->UIs) {
 		depth = UI.get()->addRenderInfo(gameState, renderInfo, depth);
 	}
 }

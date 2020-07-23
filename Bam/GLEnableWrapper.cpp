@@ -1,23 +1,24 @@
 #include "common.h"
+
 #include "GLEnableWrapper.h"
 
 GLEnabler& GLEnabler::enable(int32_t h) {
-	enabled.push_back(h);
+	this->enabled.push_back(h);
 	glEnable(h);
 	return *this;
 }
 
 GLEnabler& GLEnabler::disable(int32_t h) {
-	disabled.push_back(h);
+	this->disabled.push_back(h);
 	glDisable(h);
 	return *this;
 }
 
 GLEnabler::~GLEnabler() {
-	for (int32_t h : enabled) {
+	for (int32_t h : this->enabled) {
 		glDisable(h);
 	}
-	for (int32_t h : disabled) {
+	for (int32_t h : this->disabled) {
 		glEnable(h);
 	}
 }

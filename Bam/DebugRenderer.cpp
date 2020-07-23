@@ -4,34 +4,33 @@
 #include "ShaderLoader.h"
 
 #include "GLEnableWrapper.h"
-#include "DebugRenderInfo.h"
 #include "RenderInfo.h"
 
 void DebugRenderer::render(GLuint target, RenderInfo& renderInfo) {
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, renderInfo.cameraInfo.x, renderInfo.cameraInfo.y);
 
-	renderVector(renderInfo.debugRenderInfo.points, 0, renderInfo);
+	this->renderVector(renderInfo.debugRenderInfo.points, 0, renderInfo);
 	for (auto& line : renderInfo.debugRenderInfo.lines) {
-		renderVector(line, 1, renderInfo);
+		this->renderVector(line, 1, renderInfo);
 	}
 
 	RenderInfo screenRenderInfo;
 	screenRenderInfo.cameraInfo.VP = glm::mat4(1.0f);
 
 	for (auto& line : renderInfo.debugRenderInfo.linesScreen) {
-		renderVector(line, 1, screenRenderInfo);
+		this->renderVector(line, 1, screenRenderInfo);
 	}
 }
 
 DebugRenderer::DebugRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("DebugLine.vert", "DebugLine.frag")),
-	VP("VP", program) {
+	VP("VP", this->program) {
 
-	VAO.gen(1);
+	this->VAO.gen(1);
 
-	glGenBuffers(1, &data.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, data.ID);
+	glGenBuffers(1, &this->data.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->data.ID);
 	glVertexAttribPointer(
 		0,                                // attribute
 		2,                                // size
@@ -41,7 +40,7 @@ DebugRenderer::DebugRenderer() :
 		(void*) 0                         // array buffer offset
 	);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
 
@@ -70,12 +69,12 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int32_t type, Ren
 		drawtype = GL_LINE_STRIP;
 	}
 
-	VAO.bind();
-	program.use();
+	this->VAO.bind();
+	this->program.use();
 
-	VP.set(renderInfo.cameraInfo.VP);
+	this->VP.set(renderInfo.cameraInfo.VP);
 
-	glBindBuffer(GL_ARRAY_BUFFER, data.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->data.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * line.size(), &(line[0]), GL_STATIC_DRAW);
 
 	glDrawArrays(
@@ -84,5 +83,5 @@ void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int32_t type, Ren
 		static_cast<GLsizei>(line.size())   // count
 	);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }

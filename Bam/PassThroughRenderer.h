@@ -2,6 +2,7 @@
 
 #include "BufferWrappers.h"
 
+// TODO: rework
 class PassThroughRenderer
 {
 public:

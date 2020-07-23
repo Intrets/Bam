@@ -8,7 +8,7 @@
 bool Saver::storeString(std::string s) {
 	size_t ss = s.size();
 	store<size_t>(ss);
-	out.write(&s[0], s.size());
+	this->out.write(&s[0], s.size());
 	return false;
 }
 
@@ -21,11 +21,11 @@ bool Saver::saveGame(GameState& gameState) {
 }
 
 void Saver::close() {
-	out.close();
+	this->out.close();
 }
 
 Saver::Saver(std::string file) {
-	Locator<PathManager>::get()->openSave(out, file);
+	Locator<PathManager>::get()->openSave(this->out, file);
 }
 
 Saver::Saver() {

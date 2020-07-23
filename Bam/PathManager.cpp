@@ -6,16 +6,16 @@
 #include <fstream>
 
 GLuint PathManager::LoadFont(std::string name) {
-	return loadTexture(paths[RESOURCE_PATH::FONTS] + name);
+	return loadTexture(this->paths[RESOURCE_PATH::FONTS] + name);
 }
 
 GLuint PathManager::LoadTextureP(std::string name) {
-	return loadTexture(paths[RESOURCE_PATH::GRAPHICS] + name);
+	return loadTexture(this->paths[RESOURCE_PATH::GRAPHICS] + name);
 }
 
 GLuint PathManager::LoadShadersP(std::string vertex, std::string fragment) {
-	std::string fullPathVertex = paths[RESOURCE_PATH::SHADERS] + vertex;
-	std::string fullPathFragment = paths[RESOURCE_PATH::SHADERS] + fragment;
+	std::string fullPathVertex = this->paths[RESOURCE_PATH::SHADERS] + vertex;
+	std::string fullPathFragment = this->paths[RESOURCE_PATH::SHADERS] + fragment;
 	return LoadShaders(fullPathVertex.c_str(), fullPathFragment.c_str());
 }
 
@@ -24,38 +24,38 @@ GLuint PathManager::LoadShadersP(std::string name) {
 }
 
 void PathManager::LoadModelP(std::string& name, GLuint& vertexbuffer, GLuint& uvbuffer, GLuint& normalbuffer, GLuint& indexbuffer, int32_t& indexsize) {
-	std::string path = paths[RESOURCE_PATH::GRAPHICS] + name;
+	std::string path = this->paths[RESOURCE_PATH::GRAPHICS] + name;
 	loadModel(path, vertexbuffer, uvbuffer, normalbuffer, indexbuffer, indexsize);
 }
 
 bool PathManager::openFile(std::ifstream& file, RESOURCE_FILE t) {
-	file.open(files[t]);
+	file.open(this->files[t]);
 	return file.is_open();
 }
 
 bool PathManager::openFile(std::ofstream& file, RESOURCE_FILE t) {
-	file.open(files[t]);
+	file.open(this->files[t]);
 	return file.is_open();
 }
 
 bool PathManager::openSave(std::ifstream& file, std::string name) {
-	file.open(paths[RESOURCE_PATH::SAVE] + name, std::ifstream::binary);
+	file.open(this->paths[RESOURCE_PATH::SAVE] + name, std::ifstream::binary);
 	return file.is_open();
 }
 
 bool PathManager::openSave(std::ofstream& file, std::string name) {
-	file.open(paths[RESOURCE_PATH::SAVE] + name, std::ofstream::binary);
+	file.open(this->paths[RESOURCE_PATH::SAVE] + name, std::ofstream::binary);
 	return file.is_open();
 }
 
 PathManager::PathManager() {
 	std::string r = "C:/Users/Intrets/source/Repos/Bam/Bam/";
-	paths[RESOURCE_PATH::CONFIG] = r + "config/";
-	paths[RESOURCE_PATH::GRAPHICS] = r + "Resources/";
-	paths[RESOURCE_PATH::SHADERS] = r;
-	paths[RESOURCE_PATH::SAVE] = r + "saves/";
-	files[RESOURCE_FILE::OPTIONS] = r + "config/options.txt";
-	paths[RESOURCE_PATH::FONTS] = r + "Resources/";
+	this->paths[RESOURCE_PATH::CONFIG] = r + "config/";
+	this->paths[RESOURCE_PATH::GRAPHICS] = r + "Resources/";
+	this->paths[RESOURCE_PATH::SHADERS] = r;
+	this->paths[RESOURCE_PATH::SAVE] = r + "saves/";
+	this->files[RESOURCE_FILE::OPTIONS] = r + "config/options.txt";
+	this->paths[RESOURCE_PATH::FONTS] = r + "Resources/";
 }
 
 PathManager::~PathManager() {

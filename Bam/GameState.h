@@ -6,13 +6,10 @@
 #include "StaticWorld.h"
 
 #include "ActivityPaceHandler.h"
-//#include "Inventory.h"
-//#include "BaseWindow.h"
-//#include "ReferenceManager.h"
-#include "Saver.h"
-#include "Loader.h"
 
-//class GameObject;
+class Saver;
+class Loader;
+
 struct RenderInfo;
 
 class GameState

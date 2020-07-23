@@ -267,8 +267,6 @@
     <ClCompile Include="Activator.cpp" />
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
-    <ClCompile Include="ActivityInteractor.cpp" />
-    <ClCompile Include="ActivityLinker.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
     <ClCompile Include="ActivityLuaTest.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
@@ -297,14 +295,12 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="LogicSequencer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ModelStore.cpp" />
     <ClCompile Include="Modifyables.cpp" />
     <ClCompile Include="ModifyingInterface.cpp" />
-    <ClCompile Include="OGLhelpers.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="PassThroughRenderer.cpp" />
     <ClCompile Include="PathManager.cpp" />
@@ -360,8 +356,6 @@
     <ClInclude Include="Activator.h" />
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
-    <ClInclude Include="ActivityInteractor.h" />
-    <ClInclude Include="ActivityLinker.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />
     <ClInclude Include="ActivityLuaTest.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
@@ -388,7 +382,6 @@
     <ClInclude Include="InitModifyables.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="LogicSequencer.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Modifyables.h" />
@@ -415,7 +408,6 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelResource.h" />
     <ClInclude Include="ModelStore.h" />
-    <ClInclude Include="OGLhelpers.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="PerlinNoise.h" />

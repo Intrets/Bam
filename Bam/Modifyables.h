@@ -7,6 +7,7 @@
 #include "Anchor.h"
 #include "ReferenceManager.h"
 
+// TODO: WART REMOVAL
 class Modifyable
 {
 public:

@@ -77,8 +77,8 @@ public:
 		val(val_) {
 	};
 
-	T getVal() { return val; };
-	void setVal(T val_) { val = val_; };
+	T getVal() { return this->val; };
+	void setVal(T val_) { this->val = val_; };
 
 	virtual std::string set(std::string) override;
 	std::string type();
@@ -122,27 +122,27 @@ public:
 
 template<class T>
 inline T OptionManager::getVal(OPTIONS2 option) {
-	return static_cast<OptionValue<T>*>(data[option].get())->val;
+	return static_cast<OptionValue<T>*>(this->data[option].get())->val;
 }
 
 template<class T>
 inline void OptionManager::setVal(OPTIONS2 option, T val) {
-	static_cast<OptionValue<T>*>(data[option].get())->setVal(val);
+	static_cast<OptionValue<T>*>(this->data[option].get())->setVal(val);
 }
 
 template<class T>
 inline void OptionManager::initVal(OPTIONS2 option, T val, std::string name, std::string description) {
-	data[option] = std::make_unique<OptionValue<T>>(val, name, description);
-	nameMap[name] = option;
+	this->data[option] = std::make_unique<OptionValue<T>>(val, name, description);
+	this->nameMap[name] = option;
 }
 
 template<typename T>
 inline std::string OptionValue<T>::set(std::string str) {
 	std::stringstream in(str);
 	try {
-		in >> val;
+		in >> this->val;
 		std::stringstream out;
-		out << val;
+		out << this->val;
 		return "set value to: " + out.str();
 	}
 	catch (std::exception) {

@@ -6,42 +6,42 @@
 #include "Saver.h"
 
 bool Block::isOccupied(ActivityIgnoringGroup& ignore) {
-	if (m.isNotNull()) {
-		return !ignore.contains(m.handle);
+	if (this->m.isNotNull()) {
+		return !ignore.contains(this->m.handle);
 	}
-	return isBlock();
+	return this->isBlock();
 }
 
 bool Block::isOccupied() {
-	return isActivity() || isBlock();
+	return this->isActivity() || this->isBlock();
 }
 
 bool Block::isOccluded() {
-	return occluded;
+	return this->occluded;
 }
 
 bool Block::isBlock() {
-	return m.isNull() && blockID > 0;
+	return this->m.isNull() && this->blockID > 0;
 }
 
 bool Block::isActivity() {
-	return m.isNotNull();
+	return this->m.isNotNull();
 }
 
 bool Block::load(Loader& loader) {
-	loader.retrieve(blockID);
-	loader.retrieve(occluded);
-	loader.retrieve(m);
+	loader.retrieve(this->blockID);
+	loader.retrieve(this->occluded);
+	loader.retrieve(this->m);
 	return true;
 }
 
 bool Block::save(Saver& saver) {
-	saver.store(blockID);
-	saver.store(occluded);
-	saver.store(m);
+	saver.store(this->blockID);
+	saver.store(this->occluded);
+	saver.store(this->m);
 	return true;
 }
 
 Block::Block(int32_t id) {
-	blockID = id;
+	this->blockID = id;
 }

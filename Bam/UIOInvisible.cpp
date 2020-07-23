@@ -3,10 +3,10 @@
 #include "UIOInvisible.h"
 
 UIOInvisible::UIOInvisible(Handle self) {
-	selfHandle = self;
+	this->selfHandle = self;
 }
 
 ScreenRectangle UIOInvisible::updateSize(ScreenRectangle newScreenRectangle) {
-	screenRectangle = newScreenRectangle;
-	return screenRectangle;
+	this->screenRectangle = newScreenRectangle;
+	return this->screenRectangle;
 }

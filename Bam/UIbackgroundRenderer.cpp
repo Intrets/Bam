@@ -1,7 +1,7 @@
 #include "common.h"
 
 #include "UIbackgroundRenderer.h"
-
+#include "CameraInfo.h"
 #include "ShaderLoader.h"
 #include "GLEnableWrapper.h"
 #include "UIRenderInfo.h"
@@ -10,8 +10,8 @@ void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, Camer
 	if (renderInfo.positions.empty()) {
 		return;
 	}
-	VAO.bind();
-	program.use();
+	this->VAO.bind();
+	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.enable(GL_DEPTH_TEST).enable(GL_BLEND);
@@ -22,13 +22,13 @@ void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, Camer
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
-	glBindBuffer(GL_ARRAY_BUFFER, positions.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->positions.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * renderInfo.positions.size(), &renderInfo.positions[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, scales.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->scales.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * renderInfo.scales.size(), &renderInfo.scales[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, colors.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->colors.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * renderInfo.colors.size(), &renderInfo.colors[0]);
 
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<int32_t>(renderInfo.scales.size()));
@@ -45,10 +45,10 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 		1.0f,  1.0f,  0.0f,
 	};
 
-	VAO.gen(4);
+	this->VAO.gen(4);
 
-	glGenBuffers(1, &quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.ID);
+	glGenBuffers(1, &this->quad.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
@@ -60,8 +60,8 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 	);
 	glVertexAttribDivisor(0, 0);
 
-	glGenBuffers(1, &positions.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, positions.ID);
+	glGenBuffers(1, &this->positions.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->positions.ID);
 	// TODO: limit properly
 	int32_t limit = 1000;
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * limit, NULL, GL_DYNAMIC_DRAW);
@@ -76,8 +76,8 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 	);
 	glVertexAttribDivisor(1, 1);
 
-	glGenBuffers(1, &scales.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, scales.ID);
+	glGenBuffers(1, &this->scales.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->scales.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * limit, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(
@@ -90,8 +90,8 @@ UIbackgroundRenderer::UIbackgroundRenderer() :
 	);
 	glVertexAttribDivisor(2, 1);
 
-	glGenBuffers(1, &colors.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, colors.ID);
+	glGenBuffers(1, &this->colors.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->colors.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * limit, NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(

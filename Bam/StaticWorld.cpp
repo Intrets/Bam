@@ -53,7 +53,7 @@ void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {
 }
 
 bool StaticWorld::load(Loader& loader) {
-	world.clear();
+	this->world.clear();
 	size_t size;
 	loader.retrieve(size);
 	for (int32_t i = 0; i < size; i++) {
@@ -61,14 +61,14 @@ bool StaticWorld::load(Loader& loader) {
 		loader.retrieve(key);
 		auto chunk = std::make_unique<StaticWorldChunk>(key * CHUNKSIZE, true);
 		chunk->load(loader);
-		world[key] = std::move(chunk);
+		this->world[key] = std::move(chunk);
 	}
 	return true;
 }
 
 bool StaticWorld::save(Saver& saver) {
-	saver.store(world.size());
-	for (auto& chunk : world) {
+	saver.store(this->world.size());
+	for (auto& chunk : this->world) {
 		saver.store(chunk.first);
 		chunk.second->save(saver);
 	}
@@ -76,12 +76,12 @@ bool StaticWorld::save(Saver& saver) {
 }
 
 StaticWorldChunk* StaticWorld::getChunkByIndex(int32_t i, int32_t j) {
-	auto search = world.find(glm::ivec2(i, j));
+	auto search = this->world.find(glm::ivec2(i, j));
 	StaticWorldChunk* res;
-	if (search == world.end()) {
+	if (search == this->world.end()) {
 		auto newChunk = std::make_unique<StaticWorldChunk>(glm::vec2(i * CHUNKSIZE, j * CHUNKSIZE));
 		res = newChunk.get();
-		world.insert(
+		this->world.insert(
 			std::make_pair<glm::ivec2, std::unique_ptr<StaticWorldChunk>>(
 				glm::ivec2(i, j),
 				std::move(newChunk)

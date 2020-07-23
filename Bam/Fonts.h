@@ -8,7 +8,6 @@ struct CameraInfo;
 struct FontInfo
 {
 	std::string name;
-	//instance UV coordinates into a buffer?
 	std::array<glm::vec4, 128> charUV;
 	std::array<glm::ivec2, 128> charSize;
 };

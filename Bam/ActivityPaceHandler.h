@@ -1,5 +1,6 @@
 #pragma once
 #include "Activity.h"
+
 class GameState;
 class Activity;
 class Loader;

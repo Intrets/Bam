@@ -4,33 +4,33 @@
 #include "RenderInfo.h"
 
 void UIOWindowTile::nextRow() {
-	rows.push_back(std::vector<UIOBase*>());
+	this->rows.push_back(std::vector<UIOBase*>());
 }
 
 void UIOWindowTile::add(UniqueReference<UIOBase, UIOBase> c) {
-	rows.back().push_back(c.get());
+	this->rows.back().push_back(c.get());
 	addElement(std::move(c));
 }
 
 UIOWindowTile::UIOWindowTile(Handle self) {
-	selfHandle = self;
+	this->selfHandle = self;
 	nextRow();
 }
 
 ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
-	screenRectangle = newScreenRectangle;
+	this->screenRectangle = newScreenRectangle;
 
 	//float spacing = 0.05f;
-	glm::vec2 screenSize = screenRectangle.getBottomRight() - screenRectangle.getTopLeft();
+	glm::vec2 screenSize = this->screenRectangle.getBottomRight() - this->screenRectangle.getTopLeft();
 
-	float y = screenRectangle.getTopLeft().y;
-	float dy = screenSize.y / static_cast<float>(rows.size());
+	float y = this->screenRectangle.getTopLeft().y;
+	float dy = screenSize.y / static_cast<float>(this->rows.size());
 
-	for (auto& row : rows) {
+	for (auto& row : this->rows) {
 		if (row.empty()) {
 			continue;
 		}
-		float x = screenRectangle.getTopLeft().x;
+		float x = this->screenRectangle.getTopLeft().x;
 		float dx = screenSize.x / static_cast<float>(row.size());
 		glm::vec2 size = { dx, dy };
 		for (auto element : row) {
@@ -53,8 +53,8 @@ ScreenRectangle UIOWindowTile::updateSize(ScreenRectangle newScreenRectangle) {
 int32_t UIOWindowTile::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	//renderInfo.uiRenderInfo.addRectangle(
-	//	screenRectangle.top,
-	//	screenRectangle.bot,
+	//	this->screenRectangle.top,
+	//	this->screenRectangle.bot,
 	//	{ 1,1,1,0.5 },
 	//	depth 
 	//);

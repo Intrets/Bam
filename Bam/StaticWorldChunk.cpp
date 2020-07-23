@@ -10,18 +10,18 @@
 #include <iostream>
 
 glm::ivec2 StaticWorldChunk::getPosition() {
-	return position;
+	return this->position;
 }
 
 void StaticWorldChunk::setBlock(glm::ivec2 pos, int32_t blockID, bool occlude) {
-	staticWorld[pos.x][pos.y].blockID = blockID;
+	this->staticWorld[pos.x][pos.y].blockID = blockID;
 	static std::array < glm::ivec2, 4> dirs;
 	if (occlude) {
 		for (auto dir : dirs) {
 			glm::ivec2 t = pos + dir;
 			if (t.x >= 0 && t.y >= 0 && t.x < CHUNKSIZE && t.y < CHUNKSIZE) {
-				if (staticWorld[t.x][t.y].isBlock()) {
-					staticWorld[t.x][t.y].occluded = true;
+				if (this->staticWorld[t.x][t.y].isBlock()) {
+					this->staticWorld[t.x][t.y].occluded = true;
 				}
 			}
 		}
@@ -31,44 +31,44 @@ void StaticWorldChunk::setBlock(glm::ivec2 pos, int32_t blockID, bool occlude) {
 void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
-			if (staticWorld[i][j].isBlock()) {
-				if (!staticWorld[i][j].isOccluded()) {
-					renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
+			if (this->staticWorld[i][j].isBlock()) {
+				if (!this->staticWorld[i][j].isOccluded()) {
+					renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].blockID);
 				}
 				else {
-					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(position), staticWorld[i][j].blockID);
+					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].blockID);
 				}
 			}
-			if (staticWorld[i][j].isActivity()) {
-				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(position) + glm::vec2(0.5f));
+			if (this->staticWorld[i][j].isActivity()) {
+				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(this->position) + glm::vec2(0.5f));
 			}
 		}
 	}
 }
 
 bool StaticWorldChunk::isOccupied(glm::ivec2& pos) {
-	return staticWorld[pos.x][pos.y].isOccupied();
+	return this->staticWorld[pos.x][pos.y].isOccupied();
 }
 
 bool StaticWorldChunk::isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore) {
-	return staticWorld[pos.x][pos.y].isOccupied(ignore);
+	return this->staticWorld[pos.x][pos.y].isOccupied(ignore);
 }
 
 bool StaticWorldChunk::load(Loader& loader) {
-	loader.retrieve(position);
+	loader.retrieve(this->position);
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
-			staticWorld[i][j].load(loader);
+			this->staticWorld[i][j].load(loader);
 		}
 	}
 	return true;
 }
 
 bool StaticWorldChunk::save(Saver& saver) {
-	saver.store(position);
+	saver.store(this->position);
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
-			staticWorld[i][j].save(saver);
+			this->staticWorld[i][j].save(saver);
 		}
 	}
 	return true;
@@ -82,7 +82,7 @@ void StaticWorldChunk::fill(PerlinNoise& noise) {
 	std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
 	std::uniform_int_distribution<int32_t> uni(4, 11);
 
-	if (position.y > -1) {
+	if (this->position.y > -1) {
 		return;
 	}
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
@@ -103,12 +103,12 @@ void StaticWorldChunk::fill(PerlinNoise& noise) {
 void StaticWorldChunk::calculateOcclusions() {
 	for (int32_t i = 1; i < CHUNKSIZE - 1; i++) {
 		for (int32_t j = 1; j < CHUNKSIZE - 1; j++) {
-			if (staticWorld[i][j].isOccupied()) {
-				if (staticWorld[i + 1][j].isOccupied() &&
-					staticWorld[i][j + 1].isOccupied() &&
-					staticWorld[i - 1][j].isOccupied() &&
-					staticWorld[i][j - 1].isOccupied()) {
-					staticWorld[i][j].occluded = true;
+			if (this->staticWorld[i][j].isOccupied()) {
+				if (this->staticWorld[i + 1][j].isOccupied() &&
+					this->staticWorld[i][j + 1].isOccupied() &&
+					this->staticWorld[i - 1][j].isOccupied() &&
+					this->staticWorld[i][j - 1].isOccupied()) {
+					this->staticWorld[i][j].occluded = true;
 				}
 			}
 		}
@@ -117,7 +117,7 @@ void StaticWorldChunk::calculateOcclusions() {
 
 StaticWorldChunk::StaticWorldChunk(glm::ivec2 _position, bool empty) : position(_position) {
 	if (!empty) {
-		PerlinNoise perlinNoise(_position, glm::ivec2(CHUNKSIZE));
+		PerlinNoise perlinNoise(this->position, glm::ivec2(CHUNKSIZE));
 		perlinNoise.fillTexture(false);
 		fill(perlinNoise);
 	}

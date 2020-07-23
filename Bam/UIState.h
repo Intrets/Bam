@@ -1,6 +1,7 @@
 #pragma once
 
-#include "UIOActivitySelector.h"
+#include "ReferenceManager.h"
+#include "UIOBase.h"
 
 struct State;
 

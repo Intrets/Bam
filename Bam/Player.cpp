@@ -3,5 +3,5 @@
 #include "Player.h"
 
 glm::vec2 Player::getCameraPosition() {
-	return pos;
+	return this->pos;
 }

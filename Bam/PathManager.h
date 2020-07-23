@@ -1,13 +1,6 @@
 #pragma once
-#include <unordered_map>
 
-//typedef enum
-//{
-//	CONFIG,
-//	GRAPHICS,
-//	SHADERS,
-//	SAVE
-//} RESOURCE_PATH;
+#include <unordered_map>
 
 typedef enum
 {

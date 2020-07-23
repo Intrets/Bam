@@ -17,13 +17,13 @@ Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, MOVEABLE::DIR 
 	state = PISTON::STATIONARY;
 
 	if (leaveTraces) {
-		fillTracesLocalForced(gameState);
+		this->fillTracesLocalForced(gameState);
 	}
 
 	auto t = Locator<BlockIDTextures>::get();
-	headTex = t->getBlockTextureID("grabber.dds");
-	ropeTex = t->getBlockTextureID("rope.dds");
-	cogTex = t->getBlockTextureID("cog.dds");
+	this->headTex = t->getBlockTextureID("grabber.dds");
+	this->ropeTex = t->getBlockTextureID("rope.dds");
+	this->cogTex = t->getBlockTextureID("cog.dds");
 }
 
 Piston::Piston() {
@@ -60,29 +60,29 @@ ACTIVITY::TYPE Piston::getType() {
 }
 
 bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
-	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
+	glm::ivec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
 	switch (type) {
 		case PISTON::EXTEND:
 			{
-				if (child.isNotNull()) {
-					return child.get()->canMoveUp(gameState, headDir);
+				if (this->child.isNotNull()) {
+					return this->child.get()->canMoveUp(gameState, this->headDir);
 				}
 				else {
-					auto next = origin + (length + 2) * headDirection;
+					auto next = this->origin + (this->length + 2) * headDirection;
 					return !gameState.staticWorld.getActivity(next).has_value();
 				}
 			}
 			break;
 		case PISTON::RETRACT:
 			{
-				if (length == 0) {
+				if (this->length == 0) {
 					return false;
 				}
-				if (child.isNull()) {
+				if (this->child.isNull()) {
 					return true;
 				}
 				std::vector<Activity*> extraIgnore{ this };
-				return child.get()->canMoveUp(gameState, MOVEABLE::REV_DIR[headDir], extraIgnore);
+				return this->child.get()->canMoveUp(gameState, MOVEABLE::REV_DIR[this->headDir], extraIgnore);
 			}
 			break;
 		default:
@@ -92,14 +92,14 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
-	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
+	glm::ivec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
 	glm::ivec2 moveDirection = MOVEABLE::DIRECTION[dir];
 
 	int32_t d = idot(moveDirection, headDirection);
-	auto ori = origin + moveDirection;
+	auto ori = this->origin + moveDirection;
 	bool blocked = false;
 	if (d == 0) {
-		for (int32_t i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= this->length + 1; i++) {
 			auto p = ori + i * headDirection;
 			if (gameState.staticWorld.isOccupied(p, ignore)) {
 				blocked = true;
@@ -108,7 +108,7 @@ bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnor
 		}
 	}
 	else if (d == 1) {
-		auto p = ori + (length + 1) * headDirection;
+		auto p = ori + (this->length + 1) * headDirection;
 		if (gameState.staticWorld.isOccupied(p, ignore)) {
 			blocked = true;
 		}
@@ -123,46 +123,46 @@ bool Piston::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnor
 }
 
 void Piston::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	glm::vec2 moveDirection = MOVEABLE::DIRECTION[movementDirection];
+	glm::vec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
+	glm::vec2 moveDirection = MOVEABLE::DIRECTION[this->movementDirection];
 	int32_t tick = gameState.tick;
-	glm::vec2 ori = glm::vec2(origin);
-	if (moving) {
-		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
+	glm::vec2 ori = glm::vec2(this->origin);
+	if (this->moving) {
+		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
 		ori += scale * moveDirection;
 	}
 	glm::vec2 grabberPos = ori;
-	if (active) {
-		float scale = static_cast<float>(tick - activityTickStart) / activityPace;
-		grabberPos += (scale - 1) * glm::vec2(direction);
+	if (this->active) {
+		float scale = static_cast<float>(tick - this->activityTickStart) / this->activityPace;
+		grabberPos += (scale - 1) * glm::vec2(this->direction);
 	}
 
 	glm::vec2 base = ori;
-	glm::vec2 head = grabberPos + headDirection * (1.0f + length) + glm::vec2(1.0f);
+	glm::vec2 head = grabberPos + headDirection * (1.0f + this->length) + glm::vec2(1.0f);
 	renderInfo.selectionRenderInfo.addBox(base, head, color);
 }
 
 void Piston::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	glm::vec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	glm::vec2 moveDirection = MOVEABLE::DIRECTION[movementDirection];
+	glm::vec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
+	glm::vec2 moveDirection = MOVEABLE::DIRECTION[this->movementDirection];
 	int32_t tick = gameState.tick;
-	glm::vec2 ori = glm::vec2(origin);
-	if (moving) {
-		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
+	glm::vec2 ori = glm::vec2(this->origin);
+	if (this->moving) {
+		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
 		ori += scale * moveDirection;
 	}
 	glm::vec2 grabberPos = ori;
-	if (active) {
-		float scale = static_cast<float>(tick - activityTickStart) / activityPace;
-		grabberPos += (scale - 1) * glm::vec2(direction);
+	if (this->active) {
+		float scale = static_cast<float>(tick - this->activityTickStart) / this->activityPace;
+		grabberPos += (scale - 1) * glm::vec2(this->direction);
 	}
-	staticWorldRenderInfo.addBlockWithShadow(ori, cogTex);
-	for (int32_t i = 0; i <= length; i++) {
+	staticWorldRenderInfo.addBlockWithShadow(ori, this->cogTex);
+	for (int32_t i = 0; i <= this->length; i++) {
 		auto p = ori + static_cast<float>(i) * headDirection;
-		staticWorldRenderInfo.addBlockWithoutShadow(p, ropeTex);
+		staticWorldRenderInfo.addBlockWithoutShadow(p, this->ropeTex);
 	}
-	auto p = grabberPos + static_cast<float>(length + 1) * headDirection;
-	staticWorldRenderInfo.addBlockWithShadow(p, headTex);
+	auto p = grabberPos + static_cast<float>(this->length + 1) * headDirection;
+	staticWorldRenderInfo.addBlockWithShadow(p, this->headTex);
 }
 
 void Piston::removeActivityTracesLocal(GameState& gameState) {
@@ -172,125 +172,125 @@ void Piston::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Piston::removeMoveableTracesLocal(GameState& gameState) {
-	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	int32_t d = idot(getDirection(movementDirection), headDirection);
-	auto ori = origin - getDirection(movementDirection);
+	glm::ivec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
+	int32_t d = idot(getDirection(this->movementDirection), headDirection);
+	auto ori = this->origin - getDirection(this->movementDirection);
 	if (d == 0) {
-		for (int32_t i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= this->length + 1; i++) {
 			auto p = ori + i * headDirection;
-			gameState.staticWorld.removeTraceFilter(p, selfHandle);
+			gameState.staticWorld.removeTraceFilter(p, this->selfHandle);
 		}
 	}
 	else if (d == -1) {
-		auto p = ori + (length + 1) * headDirection;
-		gameState.staticWorld.removeTraceFilter(p, selfHandle);
+		auto p = ori + (this->length + 1) * headDirection;
+		gameState.staticWorld.removeTraceFilter(p, this->selfHandle);
 	}
 	else {
 		auto p = ori;
-		gameState.staticWorld.removeTraceFilter(p, selfHandle);
+		gameState.staticWorld.removeTraceFilter(p, this->selfHandle);
 	}
 }
 
 void Piston::leaveMoveableTracesLocal(GameState& gameState) {
-	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
-	int32_t d = idot(getDirection(movementDirection), headDirection);
-	auto ori = origin + getDirection(movementDirection);
+	glm::ivec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
+	int32_t d = idot(getDirection(this->movementDirection), headDirection);
+	auto ori = this->origin + getDirection(this->movementDirection);
 	if (d == 0) {
-		for (int32_t i = 0; i <= length + 1; i++) {
+		for (int32_t i = 0; i <= this->length + 1; i++) {
 			auto p = ori + i * headDirection;
-			gameState.staticWorld.leaveTrace(p, selfHandle);
+			gameState.staticWorld.leaveTrace(p, this->selfHandle);
 		}
 	}
 	else if (d == 1) {
-		auto p = ori + (length + 1) * headDirection;
-		gameState.staticWorld.leaveTrace(p, selfHandle);
+		auto p = ori + (this->length + 1) * headDirection;
+		gameState.staticWorld.leaveTrace(p, this->selfHandle);
 	}
 	else {
 		auto p = ori;
-		gameState.staticWorld.leaveTrace(p, selfHandle);
+		gameState.staticWorld.leaveTrace(p, this->selfHandle);
 	}
 }
 
 void Piston::save(Saver& saver) {
 	Grouper::save(saver);
-	saver.store<glm::ivec2>(direction);
-	saver.store<MOVEABLE::DIR>(headDir);
-	saver.store<PISTON::DIR>(state);
-	saver.store(length);
+	saver.store<glm::ivec2>(this->direction);
+	saver.store<MOVEABLE::DIR>(this->headDir);
+	saver.store<PISTON::DIR>(this->state);
+	saver.store(this->length);
 }
 
 bool Piston::load(Loader& loader) {
 	Grouper::load(loader);
-	loader.retrieve<glm::ivec2>(direction);
-	loader.retrieve<MOVEABLE::DIR>(headDir);
-	loader.retrieve<PISTON::DIR>(state);
-	loader.retrieve(length);
+	loader.retrieve<glm::ivec2>(this->direction);
+	loader.retrieve<MOVEABLE::DIR>(this->headDir);
+	loader.retrieve<PISTON::DIR>(this->state);
+	loader.retrieve(this->length);
 
 	auto s = Locator<BlockIDTextures>::get();
-	headTex = s->getBlockTextureID("grabber.dds");
-	ropeTex = s->getBlockTextureID("rope.dds");
-	cogTex = s->getBlockTextureID("cog.dds");
+	this->headTex = s->getBlockTextureID("grabber.dds");
+	this->ropeTex = s->getBlockTextureID("rope.dds");
+	this->cogTex = s->getBlockTextureID("cog.dds");
 
 	return true;
 }
 
 void Piston::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
-	auto d = origin - center;
+	auto d = this->origin - center;
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - 1);
-			headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(headDir + 1) % 4);
+			this->headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(this->headDir + 1) % 4);
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
-			headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(headDir + 3) % 4);
+			this->headDir = static_cast<MOVEABLE::DIR>(static_cast<int32_t>(this->headDir + 3) % 4);
 			d = glm::ivec2(-d.y - 1, d.x);
 			break;
 		default:
 			break;
 	}
-	origin = center + d;
+	this->origin = center + d;
 }
 
 void Piston::fillTracesLocalForced(GameState& gameState) {
-	glm::ivec2 pos = origin;
-	for (int32_t i = 0; i < length + 2; i++) {
-		gameState.staticWorld.leaveTrace(pos, selfHandle);
-		pos += MOVEABLE::DIRECTION[headDir];
+	glm::ivec2 pos = this->origin;
+	for (int32_t i = 0; i < this->length + 2; i++) {
+		gameState.staticWorld.leaveTrace(pos, this->selfHandle);
+		pos += MOVEABLE::DIRECTION[this->headDir];
 	}
 }
 
 void Piston::removeTracesLocalForced(GameState& gameState) {
-	glm::ivec2 pos = origin;
-	for (int32_t i = 0; i < length + 2; i++) {
+	glm::ivec2 pos = this->origin;
+	for (int32_t i = 0; i < this->length + 2; i++) {
 		gameState.staticWorld.removeTraceForced(pos);
-		pos += MOVEABLE::DIRECTION[headDir];
+		pos += MOVEABLE::DIRECTION[this->headDir];
 	}
 }
 
 void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
-	glm::ivec2 headDirection = MOVEABLE::DIRECTION[headDir];
+	glm::ivec2 headDirection = MOVEABLE::DIRECTION[this->headDir];
 	switch (type) {
 		case PISTON::EXTEND:
 			{
-				auto next = origin + (length + 2) * headDirection;
-				gameState.staticWorld.leaveTrace(next, selfHandle);
-				if (child.isNotNull()) {
-					child.get()->applyMoveUpForced(gameState, headDir, pace);
+				auto next = this->origin + (this->length + 2) * headDirection;
+				gameState.staticWorld.leaveTrace(next, this->selfHandle);
+				if (this->child.isNotNull()) {
+					this->child.get()->applyMoveUpForced(gameState, this->headDir, pace);
 				}
-				direction = headDirection;
-				length++;
+				this->direction = headDirection;
+				this->length++;
 			}
 			break;
 		case PISTON::RETRACT:
 			{
-				auto headpos = origin + (length + 1) * headDirection;
-				gameState.staticWorld.removeTraceFilter(headpos, selfHandle);
-				if (child.isNotNull()) {
-					child.get()->applyMoveUpForced(gameState, MOVEABLE::REV_DIR[headDir], pace);
+				auto headpos = this->origin + (this->length + 1) * headDirection;
+				gameState.staticWorld.removeTraceFilter(headpos, this->selfHandle);
+				if (this->child.isNotNull()) {
+					this->child.get()->applyMoveUpForced(gameState, MOVEABLE::REV_DIR[this->headDir], pace);
 				}
-				direction = -headDirection;
-				length--;
+				this->direction = -headDirection;
+				this->length--;
 			}
 			break;
 		default:
@@ -299,12 +299,12 @@ void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 }
 
 bool Piston::canFillTracesLocal(GameState& gameState) {
-	glm::ivec2 pos = origin;
-	for (int32_t i = 0; i < length + 2; i++) {
+	glm::ivec2 pos = this->origin;
+	for (int32_t i = 0; i < this->length + 2; i++) {
 		if (gameState.staticWorld.isOccupied(pos)) {
 			return false;
 		}
-		pos += MOVEABLE::DIRECTION[headDir];
+		pos += MOVEABLE::DIRECTION[this->headDir];
 	}
 	return true;
 }

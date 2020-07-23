@@ -39,28 +39,28 @@ public:
 
 template<>
 inline bool Loader::retrieve(int64_t& t) {
-	in.read(reinterpret_cast<char*>(&t), sizeof(t));
+	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
 template<>
 inline bool Loader::retrieve(int32_t& t) {
-	in.read(reinterpret_cast<char*>(&t), sizeof(t));
+	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
 template<>
 inline bool Loader::retrieve(int8_t& t) {
-	in.read(reinterpret_cast<char*>(&t), sizeof(t));
+	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
 template<>
 inline bool Loader::retrieve(glm::ivec2& t) {
 	int32_t x;
-	retrieve(x);
+	this->retrieve(x);
 	int32_t y;
-	retrieve(y);
+	this->retrieve(y);
 	t.x = static_cast<int>(x);
 	t.y = static_cast<int>(y);
 	return true;
@@ -69,20 +69,20 @@ inline bool Loader::retrieve(glm::ivec2& t) {
 template<>
 inline bool Loader::retrieve(size_t& t) {
 	int64_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<size_t>(s);
 	return true;
 }
 
 template<class A, class B>
 inline bool Loader::retrieve(WeakReference<A, B>& m) {
-	return retrieve(m.handle);
+	return this->retrieve(m.handle);
 }
 
 template<>
 inline bool Loader::retrieve(bool& t) {
 	int8_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<bool>(s);
 	return true;
 }
@@ -90,7 +90,7 @@ inline bool Loader::retrieve(bool& t) {
 template<>
 inline bool Loader::retrieve(ACTIVITY::TYPE& t) {
 	int32_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<ACTIVITY::TYPE>(s);
 	return true;
 }
@@ -98,7 +98,7 @@ inline bool Loader::retrieve(ACTIVITY::TYPE& t) {
 template<>
 inline bool Loader::retrieve(MOVEABLE::DIR& t) {
 	int32_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<MOVEABLE::DIR>(s);
 	return true;
 }
@@ -106,7 +106,7 @@ inline bool Loader::retrieve(MOVEABLE::DIR& t) {
 template<>
 inline bool Loader::retrieve(PISTON::DIR& t) {
 	int32_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<PISTON::DIR>(s);
 	return true;
 }
@@ -114,7 +114,7 @@ inline bool Loader::retrieve(PISTON::DIR& t) {
 template<>
 inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 	int32_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<RAILCRANE::DIR>(s);
 	return true;
 }
@@ -122,7 +122,7 @@ inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 template<>
 inline bool Loader::retrieve(sol::type& t) {
 	int32_t s;
-	retrieve(s);
+	this->retrieve(s);
 	t = static_cast<sol::type>(s);
 	return true;
 }
@@ -130,14 +130,14 @@ inline bool Loader::retrieve(sol::type& t) {
 template<>
 inline bool Loader::retrieve(double& t) {
 	std::string s;
-	retrieveString(s);
+	this->retrieveString(s);
 	t = std::stod(s);
 	return true;
 }
 
 template<>
 inline bool Loader::retrieve(std::string& t) {
-	return retrieveString(t);
+	return this->retrieveString(t);
 }
 
 template<class T>

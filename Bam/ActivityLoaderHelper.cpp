@@ -13,6 +13,9 @@
 #include "Activator.h"
 #include "RailCrane.h"
 
+#include "Saver.h"
+#include "Loader.h"
+
 #define LOAD(TYPE) TYPE* p = new TYPE();\
 					p->load(loader);\
 					manager.storeReference(p->getHandle(), p);

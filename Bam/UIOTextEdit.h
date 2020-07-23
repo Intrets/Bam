@@ -14,7 +14,6 @@ public:
 	glm::ivec2 viewVertical = { 0,30 };
 
 	glm::ivec2 viewSize;
-	float fontWidth;
 
 	UIOTextEdit(Handle self);
 

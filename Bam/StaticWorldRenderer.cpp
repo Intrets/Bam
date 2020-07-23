@@ -4,21 +4,19 @@
 #include <vector>
 
 #include "ShaderLoader.h"
-//#include "StaticWorldChunk.h"
 #include "CameraInfo.h"
 #include "BlockIDTextures.h"
 #include "GLEnableWrapper.h"
-//#include "ResourceManager.h"
 
 #include "ModelResource.h"
 #include "ModelStore.h"
 
 StaticWorldRenderer::StaticWorldRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("StaticWorldShader.vert", "StaticWorldShader.frag")),
-	texture("myTextureSampler", program, 0),
-	VP("VP", program)
+	texture("myTextureSampler", this->program, 0),
+	VP("VP", this->program)
 {
-	VAO.gen(5);
+	this->VAO.gen(5);
 
 	ModelResource tempp("devtile.obj");
 
@@ -90,8 +88,8 @@ StaticWorldRenderer::StaticWorldRenderer() :
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// 4th attribute buffer : offsets
-	glGenBuffers(1, &offset.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
+	glGenBuffers(1, &this->offset.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		3,                                // attribute
@@ -103,8 +101,8 @@ StaticWorldRenderer::StaticWorldRenderer() :
 	);
 	glVertexAttribDivisor(3, 1);
 
-	glGenBuffers(1, &textureID.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
+	glGenBuffers(1, &this->textureID.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->textureID.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(int32_t) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		4,                                // attribute
@@ -119,7 +117,7 @@ StaticWorldRenderer::StaticWorldRenderer() :
 	// Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempp.get()->indexbufferHandle);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
 StaticWorldRenderer::~StaticWorldRenderer() {
@@ -128,8 +126,8 @@ StaticWorldRenderer::~StaticWorldRenderer() {
 void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, CameraInfo & cameraInfo) {
 	ModelResource tempp("devtile.obj");
 
-	VAO.bind();
-	program.use();
+	this->VAO.bind();
+	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.disable(GL_BLEND);
@@ -138,20 +136,20 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y); 
 
-	texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
+	this->texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
 
 	if (info.offsets.size() == 0) {
 		return;
 	}
 
-	VP.set(cameraInfo.VP);
+	this->VP.set(cameraInfo.VP);
 
 	int32_t drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int32_t>(info.offsets.size()));
 
-	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.offsets)::value_type) * drawCount, &info.offsets[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->textureID.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int32_t) * drawCount, &info.textureIDs[0]);
 
 	glDrawElementsInstanced(
@@ -162,14 +160,14 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 		drawCount
 	);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
 void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLuint target, CameraInfo & cameraInfo) {
 	ModelResource temp("devtile.obj");
 
-	VAO.bind();
-	program.use();
+	this->VAO.bind();
+	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.disable(GL_BLEND);
@@ -178,13 +176,13 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
-	texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
+	this->texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
 
 	if (infos.size() == 0) {
 		return;
 	}
 
-	VP.set(cameraInfo.VP);
+	this->VP.set(cameraInfo.VP);
 
 	int32_t offseti = 0;
 
@@ -197,10 +195,10 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 			infoSize = MAX_STATIC_DRAW - offseti;
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(decltype(info->offsets)::value_type) * offseti, sizeof(glm::vec2) * infoSize, &info->offsets[0]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, textureID.ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->textureID.ID);
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(int32_t) * offseti, sizeof(int32_t) * infoSize, &info->textureIDs[0]);
 		offseti += infoSize;
 
@@ -217,5 +215,5 @@ void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLui
 		offseti
 	);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "BufferWrappers.h"
-#include "CameraInfo.h"
 
 struct UIRenderInfo;
+struct CameraInfo;
 
 class UIbackgroundRenderer
 {

@@ -12,7 +12,6 @@ class DebugRenderer
 {
 public:
 	void render(GLuint target, RenderInfo& renderInfo);
-	//void render(GLuint target, CameraInfo& cameraInfo);
 
 	DebugRenderer();
 	~DebugRenderer();

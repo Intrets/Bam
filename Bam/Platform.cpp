@@ -1,4 +1,5 @@
 #include "common.h"
+
 #include "Platform.h"
 #include "BlockIDTextures.h"
 #include "GameState.h"
@@ -6,56 +7,55 @@
 #include "Anchor.h"
 #include "StaticWorldChunk.h"	
 #include "Modifyables.h"
-
-//#include "Saver.h"
-//#include "Loader.h"
+#include "Saver.h"
+#include "Loader.h"
 #include "RenderInfo.h"
 
 void Platform::calculateBlockedDirections() {
 	for (int32_t i = 0; i < 4; i++) {
-		blockedDirections[i].clear();
+		this->blockedDirections[i].clear();
 	}
-	for (int32_t x = 0; x < size.x; x++) {
+	for (int32_t x = 0; x < this->size.x; x++) {
 		{
 			int32_t y = 0;
-			if (blocks[x][y].isOccupied()) {
-				blockedDirections[MOVEABLE::DOWN].push_back(glm::ivec2(x, y - 1));
+			if (this->blocks[x][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::DOWN].push_back(glm::ivec2(x, y - 1));
 			}
 		}
 		{
 			int32_t y = size.y - 1;
-			if (blocks[x][y].isOccupied()) {
-				blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
+			if (this->blocks[x][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
 			}
 		}
 		for (int32_t y = 0; y < size.y - 1; y++) {
-			if (blocks[x][y].isOccupied() && !blocks[x][y + 1].isOccupied()) {
-				blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
+			if (this->blocks[x][y].isOccupied() && !this->blocks[x][y + 1].isOccupied()) {
+				this->blockedDirections[MOVEABLE::UP].push_back(glm::ivec2(x, y + 1));
 			}
-			else if (!blocks[x][y].isOccupied() && blocks[x][y + 1].isOccupied()) {
-				blockedDirections[MOVEABLE::DOWN].push_back(glm::ivec2(x, y));
+			else if (!this->blocks[x][y].isOccupied() && this->blocks[x][y + 1].isOccupied()) {
+				this->blockedDirections[MOVEABLE::DOWN].push_back(glm::ivec2(x, y));
 			}
 		}
 	}
 	for (int32_t y = 0; y < size.y; y++) {
 		{
 			int32_t x = 0;
-			if (blocks[x][y].isOccupied()) {
-				blockedDirections[MOVEABLE::LEFT].push_back(glm::ivec2(x - 1, y));
+			if (this->blocks[x][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::LEFT].push_back(glm::ivec2(x - 1, y));
 			}
 		}
 		{
 			int32_t x = size.x - 1;
-			if (blocks[x][y].isOccupied()) {
-				blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
+			if (this->blocks[x][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
 		}
 		for (int32_t x = 0; x < size.x - 1; x++) {
-			if (blocks[x][y].isOccupied() && !blocks[x + 1][y].isOccupied()) {
-				blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
+			if (this->blocks[x][y].isOccupied() && !this->blocks[x + 1][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
-			else if (!blocks[x][y].isOccupied() && blocks[x + 1][y].isOccupied()) {
-				blockedDirections[MOVEABLE::LEFT].push_back(glm::ivec2(x, y));
+			else if (!this->blocks[x][y].isOccupied() && this->blocks[x + 1][y].isOccupied()) {
+				this->blockedDirections[MOVEABLE::LEFT].push_back(glm::ivec2(x, y));
 			}
 		}
 	}
@@ -64,16 +64,16 @@ void Platform::calculateBlockedDirections() {
 Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ivec2 pos, bool leaveTraces) :
 	Activity(self, pos),
 	size(_size),
-	blocks(size[0], std::vector<Block>(size[1], Block(0))) {
+	blocks(this->size[0], std::vector<Block>(this->size[1], Block(0))) {
 	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
-	for (int32_t i = 0; i < size[0]; i++) {
-		for (int32_t j = 0; j < size[1]; j++) {
+	for (int32_t i = 0; i < this->size[0]; i++) {
+		for (int32_t j = 0; j < this->size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			blocks[i][j].setID(textureID);
+			this->blocks[i][j].setID(textureID);
 		}
 	}
-	blocks[0][1].setID(4);
-	blocks[1][0].setID(5);
+	this->blocks[0][1].setID(4);
+	this->blocks[1][0].setID(5);
 	if (leaveTraces) {
 		fillTracesLocalForced(gameState);
 	}
@@ -82,25 +82,25 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 
 void Platform::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
 	auto d = origin - center;
-	size = glm::ivec2(size.y, size.x);
-	auto old = blocks;
-	blocks.clear();
-	blocks.resize(size.x, std::vector<Block>(size.y));
+	this->size = glm::ivec2(this->size.y, this->size.x);
+	auto old = this->blocks;
+	this->blocks.clear();
+	this->blocks.resize(size.x, std::vector<Block>(this->size.y));
 	switch (rotation) {
 		case MOVEABLE::ROT::CLOCKWISE:
-			d = glm::ivec2(d.y, -d.x - size.y);
-			for (int32_t i = 0; i < size.x; i++) {
-				for (int32_t j = 0; j < size.y; j++) {
-					blocks[i][j] = old[size.y - 1 - j][i];
+			d = glm::ivec2(d.y, -d.x - this->size.y);
+			for (int32_t i = 0; i < this->size.x; i++) {
+				for (int32_t j = 0; j < this->size.y; j++) {
+					this->blocks[i][j] = old[this->size.y - 1 - j][i];
 				}
 			}
 			calculateBlockedDirections();
 			break;
 		case MOVEABLE::ROT::COUNTERCLOCKWISE:
-			d = glm::ivec2(-d.y - size.x, d.x);
-			for (int32_t i = 0; i < size.x; i++) {
-				for (int32_t j = 0; j < size.y; j++) {
-					blocks[i][j] = old[j][size.x - 1 - i];
+			d = glm::ivec2(-d.y - this->size.x, d.x);
+			for (int32_t i = 0; i < this->size.x; i++) {
+				for (int32_t j = 0; j < this->size.y; j++) {
+					this->blocks[i][j] = old[j][this->size.x - 1 - i];
 				}
 			}
 			calculateBlockedDirections();
@@ -119,7 +119,7 @@ void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo,
 		v += scale * glm::vec2(getDirection(movementDirection));
 	}
 	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
-	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size), color);
+	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(this->size), color);
 	renderInfo.debugRenderInfo.addPoint(v);
 
 }
@@ -131,16 +131,16 @@ void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInf
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
 		v += scale * glm::vec2(getDirection(movementDirection));
 	}
-	for (int32_t x = 0; x < size.x; x++) {
-		for (int32_t y = 0; y < size.y; y++) {
+	for (int32_t x = 0; x < this->size.x; x++) {
+		for (int32_t y = 0; y < this->size.y; y++) {
 			// TODO: remove debugging textures 
-			if (blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isOccupied()) {
 				glm::vec2 p(x, y);
 				p += v;
 				staticWorldRenderInfo.offsets.push_back(p);
 				staticWorldRenderInfo.offsetsShadow.push_back(p);
-				if (blocks[x][y].isBlock()) {
-					staticWorldRenderInfo.textureIDs.push_back(blocks[x][y].getID());
+				if (this->blocks[x][y].isBlock()) {
+					staticWorldRenderInfo.textureIDs.push_back(this->blocks[x][y].getID());
 				}
 				else {
 					staticWorldRenderInfo.textureIDs.push_back(1);
@@ -153,7 +153,7 @@ void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInf
 bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
 	glm::ivec2 movedOrigin = origin + getDirection(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);
-	glm::ivec2 p2 = floordiv(movedOrigin + size, CHUNKSIZE);
+	glm::ivec2 p2 = floordiv(movedOrigin + this->size, CHUNKSIZE);
 
 	glm::ivec2 localSize = 1 + p2 - p1;
 	std::vector<std::vector<StaticWorldChunk*>> nearChunks(localSize.x, std::vector<StaticWorldChunk*>(localSize.y, nullptr));
@@ -165,7 +165,7 @@ bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgn
 		}
 	}
 	bool blocked = false;
-	for (glm::ivec2& v_ : blockedDirections[dir]) {
+	for (glm::ivec2& v_ : this->blockedDirections[dir]) {
 		glm::ivec2 v = origin + v_;
 		//debug->points.push_back(v);
 		auto r = floordivmod(v, CHUNKSIZE);
@@ -180,13 +180,13 @@ bool Platform::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgn
 }
 
 void Platform::removeMoveableTracesLocal(GameState& gameState) {
-	for (auto& dir : blockedDirections[(movementDirection + 2) % 4]) {
+	for (auto& dir : this->blockedDirections[(movementDirection + 2) % 4]) {
 		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
 	}
 }
 
 void Platform::leaveMoveableTracesLocal(GameState& gameState) {
-	for (auto& dir : blockedDirections[movementDirection]) {
+	for (auto& dir : this->blockedDirections[movementDirection]) {
 		gameState.staticWorld.leaveTrace(origin + dir, selfHandle);
 	}
 }
@@ -203,19 +203,19 @@ void Platform::leaveActivityTracesLocal(GameState& gameState) {
 
 void Platform::save(Saver& saver) {
 	Activity::save(saver);
-	saver.store<glm::ivec2>(size);
+	saver.store<glm::ivec2>(this->size);
 }
 
 bool Platform::load(Loader& loader) {
 	Activity::load(loader);
-	loader.retrieve<glm::ivec2>(size);
+	loader.retrieve<glm::ivec2>(this->size);
 
-	blocks = std::vector<std::vector<Block>>(size[0], std::vector<Block>(size[1], Block(0)));
+	this->blocks = std::vector<std::vector<Block>>(this->size[0], std::vector<Block>(this->size[1], Block(0)));
 	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
-	for (int32_t i = 0; i < size[0]; i++) {
-		for (int32_t j = 0; j < size[1]; j++) {
+	for (int32_t i = 0; i < this->size[0]; i++) {
+		for (int32_t j = 0; j < this->size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			blocks[i][j].setID(textureID);
+			this->blocks[i][j].setID(textureID);
 		}
 	}
 
@@ -249,8 +249,8 @@ void Platform::getTreeMembers(std::vector<Activity*>& members) {
 }
 
 bool Platform::canFillTracesLocal(GameState& gameState) {
-	for (int32_t i = 0; i < size.x; i++) {
-		for (int32_t j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < this->size.x; i++) {
+		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			if (gameState.staticWorld.isOccupied(p)) {
 				return false;
@@ -261,8 +261,8 @@ bool Platform::canFillTracesLocal(GameState& gameState) {
 }
 
 void Platform::fillTracesLocalForced(GameState& gameState) {
-	for (int32_t i = 0; i < size.x; i++) {
-		for (int32_t j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < this->size.x; i++) {
+		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.leaveTrace(p, selfHandle);
 		}
@@ -270,8 +270,8 @@ void Platform::fillTracesLocalForced(GameState& gameState) {
 }
 
 void Platform::removeTracesLocalForced(GameState& gameState) {
-	for (int32_t i = 0; i < size.x; i++) {
-		for (int32_t j = 0; j < size.y; j++) {
+	for (int32_t i = 0; i < this->size.x; i++) {
+		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
 			gameState.staticWorld.removeTraceForced(p);
 		}

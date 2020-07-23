@@ -4,13 +4,13 @@
 #include <iostream>
 
 bool GameLogic::ready() {
-	return glfwGetTime() > nextStep;
+	return glfwGetTime() > this->nextStep;
 }
 
 int GameLogic::runStep(GameState& gameState) {
 	gameState.tick++;
-	nextStep += stepTime;
-	step++;
+	this->nextStep += this->stepTime;
+	this->step++;
 
 	gameState.movementPaceHandler.finish(gameState);
 	gameState.movementPaceHandler.cycle();

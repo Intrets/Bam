@@ -2,6 +2,7 @@
 
 #include "Grouper.h"
 
+// TODO: move into class
 namespace RAILCRANE
 {
 	typedef enum

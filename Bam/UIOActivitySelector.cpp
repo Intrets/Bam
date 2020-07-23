@@ -6,7 +6,7 @@
 #include "UIOCallBackParams.h"
 
 UIOActivitySelector::UIOActivitySelector(Handle self) {
-	selfHandle = self;
+	this->selfHandle = self;
 
 	this->addGlobalBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		params.player.selection.expandTarget();

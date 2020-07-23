@@ -3,8 +3,6 @@
 #include <memory>
 #include "TextureStore.h"
 
-class TextureStore;
-
 class ResourceManagerTexture
 {
 private:

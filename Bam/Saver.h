@@ -39,19 +39,19 @@ public:
 
 template<>
 inline bool Saver::store(int64_t t) {
-	out.write(reinterpret_cast<char*>(&t), sizeof(t));
+	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
 template<>
 inline bool Saver::store(int32_t t) {
-	out.write(reinterpret_cast<char*>(&t), sizeof(t));
+	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
 template<>
 inline bool Saver::store(int8_t t) {
-	out.write(reinterpret_cast<char*>(&t), sizeof(t));
+	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 
@@ -173,7 +173,7 @@ inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved)
 template<class T>
 inline bool Saver::store(T t) {
 	assert(false);
-	//out.write(reinterpret_cast<char*>(&t), sizeof(t));
+	//this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
 }
 

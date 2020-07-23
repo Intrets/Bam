@@ -1,7 +1,8 @@
 #pragma once
 
 #include "BufferWrappers.h"
-#include "RenderInfo.h"
+
+struct RenderInfo;
 
 class SelectionHighlightRenderer
 {

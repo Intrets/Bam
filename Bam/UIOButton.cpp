@@ -6,15 +6,15 @@
 #include "UIOCallBackParams.h"
 
 UIOButton::UIOButton(Handle self) {
-	onPress = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onPress = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	onRelease = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onRelease = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	selfHandle = self;
+	this->selfHandle = self;
 
 	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (this->contains(state.uiState.getCursorPositionScreen())) {
@@ -31,19 +31,19 @@ UIOButton::UIOButton(Handle self) {
 }
 
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
-	screenRectangle = newScreenRectangle;
-	return screenRectangle;
+	this->screenRectangle = newScreenRectangle;
+	return this->screenRectangle;
 }
 
 int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 color;
 	if (down) {
-		color = pressedColor;
+		color = this->pressedColor;
 	}
 	else {
-		color = unpressedColor;
+		color = this->unpressedColor;
 	}
-	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, color, depth);
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, color, depth);
 	return depth + 1;
 }
 

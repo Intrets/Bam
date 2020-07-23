@@ -1,14 +1,16 @@
 #include "common.h"
+
 #include "SelectionHighlightRenderer.h"
 #include "ModelResource.h"
 #include "ModelStore.h"
 #include "GLEnableWrapper.h"
+#include "RenderInfo.h"
 
 
 SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("HighlightShader.vert", "HighlightShader.frag")),
-	VP("VP", program) {
-	VAO.gen(4);
+	VP("VP", this->program) {
+	this->VAO.gen(4);
 
 	ModelResource tempp("devtile.obj");
 
@@ -23,8 +25,8 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 		(void*) 0            // array buffer offset
 	);
 
-	glGenBuffers(1, &offset.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
+	glGenBuffers(1, &this->offset.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		1,                                // attribute
@@ -36,8 +38,8 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(1, 1);
 
-	glGenBuffers(1, &scale.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, scale.ID);
+	glGenBuffers(1, &this->scale.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->scale.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		2,                                // attribute
@@ -49,8 +51,8 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(2, 1);
 
-	glGenBuffers(1, &color.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, color.ID);
+	glGenBuffers(1, &this->color.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->color.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(
 		3,                                // attribute
@@ -65,7 +67,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	// Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempp.get()->indexbufferHandle);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
 
@@ -75,8 +77,8 @@ SelectionHighlightRenderer::~SelectionHighlightRenderer() {
 void SelectionHighlightRenderer::render(RenderInfo & info, GLuint target) {
 	ModelResource tempp("devtile.obj");
 
-	VAO.bind();
-	program.use();
+	this->VAO.bind();
+	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.disable(GL_DEPTH_TEST).enable(GL_BLEND);
@@ -90,17 +92,17 @@ void SelectionHighlightRenderer::render(RenderInfo & info, GLuint target) {
 		return;
 	}
 
-	VP.set(info.cameraInfo.VP);
+	this->VP.set(info.cameraInfo.VP);
 
 	int32_t drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int32_t>(info.selectionRenderInfo.offsets.size()));
 
-	glBindBuffer(GL_ARRAY_BUFFER, offset.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.selectionRenderInfo.offsets)::value_type) * drawCount, &info.selectionRenderInfo.offsets[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, scale.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->scale.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.selectionRenderInfo.scales)::value_type) * drawCount, &info.selectionRenderInfo.scales[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, color.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->color.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * drawCount, &info.selectionRenderInfo.colors[0]);
 
 	glDrawElementsInstanced(
@@ -111,5 +113,5 @@ void SelectionHighlightRenderer::render(RenderInfo & info, GLuint target) {
 		drawCount
 	);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }

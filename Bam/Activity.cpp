@@ -4,8 +4,8 @@
 #include "Anchor.h"
 #include "Modifyables.h"
 #include "ActivityIgnoringGroup.h"
-//#include "Saver.h"
-//#include "Loader.h"
+#include "Saver.h"
+#include "Loader.h"
 
 void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
 	this->movingPace = pace;

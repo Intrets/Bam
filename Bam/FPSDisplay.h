@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Option.h"
-//#include "BaseWindow.h"
-//#include "TextWindow.h"
 #include "ReferenceManager.h"
 
 class OptionInteger;
@@ -14,6 +12,7 @@ typedef enum
 	FPS_WINDOW,
 } FPS_display_mode;
 
+// TODO: rework
 class FPSDisplay
 {
 public:

@@ -31,6 +31,5 @@ public:
 
 protected:
 	virtual void appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo);
-	CONTINUATION runBinds(ControlState& controlState, GameState& gameState);
 };
 

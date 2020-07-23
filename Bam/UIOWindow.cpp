@@ -8,9 +8,9 @@
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
-	selfHandle = self;
+	this->selfHandle = self;
 
-	main = main_.get();
+	this->main = main_.get();
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(main_));
 	mainPad.get()->top = { UIOSizeType::PX, 30 };
@@ -20,7 +20,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	addElement(std::move(mainPad));
 
 	auto top = refMan->makeUniqueRef<UIOButton>();
-	topBar = top.get();
+	this->topBar = top.get();
 
 	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(top));
 	topConstrain.get()->maybeHeight = { UIOSizeType::PX, 30 };
@@ -29,12 +29,12 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	addElement(std::move(topConstrain));
 
 	auto setMoveOrigin = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		this->mousePressedPosOffset = screenRectangle.getTopLeft() - state.uiState.getCursorPositionScreen();
+		this->mousePressedPosOffset = this->screenRectangle.getTopLeft() - state.uiState.getCursorPositionScreen();
 		return BIND_RESULT::CONTINUE;
 	};
 
 	auto move = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (topBar->down) {
+		if (this->topBar->down) {
 			this->moveTopLeftTo(state.uiState.getCursorPositionScreen() + this->mousePressedPosOffset);
 		}
 		return BIND_RESULT::CONTINUE;
@@ -42,7 +42,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	{
 		auto br = refMan->makeUniqueRef<UIOButton>();
-		bottomRightBar = br.get();
+		this->bottomRightBar = br.get();
 
 		auto brConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(br));
 		brConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
@@ -53,7 +53,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	}
 
 	auto b = refMan->makeUniqueRef<UIOButton>();
-	bottomBar = b.get();
+	this->bottomBar = b.get();
 
 	auto botConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
 	botConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
@@ -62,7 +62,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	addElement(std::move(botConstrain));
 
 	auto r = refMan->makeUniqueRef<UIOButton>();
-	rightBar = r.get();
+	this->rightBar = r.get();
 
 	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(r));
 	rightConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
@@ -71,7 +71,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	addElement(std::move(rightConstrain));
 
 	auto scaleVertical = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (bottomBar->down) {
+		if (this->bottomBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.y = state.uiState.getCursorPositionScreen().y;
 			if (this->screenRectangle.top.y - bottomRight.y < 0.2f) {
@@ -84,7 +84,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	};
 
 	auto scaleHorizontal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (rightBar->down) {
+		if (this->rightBar->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.x = state.uiState.getCursorPositionScreen().x;
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
@@ -97,7 +97,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	};
 
 	auto scaleDiagonal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (bottomRightBar->down) {
+		if (this->bottomRightBar->down) {
 			auto bottomRight = state.uiState.getCursorPositionScreen();
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
@@ -119,14 +119,14 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 }
 
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
-	screenRectangle = newScreenRectangle;
+	this->screenRectangle = newScreenRectangle;
 
-	for (auto& element : elements) {
-		element.get()->updateSize(newScreenRectangle);
+	for (auto& element : this->elements) {
+		element.get()->updateSize(this->screenRectangle);
 	}
-	return screenRectangle;
+	return this->screenRectangle;
 }
 
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	return UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
+	return this->UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
 }

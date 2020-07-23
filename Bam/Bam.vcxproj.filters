@@ -83,9 +83,6 @@
     <Filter Include="Game\Serial">
       <UniqueIdentifier>{032343f5-548c-48ab-bda0-6732ac598b86}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Logic\Seqs">
-      <UniqueIdentifier>{f9d80dca-f977-486c-8b8c-0388260884a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Renderer\UI">
       <UniqueIdentifier>{6a5a1940-06dc-40d3-ab11-1d32428ce2ea}</UniqueIdentifier>
     </Filter>
@@ -100,9 +97,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OGLhelpers.cpp">
-      <Filter>GLWrappers</Filter>
-    </ClCompile>
     <ClCompile Include="BufferWrappers.cpp">
       <Filter>GLWrappers</Filter>
     </ClCompile>
@@ -226,20 +220,8 @@
     <ClCompile Include="GameLogic.cpp">
       <Filter>Game\Logic</Filter>
     </ClCompile>
-    <ClCompile Include="LogicSequencer.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
     <ClCompile Include="Linker.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivityLinker.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivitySelector.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivityInteractor.cpp">
-      <Filter>Game\Logic\Seqs</Filter>
     </ClCompile>
     <ClCompile Include="Piston.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
@@ -360,14 +342,18 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="Fonts.cpp" />
-    <ClCompile Include="PassThroughRenderer.cpp" />
-    <ClCompile Include="BlitRenderer.cpp" />
+    <ClCompile Include="Fonts.cpp">
+      <Filter>Renderer\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="BlitRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="PassThroughRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivitySelector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OGLhelpers.h">
-      <Filter>GLWrappers</Filter>
-    </ClInclude>
     <ClInclude Include="BufferWrappers.h">
       <Filter>GLWrappers</Filter>
     </ClInclude>
@@ -503,20 +489,8 @@
     <ClInclude Include="GameLogic.h">
       <Filter>Game\Logic</Filter>
     </ClInclude>
-    <ClInclude Include="LogicSequencer.h">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
     <ClInclude Include="Linker.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityInteractor.h">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityLinker.h">
-      <Filter>Game\Logic\Seqs</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivitySelector.h">
-      <Filter>Game\Logic\Seqs</Filter>
     </ClInclude>
     <ClInclude Include="Piston.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
@@ -637,9 +611,16 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="Log.h" />
-    <ClInclude Include="Fonts.h" />
-    <ClInclude Include="PassThroughRenderer.h" />
-    <ClInclude Include="BlitRenderer.h" />
+    <ClInclude Include="Fonts.h">
+      <Filter>Renderer\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="BlitRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="PassThroughRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySelector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
@@ -679,7 +660,11 @@
     <None Include="Passthrough.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
-    <None Include="Blit.vert" />
-    <None Include="Blit.frag" />
+    <None Include="Blit.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="Blit.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

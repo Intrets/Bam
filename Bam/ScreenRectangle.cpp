@@ -3,35 +3,35 @@
 #include "ScreenRectangle.h"
 
 glm::vec2 ScreenRectangle::getTopLeft() {
-	return glm::vec2(bot.x, top.y);
+	return glm::vec2(this->bot.x, this->top.y);
 }
 
 glm::vec2 ScreenRectangle::getBottomRight() {
-	return glm::vec2(top.x, bot.y);
+	return glm::vec2(this->top.x, this->bot.y);
 }
 
 glm::vec2 ScreenRectangle::getTopRight() {
-	return top;
+	return this->top;
 }
 
 glm::vec2 ScreenRectangle::getBottomLeft() {
-	return bot;
+	return this->bot;
 }
 
 float ScreenRectangle::getWidth() {
-	return top.x - bot.x;
+	return this->top.x - this->bot.x;
 }
 
 float ScreenRectangle::getHeight() {
-	return top.y - bot.y;
+	return this->top.y - this->bot.y;
 }
 
 glm::vec2 ScreenRectangle::size() {
-	return glm::abs(bot - top);
+	return glm::abs(this->bot - this->top);
 }
 
 glm::ivec2 ScreenRectangle::getPixelSize() {
-	return screenPixels;
+	return this->screenPixels;
 }
 
 glm::ivec2 ScreenRectangle::getPixelPos() {
@@ -41,7 +41,7 @@ glm::ivec2 ScreenRectangle::getPixelPos() {
 }
 
 bool ScreenRectangle::contains(glm::vec2 p) {
-	return (bot.x < p.x) && (p.x < top.x) && (bot.y < p.y) && (p.y < top.y);
+	return (this->bot.x < p.x) && (p.x < this->top.x) && (this->bot.y < p.y) && (p.y < this->top.y);
 }
 
 void ScreenRectangle::scaleAnchorTopLeft(glm::vec2 s) {
@@ -54,39 +54,39 @@ void ScreenRectangle::scaleAnchorTopLeft(glm::vec2 s) {
 }
 
 void ScreenRectangle::set(glm::vec2 p1, glm::vec2 p2) {
-	bot = glm::min(p1, p2);
-	top = glm::max(p1, p2);
+	this->bot = glm::min(p1, p2);
+	this->top = glm::max(p1, p2);
 }
 
 void ScreenRectangle::setTopLeft(glm::vec2 p) {
-	bot.x = p.x;
-	top.y = p.y;
+	this->bot.x = p.x;
+	this->top.y = p.y;
 }
 
 void ScreenRectangle::setBottomRight(glm::vec2 p) {
-	bot.y = p.y;
-	top.x = p.x;
+	this->bot.y = p.y;
+	this->top.x = p.x;
 }
 
 void ScreenRectangle::setTopRight(glm::vec2 p) {
-	top = p;
+	this->top = p;
 }
 
 void ScreenRectangle::setBottomLeft(glm::vec2 p) {
-	bot = p;
+	this->bot = p;
 }
 
 void ScreenRectangle::translate(glm::vec2 p) {
-	bot += p;
-	top += p;
+	this->bot += p;
+	this->top += p;
 }
 
 void ScreenRectangle::setHeight(float h) {
-	bot.y = top.y - h;
+	this->bot.y = this->top.y - h;
 }
 
 void ScreenRectangle::setWidth(float w) {
-	top.x = bot.x + w;
+	this->top.x = this->bot.x + w;
 }
 
 bool ScreenRectangle::equals(ScreenRectangle& other) {

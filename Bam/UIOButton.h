@@ -12,8 +12,6 @@ public:
 	glm::vec4 pressedColor = { 0.5f, 0.5f, 0.5f, 1.0f };
 	glm::vec4 unpressedColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-  	std::vector<CallBack> whileDown;
-
 	UIOButton(Handle self);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;

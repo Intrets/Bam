@@ -4,7 +4,7 @@
 #include "State.h"
 
 void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
-	elements.push_back(std::move(element));
+	this->elements.push_back(std::move(element));
 }
 
 void UIOBase::translate(glm::vec2 p) {
@@ -16,18 +16,18 @@ void UIOBase::translate(glm::vec2 p) {
 }
 
 void UIOBase::setScreenPixels(glm::ivec2 px) {
-	screenRectangle.screenPixels = px;
-	for (auto& element : elements) {
+	this->screenRectangle.screenPixels = px;
+	for (auto& element : this->elements) {
 		element.get()->setScreenPixels(px);
 	}
 }
 
 void UIOBase::moveTopLeftTo(glm::vec2 p) {
-	translate(p - screenRectangle.getTopLeft());
+	translate(p - this->screenRectangle.getTopLeft());
 }
 
 bool UIOBase::contains(glm::vec2 p) {
-	return screenRectangle.contains(p);
+	return this->screenRectangle.contains(p);
 }
 
 void UIOBase::addGlobalBind(BindControl bindControl, CallBack callBack) {
@@ -53,7 +53,7 @@ CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 			}
 		}
 	}
-	for (auto& element : elements) {
+	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
 		sumResult |= elementResult;
 		if (sumResult & BIND_RESULT::STOP) {
@@ -78,7 +78,7 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 			}
 		}
 	}
-	for (auto& element : elements) {
+	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
 		sumResult |= elementResult;
 		if (sumResult & BIND_RESULT::STOP) {
@@ -90,7 +90,7 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 
 int32_t UIOBase::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t maxDepth = 0;
-	for (auto& element : elements) {
+	for (auto& element : this->elements) {
 		maxDepth = glm::max(maxDepth, element.get()->addRenderInfo(gameState, renderInfo, depth));
 	}
 	return 1 + maxDepth;

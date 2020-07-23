@@ -135,8 +135,3 @@ void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo&
 	//);
 }
 
-CONTINUATION ActivityLuaTest::runBinds(ControlState& controlState, GameState& gameState) {
-	text.append(controlState.getCharBuffer());
-	//return LogicSequencer::runBinds(controlState, gameState);
-	return CONTINUATION::CONTINUE;
-}

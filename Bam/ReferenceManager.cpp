@@ -2,13 +2,13 @@
 #include "ReferenceManager.h"
 
 void ManagedReferenceBase::validate() {
-	valid = true;
+	this->valid = true;
 }
 
 void ManagedReferenceBase::invalidate() {
-	valid = false;
+	this->valid = false;
 }
 
 bool ManagedReferenceBase::isValid() const {
-	return valid;
+	return this->valid;
 }

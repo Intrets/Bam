@@ -8,7 +8,6 @@
 #include "DebugRenderInfo.h"
 #include "SelectionRenderInfo.h"
 #include "TextRenderInfo.h"
-//#include "RenderState.h"
 
 struct RenderInfo
 {
@@ -19,7 +18,4 @@ struct RenderInfo
 	SelectionRenderInfo selectionRenderInfo;
 	TextRenderInfo textRenderInfo;
 	UIRenderInfo uiRenderInfo;
-
-	//TODO: add buffering of options
-	// eg OptionInteger blurRender;
 };

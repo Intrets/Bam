@@ -6,8 +6,6 @@
 class UIOTextDisplay : public UIOBase
 {
 public:
-	int32_t fontSize = 16;
-
 	std::vector<std::string> text;
 
 	std::optional<WindowTextRenderInfo> cachedText;

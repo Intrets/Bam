@@ -1,30 +1,31 @@
 #include "common.h"
+
 #include "Anchor.h"
 #include "GameState.h"
 #include "Modifyables.h"
 #include <sstream>
 #include "ActivityIgnoringGroup.h"
-//#include "Saver.h"
-//#include "Loader.h"
+#include "Saver.h"
+#include "Loader.h"
 #include "RenderInfo.h"
 #include <algorithm>
 
 void Anchor::addChild(Handle h) {
-	if (h == selfHandle) {
+	if (h == this->selfHandle) {
 		return;
 	}
-	children.push_back(WeakReference<Activity, Activity>(h));
+	this->children.push_back(WeakReference<Activity, Activity>(h));
 }
 
 bool Anchor::removeChild(Handle h) {
 	auto newEnd = std::remove_if(
-		children.begin(), children.end(),
+		this->children.begin(), this->children.end(),
 		[=](WeakReference<Activity, Activity> t) -> bool {
 		return t.handle == h;
 	}
 	);
-	children.erase(newEnd, children.end());
-	return children.empty();
+	this->children.erase(newEnd, this->children.end());
+	return this->children.empty();
 }
 
 Anchor::Anchor() {
@@ -67,9 +68,9 @@ void Anchor::leaveActivityTracesLocal(GameState& gameState) {
 
 void Anchor::save(Saver& saver) {
 	Activity::save(saver);
-	size_t s = children.size();
+	size_t s = this->children.size();
 	saver.store<size_t>(s);
-	for (auto& child : children) {
+	for (auto& child : this->children) {
 		saver.store(child.handle);
 	}
 }
@@ -81,7 +82,7 @@ bool Anchor::load(Loader& loader) {
 	for (int32_t i = 0; i < count; i++) {
 		int32_t handle;
 		loader.retrieve(handle);
-		children.push_back(WeakReference<Activity, Activity>(handle));
+		this->children.push_back(WeakReference<Activity, Activity>(handle));
 	}
 	return true;
 }
@@ -115,7 +116,7 @@ ACTIVITY::TYPE Anchor::getType() {
 
 void Anchor::getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
-	for (auto& child : children) {
+	for (auto& child : this->children) {
 		child.get()->getTreeMembers(members);
 	}
 }
@@ -135,7 +136,7 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 }
 
 void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-	for (auto& child : children) {
+	for (auto& child : this->children) {
 		child.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,0.5,0.5 });
 	}
 }

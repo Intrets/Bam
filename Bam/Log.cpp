@@ -4,7 +4,7 @@
 
 void Log::putLine(std::string str) {
 	std::lock_guard<std::mutex> lock(this->mtx);
-	lines.push_back(str);
+	this->lines.push_back(str);
 }
 
 std::vector<std::string> Log::getLines() {
