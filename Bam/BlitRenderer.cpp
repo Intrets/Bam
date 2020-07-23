@@ -3,22 +3,31 @@
 #include "BlitRenderer.h"
 #include "GLEnableWrapper.h"
 
-void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, bool flipUVvertical) {
-	VAO.bind();
-	program.use();
+void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical) {
+	this->VAO.bind();
+	this->program.use();
 
 	GLEnabler glEnabler;
-	glEnabler.enable(GL_BLEND).disable(GL_DEPTH_TEST);
+	glEnabler.enable(GL_BLEND);
+
+	if (depth_.has_value()) {
+		glEnabler.enable(GL_DEPTH_TEST);
+		this->depth.set(depth_.value());
+	}
+	else {
+		glEnabler.disable(GL_DEPTH_TEST);
+		this->depth.set(0.0f);
+	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 
 	if (flipUVvertical) {
-		UVflip.set(-1.0f);
+		this->UVflip.set(-1.0f);
 	}
 	else {
-		UVflip.set(1.0f);
+		this->UVflip.set(1.0f);
 	}
 
 	this->texture_t.set(texture);
@@ -32,10 +41,10 @@ void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& wo
 	while (remaining > 0) {
 		int32_t size = glm::min(remaining, MAX_BATCH_SIZE);
 
-		glBindBuffer(GL_ARRAY_BUFFER, UVSource.ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->UVSource.ID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * size, &uv[start]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, worldTarget.ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->worldTarget.ID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * size, &world[start]);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, size);
@@ -45,20 +54,21 @@ void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& wo
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
-void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, bool flipUVvertical) {
+void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical) {
 	std::vector uvv{ uv };
 	std::vector worldv{ world };
-	render(uvv, worldv, target, viewport, texture, flipUVvertical);
+	this->render(uvv, worldv, target, viewport, texture, depth_, flipUVvertical);
 }
 
 BlitRenderer::BlitRenderer() :
 	program(Locator<PathManager>::ref().LoadShadersP("Blit")),
-	UVflip("UVflip", program),
-	texture_t("texture_t", program, 0) {
-	VAO.gen(3);
+	UVflip("UVflip", this->program),
+	texture_t("texture_t", this->program, 0),
+	depth("depth", this->program) {
+	this->VAO.gen(3);
 
 	static const GLfloat g_quad_vertex_buffer_data[] = {
 		0.0f,  0.0f,
@@ -69,8 +79,8 @@ BlitRenderer::BlitRenderer() :
 		1.0f,  1.0f,
 	};
 
-	glGenBuffers(1, &quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.ID);
+	glGenBuffers(1, &this->quad.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
 	glVertexAttribPointer(
 		0,                  // attribute
@@ -108,7 +118,7 @@ BlitRenderer::BlitRenderer() :
 	);
 	glVertexAttribDivisor(2, 1);
 
-	VAO.unbind();
+	this->VAO.unbind();
 }
 
 BlitRenderer::~BlitRenderer() {

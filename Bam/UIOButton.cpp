@@ -43,7 +43,7 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	else {
 		color = this->unpressedColor;
 	}
-	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, color, depth);
-	return depth + 1;
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, color, depth++);
+	return depth;
 }
 

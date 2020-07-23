@@ -26,7 +26,14 @@ void WindowTextRenderInfo::addString(std::string text) {
 void WindowTextRenderInfo::newLine() {
 	this->nextPos.x = -1.0f;
 	this->nextPos.y -= this->laneWidth;
-	this->laneWidth = 0.0f;
+}
+
+void WindowTextRenderInfo::setDepth(int32_t layer) {
+	this->depth = 1 - 1 / static_cast<float>(1 + layer);
+}
+
+void WindowTextRenderInfo::setDepth(float depth_) {
+	this->depth = depth_;
 }
 
 void WindowTextRenderInfo::addCharInternal(char c, FontInfo& fontInfo) {

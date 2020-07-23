@@ -6,11 +6,12 @@ layout(location = 2) in vec4 worldTarget;
 
 
 uniform float UVflip;
+uniform float depth;
 
 out vec2 UV;
 
 void main(){
-	gl_Position = vec4(vertex * worldTarget.zw + worldTarget.xy, 0, 1);
+	gl_Position = vec4(vertex * worldTarget.zw + worldTarget.xy, depth, 1);
 
 	UV = vertex * vec2(1, UVflip) + vec2(0,1);
 	UV = (UV * UVSource.zw) + UVSource.xy;

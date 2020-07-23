@@ -21,6 +21,7 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint t
 			target,
 			{ bot.x, bot.y, size.x, size.y },
 			fonts.fontAtlas.ID,
+			info.depth,
 			false
 		);
 	}

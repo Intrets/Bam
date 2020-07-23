@@ -10,6 +10,7 @@ struct WindowTextRenderInfo
 {
 public:
 	ScreenRectangle screenRectangle;
+	float depth;
 
 	std::vector<glm::vec4> pos;
 	std::vector<glm::vec4> uvs;
@@ -24,6 +25,8 @@ public:
 	void addChar(char c);
 	void addString(std::string text);
 	void newLine();
+	void setDepth(int32_t layer);
+	void setDepth(float depth_);
 
 private:
 	void addCharInternal(char c, FontInfo& fontInfo);

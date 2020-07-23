@@ -66,6 +66,7 @@ FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::iv
 		this->buffer.ID,
 		glm::ivec4(0, 0, this->atlasSize, this->atlasSize),
 		tex.ID,
+		std::nullopt,
 		true
 	);
 

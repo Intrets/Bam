@@ -140,7 +140,9 @@ UIState::UIState() {
 		textDisplay.get()->addGlobalBind({ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 			auto self = static_cast<UIOTextDisplay*>(self_);
 			auto newLines = Locator<Log>::ref().getLines();
-			self->text.insert(self->text.begin(), newLines.begin(), newLines.end());
+			for (auto& newLine : newLines) {
+				self->addLine(newLine);
+			}
 			return BIND_RESULT::CONTINUE;
 		});
 

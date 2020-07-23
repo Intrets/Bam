@@ -100,11 +100,29 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 }
 
 ScreenRectangle UIOTextEdit::updateSize(ScreenRectangle newScreenRectangle) {
+	if (!this->screenRectangle.equals(newScreenRectangle)) {
+		cachedText = std::nullopt;
+	}
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;
 }
 
 int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+
+	if (!this->cachedText.has_value()) {
+		WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
+
+		for (auto& line : this->lines) {
+			textInfo.addString(line);
+			textInfo.newLine();
+		}
+
+		this->cachedText = textInfo;
+	}
+
+	this->cachedText.value().setDepth(depth++);
+	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(this->cachedText.value());
+
 	//TODO: new text rendering
 
 	//auto& cameraInfo = renderInfo.cameraInfo;
@@ -147,9 +165,9 @@ int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo,
 	//relativeCursorPos.y *= -1;
 	//relativeCursorPos.y -= 1;
 	//renderInfo.uiRenderInfo.addRectangle(start + glm::vec2(relativeCursorPos) * fontScale, start + glm::vec2(1 + relativeCursorPos) * fontScale, glm::vec4(0.5f, 0, 0, 0.5f), depth);
-	//renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 0.5f,0.5f,0.5f, 1.0f }, depth);
+	renderInfo.uiRenderInfo.addRectangle(screenRectangle.bot, screenRectangle.top, { 0.9f, 0.9f, 0.9f, 1.0f }, depth++);
 
-	return depth + 1;
+	return depth;
 }
 
 void UIOTextEdit::moveCursor(glm::ivec2 p) {
@@ -194,6 +212,7 @@ void UIOTextEdit::insertText(std::string text) {
 			this->cursor.x++;
 		}
 	}
+	this->cachedText = std::nullopt;
 	moveCursor(glm::ivec2(0));
 }
 
@@ -211,6 +230,7 @@ void UIOTextEdit::backspaceChar() {
 		this->lines[this->cursor.y].erase(this->cursor.x - 1, 1);
 		this->cursor.x = glm::max(this->cursor.x - 1, 0);
 	}
+	this->cachedText = std::nullopt;
 	moveCursor(glm::ivec2(0));
 }
 
@@ -227,5 +247,6 @@ void UIOTextEdit::deleteChar() {
 		this->lines[this->cursor.y].erase(this->cursor.x, 1);
 		this->cursor.x = glm::max(this->cursor.x, 0);
 	}
+	this->cachedText = std::nullopt;
 	moveCursor(glm::ivec2(0));
 }

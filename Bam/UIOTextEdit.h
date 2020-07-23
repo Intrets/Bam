@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
+#include "TextRenderInfo.h"
 
 class UIOTextEdit : public UIOBase
 {
@@ -8,6 +9,9 @@ public:
 	bool focus;
 
 	std::vector<std::string> lines;
+
+	std::optional<WindowTextRenderInfo> cachedText;
+
 	glm::ivec2 cursor;
 
 	glm::ivec2 viewHorizontal = { 0,30 };
