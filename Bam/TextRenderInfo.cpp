@@ -31,7 +31,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 			if (it == this->lines.end()) {
 				it = this->lines.insert({ vertRange, {} }).first;
 			}
-			it->second[vertRange] = static_cast<int32_t>(uvs.size());
+			it->second[horRange] = static_cast<int32_t>(uvs.size());
 
 
 			this->pos.push_back(glm::vec4(addPos, size));
@@ -58,7 +58,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 			if (it == this->lines.end()) {
 				it = this->lines.insert({ vertRange, {} }).first;
 			}
-			it->second[vertRange] = static_cast<int32_t>(uvs.size());
+			it->second[horRange] = static_cast<int32_t>(uvs.size());
 
 
 			this->pos.push_back(glm::vec4(addPos, size));
@@ -80,6 +80,18 @@ void WindowTextRenderInfo::setDepth(int32_t layer) {
 
 void WindowTextRenderInfo::setDepth(float depth_) {
 	this->depth = depth_;
+}
+
+std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {
+	auto line = this->lines.find(glm::vec2(p.y));
+	if (line == this->lines.end()) {
+		return std::nullopt;
+	}
+	auto index = line->second.find(glm::vec2(p.x));
+	if (index == line->second.end()) {
+		return std::nullopt;
+	}
+	return index->second;
 }
 
 std::optional<glm::vec4> WindowTextRenderInfo::getCursorPos(int32_t index) {
@@ -114,11 +126,11 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 		viewRect.bot = glm::vec2(-1.0f) + this->view;
 		viewRect.top = glm::vec2(1.0f) + this->view;
 
-		float leftDist = cursorRect.left1() - viewRect.left1();
-		float rightDist = viewRect.right1() - cursorRect.right1();
+		float leftDist = cursorRect.getLeft() - viewRect.getLeft();
+		float rightDist = viewRect.getRight() - cursorRect.getRight();
 
-		float botDist = cursorRect.bot1() - viewRect.bot1();
-		float topDist = viewRect.top1() - cursorRect.top1();
+		float botDist = cursorRect.getBot() - viewRect.getBot();
+		float topDist = viewRect.getTop() - cursorRect.getTop();
 
 		if (leftDist < 0.0f) {
 			this->view.x += leftDist;
@@ -144,6 +156,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	if (!cachedRenderInfo.has_value()) {
 		makeRenderInfo(screenRectangle, font, wrap);
 	}
+
 	auto& textRenderInfo = cachedRenderInfo.value();
 	textRenderInfo.setDepth(depth);
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
@@ -243,8 +256,6 @@ void Text::moveCursor(glm::ivec2 p) {
 	}
 	this->cursorIndex += this->cursor.x;
 
-	Locator<Log>::ref() << Log::OPEN{} << "index: " << this->cursorIndex << " cursor: " << this->cursor.x << " " << this->cursor.y << "\n" << Log::CLOSE{};
-
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
 	}
@@ -260,11 +271,11 @@ void Text::moveCursor(glm::ivec2 p) {
 			viewRect.bot = glm::vec2(-1.0f) + this->view;
 			viewRect.top = glm::vec2(1.0f) + this->view;
 
-			float leftDist = cursorRect.left1() - viewRect.left1();
-			float rightDist = viewRect.right1() - cursorRect.right1();
+			float leftDist = cursorRect.getLeft() - viewRect.getLeft();
+			float rightDist = viewRect.getRight() - cursorRect.getRight();
 
-			float botDist = cursorRect.bot1() - viewRect.bot1();
-			float topDist = viewRect.top1() - cursorRect.top1();
+			float botDist = cursorRect.getBot() - viewRect.getBot();
+			float topDist = viewRect.getTop() - cursorRect.getTop();
 
 			if (leftDist < 0.0f) {
 				this->view.x += leftDist;
@@ -282,6 +293,21 @@ void Text::moveCursor(glm::ivec2 p) {
 		}
 
 		this->cachedRenderInfo.value().offset = -this->view;
+	}
+}
+
+void Text::selectIndex(int32_t index) {
+	int32_t lineIndex = 0;
+	int32_t i = index;
+
+	for (auto& line : this->lines) {
+		if (i - static_cast<int32_t>(line.size()) < 0) {
+			this->cursor = glm::ivec2(i, lineIndex);
+			this->cursorIndex = index;
+			return;
+		}
+		i -= static_cast<int32_t>(line.size());
+		lineIndex++;
 	}
 }
 

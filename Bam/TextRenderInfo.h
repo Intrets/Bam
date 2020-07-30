@@ -40,6 +40,8 @@ public:
 	void setDepth(int32_t layer);
 	void setDepth(float depth_);
 
+	std::optional<int32_t> getIndex(glm::vec2 p);
+
 	std::optional<glm::vec4> getCursorPos(int32_t index);
 };
 
@@ -61,6 +63,7 @@ public:
 	Fonts::Font lastFont;
 	bool lastWrap;
 
+	// TODO: make view behave less weird when resizing window
 	glm::vec2 view = { 0.0f, 0.0f };
 
 	void invalidateCache();
@@ -72,6 +75,7 @@ public:
 	bool backspaceChar();
 	void insertString(std::string text);
 	void moveCursor(glm::ivec2 p);
+	void selectIndex(int32_t index);
 
 	void addLine(std::string text);
 };

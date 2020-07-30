@@ -341,7 +341,6 @@
     <ClCompile Include="ControlState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Log.cpp" />
     <ClCompile Include="Fonts.cpp">
       <Filter>Renderer\UI</Filter>
     </ClCompile>
@@ -351,9 +350,18 @@
     <ClCompile Include="PassThroughRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="ActivitySelector.cpp" />
-    <ClCompile Include="UIOFinalTextDisplay.cpp" />
-    <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="UIOFinalTextDisplay.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivitySelector.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -612,7 +620,6 @@
     <ClInclude Include="ControlState.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="Log.h" />
     <ClInclude Include="Fonts.h">
       <Filter>Renderer\UI</Filter>
     </ClInclude>
@@ -622,9 +629,18 @@
     <ClInclude Include="PassThroughRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="ActivitySelector.h" />
-    <ClInclude Include="UIOFinalTextDisplay.h" />
-    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="UIOFinalTextDisplay.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySelector.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

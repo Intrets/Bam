@@ -10,18 +10,18 @@ bool Rectangle::contains(Rectangle& rec) {
 	return this->contains(rec.bot) && this->contains(rec.top);
 }
 
-float Rectangle::left1() {
+float Rectangle::getLeft() {
 	return bot.x;
 }
 
-float Rectangle::right1() {
+float Rectangle::getRight() {
 	return top.x;
 }
 
-float Rectangle::top1() {
+float Rectangle::getTop() {
 	return top.y;
 }
 
-float Rectangle::bot1() {
+float Rectangle::getBot() {
 	return bot.y;
 }
