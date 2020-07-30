@@ -183,4 +183,9 @@ UIState::UIState() {
 
 		this->UIs.push_back(std::move(movement));
 	}
+
+	// save/load and other stuff
+	{
+
+	}
 }

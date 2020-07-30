@@ -43,7 +43,7 @@ protected:
 public:
 	ScreenRectangle screenRectangle;
 
-	void translate(glm::vec2 p);
+	virtual void translate(glm::vec2 p);
 	void setScreenPixels(glm::ivec2 px);
 	void moveTopLeftTo(glm::vec2 p);
 	bool contains(glm::vec2 p);

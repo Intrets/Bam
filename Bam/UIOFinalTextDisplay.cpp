@@ -4,6 +4,12 @@
 #include "RenderInfo.h"
 
 ScreenRectangle UIOFinalTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
+	this->text.makeRenderInfo(screenRectangle, Fonts::Font::ROBOTO_12, false);
+	auto& renderInfo = this->text.cachedRenderInfo.value();
+	glm::vec2 screenSize = renderInfo.getRenderedScreenSize();
+	newScreenRectangle.setWidth(screenSize.x);
+	newScreenRectangle.setHeight(screenSize.y);
+	//this->text.addRenderInfo(this->screenRectangle, )
 	return ScreenRectangle();
 }
 

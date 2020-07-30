@@ -14,6 +14,7 @@ enum class CONSTRAIN_ALIGNMENT
 	TOPRIGHT,
 	BOTTOMLEFT,
 	BOTTOMRIGHT,
+	CENTER,
 };
 
 class UIOConstrainSize : public UIOBase

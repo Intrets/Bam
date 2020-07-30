@@ -22,7 +22,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 			glm::vec2 addPos = this->nextPos;
 			addPos.y -= size.y;
 
-			this->laneWidth = glm::max(this->laneWidth, size.y);
+			this->laneHeight = glm::max(this->laneHeight, size.y);
 
 			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
 			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
@@ -49,7 +49,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 			glm::vec2 addPos = this->nextPos;
 			addPos.y -= size.y;
 
-			this->laneWidth = glm::max(this->laneWidth, size.y);
+			this->laneHeight = glm::max(this->laneHeight, size.y);
 
 			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
 			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
@@ -71,7 +71,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 
 void WindowTextRenderInfo::newLine() {
 	this->nextPos.x = -1.0f;
-	this->nextPos.y -= this->laneWidth;
+	this->nextPos.y -= this->laneHeight;
 }
 
 void WindowTextRenderInfo::setDepth(int32_t layer) {
@@ -80,6 +80,10 @@ void WindowTextRenderInfo::setDepth(int32_t layer) {
 
 void WindowTextRenderInfo::setDepth(float depth_) {
 	this->depth = depth_;
+}
+
+glm::vec2 WindowTextRenderInfo::getRenderedScreenSize() {
+	return this->screenRectangle.size() * this->renderedSize;
 }
 
 std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {

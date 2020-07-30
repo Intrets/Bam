@@ -13,15 +13,29 @@ struct WindowTextRenderInfo
 {
 public:
 	ScreenRectangle screenRectangle;
+
+	// layering for UI rendering
 	float depth;
 
+	// view offset for render info
 	glm::vec2 offset;
 
+	// total size of entire text in [-1, 1] in screenRectangle space 
+	glm::vec2 renderedSize;
+
+	// in [-1, 1] in screenRectangle space
 	std::vector<glm::vec4> pos;
+
+	// UV info for atlas texture
 	std::vector<glm::vec4> uvs;
 
+	// next position for character in screenRectangle space
 	glm::vec2 nextPos = { -1.0f, 1.0f };
-	float laneWidth = 0.0f;
+
+	// current line width
+	float laneHeight = 0.0f;
+
+	// render with linewrap
 	bool lineWrap;
 
 	struct cmp
@@ -39,6 +53,8 @@ public:
 	void newLine();
 	void setDepth(int32_t layer);
 	void setDepth(float depth_);
+
+	glm::vec2 getRenderedScreenSize();
 
 	std::optional<int32_t> getIndex(glm::vec2 p);
 

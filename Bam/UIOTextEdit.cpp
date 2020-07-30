@@ -113,6 +113,13 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 	});
 }
 
+void UIOTextEdit::translate(glm::vec2 p) {
+	this->UIOBase::translate(p);
+	if (this->text.cachedRenderInfo.has_value()) {
+		this->text.cachedRenderInfo.value().screenRectangle.translate(p);
+	}
+}
+
 ScreenRectangle UIOTextEdit::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!this->screenRectangle.equals(newScreenRectangle)) {
 		this->text.invalidateCache();
