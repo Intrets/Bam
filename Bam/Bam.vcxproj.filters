@@ -352,6 +352,8 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="ActivitySelector.cpp" />
+    <ClCompile Include="UIOFinalTextDisplay.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -621,6 +623,8 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="ActivitySelector.h" />
+    <ClInclude Include="UIOFinalTextDisplay.h" />
+    <ClInclude Include="Rectangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

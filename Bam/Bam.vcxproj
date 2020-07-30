@@ -308,8 +308,10 @@
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
+    <ClCompile Include="UIOFinalTextDisplay.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIState.cpp" />
@@ -390,8 +392,10 @@
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
+    <ClInclude Include="UIOFinalTextDisplay.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIState.h" />

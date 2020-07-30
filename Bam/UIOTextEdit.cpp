@@ -10,13 +10,13 @@
 
 UIOTextEdit::UIOTextEdit(Handle self) {
 	this->selfHandle = self;
-	this->lines.push_back("11234567890");
-	this->lines.push_back("21234567890");
-	this->lines.push_back("31234567890");
-	this->lines.push_back("41234567890");
-	this->lines.push_back("51234567890");
-	this->lines.push_back("61234567890");
-	this->lines.push_back("71234567890");
+	this->text.addLine("11234567890");
+	this->text.addLine("21234567890");
+	this->text.addLine("31234567890");
+	this->text.addLine("41234567890");
+	this->text.addLine("51234567890");
+	this->text.addLine("61234567890");
+	this->text.addLine("71234567890");
 
 	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
 				  [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
@@ -101,27 +101,14 @@ UIOTextEdit::UIOTextEdit(Handle self) {
 
 ScreenRectangle UIOTextEdit::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!this->screenRectangle.equals(newScreenRectangle)) {
-		cachedText = std::nullopt;
+		this->text.invalidateCache();
 	}
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;
 }
 
 int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-
-	if (!this->cachedText.has_value()) {
-		WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
-
-		for (auto& line : this->lines) {
-			textInfo.addString(line);
-			textInfo.newLine();
-		}
-
-		this->cachedText = textInfo;
-	}
-
-	this->cachedText.value().setDepth(depth++);
-	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(this->cachedText.value());
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, true);
 
 	//TODO: new text rendering
 
@@ -171,82 +158,25 @@ int32_t UIOTextEdit::addRenderInfo(GameState& gameState, RenderInfo& renderInfo,
 }
 
 void UIOTextEdit::moveCursor(glm::ivec2 p) {
-	this->cursor += p;
-	this->cursor = glm::max(this->cursor, glm::ivec2(0));
-
-	this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 1));
-	this->cursor.x = glm::min(this->cursor.x, static_cast<int32_t>(this->lines[this->cursor.y].size()));
-
-	if (this->cursor.x >= this->viewHorizontal[1]) {
-		int32_t d = this->cursor.x - this->viewHorizontal[1] + 1;
-		this->viewHorizontal += d;
-	}
-	else if (this->cursor.x < this->viewHorizontal[0]) {
-		int32_t d = this->cursor.x - this->viewHorizontal[0];
-		this->viewHorizontal += d;
-	}
-
-	if (this->cursor.y >= this->viewVertical[1]) {
-		int32_t d = this->cursor.y - this->viewVertical[1] + 1;
-		this->viewVertical += d;
-	}
-	else if (this->cursor.y < this->viewVertical[0]) {
-		int32_t d = this->cursor.y - this->viewVertical[0];
-		this->viewVertical += d;
-	}
+	this->text.moveCursor(p);
 }
 
-void UIOTextEdit::insertText(std::string text) {
-	for (auto c : text) {
-		if (c == '\n') {
-			auto first = std::string(this->lines[this->cursor.y].begin(), this->lines[this->cursor.y].begin() + this->cursor.x);
-			auto second = std::string(this->lines[this->cursor.y].begin() + this->cursor.x, this->lines[this->cursor.y].end());
-
-			this->lines[this->cursor.y] = first;
-			this->cursor.x = 0;
-			this->cursor.y++;
-			this->lines.insert(this->lines.begin() + this->cursor.y, second);
-		}
-		else {
-			this->lines[this->cursor.y].insert(this->cursor.x, std::string(1, c));
-			this->cursor.x++;
-		}
-	}
-	this->cachedText = std::nullopt;
+void UIOTextEdit::insertText(std::string text_) {
+	this->text.insertString(text_);
+	this->text.invalidateCache();
 	moveCursor(glm::ivec2(0));
 }
 
 void UIOTextEdit::backspaceChar() {
-	if (this->cursor == glm::ivec2(0)) {
-		return;
+	if (this->text.backspaceChar()) {
+		this->text.invalidateCache();
+		moveCursor(glm::ivec2(0));
 	}
-	if (this->cursor.x == 0) {
-		this->cursor.x = static_cast<int32_t>(this->lines[this->cursor.y - 1].size());
-		this->lines[this->cursor.y - 1] += this->lines[this->cursor.y];
-		this->lines.erase(this->lines.begin() + this->cursor.y, this->lines.begin() + this->cursor.y + 1);
-		this->cursor.y--;
-	}
-	else {
-		this->lines[this->cursor.y].erase(this->cursor.x - 1, 1);
-		this->cursor.x = glm::max(this->cursor.x - 1, 0);
-	}
-	this->cachedText = std::nullopt;
-	moveCursor(glm::ivec2(0));
 }
 
 void UIOTextEdit::deleteChar() {
-	auto test = glm::ivec2(this->lines[this->cursor.y].size(), this->lines.size() - 1);
-	if (this->cursor == test) {
-		return;
+	if (this->text.deleteChar()) {
+		this->text.invalidateCache();
+		moveCursor(glm::ivec2(0));
 	}
-	if (this->cursor.x == this->lines[this->cursor.y].size()) {
-		this->lines[this->cursor.y] += this->lines[this->cursor.y + 1];
-		this->lines.erase(this->lines.begin() + this->cursor.y + 1, this->lines.begin() + this->cursor.y + 2);
-	}
-	else {
-		this->lines[this->cursor.y].erase(this->cursor.x, 1);
-		this->cursor.x = glm::max(this->cursor.x, 0);
-	}
-	this->cachedText = std::nullopt;
-	moveCursor(glm::ivec2(0));
 }

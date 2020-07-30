@@ -16,11 +16,12 @@ private:
 	bwo::UniformTexture2D texture_t;
 	bwo::Uniform1f UVflip;
 	bwo::Uniform1f depth;
+	bwo::Uniform2fv offset;
 
 public:
 	int32_t const MAX_BATCH_SIZE = 1000;
 
-	void render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical);
+	void render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset);
 
 	void render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool fromTexture);
 

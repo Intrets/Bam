@@ -13,18 +13,16 @@ UIOTextDisplay::UIOTextDisplay(Handle self) {
 }
 
 void UIOTextDisplay::setText(std::string text_) {
-	split(0, text_, this->text, '\n', true);
-	this->cachedText = std::nullopt;
+	this->text.setText(text_);
 }
 
 void UIOTextDisplay::addLine(std::string text_) {
-	text.push_back(text_);
-	this->cachedText = std::nullopt;
+	this->text.addLine(text_);
 }
 
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
-		this->cachedText = std::nullopt;
+		this->text.invalidateCache();
 	}
 	this->screenRectangle = newScreenRectangle;
 
@@ -36,19 +34,7 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 	glm::vec2 top = this->screenRectangle.getTopLeft();
 	glm::vec2 bot;
 
-	if (!this->cachedText.has_value()) {
-		WindowTextRenderInfo textInfo(this->screenRectangle, Fonts::Font::ROBOTO_12, true);
-
-		for (auto& line : this->text) {
-			textInfo.addString(line);
-			textInfo.newLine();
-		}
-
-		this->cachedText = textInfo;
-	}
-
-	this->cachedText.value().setDepth(depth++);
-	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(this->cachedText.value());
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, true);
 
 	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.9f, 0.9f, 0.9f, 1.0f), depth++);
 

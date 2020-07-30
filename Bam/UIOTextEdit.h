@@ -7,17 +7,15 @@ class UIOTextEdit : public UIOBase
 {
 public:
 	bool focus;
+	
+	Text text;
 
-	std::vector<std::string> lines;
+	//glm::ivec2 cursor;
 
-	std::optional<WindowTextRenderInfo> cachedText;
+	//glm::ivec2 viewHorizontal = { 0,30 };
+	//glm::ivec2 viewVertical = { 0,30 };
 
-	glm::ivec2 cursor;
-
-	glm::ivec2 viewHorizontal = { 0,30 };
-	glm::ivec2 viewVertical = { 0,30 };
-
-	glm::ivec2 viewSize;
+	//glm::ivec2 viewSize;
 
 	UIOTextEdit(Handle self);
 

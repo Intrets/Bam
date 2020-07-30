@@ -2,9 +2,12 @@
 
 #include "ScreenRectangle.h"
 #include "Fonts.h"
+#include <optional>
+#include <map>
 
 class TextRenderer;
 struct CameraInfo;
+struct RenderInfo;
 
 struct WindowTextRenderInfo
 {
@@ -12,27 +15,69 @@ public:
 	ScreenRectangle screenRectangle;
 	float depth;
 
+	glm::vec2 offset;
+
 	std::vector<glm::vec4> pos;
 	std::vector<glm::vec4> uvs;
 
-	Fonts::Font font;
 	glm::vec2 nextPos = { -1.0f, 1.0f };
 	float laneWidth = 0.0f;
 	bool lineWrap;
 
-	WindowTextRenderInfo(ScreenRectangle rect, Fonts::Font font_, bool lineWrap = false);
+	struct cmp
+	{
+		bool operator()(const glm::vec2& a, const glm::vec2& b) const {
+			constexpr float eps = 0.000001f;
+			return (a[0] <= b[0] - eps) && (a[1] <= b[1] - eps);
+		}
+	};
 
-	void addChar(char c);
-	void addString(std::string text);
+	std::map<glm::vec2, std::map<glm::vec2, int32_t, cmp>, cmp> lines;
+
+	WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap = false);
+
+	void addString(Fonts::Font font, std::string text);
 	void newLine();
 	void setDepth(int32_t layer);
 	void setDepth(float depth_);
 
-private:
-	void addCharInternal(char c, FontInfo& fontInfo);
+	std::optional<glm::vec4> getCursorPos(int32_t index);
 };
 
 struct TextRenderInfo
 {
 	std::vector<WindowTextRenderInfo> windowTextRenderInfos;
+};
+
+class Text
+{
+public:
+	std::vector<std::string> lines = { "" };
+
+	glm::ivec2 cursor;
+	int32_t cursorIndex;
+
+	std::optional<WindowTextRenderInfo> cachedRenderInfo;
+	ScreenRectangle lastScreenRectangle;
+	Fonts::Font lastFont;
+	bool lastWrap;
+
+	glm::vec2 view = { 0.0f, 0.0f };
+
+	void invalidateCache();
+	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap);
+
+	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap);
+
+	bool deleteChar();
+	bool backspaceChar();
+	void insertString(std::string text);
+	void moveCursor(glm::ivec2 p);
+
+	void setText(std::string text);
+	void setText(std::vector<std::string>& text);
+	void addChar(char c);
+	void addLine(std::string text);
+	void addText(std::string text);
+	void newLine();
 };

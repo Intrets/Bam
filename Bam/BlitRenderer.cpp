@@ -3,12 +3,14 @@
 #include "BlitRenderer.h"
 #include "GLEnableWrapper.h"
 
-void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical) {
+void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset_) {
 	this->VAO.bind();
 	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.enable(GL_BLEND);
+
+	this->offset.set(offset_);
 
 	if (depth_.has_value()) {
 		glEnabler.enable(GL_DEPTH_TEST);
@@ -60,14 +62,15 @@ void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& wo
 void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical) {
 	std::vector uvv{ uv };
 	std::vector worldv{ world };
-	this->render(uvv, worldv, target, viewport, texture, depth_, flipUVvertical);
+	this->render(uvv, worldv, target, viewport, texture, depth_, flipUVvertical, glm::vec2(0.0f));
 }
 
 BlitRenderer::BlitRenderer() :
 	program(Locator<PathManager>::ref().LoadShadersP("Blit")),
 	UVflip("UVflip", this->program),
 	texture_t("texture_t", this->program, 0),
-	depth("depth", this->program) {
+	depth("depth", this->program),
+	offset("offset", this->program) {
 	this->VAO.gen(3);
 
 	static const GLfloat g_quad_vertex_buffer_data[] = {
