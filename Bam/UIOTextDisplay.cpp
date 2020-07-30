@@ -12,13 +12,13 @@ UIOTextDisplay::UIOTextDisplay(Handle self) {
 	this->selfHandle = self;
 }
 
-void UIOTextDisplay::setText(std::string text_) {
-	this->text.setText(text_);
-}
-
-void UIOTextDisplay::addLine(std::string text_) {
-	this->text.addLine(text_);
-}
+//void UIOTextDisplay::setText(std::string text_) {
+//	this->text.setText(text_);
+//}
+//
+//void UIOTextDisplay::addLine(std::string text_) {
+//	this->text.addLine(text_);
+//}
 
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {

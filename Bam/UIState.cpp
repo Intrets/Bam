@@ -141,7 +141,7 @@ UIState::UIState() {
 			auto self = static_cast<UIOTextDisplay*>(self_);
 			auto newLines = Locator<Log>::ref().getLines();
 			for (auto& newLine : newLines) {
-				self->addLine(newLine);
+				self->text.addLine(newLine);
 			}
 			return BIND_RESULT::CONTINUE;
 		});

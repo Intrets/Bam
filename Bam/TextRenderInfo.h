@@ -27,8 +27,7 @@ public:
 	struct cmp
 	{
 		bool operator()(const glm::vec2& a, const glm::vec2& b) const {
-			constexpr float eps = 0.000001f;
-			return (a[0] <= b[0] - eps) && (a[1] <= b[1] - eps);
+			return (a[0] < b[0]) && (a[1] < b[1]);
 		}
 	};
 
@@ -74,10 +73,5 @@ public:
 	void insertString(std::string text);
 	void moveCursor(glm::ivec2 p);
 
-	void setText(std::string text);
-	void setText(std::vector<std::string>& text);
-	void addChar(char c);
 	void addLine(std::string text);
-	void addText(std::string text);
-	void newLine();
 };

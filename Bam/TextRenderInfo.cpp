@@ -19,6 +19,26 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.screenPixels) / this->screenRectangle.size() * 4.0f;
 
 		if (c == '\n') {
+			glm::vec2 addPos = this->nextPos;
+			addPos.y -= size.y;
+
+			this->laneWidth = glm::max(this->laneWidth, size.y);
+
+			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
+			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
+
+			auto it = this->lines.find(vertRange);
+			if (it == this->lines.end()) {
+				it = this->lines.insert({ vertRange, {} }).first;
+			}
+			it->second[vertRange] = static_cast<int32_t>(uvs.size());
+
+
+			this->pos.push_back(glm::vec4(addPos, size));
+			this->uvs.push_back(fontInfo.charUV[static_cast<int32_t>(c)]);
+
+			this->nextPos.x += size.x;
+
 			this->newLine();
 		}
 		else {
@@ -81,7 +101,6 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 
 	for (auto& line : lines) {
 		textInfo.addString(font, line);
-		textInfo.newLine();
 	}
 
 	auto maybeCursorQuad = textInfo.getCursorPos(this->cursorIndex);
@@ -131,7 +150,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 
 	if (indexInVector(this->cursorIndex, textRenderInfo.pos)) {
 		glm::vec4 v = textRenderInfo.pos[this->cursorIndex];
-		glm::vec2 a = glm::vec2(v[0], v[1]) / 2.0f + 0.5f;
+		glm::vec2 a = (glm::vec2(v[0], v[1]) - this->view) / 2.0f + 0.5f;
 		glm::vec2 b = glm::vec2(v[2], v[3]) / 2.0f;
 		a *= screenRectangle.size();
 		b *= screenRectangle.size();
@@ -145,11 +164,11 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 }
 
 bool Text::deleteChar() {
-	auto test = glm::ivec2(this->lines[this->cursor.y].size(), this->lines.size() - 1);
-	if (this->cursor == test) {
+	if (this->cursor.y >= this->lines.size() - 2) {
 		return false;
 	}
-	if (this->cursor.x == this->lines[this->cursor.y].size()) {
+	if (this->cursor.x == this->lines[this->cursor.y].size() - 1) {
+		this->lines[this->cursor.y].erase(this->lines[this->cursor.y].end() - 1);
 		this->lines[this->cursor.y] += this->lines[this->cursor.y + 1];
 		this->lines.erase(this->lines.begin() + this->cursor.y + 1, this->lines.begin() + this->cursor.y + 2);
 	}
@@ -167,6 +186,7 @@ bool Text::backspaceChar() {
 	}
 	if (this->cursor.x == 0) {
 		this->cursor.x = static_cast<int32_t>(this->lines[this->cursor.y - 1].size());
+		this->lines[this->cursor.y - 1].erase(this->lines[this->cursor.y - 1].end() - 1);
 		this->lines[this->cursor.y - 1] += this->lines[this->cursor.y];
 		this->lines.erase(this->lines.begin() + this->cursor.y, this->lines.begin() + this->cursor.y + 1);
 		this->cursor.y--;
@@ -174,6 +194,7 @@ bool Text::backspaceChar() {
 	else {
 		this->lines[this->cursor.y].erase(this->cursor.x - 1, 1);
 		this->cursor.x = glm::max(this->cursor.x - 1, 0);
+		this->cursorIndex = glm::max(this->cursorIndex - 1, 0);
 	}
 	this->invalidateCache();
 	return true;
@@ -185,14 +206,16 @@ void Text::insertString(std::string text) {
 			auto first = std::string(this->lines[this->cursor.y].begin(), this->lines[this->cursor.y].begin() + this->cursor.x);
 			auto second = std::string(this->lines[this->cursor.y].begin() + this->cursor.x, this->lines[this->cursor.y].end());
 
-			this->lines[this->cursor.y] = first;
+			this->lines[this->cursor.y] = first + "\n";
 			this->cursor.x = 0;
 			this->cursor.y++;
+			this->cursorIndex++;
 			this->lines.insert(this->lines.begin() + this->cursor.y, second);
 		}
 		else {
 			this->lines[this->cursor.y].insert(this->cursor.x, std::string(1, c));
 			this->cursor.x++;
+			this->cursorIndex++;
 		}
 	}
 	this->invalidateCache();
@@ -205,21 +228,22 @@ void Text::moveCursor(glm::ivec2 p) {
 	this->cursor += p;
 	this->cursor = glm::max(this->cursor, glm::ivec2(0));
 
-	this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 1));
-	this->cursor.x = glm::min(this->cursor.x, static_cast<int32_t>(this->lines[this->cursor.y].size()));
+	this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 2));
+	this->cursor.x = glm::min(this->cursor.x, static_cast<int32_t>(this->lines[this->cursor.y].size()) - 1);
 
 	if (this->cursor.y < previous.y) {
 		for (int32_t line = this->cursor.y; line < previous.y; line++) {
-			this->cursorIndex -= this->lines[line].size();
+			this->cursorIndex -= static_cast<int32_t>(this->lines[line].size());
 		}
-		this->cursorIndex += this->cursor.x;
 	}
 	else {
 		for (int32_t line = previous.y; line < this->cursor.y; line++) {
-			this->cursorIndex += this->lines[line].size();
+			this->cursorIndex += static_cast<int32_t>(this->lines[line].size());
 		}
-		this->cursorIndex += this->cursor.x;
 	}
+	this->cursorIndex += this->cursor.x;
+
+	Locator<Log>::ref() << Log::OPEN{} << "index: " << this->cursorIndex << " cursor: " << this->cursor.x << " " << this->cursor.y << "\n" << Log::CLOSE{};
 
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
@@ -259,54 +283,10 @@ void Text::moveCursor(glm::ivec2 p) {
 
 		this->cachedRenderInfo.value().offset = -this->view;
 	}
-
-	// TODO: move to TextRenderInfo
-	//if (this->cursor.x >= this->viewHorizontal[1]) {
-	//	int32_t d = this->cursor.x - this->viewHorizontal[1] + 1;
-	//	this->viewHorizontal += d;
-	//}
-	//else if (this->cursor.x < this->viewHorizontal[0]) {
-	//	int32_t d = this->cursor.x - this->viewHorizontal[0];
-	//	this->viewHorizontal += d;
-	//}
-
-	//if (this->cursor.y >= this->viewVertical[1]) {
-	//	int32_t d = this->cursor.y - this->viewVertical[1] + 1;
-	//	this->viewVertical += d;
-	//}
-	//else if (this->cursor.y < this->viewVertical[0]) {
-	//	int32_t d = this->cursor.y - this->viewVertical[0];
-	//	this->viewVertical += d;
-	//}
-}
-
-void Text::setText(std::string text) {
-	split(0, text, this->lines, '\n', true);
-	this->invalidateCache();
-}
-
-void Text::setText(std::vector<std::string>& text) {
-	this->lines = text;
-	this->invalidateCache();
-}
-
-void Text::addChar(char c) {
-	this->lines.back().push_back(c);
-	this->invalidateCache();
 }
 
 void Text::addLine(std::string text) {
-	this->lines.back().append(text);
-	this->lines.push_back("");
-	this->invalidateCache();
-}
-
-void Text::addText(std::string text) {
-	this->lines.back().append(text);
-	this->invalidateCache();
-}
-
-void Text::newLine() {
+	this->lines.back().append(text + "\n");
 	this->lines.push_back("");
 	this->invalidateCache();
 }
