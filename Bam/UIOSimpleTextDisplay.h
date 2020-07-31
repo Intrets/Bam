@@ -4,11 +4,14 @@
 
 #include "TextRenderInfo.h"
 
-class UIOFinalTextDisplay : public UIOBase {
+class UIOSimpleTextDisplay : public UIOBase {
 public:
+	// TODO: stop cursor from rendering in Text
 	Text text;
 
-	UIOFinalTextDisplay(Handle self, std::string text_);
+	virtual void translate(glm::vec2 p) override;
+
+	UIOSimpleTextDisplay(Handle self, std::string text_);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

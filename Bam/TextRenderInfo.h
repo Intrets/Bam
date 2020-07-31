@@ -94,4 +94,5 @@ public:
 	void selectIndex(int32_t index);
 
 	void addLine(std::string text);
+	void addString(std::string text);
 };

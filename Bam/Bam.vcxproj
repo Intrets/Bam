@@ -311,7 +311,7 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
-    <ClCompile Include="UIOFinalTextDisplay.cpp" />
+    <ClCompile Include="UIOSimpleTextDisplay.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIOTextEdit2.cpp" />
@@ -396,7 +396,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
-    <ClInclude Include="UIOFinalTextDisplay.h" />
+    <ClInclude Include="UIOSimpleTextDisplay.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIOTextEdit2.h" />

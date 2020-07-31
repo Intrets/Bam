@@ -353,9 +353,6 @@
     <ClCompile Include="PassThroughRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="UIOFinalTextDisplay.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="Rectangle.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
@@ -366,6 +363,9 @@
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="UIOTextEdit2.cpp" />
+    <ClCompile Include="UIOSimpleTextDisplay.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -633,9 +633,6 @@
     <ClInclude Include="PassThroughRenderer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="UIOFinalTextDisplay.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -646,6 +643,9 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="UIOTextEdit2.h" />
+    <ClInclude Include="UIOSimpleTextDisplay.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

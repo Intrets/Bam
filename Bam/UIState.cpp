@@ -16,6 +16,7 @@
 #include "UIOActivitySelector.h"
 #include "Option.h"
 #include "UIOTextEdit2.h"
+#include "UIOSimpleTextDisplay.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -171,6 +172,26 @@ UIState::UIState() {
 		this->UIs.push_back(std::move(t3));
 	}
 
+	// save/load and other stuff
+	{
+		auto t = refMan->makeUniqueRef<UIOSimpleTextDisplay>("testing");
+
+		auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(t));
+		t2.get()->alignment = CONSTRAIN_ALIGNMENT::CENTER;
+
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(t2));
+		test2.get()->screenRectangle.setWidth(0.4f);
+		test2.get()->screenRectangle.setHeight(0.4f);
+		test2.get()->screenRectangle.translate({ 0.0f, -0.5f });
+
+		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		test3.get()->updateSize(r);
+
+		this->UIs.push_back(std::move(test3));
+
+	}
+
 	// wasd movement in world
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
@@ -198,8 +219,4 @@ UIState::UIState() {
 		this->UIs.push_back(std::move(movement));
 	}
 
-	// save/load and other stuff
-	{
-
-	}
 }

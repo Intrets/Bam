@@ -18,9 +18,10 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 	for (char c : text) {
 		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.screenPixels) / this->screenRectangle.size() * 4.0f;
 
+		glm::vec2 addPos = this->nextPos;
+		addPos.y -= size.y;
+
 		if (c == '\n') {
-			glm::vec2 addPos = this->nextPos;
-			addPos.y -= size.y;
 
 			this->laneHeight = glm::max(this->laneHeight, size.y);
 
@@ -46,9 +47,6 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 				this->newLine();
 			}
 
-			glm::vec2 addPos = this->nextPos;
-			addPos.y -= size.y;
-
 			this->laneHeight = glm::max(this->laneHeight, size.y);
 
 			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
@@ -66,6 +64,11 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 
 			this->nextPos.x += size.x;
 		}
+
+		glm::vec2 addBot = addPos;
+		addBot.x += size.x;
+		glm::vec2 curSize = glm::abs(addBot - glm::vec2(-1.0f, 1.0f));
+		this->renderedSize = glm::max(this->renderedSize, curSize);
 	}
 }
 
@@ -83,7 +86,7 @@ void WindowTextRenderInfo::setDepth(float depth_) {
 }
 
 glm::vec2 WindowTextRenderInfo::getRenderedScreenSize() {
-	return this->screenRectangle.size() * this->renderedSize;
+	return this->screenRectangle.size() * this->renderedSize / 2.0f;
 }
 
 std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {
@@ -318,5 +321,10 @@ void Text::selectIndex(int32_t index) {
 void Text::addLine(std::string text) {
 	this->lines.back().append(text + "\n");
 	this->lines.push_back("");
+	this->invalidateCache();
+}
+
+void Text::addString(std::string text) {
+	this->lines.back().append(text);
 	this->invalidateCache();
 }

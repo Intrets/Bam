@@ -88,6 +88,12 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 		case CONSTRAIN_ALIGNMENT::BOTTOMLEFT:
 			p += this->screenRectangle.getBottomLeft() - newScreenRectangle.getBottomLeft();
 			break;
+
+		case CONSTRAIN_ALIGNMENT::CENTER:
+			p.y -= this->screenRectangle.getHeight() / 2 - newScreenRectangle.getHeight() / 2;
+			p.x += this->screenRectangle.getWidth() / 2 - newScreenRectangle.getWidth() / 2;
+			break;
+
 		default:
 			break;
 	}
