@@ -16,6 +16,7 @@ void UIOTextDisplay::translate(glm::vec2 p) {
 	this->UIOBase::translate(p);
 	if (this->text.cachedRenderInfo.has_value()) {
 		this->text.cachedRenderInfo.value().screenRectangle.translate(p);
+		this->text.lastScreenRectangle.translate(p);
 	}
 }
 
