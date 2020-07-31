@@ -175,8 +175,11 @@ UIState::UIState() {
 	// save/load and other stuff
 	{
 		auto t = refMan->makeUniqueRef<UIOSimpleTextDisplay>("testing");
+		//auto t = refMan->makeUniqueRef<UIOTextEdit>();
 
 		auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(t));
+		t2.get()->maybeHeight = UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f);
+		t2.get()->maybeWidth = UIOSizeType(UIOSizeType::RELATIVE_WIDTH, 0.5f);
 		t2.get()->alignment = CONSTRAIN_ALIGNMENT::CENTER;
 
 		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(t2));

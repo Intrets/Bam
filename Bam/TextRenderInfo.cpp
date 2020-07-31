@@ -161,7 +161,7 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 
 int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap) {
 	if (!cachedRenderInfo.has_value()) {
-		makeRenderInfo(screenRectangle, font, wrap);
+		this->makeRenderInfo(screenRectangle, font, wrap);
 	}
 
 	auto& textRenderInfo = cachedRenderInfo.value();
@@ -172,11 +172,11 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 		glm::vec4 v = textRenderInfo.pos[this->cursorIndex];
 		glm::vec2 a = (glm::vec2(v[0], v[1]) - this->view) / 2.0f + 0.5f;
 		glm::vec2 b = glm::vec2(v[2], v[3]) / 2.0f;
-		a *= screenRectangle.size();
-		b *= screenRectangle.size();
+		a *= this->lastScreenRectangle.size();
+		b *= this->lastScreenRectangle.size();
 
 		//a += screenRectangle.getBottomRight();
-		a += screenRectangle.getBottomLeft();
+		a += this->lastScreenRectangle.getBottomLeft();
 		renderInfo.uiRenderInfo.addRectangle(a, a + b, { 1.0f, 0.5f, 0.5f, 0.5f });
 	}
 
