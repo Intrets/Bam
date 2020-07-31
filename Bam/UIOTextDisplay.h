@@ -10,6 +10,8 @@ public:
 
 	UIOTextDisplay(Handle self);
 
+	virtual void translate(glm::vec2 p) override;
+
 	void moveCursor(glm::ivec2 p);
 	void insertText(std::string text);
 	void backspaceChar();

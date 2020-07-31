@@ -12,6 +12,13 @@ UIOTextDisplay::UIOTextDisplay(Handle self) {
 	this->selfHandle = self;
 }
 
+void UIOTextDisplay::translate(glm::vec2 p) {
+	this->UIOBase::translate(p);
+	if (this->text.cachedRenderInfo.has_value()) {
+		this->text.cachedRenderInfo.value().screenRectangle.translate(p);
+	}
+}
+
 void UIOTextDisplay::moveCursor(glm::ivec2 p) {
 	this->text.moveCursor(p);
 }

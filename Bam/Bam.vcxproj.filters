@@ -95,6 +95,9 @@
     <Filter Include="States">
       <UniqueIdentifier>{5a7c42d5-94e7-46ca-8b9a-a764b41e8cbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\Constructors">
+      <UniqueIdentifier>{22ec3228-e39b-4532-a771-59e42dd763c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferWrappers.cpp">
@@ -362,6 +365,7 @@
     <ClCompile Include="Log.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="UIOTextEdit2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -641,6 +645,7 @@
     <ClInclude Include="Log.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="UIOTextEdit2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

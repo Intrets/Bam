@@ -15,6 +15,7 @@
 #include "UIOActivityLinker.h"
 #include "UIOActivitySelector.h"
 #include "Option.h"
+#include "UIOTextEdit2.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -119,9 +120,8 @@ UIState::UIState() {
 
 	// text edit test window
 	{
-		auto text = refMan->makeUniqueRef<UIOTextEdit>();
+		auto text = constructTextEdit();
 
-		//auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
 		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
 		test2.get()->screenRectangle.setWidth(0.4f);
 		test2.get()->screenRectangle.setHeight(0.4f);
@@ -131,6 +131,20 @@ UIState::UIState() {
 		test3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(test3));
+
+		// ==============
+		//auto text = refMan->makeUniqueRef<UIOTextEdit>();
+
+		////auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
+		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
+		//test2.get()->screenRectangle.setWidth(0.4f);
+		//test2.get()->screenRectangle.setHeight(0.4f);
+
+		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		//test3.get()->updateSize(r);
+
+		//this->UIs.push_back(std::move(test3));
 	}
 
 	// text display test window
