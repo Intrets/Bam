@@ -21,6 +21,7 @@
 #include "UIOList.h"
 #include "UIOPad.h"
 #include "UIOSizeType.h"
+#include "UIOConstructButtons.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -182,14 +183,12 @@ UIState::UIState() {
 		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::VERTICAL);
 
 		for (int32_t i = 0; i < 10; i++) {
-			auto b = refMan->makeUniqueRef<UIOButton>();
+			auto [b, bptr] = constructButtonWithText("test button");
 
-			auto b2 = refMan->makeUniqueRef<UIOPad>(std::move(b), UIOSizeType(UIOSizeType::PX, 4));
+			auto b2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
+			b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 100);
 
-			auto b3 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b2));
-			b3.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 100);
-
-			list.get()->addElement(std::move(b3));
+			list.get()->addElement(std::move(b2));
 		}
 
 		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list));

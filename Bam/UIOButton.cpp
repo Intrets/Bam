@@ -30,7 +30,15 @@ UIOButton::UIOButton(Handle self) {
 	});
 }
 
+UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) : UIOButton(self) {
+	this->maybeMain = main.get();
+	this->addElement(std::move(main));
+}
+
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
+	if (this->maybeMain) {
+		this->maybeMain.value()->updateSize(newScreenRectangle);
+	}
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;
 }
@@ -42,6 +50,9 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	}
 	else {
 		color = this->unpressedColor;
+	}
+	if (this->maybeMain) {
+		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);
 	}
 	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, color, depth++);
 	return depth;
