@@ -7,14 +7,7 @@
 UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit() {
 	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
 	auto ptr = res.get();
-
-	ptr->text.addLine("11234567890");
-	ptr->text.addLine("21234567890");
-	ptr->text.addLine("31234567890");
-	ptr->text.addLine("41234567890");
-	ptr->text.addLine("51234567890");
-	ptr->text.addLine("61234567890");
-	ptr->text.addLine("71234567890");
+	ptr->text.addLine("");
 
 	ptr->addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
 						 [=](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {

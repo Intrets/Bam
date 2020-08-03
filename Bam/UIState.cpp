@@ -17,6 +17,10 @@
 #include "Option.h"
 #include "UIOTextEdit2.h"
 #include "UIOSimpleTextDisplay.h"
+#include "UIOGrid.h"
+#include "UIOList.h"
+#include "UIOPad.h"
+#include "UIOSizeType.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -174,24 +178,50 @@ UIState::UIState() {
 
 	// save/load and other stuff
 	{
-		auto t = refMan->makeUniqueRef<UIOSimpleTextDisplay>("testing");
-		//auto t = refMan->makeUniqueRef<UIOTextEdit>();
 
-		auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(t));
-		t2.get()->maybeHeight = UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f);
-		t2.get()->maybeWidth = UIOSizeType(UIOSizeType::RELATIVE_WIDTH, 0.5f);
-		t2.get()->alignment = CONSTRAIN_ALIGNMENT::CENTER;
+		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::VERTICAL);
 
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(t2));
+		for (int32_t i = 0; i < 10; i++) {
+			auto b = refMan->makeUniqueRef<UIOButton>();
+
+			auto b2 = refMan->makeUniqueRef<UIOPad>(std::move(b), UIOSizeType(UIOSizeType::PX, 4));
+
+			auto b3 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b2));
+			b3.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 100);
+
+			list.get()->addElement(std::move(b3));
+		}
+
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list));
 		test2.get()->screenRectangle.setWidth(0.4f);
 		test2.get()->screenRectangle.setHeight(0.4f);
-		test2.get()->screenRectangle.translate({ 0.0f, -0.5f });
+		test2.get()->screenRectangle.translate({ -0.5f, -0.5f });
 
 		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
 
 		test3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(test3));
+
+
+		//auto grid = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(4, 2));
+		//auto grid = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::HORIZONTAL);
+
+		//for (int32_t i = 0; i < 8; i++) {
+		//	auto t = refMan->makeUniqueRef<UIOSimpleTextDisplay>(std::to_string(i));
+		//	grid.get()->addElement(std::move(t));
+		//}
+
+		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(grid));
+		//test2.get()->screenRectangle.setWidth(0.4f);
+		//test2.get()->screenRectangle.setHeight(0.4f);
+		//test2.get()->screenRectangle.translate({ 0.0f, -0.5f });
+
+		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		//test3.get()->updateSize(r);
+
+		//this->UIs.push_back(std::move(test3));
 
 	}
 

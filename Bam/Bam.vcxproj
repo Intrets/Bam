@@ -311,6 +311,8 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
+    <ClCompile Include="UIOGrid.cpp" />
+    <ClCompile Include="UIOList.cpp" />
     <ClCompile Include="UIOSimpleTextDisplay.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
@@ -340,7 +342,6 @@
     <ClCompile Include="UIOActivityLinker.cpp" />
     <ClCompile Include="UIOActivitySelector.cpp" />
     <ClCompile Include="UIOBase.cpp" />
-    <ClCompile Include="UIOBasicWindow.cpp" />
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
     <ClCompile Include="UIOFreeSize.cpp" />
@@ -396,6 +397,8 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="UIOCallBackParams.h" />
+    <ClInclude Include="UIOGrid.h" />
+    <ClInclude Include="UIOList.h" />
     <ClInclude Include="UIOSimpleTextDisplay.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOProxy.h" />
@@ -436,7 +439,6 @@
     <ClInclude Include="UIOActivityLinker.h" />
     <ClInclude Include="UIOActivitySelector.h" />
     <ClInclude Include="UIOBase.h" />
-    <ClInclude Include="UIOBasicWindow.h" />
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />
     <ClInclude Include="UIOFreeSize.h" />

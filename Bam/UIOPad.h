@@ -14,6 +14,7 @@ public:
 	std::optional<UIOSizeType> right;
 
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
+	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

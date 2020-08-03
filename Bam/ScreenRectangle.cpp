@@ -41,7 +41,7 @@ glm::ivec2 ScreenRectangle::getPixelPos() {
 }
 
 bool ScreenRectangle::contains(glm::vec2 p) {
-	return (this->bot.x < p.x) && (p.x < this->top.x) && (this->bot.y < p.y) && (p.y < this->top.y);
+	return (this->bot.x <= p.x) && (p.x <= this->top.x) && (this->bot.y <= p.y) && (p.y <= this->top.y);
 }
 
 void ScreenRectangle::scaleAnchorTopLeft(glm::vec2 s) {

@@ -36,12 +36,13 @@ protected:
 
 	using Bind = std::pair<BindControl, CallBack>;
 
-	void addElement(UniqueReference<UIOBase, UIOBase> element);
 	std::vector<Bind> globalBinds;
 	std::vector<Bind> focussedBinds;
 
 public:
 	ScreenRectangle screenRectangle;
+
+	void addElement(UniqueReference<UIOBase, UIOBase> element);
 
 	virtual void translate(glm::vec2 p);
 	void setScreenPixels(glm::ivec2 px);

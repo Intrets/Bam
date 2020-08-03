@@ -98,6 +98,18 @@
     <Filter Include="Game\Logic\User IO Controllers\Constructors">
       <UniqueIdentifier>{22ec3228-e39b-4532-a771-59e42dd763c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\Components">
+      <UniqueIdentifier>{37b63987-1c2a-4bdc-9575-183f242488b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\User Interactables">
+      <UniqueIdentifier>{8bbe463e-cbf1-4043-8d1f-60171411fb3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\User Interactables\Invisible">
+      <UniqueIdentifier>{dce41069-60c7-47d3-bbde-47494c2ab35b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\User Interactables\Visible">
+      <UniqueIdentifier>{f45cee8f-5da2-4df6-8c38-25b69a355aa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferWrappers.cpp">
@@ -272,58 +284,10 @@
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="UIOBase.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOBasicWindow.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOButton.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOWindowTile.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="ScreenRectangle.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextEdit.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOWindow.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOTextDisplay.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOConstrainSize.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOPad.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOActivityLinker.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOActivitySelector.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOFreeSize.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOHotbar.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOShell.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="UIOSizeType.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOInvisible.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOProxy.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
     <ClCompile Include="UIOCallBackParams.cpp">
@@ -362,9 +326,62 @@
     <ClCompile Include="Log.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextEdit2.cpp" />
+    <ClCompile Include="UIOActivityLinker.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOActivitySelector.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOBase.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOButton.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOFreeSize.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOHotbar.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstrainSize.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOInvisible.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOPad.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOProxy.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOShell.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
     <ClCompile Include="UIOSimpleTextDisplay.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextDisplay.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextEdit.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOWindow.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOWindowTile.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOTextEdit2.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOGrid.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOList.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -552,61 +569,13 @@
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="UIOWindowTile.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOBase.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOBasicWindow.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOButton.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="ScreenRectangle.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOTextEdit.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOWindow.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOTextDisplay.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOConstrainSize.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOPad.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOActivityLinker.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOActivitySelector.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOFreeSize.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOHotbar.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOShell.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="UIOSizeType.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOProxy.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="UIOCallBackParams.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOInvisible.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -642,9 +611,62 @@
     <ClInclude Include="Log.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="UIOTextEdit2.h" />
+    <ClInclude Include="UIOActivityLinker.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOActivitySelector.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOBase.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOButton.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOFreeSize.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOHotbar.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstrainSize.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOInvisible.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOPad.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOProxy.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOShell.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
     <ClInclude Include="UIOSimpleTextDisplay.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextDisplay.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextEdit.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOWindow.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOWindowTile.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOTextEdit2.h">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOGrid.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOList.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

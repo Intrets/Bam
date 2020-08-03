@@ -6,17 +6,17 @@
 #include "UIOCallBackParams.h"
 
 UIOButton::UIOButton(Handle self) {
-	this->onPress = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	this->onRelease = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onRelease = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		return BIND_RESULT::CONTINUE;
 	};
 
 	this->selfHandle = self;
 
-	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (this->contains(state.uiState.getCursorPositionScreen())) {
 			this->down = true;
 			return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
@@ -24,7 +24,7 @@ UIOButton::UIOButton(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		this->down = false;
 		return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;
 	});
