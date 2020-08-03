@@ -11,6 +11,7 @@ void OptionManager::defaultValues() {
 	initVal(OPTIONS2::CL_VIEWPORTSCALE, 20.0f, "cl_viewportscale", "");
 	initVal(OPTIONS2::GR_DEBUG, false, "gr_debug", "");
 	initVal(OPTIONS2::GR_FRAMESYNCMODE, 0, "gr_framesyncmode", "");
+	initVal(OPTIONS2::UI_SCALE, 1.0f, "ui_scale", "");
 }
 
 void OptionManager::readFromFile() {

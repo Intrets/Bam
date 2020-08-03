@@ -3,12 +3,12 @@
 #include "UIOHotbar.h"
 #include "UIOPad.h"
 #include "UIOButton.h"
-#include "UIOWindowTile.h"
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "UIOShell.h"
 #include "ControlState.h"
 #include "UIOCallBackParams.h"
+#include "UIOGrid.h"
 
 UIOHotbar::UIOHotbar(Handle self) {
 	this->selfHandle = self;
@@ -31,7 +31,8 @@ UIOHotbar::UIOHotbar(Handle self) {
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
-	auto tile = refMan->makeUniqueRef<UIOWindowTile>();
+	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 1));
+	//auto tile = refMan->makeUniqueRef<UIOWindowTile>();
 
 	for (int32_t i = 0; i < 10; i++) {
 		auto but = refMan->makeUniqueRef<UIOButton>();
@@ -43,16 +44,16 @@ UIOHotbar::UIOHotbar(Handle self) {
 		this->slots.push_back(but.get());
 
 		auto e = refMan->makeUniqueRef<UIOPad>(std::move(but));
-		e.get()->bottom = { UIOSizeType::PX, 5 };
-		e.get()->top = { UIOSizeType::PX, 5 };
-		e.get()->left = { UIOSizeType::PX, 5 };
-		e.get()->right = { UIOSizeType::PX, 5 };
+		e.get()->bottom = { UIOSizeType::PX, 2 };
+		e.get()->top = { UIOSizeType::PX, 2 };
+		e.get()->left = { UIOSizeType::PX, 2 };
+		e.get()->right = { UIOSizeType::PX, 2 };
 
 		auto shell = refMan->makeUniqueRef<UIOShell>(std::move(e));
 
 		this->slotSize.push_back(shell.get());
 
-		tile.get()->add(std::move(shell));
+		tile.get()->addElement(std::move(shell));
 	}
 
 	this->slots[0]->addGlobalBind({ CONTROLS::TOOL_0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult {

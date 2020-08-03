@@ -371,9 +371,6 @@
     <ClCompile Include="UIOWindow.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
-    <ClCompile Include="UIOWindowTile.cpp">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
     <ClCompile Include="UIOTextEdit2.cpp">
       <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
     </ClCompile>
@@ -656,9 +653,6 @@
     </ClInclude>
     <ClInclude Include="UIOWindow.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOWindowTile.h">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
     <ClInclude Include="UIOTextEdit2.h">
       <Filter>Game\Logic\User IO Controllers\Constructors</Filter>

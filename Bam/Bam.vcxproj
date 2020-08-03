@@ -352,7 +352,6 @@
     <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOTextEdit.cpp" />
     <ClCompile Include="UIOWindow.cpp" />
-    <ClCompile Include="UIOWindowTile.cpp" />
     <ClCompile Include="UIOPad.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
@@ -450,7 +449,6 @@
     <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOTextEdit.h" />
     <ClInclude Include="UIOWindow.h" />
-    <ClInclude Include="UIOWindowTile.h" />
     <ClInclude Include="UIOPad.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />

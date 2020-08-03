@@ -7,8 +7,10 @@ class UIOList : public UIOBase
 public:
 	enum class DIRECTION
 	{
-		VERTICAL,
-		HORIZONTAL,
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN,
 	};
 
 	DIRECTION direction;

@@ -133,7 +133,6 @@ UIState::UIState() {
 		test2.get()->screenRectangle.setHeight(0.4f);
 
 		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
 		test3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(test3));
@@ -180,13 +179,13 @@ UIState::UIState() {
 	// save/load and other stuff
 	{
 
-		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::VERTICAL);
+		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::UP);
 
 		for (int32_t i = 0; i < 10; i++) {
 			auto [b, bptr] = constructButtonWithText("test button");
 
 			auto b2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
-			b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 100);
+			b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 50);
 
 			list.get()->addElement(std::move(b2));
 		}

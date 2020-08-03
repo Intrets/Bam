@@ -7,11 +7,9 @@ class UIOWindow : public UIOBase
 {
 public:
 	UIOBase* main;
-	// TODO: class for segments like this
-	UIOButton* topBar;
-	UIOButton* bottomBar;
-	UIOButton* rightBar;
-	UIOButton* bottomRightBar;
+	UIOBase* topBarPtr;
+
+	bool minimized;
 
 	glm::vec2 mousePressedPosOffset;
 
@@ -19,5 +17,8 @@ public:
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
+
+	virtual CallBackBindResult runGlobalBinds(State& state) override;
+	virtual CallBackBindResult runFocussedBinds(State& state) override;
 };
 

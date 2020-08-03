@@ -5,6 +5,8 @@
 #include "UIOPad.h"
 #include "GameState.h"
 #include "State.h"
+#include "UIOList.h"
+#include "UIOConstructButtons.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
@@ -12,66 +14,89 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 
 	this->main = main_.get();
 
+	auto topBar = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::LEFT);
+	this->topBarPtr = topBar.get();
+
+	auto [close, closePtr_] = constructButtonWithText("x", glm::ivec2(20, 20), 1);
+	//auto closePtr = closePtr_;
+	topBar.get()->addElement(std::move(close));
+
+	auto [minimize, minimizePtr_] = constructButtonWithText("_", glm::ivec2(20, 20), 1);
+	minimizePtr_->onPress = ([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		this->minimized = !this->minimized;
+		return BIND_RESULT::CONTINUE;
+	});
+	//auto minimisePtr = minimizePtr_;
+	topBar.get()->addElement(std::move(minimize));
+
+	auto [titleBar, titleBarPtr_] = constructButtonWithText("title bar");
+	auto titleBarPtr = titleBarPtr_;
+	topBar.get()->addElement(std::move(titleBar));
+
+	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(topBar));
+	topConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
+	topConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::TOP;
+
+	this->addElement(std::move(topConstrain));
+
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(main_));
-	mainPad.get()->top = { UIOSizeType::PX, 30 };
+	mainPad.get()->top = { UIOSizeType::PX, 20 };
 	mainPad.get()->right = { UIOSizeType::PX, 20 };
 	mainPad.get()->bottom = { UIOSizeType::PX, 20 };
 
-	addElement(std::move(mainPad));
+	this->addElement(std::move(mainPad));
 
-	auto top = refMan->makeUniqueRef<UIOButton>();
-	this->topBar = top.get();
-
-	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(top));
-	topConstrain.get()->maybeHeight = { UIOSizeType::PX, 30 };
-	topConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::TOP;
-
-	addElement(std::move(topConstrain));
-
-	auto setMoveOrigin = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto setMoveOrigin = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		this->mousePressedPosOffset = this->screenRectangle.getTopLeft() - state.uiState.getCursorPositionScreen();
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto move = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->topBar->down) {
+	auto move = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		if (titleBarPtr->down) {
 			this->moveTopLeftTo(state.uiState.getCursorPositionScreen() + this->mousePressedPosOffset);
 		}
 		return BIND_RESULT::CONTINUE;
 	};
 
-	{
-		auto br = refMan->makeUniqueRef<UIOButton>();
-		this->bottomRightBar = br.get();
+	auto [rightBar, rightBarPtr_] = constructButton();
+	auto rightBarPtr = rightBarPtr_;
 
-		auto brConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(br));
-		brConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
-		brConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
-		brConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+	auto paddedRightBar = refMan->makeUniqueRef<UIOPad>(std::move(rightBar));
+	paddedRightBar.get()->bottom = UIOSizeType(UIOSizeType::PX, 20);
+	paddedRightBar.get()->top = UIOSizeType(UIOSizeType::PX, 20);
 
-		addElement(std::move(brConstrain));
-	}
-
-	auto b = refMan->makeUniqueRef<UIOButton>();
-	this->bottomBar = b.get();
-
-	auto botConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
-	botConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
-	botConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
-
-	addElement(std::move(botConstrain));
-
-	auto r = refMan->makeUniqueRef<UIOButton>();
-	this->rightBar = r.get();
-
-	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(r));
+	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(paddedRightBar));
 	rightConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
-	rightConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+	rightConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::RIGHT;
 
 	addElement(std::move(rightConstrain));
 
-	auto scaleVertical = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->bottomBar->down) {
+	auto [bottomBar, bottomBarPtr_] = constructButton();
+	auto bottomBarPtr = bottomBarPtr_;
+
+	auto paddedbottomBar = refMan->makeUniqueRef<UIOPad>(std::move(bottomBar));
+	paddedbottomBar.get()->right = UIOSizeType(UIOSizeType::PX, 20);
+
+	auto bottomConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(paddedbottomBar));
+	bottomConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
+	bottomConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMLEFT;
+
+	addElement(std::move(bottomConstrain));
+
+
+	auto [cornerBar, cornerBarPtr_] = constructButton();
+	auto cornerBarPtr = cornerBarPtr_;
+
+	auto cornerConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(cornerBar));
+	cornerConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
+	cornerConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
+	cornerConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+
+	addElement(std::move(cornerConstrain));
+
+
+	auto scaleVertical = [this, bottomBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		if (bottomBarPtr->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.y = state.uiState.getCursorPositionScreen().y;
 			if (this->screenRectangle.top.y - bottomRight.y < 0.2f) {
@@ -83,8 +108,8 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleHorizontal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->rightBar->down) {
+	auto scaleHorizontal = [this, rightBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		if (rightBarPtr->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.x = state.uiState.getCursorPositionScreen().x;
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
@@ -96,8 +121,8 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleDiagonal = [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->bottomRightBar->down) {
+	auto scaleDiagonal = [this, cornerBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		if (cornerBarPtr->down) {
 			auto bottomRight = state.uiState.getCursorPositionScreen();
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
 				bottomRight.x = this->screenRectangle.bot.x + 0.2f;
@@ -111,11 +136,12 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 		return BIND_RESULT::CONTINUE;
 	};
 
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
-	addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleDiagonal);
-	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, setMoveOrigin);
+	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
+	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
+	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleDiagonal);
+
+	this->topBarPtr->addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
+	this->topBarPtr->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, setMoveOrigin);
 }
 
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
@@ -128,5 +154,28 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	return this->UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
+	if (minimized) {
+		return topBarPtr->addRenderInfo(gameState, renderInfo, depth + 1);
+	}
+	else {
+		return this->UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
+	}
+}
+
+CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
+	if (minimized) {
+		return this->topBarPtr->runGlobalBinds(state);
+	}
+	else {
+		return this->UIOBase::runGlobalBinds(state);
+	}
+}
+
+CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
+	if (minimized) {
+		return this->topBarPtr->runFocussedBinds(state);
+	}
+	else {
+		return this->UIOBase::runFocussedBinds(state);
+	}
 }

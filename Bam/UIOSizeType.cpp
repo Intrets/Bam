@@ -20,7 +20,7 @@ float UIOSizeType::getWidth(ScreenRectangle screenRectangle) {
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (this->type) {
 		case UIOSizeType::PX:
-			widthS = static_cast<float>(this->px) / pixelSize.x;
+			widthS = 2 * static_cast<float>(this->px) / pixelSize.x;
 			break;
 		case UIOSizeType::ABSOLUTE_HEIGHT:
 			widthS = (this->absolute_height * pixelSize.y) / pixelSize.x;
@@ -46,7 +46,7 @@ float UIOSizeType::getHeight(ScreenRectangle screenRectangle) {
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (type) {
 		case UIOSizeType::PX:
-			heightS = static_cast<float>(this->px) / pixelSize.y;
+			heightS = 2 * static_cast<float>(this->px) / pixelSize.y;
 			break;
 		case UIOSizeType::ABSOLUTE_HEIGHT:
 			heightS = this->absolute_height;
