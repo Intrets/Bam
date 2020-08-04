@@ -4,10 +4,10 @@
 
 #include "UIOCallBackParams.h"
 
-UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit() {
+UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit(std::string text) {
 	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
 	auto ptr = res.get();
-	ptr->text.addLine("");
+	ptr->text.addLine(text);
 
 	ptr->addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
 						 [=](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {

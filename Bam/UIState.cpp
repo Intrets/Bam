@@ -21,6 +21,9 @@
 #include "UIOPad.h"
 #include "UIOSizeType.h"
 #include "UIOConstructButtons.h"
+#include "Saver.h"
+#include "Loader.h"
+#include "UIOEmpty.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -127,7 +130,7 @@ UIState::UIState() {
 	{
 		auto text = constructTextEdit();
 
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text), "text edit test");
 		test2.get()->screenRectangle.setWidth(0.4f);
 		test2.get()->screenRectangle.setHeight(0.4f);
 
@@ -167,7 +170,7 @@ UIState::UIState() {
 			return BIND_RESULT::CONTINUE;
 		});
 
-		auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay));
+		auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay), "Log output");
 		t2.get()->screenRectangle.setWidth(0.4f);
 		t2.get()->screenRectangle.setHeight(0.4f);
 
@@ -181,18 +184,81 @@ UIState::UIState() {
 	// save/load and other stuff
 	{
 
-		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::UP);
+		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
 
-		for (int32_t i = 0; i < 10; i++) {
-			auto [b, bptr] = constructButtonWithText("test button");
+		{
+			auto text = constructTextEdit("test.save");
+			auto textPtr = text.get();
 
-			auto b2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
-			b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 50);
+			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(text));
+			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
 
-			list.get()->addElement(std::move(b2));
+			list.get()->addElement(std::move(t2));
+
+
+			auto [b1, b1ptr] = constructButtonWithText("save", 1);
+			b1ptr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				if (textPtr->text.lines.size() == 0) {
+					return BIND_RESULT::CONTINUE;
+				}
+				auto name = textPtr->text.lines.front();
+				name.erase(name.end() - 1);
+
+				Locator<Log>::ref().putLine("saving: " + name);
+
+				Saver(name).saveGame(params.gameState);
+				return BIND_RESULT::CONTINUE;
+			};
+
+			auto b12 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b1));
+			b12.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+
+			list.get()->addElement(std::move(b12));
+
+
+			auto [b2, b2ptr] = constructButtonWithText("load", 1);
+
+			b2ptr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				if (textPtr->text.lines.size() == 0) {
+					return BIND_RESULT::CONTINUE;
+				}
+				auto name = textPtr->text.lines.front();
+				name.erase(name.end() - 1);
+
+				Locator<Log>::ref().putLine("loading: " + name);
+
+				Loader(name).loadGame(params.gameState);
+				return BIND_RESULT::CONTINUE;
+			};
+
+			auto b22 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b2));
+			b22.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+
+			list.get()->addElement(std::move(b22));
 		}
 
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list));
+		{
+			auto space = refMan->makeUniqueRef<UIOConstrainSize>(refMan->makeUniqueRef<UIOEmpty>());
+			space.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 5);
+			list.get()->addElement(std::move(space));
+		}
+
+		{
+			auto [testbutton, ptr] = constructButtonWithText("testButton");
+			list.get()->addElement(std::move(testbutton));
+		}
+
+
+		//for (int32_t i = 0; i < 10; i++) {
+		//	auto [b, bptr] = constructButtonWithText("test button", 1);
+
+		//	auto b2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
+		//	b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+
+		//	list.get()->addElement(std::move(b2));
+		//}
+
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "debug stuff");
 		test2.get()->screenRectangle.setWidth(0.4f);
 		test2.get()->screenRectangle.setHeight(0.4f);
 		test2.get()->screenRectangle.translate({ -0.5f, -0.5f });

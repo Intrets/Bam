@@ -4,5 +4,5 @@
 #include "UIOTextDisplay.h"
 
 
-UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit();
+UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit(std::string text = "");
 

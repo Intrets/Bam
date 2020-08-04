@@ -378,6 +378,7 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
     <ClCompile Include="UIOConstructButtons.cpp" />
+    <ClCompile Include="UIOEmpty.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -658,6 +659,7 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
     <ClInclude Include="UIOConstructButtons.h" />
+    <ClInclude Include="UIOEmpty.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

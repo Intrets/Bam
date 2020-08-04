@@ -13,7 +13,7 @@ public:
 
 	glm::vec2 mousePressedPosOffset;
 
-	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_);
+	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

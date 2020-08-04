@@ -154,7 +154,7 @@ public:
 		}
 	};
 	ReferenceManager() : ReferenceManager(1024) {};
-	~ReferenceManager() = default;
+	~ReferenceManager();
 };
 
 template<class B, class T>
@@ -305,6 +305,13 @@ template<class B>
 inline void ReferenceManager<B>::deleteReference(WeakReferenceBase* b) {
 	deleteReference(b->handle);
 	b->handle = 0;
+}
+
+template<class B>
+inline ReferenceManager<B>::~ReferenceManager() {
+	for (auto [_, managed] : this->managedReferences) {
+		managed->invalidate();
+	}
 }
 
 template<class B>

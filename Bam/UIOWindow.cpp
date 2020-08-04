@@ -8,7 +8,7 @@
 #include "UIOList.h"
 #include "UIOConstructButtons.h"
 
-UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
+UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	this->selfHandle = self;
 
@@ -29,7 +29,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	//auto minimisePtr = minimizePtr_;
 	topBar.get()->addElement(std::move(minimize));
 
-	auto [titleBar, titleBarPtr_] = constructButtonWithText("title bar");
+	auto [titleBar, titleBarPtr_] = constructButtonWithText(title);
 	auto titleBarPtr = titleBarPtr_;
 	topBar.get()->addElement(std::move(titleBar));
 

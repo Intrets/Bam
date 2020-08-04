@@ -85,10 +85,6 @@ bool Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame(GameState& gameState) {
-	//auto s = new ScriptManager();
-	//s->load(*this);
-	//Locator<ScriptManager>::provide(s);
-
 	auto manager = new ReferenceManager<Activity>(1024);
 	load(*this, *manager);
 	Locator<ReferenceManager<Activity>>::provide(manager);
