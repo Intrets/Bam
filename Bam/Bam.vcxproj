@@ -350,7 +350,6 @@
     <ClCompile Include="UIOShell.cpp" />
     <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
-    <ClCompile Include="UIOTextEdit.cpp" />
     <ClCompile Include="UIOWindow.cpp" />
     <ClCompile Include="UIOPad.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
@@ -447,7 +446,6 @@
     <ClInclude Include="UIOShell.h" />
     <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />
-    <ClInclude Include="UIOTextEdit.h" />
     <ClInclude Include="UIOWindow.h" />
     <ClInclude Include="UIOPad.h" />
     <ClInclude Include="UIRenderInfo.h" />

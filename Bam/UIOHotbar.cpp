@@ -32,7 +32,6 @@ UIOHotbar::UIOHotbar(Handle self) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 1));
-	//auto tile = refMan->makeUniqueRef<UIOWindowTile>();
 
 	for (int32_t i = 0; i < 10; i++) {
 		auto but = refMan->makeUniqueRef<UIOButton>();

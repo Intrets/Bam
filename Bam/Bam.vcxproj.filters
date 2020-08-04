@@ -365,9 +365,6 @@
     <ClCompile Include="UIOTextDisplay.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextEdit.cpp">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClCompile>
     <ClCompile Include="UIOWindow.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
@@ -646,9 +643,6 @@
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
     <ClInclude Include="UIOTextDisplay.h">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOTextEdit.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
     <ClInclude Include="UIOWindow.h">

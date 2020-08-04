@@ -3,7 +3,6 @@
 #include "UIState.h"
 #include "UIOHotbar.h"
 #include "UIOConstrainSize.h"
-#include "UIOTextEdit.h"
 #include "UIOWindow.h"
 #include "UIOFreeSize.h"
 #include "UIOTextDisplay.h"
@@ -161,6 +160,9 @@ UIState::UIState() {
 			auto newLines = Locator<Log>::ref().getLines();
 			for (auto& newLine : newLines) {
 				self->text.addLine(newLine);
+			}
+			if (newLines.size() != 0) {
+				self->text.moveCursor(glm::ivec2(0, newLines.size()));
 			}
 			return BIND_RESULT::CONTINUE;
 		});

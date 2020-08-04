@@ -18,51 +18,34 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 	for (char c : text) {
 		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.screenPixels) / this->screenRectangle.size() * 4.0f;
 
-		glm::vec2 addPos = this->nextPos;
-		addPos.y -= size.y;
+		glm::vec2 addPos;
 
-		if (c == '\n') {
-
-			this->laneHeight = glm::max(this->laneHeight, size.y);
-
-			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
-			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
-
-			auto it = this->lines.find(vertRange);
-			if (it == this->lines.end()) {
-				it = this->lines.insert({ vertRange, {} }).first;
-			}
-			it->second[horRange] = static_cast<int32_t>(uvs.size());
-
-
-			this->pos.push_back(glm::vec4(addPos, size));
-			this->uvs.push_back(fontInfo.charUV[static_cast<int32_t>(c)]);
-
-			this->nextPos.x += size.x;
-
+		if (this->lineWrap && this->nextPos.x + size.x > 1.0f) {
 			this->newLine();
 		}
-		else {
-			if (this->lineWrap && this->nextPos.x + size.x > 1.0f) {
-				this->newLine();
-			}
 
-			this->laneHeight = glm::max(this->laneHeight, size.y);
+		addPos = this->nextPos;
+		addPos.y -= size.y;
 
-			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
-			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
+		this->laneHeight = glm::max(this->laneHeight, size.y);
 
-			auto it = this->lines.find(vertRange);
-			if (it == this->lines.end()) {
-				it = this->lines.insert({ vertRange, {} }).first;
-			}
-			it->second[horRange] = static_cast<int32_t>(uvs.size());
+		glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
+		glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
+
+		auto it = this->lines.find(vertRange);
+		if (it == this->lines.end()) {
+			it = this->lines.insert({ vertRange, {} }).first;
+		}
+		it->second[horRange] = static_cast<int32_t>(uvs.size());
 
 
-			this->pos.push_back(glm::vec4(addPos, size));
-			this->uvs.push_back(fontInfo.charUV[static_cast<int32_t>(c)]);
+		this->pos.push_back(glm::vec4(addPos, size));
+		this->uvs.push_back(fontInfo.charUV[static_cast<int32_t>(c)]);
 
-			this->nextPos.x += size.x;
+		this->nextPos.x += size.x;
+
+		if (c == '\n') {
+			this->newLine();
 		}
 
 		glm::vec2 addBot = addPos;
