@@ -15,8 +15,6 @@ class WindowManager;
 class Renderer
 {
 private:
-	Option<OPTIONS2::GR_DEBUG, bool> debugOption;
-
 	DebugRenderer debugRenderer;
 
 	StaticWorldRenderer staticWorldRenderer;

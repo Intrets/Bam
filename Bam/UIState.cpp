@@ -86,8 +86,7 @@ void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
 
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
 	glm::vec2 viewport(ratio, 1.0f);
-	Option<OPTIONS2::CL_VIEWPORTSCALE, float> viewportScale;
-	viewport *= viewportScale.getVal();
+	viewport *= Option<OPTIONS2::CL_VIEWPORTSCALE, float>::getVal();
 
 	this->cursorScreen = glm::vec2(x, y);
 	this->cursorWorld = cam + this->cursorScreen * viewport;
@@ -241,11 +240,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Debug Render", 1);
+			ptr->color = Option<GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<GR_DEBUG, bool> debug;
-				debug.setVal(!debug.getVal());
+				Option<GR_DEBUG, bool>::setVal(!Option<GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->unpressedColor = debug.getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 
@@ -256,11 +255,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Toggle Seperate Render Thread", 1);
+			ptr->color = Option<GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onRelease = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<GR_RENDERTHREAD, bool> thread;
-				thread.setVal(!thread.getVal());
+				Option<GR_RENDERTHREAD, bool>::setVal(!Option<GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->unpressedColor = thread.getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 

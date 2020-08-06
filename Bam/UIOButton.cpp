@@ -50,14 +50,14 @@ ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	glm::vec4 color = this->unpressedColor;
+	glm::vec4 c = this->color;
 	if (down) {
-		color = COLORS::DARKEN(color);
+		c = COLORS::DARKEN(c);
 	}
 	if (this->maybeMain) {
 		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);
 	}
-	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, color, depth++);
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, c, depth++);
 	return depth;
 }
 

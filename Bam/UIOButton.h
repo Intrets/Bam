@@ -11,7 +11,7 @@ public:
 	std::optional<UIOBase*> maybeMain;
 
 	bool down = false;
-	glm::vec4 unpressedColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	UIOButton(Handle self);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);

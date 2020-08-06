@@ -29,8 +29,8 @@ template<OPTIONS2 A, class T>
 class Option : public _OptionBase
 {
 public:
-	T getVal();
-	void setVal(T val);
+	static T getVal();
+	static void setVal(T val);
 };
 
 template<OPTIONS2 A, class T>
