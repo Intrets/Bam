@@ -12,6 +12,7 @@ class OptionManager;
 
 typedef enum
 {
+	GR_RENDERTHREAD,
 	GR_FRAMESYNCMODE,
 	GR_DEBUG,
 	CL_VIEWPORTSCALE,

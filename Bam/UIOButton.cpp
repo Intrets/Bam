@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "UIOCallBackParams.h"
+#include "Colors.h"
 
 UIOButton::UIOButton(Handle self) {
 	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
@@ -25,8 +26,13 @@ UIOButton::UIOButton(Handle self) {
 	});
 
 	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		this->down = false;
-		return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;
+		if (this->down) {
+			this->down = false;
+			return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;
+		}
+		else {
+			return BIND_RESULT::CONTINUE;
+		}
 	});
 }
 
@@ -44,12 +50,9 @@ ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	glm::vec4 color;
+	glm::vec4 color = this->unpressedColor;
 	if (down) {
-		color = this->pressedColor;
-	}
-	else {
-		color = this->unpressedColor;
+		color = COLORS::DARKEN(color);
 	}
 	if (this->maybeMain) {
 		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);

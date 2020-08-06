@@ -1,16 +1,18 @@
 #pragma once
 
 #include "CircularArray.h"
+#include "PeriodAverage.h"
 #include <mutex>
 #include <optional>
 
 struct Timing
 {
-	CircularArray<double> history;
+	//CircularArray<double> history;
+	PeriodAvarage<double> history;
 	double timing;
 	std::optional<double> maybeStart;
 
-	Timing() : history(0.0f, 200), timing(0.0), maybeStart(std::nullopt) {};
+	Timing() : history(5, 0.5), timing(0.0), maybeStart(std::nullopt) {};
 };
 
 

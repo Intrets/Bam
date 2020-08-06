@@ -386,6 +386,7 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="Colors.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -674,6 +675,10 @@
     <ClInclude Include="Timer.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="PeriodAverage.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Colors.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

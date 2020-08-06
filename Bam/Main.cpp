@@ -78,7 +78,13 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("UI Logic");
 
 			Locator<Timer>::ref().newTiming("Game Logic");
-			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
+			if (Option<GR_RENDERTHREAD, bool>().getVal()) {
+				logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
+			}
+			else {
+				gameLogic.runStep(state.gameState);
+				Locator<Timer>::ref().endTiming("Game Logic");
+			}
 		}
 
 		if (rendering) {
@@ -89,7 +95,7 @@ void mainLoop(GLFWwindow* window) {
 			fpsDisplay.displayFPS(window);
 			Locator<Timer>::ref().endTiming("Render");
 		}
-		
+
 		if (logicThread.joinable()) {
 			logicThread.join();
 			Locator<Timer>::ref().endTiming("Game Logic");

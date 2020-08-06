@@ -278,6 +278,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
+    <ClCompile Include="Colors.cpp" />
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
@@ -373,6 +374,7 @@
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
@@ -392,6 +394,7 @@
     <ClInclude Include="Modifyables.h" />
     <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="PassThroughRenderer.h" />
+    <ClInclude Include="PeriodAverage.h" />
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />

@@ -12,6 +12,7 @@ void OptionManager::defaultValues() {
 	initVal(OPTIONS2::GR_DEBUG, false, "gr_debug", "");
 	initVal(OPTIONS2::GR_FRAMESYNCMODE, 0, "gr_framesyncmode", "");
 	initVal(OPTIONS2::UI_SCALE, 1.0f, "ui_scale", "");
+	initVal(OPTIONS2::GR_RENDERTHREAD, false, "gr_renderthread", "seperate render and game logic threads");
 }
 
 void OptionManager::readFromFile() {

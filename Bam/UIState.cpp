@@ -25,6 +25,7 @@
 #include "Loader.h"
 #include "UIOEmpty.h"
 #include "Timer.h"
+#include "Colors.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -156,31 +157,6 @@ UIState::UIState() {
 	}
 
 	// text display test window
-	{
-		auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
-
-		textDisplay.get()->addGlobalBind({ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-			auto self = static_cast<UIOTextDisplay*>(self_);
-			auto newLines = Locator<Log>::ref().getLines();
-			for (auto& newLine : newLines) {
-				self->text.addLine(newLine);
-			}
-			if (newLines.size() != 0) {
-				self->text.moveCursor(glm::ivec2(0, newLines.size()));
-			}
-			return BIND_RESULT::CONTINUE;
-		});
-
-		auto t2 = refMan->makeUniqueRef<UIOWindow>(std::move(textDisplay), "Log output");
-		t2.get()->screenRectangle.setWidth(0.4f);
-		t2.get()->screenRectangle.setHeight(0.4f);
-
-		auto t3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(t2));
-
-		t3.get()->updateSize(r);
-
-		this->UIs.push_back(std::move(t3));
-	}
 
 	// save/load and other stuff
 	{
@@ -200,9 +176,14 @@ UIState::UIState() {
 			});
 
 			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(text));
-			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 140);
+			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 120);
 
 			list.get()->addElement(std::move(t2));
+		}
+		{
+			auto space = refMan->makeUniqueRef<UIOConstrainSize>(refMan->makeUniqueRef<UIOEmpty>());
+			space.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 5);
+			list.get()->addElement(std::move(space));
 		}
 		{
 			auto text = constructTextEdit("test.save");
@@ -253,18 +234,18 @@ UIState::UIState() {
 
 			list.get()->addElement(std::move(b22));
 		}
-
 		{
 			auto space = refMan->makeUniqueRef<UIOConstrainSize>(refMan->makeUniqueRef<UIOEmpty>());
 			space.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 5);
 			list.get()->addElement(std::move(space));
 		}
-
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Debug Render", 1);
 			ptr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 				Option<GR_DEBUG, bool> debug;
 				debug.setVal(!debug.getVal());
+				auto self = static_cast<UIOButton*>(self_);
+				self->unpressedColor = debug.getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 
@@ -273,9 +254,49 @@ UIState::UIState() {
 
 			list.get()->addElement(std::move(b));
 		}
+		{
+			auto [testbutton, ptr] = constructButtonWithText("Toggle Seperate Render Thread", 1);
+			ptr->onRelease = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				Option<GR_RENDERTHREAD, bool> thread;
+				thread.setVal(!thread.getVal());
+				auto self = static_cast<UIOButton*>(self_);
+				self->unpressedColor = thread.getVal() ? COLORS::GREEN : COLORS::RED;
+				return BIND_RESULT::CONTINUE;
+			};
+
+			auto b = refMan->makeUniqueRef<UIOConstrainSize>(std::move(testbutton));
+			b.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+
+			list.get()->addElement(std::move(b));
+		}
+		{
+			auto space = refMan->makeUniqueRef<UIOConstrainSize>(refMan->makeUniqueRef<UIOEmpty>());
+			space.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 5);
+			list.get()->addElement(std::move(space));
+		}
+		{
+			auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
+
+			textDisplay.get()->addGlobalBind({ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				auto self = static_cast<UIOTextDisplay*>(self_);
+				auto newLines = Locator<Log>::ref().getLines();
+				for (auto& newLine : newLines) {
+					self->text.addLine(newLine);
+				}
+				if (newLines.size() != 0) {
+					self->text.moveCursor(glm::ivec2(0, newLines.size()));
+				}
+				return BIND_RESULT::CONTINUE;
+			});
+
+			auto b = refMan->makeUniqueRef<UIOConstrainSize>(std::move(textDisplay));
+			b.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 100);
+
+			list.get()->addElement(std::move(b));
+		}
 
 		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "debug stuff");
-		test2.get()->screenRectangle.setWidth(0.2f);
+		test2.get()->screenRectangle.setWidth(0.31f);
 		test2.get()->screenRectangle.setHeight(1.7f);
 		test2.get()->screenRectangle.translate({ -1.0f, 1.0f });
 
