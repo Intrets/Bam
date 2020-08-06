@@ -11,6 +11,7 @@
 #include "FPSDisplay.h"
 #include "UIState.h"
 #include "State.h"
+#include "Timer.h"
 
 ControlState controlState;
 
@@ -54,30 +55,44 @@ void mainLoop(GLFWwindow* window) {
 		bool rendering = fpsLimiter.ready();
 
 		if (rendering) {
+			Locator<Timer>::ref().endTiming("Render Loop");
+			Locator<Timer>::ref().newTiming("Render Loop");
+
+			Locator<Timer>::ref().newTiming("Prepare render");
 			state.uiState.updateSize(window);
 			renderer.prepareRender(window, renderInfo, state);
+			Locator<Timer>::ref().endTiming("Prepare render");
 		}
 
 		if (gameLogic.ready()) {
+			Locator<Timer>::ref().endTiming("Game Loop");
+			Locator<Timer>::ref().newTiming("Game Loop");
+
+			Locator<Timer>::ref().newTiming("UI Logic");
 			state.controlState.cycleStates();
 			glfwPollEvents();
 
 			state.uiState.updateCursor(window, state.player.getCameraPosition());
 
 			state.uiState.run(state);
+			Locator<Timer>::ref().endTiming("UI Logic");
 
+			Locator<Timer>::ref().newTiming("Game Logic");
 			logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
 		}
 
 		if (rendering) {
+			Locator<Timer>::ref().newTiming("Render");
 			fpsLimiter.renderStart();
 			renderer.render(window, renderInfo);
 			fpsLimiter.renderFinish();
 			fpsDisplay.displayFPS(window);
+			Locator<Timer>::ref().endTiming("Render");
 		}
-
+		
 		if (logicThread.joinable()) {
 			logicThread.join();
+			Locator<Timer>::ref().endTiming("Game Logic");
 		}
 
 		{
@@ -88,6 +103,6 @@ void mainLoop(GLFWwindow* window) {
 			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
+		std::this_thread::sleep_for(std::chrono::microseconds((long) 500));
 	}
 }

@@ -24,6 +24,7 @@
 #include "Saver.h"
 #include "Loader.h"
 #include "UIOEmpty.h"
+#include "Timer.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -183,9 +184,26 @@ UIState::UIState() {
 
 	// save/load and other stuff
 	{
-
 		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+		{
+			auto text = refMan->makeUniqueRef<UIOTextDisplay>();
+			text.get()->text.cursorIndex = -1;
+			text.get()->addGlobalBind(
+				{ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED },
+				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				auto self = static_cast<UIOTextDisplay*>(self_);
+				self->text.setString("");
+				for (auto& line : Locator<Timer>::ref().print()) {
+					self->text.addLine(line);
+				}
+				return BIND_RESULT::CONTINUE;
+			});
 
+			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(text));
+			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 140);
+
+			list.get()->addElement(std::move(t2));
+		}
 		{
 			auto text = constructTextEdit("test.save");
 			auto textPtr = text.get();
@@ -194,7 +212,6 @@ UIState::UIState() {
 			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
 
 			list.get()->addElement(std::move(t2));
-
 
 			auto [b1, b1ptr] = constructButtonWithText("save", 1);
 			b1ptr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
@@ -244,24 +261,23 @@ UIState::UIState() {
 		}
 
 		{
-			auto [testbutton, ptr] = constructButtonWithText("testButton");
-			list.get()->addElement(std::move(testbutton));
+			auto [testbutton, ptr] = constructButtonWithText("Debug Render", 1);
+			ptr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				Option<GR_DEBUG, bool> debug;
+				debug.setVal(!debug.getVal());
+				return BIND_RESULT::CONTINUE;
+			};
+
+			auto b = refMan->makeUniqueRef<UIOConstrainSize>(std::move(testbutton));
+			b.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+
+			list.get()->addElement(std::move(b));
 		}
 
-
-		//for (int32_t i = 0; i < 10; i++) {
-		//	auto [b, bptr] = constructButtonWithText("test button", 1);
-
-		//	auto b2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b));
-		//	b2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
-
-		//	list.get()->addElement(std::move(b2));
-		//}
-
 		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "debug stuff");
-		test2.get()->screenRectangle.setWidth(0.4f);
-		test2.get()->screenRectangle.setHeight(0.4f);
-		test2.get()->screenRectangle.translate({ -0.5f, -0.5f });
+		test2.get()->screenRectangle.setWidth(0.2f);
+		test2.get()->screenRectangle.setHeight(1.7f);
+		test2.get()->screenRectangle.translate({ -1.0f, 1.0f });
 
 		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
 

@@ -377,8 +377,15 @@
     <ClCompile Include="UIOList.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOConstructButtons.cpp" />
-    <ClCompile Include="UIOEmpty.cpp" />
+    <ClCompile Include="UIOEmpty.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstructButtons.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -658,8 +665,15 @@
     <ClInclude Include="UIOList.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOConstructButtons.h" />
-    <ClInclude Include="UIOEmpty.h" />
+    <ClInclude Include="UIOEmpty.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstructButtons.h">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

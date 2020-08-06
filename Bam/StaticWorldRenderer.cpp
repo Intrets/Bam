@@ -130,7 +130,7 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 	this->program.use();
 
 	GLEnabler glEnabler;
-	glEnabler.disable(GL_BLEND);
+	glEnabler.disable(GL_BLEND).enable(GL_DEPTH_TEST);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindFramebuffer(GL_FRAMEBUFFER, target);

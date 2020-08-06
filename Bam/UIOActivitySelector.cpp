@@ -26,8 +26,10 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 	this->addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		auto& selection = params.player.selection;
 		if (selection.type == SELECTION_TYPE::HOVERING) {
-			auto pos = glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()));
-			selection.target.get()->forceMoveOriginUp(pos - selection.target.get()->getOrigin());
+			if (selection.target.isValid()) {
+				auto pos = glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()));
+				selection.target.get()->forceMoveOriginUp(pos - selection.target.get()->getOrigin());
+			}
 		}
 		return BIND_RESULT::CONTINUE;
 	});

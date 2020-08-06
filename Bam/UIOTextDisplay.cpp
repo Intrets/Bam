@@ -20,6 +20,12 @@ void UIOTextDisplay::translate(glm::vec2 p) {
 	}
 }
 
+void UIOTextDisplay::setText(std::string text_) {
+	this->text.setString(text_);
+	this->moveCursor(glm::ivec2(0));
+
+}
+
 void UIOTextDisplay::moveCursor(glm::ivec2 p) {
 	this->text.moveCursor(p);
 }
@@ -27,7 +33,7 @@ void UIOTextDisplay::moveCursor(glm::ivec2 p) {
 void UIOTextDisplay::insertText(std::string text_) {
 	this->text.insertString(text_);
 	this->text.invalidateCache();
-	moveCursor(glm::ivec2(0));
+	this->moveCursor(glm::ivec2(0));
 }
 
 void UIOTextDisplay::backspaceChar() {

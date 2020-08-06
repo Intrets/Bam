@@ -311,3 +311,8 @@ void Text::addString(std::string text) {
 	this->lines.back().append(text);
 	this->invalidateCache();
 }
+
+void Text::setString(std::string text) {
+	this->lines = std::vector<std::string>{text};
+	this->invalidateCache();
+}

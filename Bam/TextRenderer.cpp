@@ -13,8 +13,8 @@
 
 void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint target, CameraInfo& cameraInfo) {
 	for (auto& info : textRenderInfo.windowTextRenderInfos) {
-		glm::ivec2 bot = (info.screenRectangle.bot / 2.0f + 0.5f) * glm::vec2(info.screenRectangle.getPixelSize());
-		glm::ivec2 size = info.screenRectangle.size() / 2.0f * glm::vec2(info.screenRectangle.getPixelSize());
+		glm::ivec2 bot = glm::round((info.screenRectangle.bot / 2.0f + 0.5f) * glm::vec2(info.screenRectangle.getPixelSize()));
+		glm::ivec2 size = glm::round(info.screenRectangle.size() / 2.0f * glm::vec2(info.screenRectangle.getPixelSize()));
 		Locator<BlitRenderer>::ref().render(
 			info.uvs,
 			info.pos,

@@ -14,6 +14,7 @@
 #include "PassThroughRenderer.h"
 #include "Fonts.h"
 #include "BlitRenderer.h"
+#include "Timer.h"
 
 void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
@@ -30,6 +31,7 @@ void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
 	Locator<BlitRenderer>::provide(new BlitRenderer());
 	Locator<Fonts>::provide(new Fonts());
+	Locator<Timer>::provide(new Timer());
 
 	Locator<Log>::provide(new Log());
 }

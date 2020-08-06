@@ -12,8 +12,9 @@ public:
 
 	virtual void translate(glm::vec2 p) override;
 
+	void setText(std::string text_);
 	void moveCursor(glm::ivec2 p);
-	void insertText(std::string text);
+	void insertText(std::string text_);
 	void backspaceChar();
 	void deleteChar();
 

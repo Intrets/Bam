@@ -310,6 +310,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOConstructButtons.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
@@ -396,6 +397,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOConstructButtons.h" />
     <ClInclude Include="UIOEmpty.h" />
