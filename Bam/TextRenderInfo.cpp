@@ -316,3 +316,11 @@ void Text::setString(std::string text) {
 	this->lines = std::vector<std::string>{text};
 	this->invalidateCache();
 }
+
+void Text::setLines(std::vector<std::string> lines_) {
+	lines = {};
+	for (auto& line : lines_) {
+		lines.push_back(line + "\n");
+	}
+	this->invalidateCache();
+}

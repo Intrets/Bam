@@ -96,4 +96,5 @@ public:
 	void addLine(std::string text);
 	void addString(std::string text);
 	void setString(std::string text);
+	void setLines(std::vector<std::string> lines);
 };

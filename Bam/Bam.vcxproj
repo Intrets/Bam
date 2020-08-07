@@ -312,8 +312,10 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOConstructButtons.cpp" />
+    <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOList.cpp" />
@@ -401,8 +403,10 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOConstructButtons.h" />
+    <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOList.h" />

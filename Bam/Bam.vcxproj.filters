@@ -386,7 +386,15 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOColoredBackground.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstructer.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClCompile>
+    <ClCompile Include="Colors.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -678,7 +686,15 @@
     <ClInclude Include="PeriodAverage.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOColoredBackground.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstructer.h">
+      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+    </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -26,6 +26,8 @@
 #include "UIOEmpty.h"
 #include "Timer.h"
 #include "Colors.h"
+#include "UIOColoredBackground.h"
+#include "UIOConstructer.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -139,42 +141,24 @@ UIState::UIState() {
 		test3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(test3));
-
-		// ==============
-		//auto text = refMan->makeUniqueRef<UIOTextEdit>();
-
-		////auto test = refMan->makeUniqueRef<UIOScaling>(std::move(text));
-		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text));
-		//test2.get()->screenRectangle.setWidth(0.4f);
-		//test2.get()->screenRectangle.setHeight(0.4f);
-
-		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
-		//test3.get()->updateSize(r);
-
-		//this->UIs.push_back(std::move(test3));
 	}
-
-	// text display test window
 
 	// save/load and other stuff
 	{
 		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
 		{
-			auto text = refMan->makeUniqueRef<UIOTextDisplay>();
-			text.get()->text.cursorIndex = -1;
+			auto text = refMan->makeUniqueRef<UIOSimpleTextDisplay>("");
 			text.get()->addGlobalBind(
 				{ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) },
 				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				auto self = static_cast<UIOTextDisplay*>(self_);
-				self->text.setString("");
-				for (auto& line : Locator<Timer>::ref().print()) {
-					self->text.addLine(line);
-				}
+				auto self = static_cast<UIOSimpleTextDisplay*>(self_);
+				self->updateText(Locator<Timer>::ref().print());
 				return BIND_RESULT::CONTINUE;
 			});
 
-			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(text));
+			auto t1 = refMan->makeUniqueRef<UIOColoredBackground>(std::move(text));
+
+			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(t1));
 			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 120);
 
 			list.get()->addElement(std::move(t2));
@@ -185,16 +169,22 @@ UIState::UIState() {
 			list.get()->addElement(std::move(space));
 		}
 		{
-			auto text = constructTextEdit("test.save");
-			auto textPtr = text.get();
+			UIOTextDisplay* textPtr;
+			auto text = constructTextEdit2("test.save").setPtr(textPtr)
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.get();
 
-			auto t2 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(text));
-			t2.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+			list.get()->addElement(std::move(text));
 
-			list.get()->addElement(std::move(t2));
+			UIOButton* saveButtonPtr;
+			auto saveButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructor("save")
+				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.button().setPtr(saveButtonPtr)
+				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.get();
 
-			auto [b1, b1ptr] = constructButtonWithText("save", 1);
-			b1ptr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+			saveButtonPtr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 				if (textPtr->text.lines.size() == 0) {
 					return BIND_RESULT::CONTINUE;
 				}
@@ -207,15 +197,18 @@ UIState::UIState() {
 				return BIND_RESULT::CONTINUE;
 			};
 
-			auto b12 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b1));
-			b12.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
+			list.get()->addElement(std::move(saveButton));
 
-			list.get()->addElement(std::move(b12));
+			UIOButton* loadButtonPtr;
+			auto loadButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructor("load")
+				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.button().setPtr(loadButtonPtr)
+				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.get();
 
 
-			auto [b2, b2ptr] = constructButtonWithText("load", 1);
-
-			b2ptr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+			loadButtonPtr->onPress = [textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 				if (textPtr->text.lines.size() == 0) {
 					return BIND_RESULT::CONTINUE;
 				}
@@ -228,10 +221,7 @@ UIState::UIState() {
 				return BIND_RESULT::CONTINUE;
 			};
 
-			auto b22 = refMan->makeUniqueRef<UIOConstrainSize>(std::move(b2));
-			b22.get()->maybeHeight = UIOSizeType(UIOSizeType::PX, 20);
-
-			list.get()->addElement(std::move(b22));
+			list.get()->addElement(std::move(loadButton));
 		}
 		{
 			auto space = refMan->makeUniqueRef<UIOConstrainSize>(refMan->makeUniqueRef<UIOEmpty>());
@@ -304,27 +294,6 @@ UIState::UIState() {
 		test3.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(test3));
-
-
-		//auto grid = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(4, 2));
-		//auto grid = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::HORIZONTAL);
-
-		//for (int32_t i = 0; i < 8; i++) {
-		//	auto t = refMan->makeUniqueRef<UIOSimpleTextDisplay>(std::to_string(i));
-		//	grid.get()->addElement(std::move(t));
-		//}
-
-		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(grid));
-		//test2.get()->screenRectangle.setWidth(0.4f);
-		//test2.get()->screenRectangle.setHeight(0.4f);
-		//test2.get()->screenRectangle.translate({ 0.0f, -0.5f });
-
-		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
-		//test3.get()->updateSize(r);
-
-		//this->UIs.push_back(std::move(test3));
-
 	}
 
 	// wasd movement in world

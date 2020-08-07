@@ -24,6 +24,20 @@ UIOSimpleTextDisplay::UIOSimpleTextDisplay(Handle self, std::string text_) {
 	this->text.cursorIndex = -1;
 }
 
+UIOSimpleTextDisplay::UIOSimpleTextDisplay(Handle self, std::vector<std::string> text_) {
+	this->selfHandle = self;
+	this->text.setLines(text_);
+	this->text.cursorIndex = -1;
+}
+
+void UIOSimpleTextDisplay::updateText(std::string text_) {
+	this->text.setString(text_);
+}
+
+void UIOSimpleTextDisplay::updateText(std::vector<std::string> lines) {
+	this->text.setLines(lines);
+}
+
 void UIOSimpleTextDisplay::translate(glm::vec2 p) {
 	this->UIOBase::translate(p);
 	if (this->text.cachedRenderInfo.has_value()) {
