@@ -88,18 +88,18 @@ inline bool Loader::retrieve(bool& t) {
 }
 
 template<>
-inline bool Loader::retrieve(ACTIVITY::TYPE& t) {
+inline bool Loader::retrieve(Activity::TYPE& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<ACTIVITY::TYPE>(s);
+	t = static_cast<Activity::TYPE>(s);
 	return true;
 }
 
 template<>
-inline bool Loader::retrieve(MOVEABLE::DIR& t) {
+inline bool Loader::retrieve(Activity::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<MOVEABLE::DIR>(s);
+	t = static_cast<Activity::DIR>(s);
 	return true;
 }
 

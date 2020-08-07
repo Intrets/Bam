@@ -118,9 +118,9 @@ UIState::UIState() {
 
 		//
 		auto sized = refMan->makeUniqueRef<UIOConstrainSize>(std::move(hotbar));
-		sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.09f };
-		sized.get()->maybeWidth = { UIOSizeType::RELATIVE_WIDTH, 0.9f };
-		sized.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOM;
+		sized.get()->maybeHeight = { UIOSizeType::RELATIVE_WIDTH, 0.05f };
+		sized.get()->maybeWidth = { UIOSizeType::RELATIVE_WIDTH, 0.5f };
+		sized.get()->alignment = UIOConstrainSize::ALIGNMENT::BOTTOM;
 
 		sized.get()->updateSize(r);
 
@@ -164,7 +164,7 @@ UIState::UIState() {
 			auto text = refMan->makeUniqueRef<UIOTextDisplay>();
 			text.get()->text.cursorIndex = -1;
 			text.get()->addGlobalBind(
-				{ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED },
+				{ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) },
 				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 				auto self = static_cast<UIOTextDisplay*>(self_);
 				self->text.setString("");
@@ -240,11 +240,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Debug Render", 1);
-			ptr->color = Option<GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTIONS2::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<GR_DEBUG, bool>::setVal(!Option<GR_DEBUG, bool>::getVal());
+				Option<OPTIONS2::GR_DEBUG, bool>::setVal(!Option<OPTIONS2::GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTIONS2::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 
@@ -255,11 +255,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Toggle Seperate Render Thread", 1);
-			ptr->color = Option<GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onRelease = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<GR_RENDERTHREAD, bool>::setVal(!Option<GR_RENDERTHREAD, bool>::getVal());
+				Option<OPTIONS2::GR_RENDERTHREAD, bool>::setVal(!Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 
@@ -276,7 +276,7 @@ UIState::UIState() {
 		{
 			auto textDisplay = refMan->makeUniqueRef<UIOTextDisplay>();
 
-			textDisplay.get()->addGlobalBind({ CONTROLS::EVERY_TICK, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+			textDisplay.get()->addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 				auto self = static_cast<UIOTextDisplay*>(self_);
 				auto newLines = Locator<Log>::ref().getLines();
 				for (auto& newLine : newLines) {
@@ -331,22 +331,22 @@ UIState::UIState() {
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 			state.player.pos.x -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 			state.player.pos.x += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 			state.player.pos.y -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 			state.player.pos.y += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});

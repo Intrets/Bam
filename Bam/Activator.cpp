@@ -44,8 +44,8 @@ void Activator::removeActivityTracesLocal(GameState& gameState) {
 void Activator::leaveActivityTracesLocal(GameState& gameState) {
 }
 
-ACTIVITY::TYPE Activator::getType() {
-	return ACTIVITY::TYPE::ACTIVATOR;
+Activity::TYPE Activator::getType() {
+	return Activity::TYPE::ACTIVATOR;
 }
 
 void Activator::save(Saver& saver) {

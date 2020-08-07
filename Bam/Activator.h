@@ -22,7 +22,7 @@ public:
 	virtual void leaveActivityTracesLocal(GameState& gameState);
 
 	// Serial
-	virtual ACTIVITY::TYPE getType() override;
+	virtual Activity::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
 

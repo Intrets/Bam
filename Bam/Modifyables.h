@@ -100,28 +100,28 @@ template <class T>
 class ModifyableDoRootMove : public Modifyable
 {
 public:
-	using SetterType = bool (T::*)(GameState&, MOVEABLE::DIR, int32_t);
+	using SetterType = bool (T::*)(GameState&, Activity::DIR, int32_t);
 
 	SetterType setter;
 
 	virtual bool modify(void* base_, GameState& gameState, std::vector<std::string>& value) {
 		if (readOnly) return false;
 		T* base = static_cast<T*>(base_);
-		MOVEABLE::DIR direction;
+		Activity::DIR direction;
 		if (value.size() == 0) {
 			return false;
 		}
 		if (value[0] == "up") {
-			direction = MOVEABLE::DIR::UP;
+			direction = Activity::DIR::UP;
 		}
 		else if (value[0] == "down") {
-			direction = MOVEABLE::DIR::DOWN;
+			direction = Activity::DIR::DOWN;
 		}
 		else if (value[0] == "left") {
-			direction = MOVEABLE::DIR::LEFT;
+			direction = Activity::DIR::LEFT;
 		}
 		else if (value[0] == "right") {
-			direction = MOVEABLE::DIR::RIGHT;
+			direction = Activity::DIR::RIGHT;
 		}
 		else {
 			return false;
@@ -256,7 +256,7 @@ template <class T>
 class ModifyableDIR : public Modifyable
 {
 public:
-	using Member = MOVEABLE::DIR;
+	using Member = Activity::DIR;
 	using Type = Member(T::*);
 
 	Type ptr;
@@ -268,18 +268,18 @@ public:
 		}
 		T* base = static_cast<T*>(base_);
 		auto t = static_cast<Member*>(&(base->*ptr));
-		MOVEABLE::DIR direction;
+		Activity::DIR direction;
 		if (value[0] == "up") {
-			direction = MOVEABLE::DIR::UP;
+			direction = Activity::DIR::UP;
 		}
 		else if (value[0] == "down") {
-			direction = MOVEABLE::DIR::DOWN;
+			direction = Activity::DIR::DOWN;
 		}
 		else if (value[0] == "left") {
-			direction = MOVEABLE::DIR::LEFT;
+			direction = Activity::DIR::LEFT;
 		}
 		else if (value[0] == "right") {
-			direction = MOVEABLE::DIR::RIGHT;
+			direction = Activity::DIR::RIGHT;
 		}
 		else {
 			return false;

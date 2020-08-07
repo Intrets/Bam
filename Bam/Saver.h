@@ -76,14 +76,14 @@ inline bool Saver::store(bool t) {
 }
 
 template<>
-inline bool Saver::store(ACTIVITY::TYPE t) {
+inline bool Saver::store(Activity::TYPE t) {
 	int32_t s = static_cast<int32_t>(t);
 	store(s);
 	return true;
 }
 
 template<>
-inline bool Saver::store(MOVEABLE::DIR t) {
+inline bool Saver::store(Activity::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
 	store(s);
 	return true;

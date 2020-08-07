@@ -9,7 +9,7 @@ UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit(std::string text) {
 	auto ptr = res.get();
 	ptr->text.addLine(text);
 
-	ptr->addFocussedBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
+	ptr->addFocussedBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED },
 						 [=](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		if (!ptr->contains(params.uiState.getCursorPositionScreen())) {
 			return BIND_RESULT::CONTINUE;
@@ -32,46 +32,46 @@ UniqueReference<UIOBase, UIOTextDisplay> constructTextEdit(std::string text) {
 		return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 	});
 
-	ptr->addFocussedBind({ CONTROLS::TEST_UP, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::TEST_UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->moveCursor({ 0,-1 });
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	ptr->addFocussedBind({ CONTROLS::TEST_DOWN, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::TEST_DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->moveCursor({ 0,1 });
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	ptr->addFocussedBind({ CONTROLS::TEST_LEFT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::TEST_LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->moveCursor({ -1,0 });
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
-	ptr->addFocussedBind({ CONTROLS::TEST_RIGHT, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::TEST_RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->moveCursor({ 1,0 });
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	ptr->addFocussedBind({ CONTROLS::CHAR_BUFFER_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED },
+	ptr->addFocussedBind({ ControlState::CONTROLS::CHAR_BUFFER_CHANGED, ControlState::CONTROLSTATE_PRESSED },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->insertText(state.controlState.getCharBuffer());
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	ptr->addFocussedBind({ CONTROLS::BACKSPACE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::BACKSPACE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->backspaceChar();
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	ptr->addFocussedBind({ CONTROLS::DELETE, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::DELETE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->deleteChar();
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	ptr->addFocussedBind({ CONTROLS::TAB, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT },
+	ptr->addFocussedBind({ ControlState::CONTROLS::TAB, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 					[=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		ptr->insertText("    ");
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;

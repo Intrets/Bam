@@ -12,7 +12,7 @@ std::pair<UniqueReference<UIOBase, UIOBase>, UIOButton*> constructButtonWithText
 	auto& refMan = Locator<ReferenceManager<UIOBase>>::ref();
 
 	auto centeredText = refMan.makeUniqueRef<UIOConstrainSize>(refMan.makeUniqueRef<UIOSimpleTextDisplay>(text));
-	centeredText.get()->alignment = CONSTRAIN_ALIGNMENT::CENTER;
+	centeredText.get()->alignment = UIOConstrainSize::ALIGNMENT::CENTER;
 
 	auto button = refMan.makeUniqueRef<UIOButton>(std::move(centeredText));
 	auto buttonPtr = button.get();
@@ -26,7 +26,7 @@ std::pair<UniqueReference<UIOBase, UIOBase>, UIOButton*> constructButtonWithText
 	auto& refMan = Locator<ReferenceManager<UIOBase>>::ref();
 
 	auto centeredText = refMan.makeUniqueRef<UIOConstrainSize>(refMan.makeUniqueRef<UIOSimpleTextDisplay>(text));
-	centeredText.get()->alignment = CONSTRAIN_ALIGNMENT::CENTER;
+	centeredText.get()->alignment = UIOConstrainSize::ALIGNMENT::CENTER;
 
 	auto button = refMan.makeUniqueRef<UIOButton>(std::move(centeredText));
 	auto buttonPtr = button.get();

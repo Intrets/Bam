@@ -40,13 +40,13 @@ Anchor::Anchor(Handle self, GameState& gameState) : Anchor(self) {
 Anchor::~Anchor() {
 }
 
-void Anchor::rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) {
+void Anchor::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 }
 
 void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 }
 
-bool Anchor::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
+bool Anchor::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
 	return true;
 }
 
@@ -110,8 +110,8 @@ std::stringstream& Anchor::getMembers(std::stringstream& out) {
 	return out;
 }
 
-ACTIVITY::TYPE Anchor::getType() {
-	return ACTIVITY::ANCHOR;
+Activity::TYPE Anchor::getType() {
+	return Activity::TYPE::ANCHOR;
 }
 
 void Anchor::getTreeMembers(std::vector<Activity*>& members) {

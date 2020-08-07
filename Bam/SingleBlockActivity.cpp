@@ -20,8 +20,8 @@ SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm:
 	}
 }
 
-bool SingleBlockActivity::canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) {
-	return !gameState.staticWorld.isOccupied(this->origin + MOVEABLE::DIRECTION[dir], ignore);
+bool SingleBlockActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
+	return !gameState.staticWorld.isOccupied(this->origin + Activity::getDirection(dir), ignore);
 }
 
 bool SingleBlockActivity::canFillTracesLocal(GameState& gameState) {

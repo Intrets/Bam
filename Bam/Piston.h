@@ -23,24 +23,24 @@ public:
 	int32_t length;
 
 	glm::ivec2 direction;
-	MOVEABLE::DIR headDir;
+	Activity::DIR headDir;
 
 	PISTON::DIR state = PISTON::STATIONARY;
 
 
-	Piston(Handle self, GameState& gameState, glm::ivec2 pos, MOVEABLE::DIR dir, bool leaveTraces = true);
-	Piston();
-	~Piston();
+	Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces = true);
+	Piston() = default;
+	virtual ~Piston() = default;
 
 	// Placement
-	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
+	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
 
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
 	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
+	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
@@ -56,7 +56,7 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
 	// Serial
-	virtual ACTIVITY::TYPE getType() override;
+	virtual Activity::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
 

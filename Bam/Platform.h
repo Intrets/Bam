@@ -19,14 +19,14 @@ public:
 	~Platform() = default;
 
 	// Placement
-	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) override;
+	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
 
 	// Activity
 	virtual bool canActivityLocal(GameState & gameState, int32_t type) override;
 	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
-	virtual bool canMoveLocal(GameState & gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) override;
+	virtual bool canMoveLocal(GameState & gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
@@ -56,6 +56,6 @@ public:
 	virtual void fillModifyingMap(ModifyerBase& modifyer) override;
 	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value);
 	virtual std::stringstream& getMembers(std::stringstream& out);
-	virtual ACTIVITY::TYPE getType() override { return ACTIVITY::PLATFORM; }
+	virtual Activity::TYPE getType() override { return Activity::TYPE::PLATFORM; }
 };
 

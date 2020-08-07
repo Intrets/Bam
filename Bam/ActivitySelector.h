@@ -22,8 +22,8 @@ public:
 	void selectTarget(GameState& gameState, glm::vec2 pos);
 	void expandTarget();
 	void shrinkTarget();
-	void spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);
-	void rotateHover(MOVEABLE::ROT rot);
+	void spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);
+	void rotateHover(Activity::ROT rot);
 
 	ActivitySelector();
 	~ActivitySelector() = default;

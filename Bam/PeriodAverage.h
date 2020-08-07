@@ -18,6 +18,8 @@ public:
 	double timePeriod;
 
 	PeriodAvarage(int32_t historySize, double timePeriod_);
+	PeriodAvarage() = default;
+	~PeriodAvarage() = default;
 
 	void insert(T val, double time);
 	T getAvarege(int32_t timePeriods);

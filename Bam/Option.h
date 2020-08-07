@@ -10,7 +10,7 @@
 
 class OptionManager;
 
-typedef enum
+enum class OPTIONS2
 {
 	GR_RENDERTHREAD,
 	GR_FRAMESYNCMODE,
@@ -18,7 +18,7 @@ typedef enum
 	CL_VIEWPORTSCALE,
 	UI_SCALE,
 	OPTIONS2_MAX
-} OPTIONS2;
+};
 
 class _OptionBase
 {
@@ -100,7 +100,7 @@ inline std::ostream& operator<< (std::ostream& out, OptionValue<T>& D) {
 class OptionManager
 {
 private:
-	std::array<std::unique_ptr<_OptionValueBase>, OPTIONS2::OPTIONS2_MAX> data;
+	std::array<std::unique_ptr<_OptionValueBase>, static_cast<size_t>(OPTIONS2::OPTIONS2_MAX)> data;
 	std::unordered_map<std::string, OPTIONS2> nameMap;
 
 	void defaultValues();
@@ -124,17 +124,17 @@ public:
 
 template<class T>
 inline T OptionManager::getVal(OPTIONS2 option) {
-	return static_cast<OptionValue<T>*>(this->data[option].get())->val;
+	return static_cast<OptionValue<T>*>(this->data[static_cast<size_t>(option)].get())->val;
 }
 
 template<class T>
 inline void OptionManager::setVal(OPTIONS2 option, T val) {
-	static_cast<OptionValue<T>*>(this->data[option].get())->setVal(val);
+	static_cast<OptionValue<T>*>(this->data[static_cast<size_t>(option)].get())->setVal(val);
 }
 
 template<class T>
 inline void OptionManager::initVal(OPTIONS2 option, T val, std::string name, std::string description) {
-	this->data[option] = std::make_unique<OptionValue<T>>(val, name, description);
+	this->data[static_cast<size_t>(option)] = std::make_unique<OptionValue<T>>(val, name, description);
 	this->nameMap[name] = option;
 }
 

@@ -58,6 +58,8 @@ public:
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
+
+	UIOBase() = default;
 	virtual ~UIOBase() = default;
 };
 

@@ -35,14 +35,14 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 
 	auto topConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(topBar));
 	topConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
-	topConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::TOP;
+	topConstrain.get()->alignment = UIOConstrainSize::ALIGNMENT::TOP;
 
 	this->addElement(std::move(topConstrain));
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(main_));
 	mainPad.get()->top = { UIOSizeType::PX, 20 };
-	mainPad.get()->right = { UIOSizeType::PX, 20 };
-	mainPad.get()->bottom = { UIOSizeType::PX, 20 };
+	mainPad.get()->right = { UIOSizeType::PX, 10 };
+	mainPad.get()->bottom = { UIOSizeType::PX, 10 };
 
 	this->addElement(std::move(mainPad));
 
@@ -62,12 +62,12 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	auto rightBarPtr = rightBarPtr_;
 
 	auto paddedRightBar = refMan->makeUniqueRef<UIOPad>(std::move(rightBar));
-	paddedRightBar.get()->bottom = UIOSizeType(UIOSizeType::PX, 20);
+	paddedRightBar.get()->bottom = UIOSizeType(UIOSizeType::PX, 10);
 	paddedRightBar.get()->top = UIOSizeType(UIOSizeType::PX, 20);
 
 	auto rightConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(paddedRightBar));
-	rightConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
-	rightConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::RIGHT;
+	rightConstrain.get()->maybeWidth = { UIOSizeType::PX, 10 };
+	rightConstrain.get()->alignment = UIOConstrainSize::ALIGNMENT::RIGHT;
 
 	addElement(std::move(rightConstrain));
 
@@ -75,11 +75,11 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	auto bottomBarPtr = bottomBarPtr_;
 
 	auto paddedbottomBar = refMan->makeUniqueRef<UIOPad>(std::move(bottomBar));
-	paddedbottomBar.get()->right = UIOSizeType(UIOSizeType::PX, 20);
+	paddedbottomBar.get()->right = UIOSizeType(UIOSizeType::PX, 10);
 
 	auto bottomConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(paddedbottomBar));
-	bottomConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
-	bottomConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMLEFT;
+	bottomConstrain.get()->maybeHeight = { UIOSizeType::PX, 10 };
+	bottomConstrain.get()->alignment = UIOConstrainSize::ALIGNMENT::BOTTOMLEFT;
 
 	addElement(std::move(bottomConstrain));
 
@@ -88,9 +88,9 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	auto cornerBarPtr = cornerBarPtr_;
 
 	auto cornerConstrain = refMan->makeUniqueRef<UIOConstrainSize>(std::move(cornerBar));
-	cornerConstrain.get()->maybeHeight = { UIOSizeType::PX, 20 };
-	cornerConstrain.get()->maybeWidth = { UIOSizeType::PX, 20 };
-	cornerConstrain.get()->alignment = CONSTRAIN_ALIGNMENT::BOTTOMRIGHT;
+	cornerConstrain.get()->maybeHeight = { UIOSizeType::PX, 10 };
+	cornerConstrain.get()->maybeWidth = { UIOSizeType::PX, 10 };
+	cornerConstrain.get()->alignment = UIOConstrainSize::ALIGNMENT::BOTTOMRIGHT;
 
 	addElement(std::move(cornerConstrain));
 
@@ -136,12 +136,12 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 		return BIND_RESULT::CONTINUE;
 	};
 
-	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleVertical);
-	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleHorizontal);
-	addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, scaleDiagonal);
+	addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED }, scaleVertical);
+	addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED }, scaleHorizontal);
+	addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED }, scaleDiagonal);
 
-	this->topBarPtr->addFocussedBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, move);
-	this->topBarPtr->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, setMoveOrigin);
+	this->topBarPtr->addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED }, move);
+	this->topBarPtr->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, setMoveOrigin);
 }
 
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {

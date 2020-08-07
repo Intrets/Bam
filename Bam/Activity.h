@@ -14,21 +14,6 @@ struct RenderInfo;
 
 namespace MOVEABLE
 {
-	typedef enum
-	{
-		CLOCKWISE,
-		COUNTERCLOCKWISE,
-	} ROT;
-
-	typedef enum
-	{
-		UP,
-		RIGHT,
-		DOWN,
-		LEFT,
-		STATIONARY,
-	} DIR;
-
 	const std::vector<std::string> DIR_NAMES{
 		"up",
 		"right",
@@ -36,43 +21,11 @@ namespace MOVEABLE
 		"left",
 		"stationary"
 	};
-
-	static std::array<DIR, 5> REV_DIR{
-		DOWN,
-		LEFT,
-		UP,
-		RIGHT,
-		STATIONARY,
-	};
-
-	// TODO: does this break?
-	static std::array<glm::ivec2, 5> DIRECTION{
-			glm::ivec2(0, 1),
-			glm::ivec2(1, 0),
-			glm::ivec2(0, -1),
-			glm::ivec2(-1, 0),
-			glm::ivec2(0, 0)
-	};
 }
 
 // TODO: better runtime type system??
 namespace ACTIVITY
 {
-	typedef enum
-	{
-		ANCHOR,
-		MOVER,
-		PLATFORM,
-		PISTON,
-		SINGLEPLATFORM,
-		BREAKER,
-		GRABBER,
-		PLANT,
-		ACTIVATOR,
-		RAILCRANE,
-		_MAX,
-	} TYPE;
-
 	const std::vector<std::string> TYPE_NAMES{
 		"anchor",
 		"mover",
@@ -92,6 +45,84 @@ class Anchor;
 
 class Activity : public ModifyingInterface
 {
+public:
+	enum DIR
+	{
+		UP,
+		RIGHT,
+		DOWN,
+		LEFT,
+		STATIONARY,
+	};
+
+	static DIR REV_DIR(DIR dir) {
+		switch (dir) {
+			case DIR::UP:
+				return Activity::DIR::DOWN;
+				break;
+			case DIR::RIGHT:
+				return Activity::DIR::LEFT;
+				break;
+			case DIR::DOWN:
+				return Activity::DIR::UP;
+				break;
+			case DIR::LEFT:
+				return Activity::DIR::RIGHT;
+				break;
+			case DIR::STATIONARY:
+				return Activity::DIR::STATIONARY;
+				break;
+			default:
+				assert(0);
+				return Activity::DIR::STATIONARY;
+				break;
+		}
+	}
+
+	glm::ivec2 getDirection(Activity::DIR dir) {
+		switch (dir) {
+			case Activity::DIR::UP:
+				return glm::ivec2(0, 1);
+				break;
+			case Activity::DIR::RIGHT:
+				return glm::ivec2(1, 0);
+				break;
+			case Activity::DIR::DOWN:
+				return glm::ivec2(0, -1);
+				break;
+			case Activity::DIR::LEFT:
+				return glm::ivec2(-1, 0);
+				break;
+			case Activity::DIR::STATIONARY:
+				return glm::ivec2(0, 0);
+				break;
+			default:
+				assert(0);
+				return glm::ivec2(0, 0);
+				break;
+		}
+	}
+
+	enum class ROT
+	{
+		CLOCKWISE,
+		COUNTERCLOCKWISE,
+	};
+
+	enum class TYPE
+	{
+		ANCHOR,
+		MOVER,
+		PLATFORM,
+		PISTON,
+		SINGLEPLATFORM,
+		BREAKER,
+		GRABBER,
+		PLANT,
+		ACTIVATOR,
+		RAILCRANE,
+		_MAX,
+	};
 private:
 	Handle getRootHandle();
 
@@ -105,7 +136,7 @@ protected:
 
 	int32_t movingPace = 20;
 	int32_t movingTickStart = 0;
-	MOVEABLE::DIR movementDirection = MOVEABLE::STATIONARY;
+	DIR movementDirection = DIR::STATIONARY;
 	bool moving = false;
 
 	glm::ivec2 origin;
@@ -131,8 +162,8 @@ public:
 	virtual ~Activity() = default;
 
 	// Placement 
-	virtual void rotateForcedLocal(glm::ivec2 center, MOVEABLE::ROT rotation) = 0;
-	void rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation);
+	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) = 0;
+	void rotateForcedUp(glm::ivec2 center, Activity::ROT rotation);
 	void forceMoveOriginUp(glm::ivec2 d);
 	void forceMoveOriginLocal(glm::ivec2 d) { origin += d; };
 	void disconnectFromParent();
@@ -144,13 +175,13 @@ public:
 	void stopActivity(GameState& gameState);
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, MOVEABLE::DIR dir, ActivityIgnoringGroup& ignore) = 0;
-	virtual void applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
-	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir);
-	bool canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore);
-	bool applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
-	void applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
-	bool applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int32_t pace);
+	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) = 0;
+	virtual void applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int32_t pace);
+	bool canMoveUp(GameState& gameState, Activity::DIR dir);
+	bool canMoveUp(GameState& gameState, Activity::DIR dir, std::vector<Activity*>& extraIgnore);
+	bool applyMoveUp(GameState& gameState, Activity::DIR dir, int32_t pace);
+	void applyMoveUpForced(GameState& gameState, Activity::DIR dir, int32_t pace);
+	bool applyMoveRoot(GameState& gameState, Activity::DIR dir, int32_t pace);
 	void stopMovement(GameState& gameState);
 
 	// Traces Placement
@@ -177,7 +208,7 @@ public:
 	WeakReference<Activity, Activity> getRoot();
 
 	// Serial
-	virtual ACTIVITY::TYPE getType() = 0;
+	virtual TYPE getType() = 0;
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);
 
@@ -189,10 +220,5 @@ public:
 	virtual void fillModifyingMap(ModifyerBase& modifyer) override;
 	using ModifyingInterface::getSimpleInfo;
 	virtual std::ostream& getSimpleInfo(std::ostream& out) override;
-
-	// TODO: move helper function
-	glm::ivec2 getDirection(int32_t  i) {
-		return MOVEABLE::DIRECTION[i];
-	}
 };
 

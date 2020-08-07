@@ -24,50 +24,50 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 	size_t size;
 	loader.retrieve(size);
 	for (size_t i = 0; i < size; i++) {
-		ACTIVITY::TYPE type;
+		Activity::TYPE type;
 		loader.retrieve(type);
 		switch (type) {
-			case ACTIVITY::ANCHOR:
+			case Activity::TYPE::ANCHOR:
 				{
 					LOAD(Anchor);
 					break;
 				}
-				//case ACTIVITY::MOVER:
+				//case Activity::TYPE::MOVER:
 				//	{
 				//		LOAD(Mover);
 				//		break;
 				//	}
-			case ACTIVITY::PLATFORM:
+			case Activity::TYPE::PLATFORM:
 				{
 					LOAD(Platform);
 					break;
 				}
-			case ACTIVITY::PISTON:
+			case Activity::TYPE::PISTON:
 				{
 					LOAD(Piston);
 					break;
 				}
-			case ACTIVITY::RAILCRANE:
+			case Activity::TYPE::RAILCRANE:
 				{
 					LOAD(RailCrane);
 					break;
 				}
-			case ACTIVITY::ACTIVATOR:
+			case Activity::TYPE::ACTIVATOR:
 				{
 					LOAD(Activator);
 					break;
 				}
-				//case ACTIVITY::SINGLEPLATFORM:
+				//case Activity::Type::SINGLEPLATFORM:
 				//	{
 				//		LOAD(SinglePlatform);
 				//		break;
 				//	}
-				//case ACTIVITY::BREAKER:
+				//case Activity::Type::BREAKER:
 				//	{
 				//		LOAD(Breaker);
 				//		break;
 				//	}
-				//case ACTIVITY::GRABBER:
+				//case Activity::Type::GRABBER:
 				//	{
 				//		LOAD(Grabber);
 				//		break;

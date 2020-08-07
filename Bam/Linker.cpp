@@ -28,7 +28,7 @@ std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Gr
 	auto a11 = r1.get();
 	auto a2 = r2.get();
 	WeakReference<Activity, Anchor> target;
-	if (a2->getType() == ACTIVITY::ANCHOR || a2->getType() == ACTIVITY::RAILCRANE) {
+	if (a2->getType() == Activity::TYPE::ANCHOR || a2->getType() == Activity::TYPE::RAILCRANE) {
 		target = r2;
 	}
 	else if (a2->parentRef.isNotNull()) {
@@ -62,7 +62,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 	// TODO: stop cycles from breaking everything
 	WeakReference<Activity, Anchor> g1;
 	WeakReference<Activity, Anchor> g2;
-	if (a1->getType() == ACTIVITY::ANCHOR) {
+	if (a1->getType() == Activity::TYPE::ANCHOR) {
 		g1 = r1;
 	}
 	else if (a1->parentRef.isNull()) {
@@ -73,7 +73,7 @@ std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity>
 	else {
 		g1 = a1->parentRef;
 	}
-	if (a2->getType() == ACTIVITY::ANCHOR) {
+	if (a2->getType() == Activity::TYPE::ANCHOR) {
 		g2 = r2;
 	}
 	else if (a2->parentRef.isNull()) {

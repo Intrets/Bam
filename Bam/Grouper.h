@@ -10,6 +10,8 @@ public:
 
 	Grouper() = default;
 	Grouper(Handle self, glm::ivec2 p);
+	virtual ~Grouper() = default;
+
 	virtual bool addChild(WeakReference<Activity, Activity> ref);
 	virtual void getTreeMembers(std::vector<Activity*>& members);
 

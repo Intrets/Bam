@@ -7,7 +7,7 @@
 #include "Saver.h"
 #include "Loader.h"
 
-void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
+void Activity::applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int32_t pace) {
 	this->movingPace = pace;
 	this->moving = true;
 	this->movementDirection = dir;
@@ -16,7 +16,7 @@ void Activity::applyMoveLocalForced(GameState& gameState, MOVEABLE::DIR dir, int
 	this->leaveMoveableTracesLocal(gameState);
 }
 
-bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
+bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -35,7 +35,7 @@ bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir) {
 	return true;
 }
 
-bool Activity::canMoveUp(GameState& gameState, MOVEABLE::DIR dir, std::vector<Activity*>& extraIgnore) {
+bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir, std::vector<Activity*>& extraIgnore) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -105,7 +105,7 @@ float Activity::getActivityScale(int32_t tick) {
 	}
 }
 
-void Activity::rotateForcedUp(glm::ivec2 center, MOVEABLE::ROT rotation) {
+void Activity::rotateForcedUp(glm::ivec2 center, Activity::ROT rotation) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 	for (auto member : members) {
@@ -150,7 +150,7 @@ bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t
 	return true;
 }
 
-bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
+bool Activity::applyMoveUp(GameState& gameState, Activity::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -173,7 +173,7 @@ bool Activity::applyMoveUp(GameState& gameState, MOVEABLE::DIR dir, int32_t pace
 	return true;
 }
 
-void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
+void Activity::applyMoveUpForced(GameState& gameState, Activity::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -182,14 +182,14 @@ void Activity::applyMoveUpForced(GameState& gameState, MOVEABLE::DIR dir, int32_
 	}
 }
 
-bool Activity::applyMoveRoot(GameState& gameState, MOVEABLE::DIR dir, int32_t pace) {
+bool Activity::applyMoveRoot(GameState& gameState, Activity::DIR dir, int32_t pace) {
 	return this->getRoot().get()->applyMoveUp(gameState, dir, pace);
 }
 
 void Activity::stopMovement(GameState& gameState) {
 	this->origin += this->getDirection(this->movementDirection);
 	this->removeMoveableTracesLocal(gameState);
-	this->movementDirection = MOVEABLE::STATIONARY;
+	this->movementDirection = Activity::DIR::STATIONARY;
 	this->moving = false;
 }
 
@@ -251,7 +251,7 @@ void Activity::fillModifyingMap(ModifyerBase& modifyer) {
 }
 
 std::ostream& Activity::getSimpleInfo(std::ostream& out) {
-	std::string typeName = ACTIVITY::TYPE_NAMES[this->getType()];
+	std::string typeName = ACTIVITY::TYPE_NAMES[static_cast<int32_t>(this->getType())];
 	out << typeName << ": " << this->selfHandle;
 	return out;
 }

@@ -8,22 +8,22 @@
 UIOActivitySelector::UIOActivitySelector(Handle self) {
 	this->selfHandle = self;
 
-	this->addGlobalBind({ CONTROLS::ACTION5, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::ACTION5, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		params.player.selection.expandTarget();
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ACTION6, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::ACTION6, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		params.player.selection.shrinkTarget();
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		params.player.selection.selectTarget(params.gameState, params.uiState.getCursorPositionWorld());
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::MOUSE_POS_CHANGED, CONTROLSTATE::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		auto& selection = params.player.selection;
 		if (selection.type == SELECTION_TYPE::HOVERING) {
 			if (selection.target.isValid()) {
@@ -34,13 +34,13 @@ UIOActivitySelector::UIOActivitySelector(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ROTATEL, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-		params.player.selection.rotateHover(MOVEABLE::COUNTERCLOCKWISE);
+	this->addGlobalBind({ ControlState::CONTROLS::ROTATEL, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		params.player.selection.rotateHover(Activity::ROT::COUNTERCLOCKWISE);
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROLS::ROTATER, CONTROLSTATE::CONTROLSTATE_PRESSED | CONTROLSTATE::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-		params.player.selection.rotateHover(MOVEABLE::COUNTERCLOCKWISE);
+	this->addGlobalBind({ ControlState::CONTROLS::ROTATER, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT }, [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		params.player.selection.rotateHover(Activity::ROT::COUNTERCLOCKWISE);
 		return BIND_RESULT::CONTINUE;
 	});
 }

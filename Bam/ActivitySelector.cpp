@@ -35,7 +35,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 				}
 				else {
 					this->type = SELECTION_TYPE::HOVERING;
-					this->spawnHover(gameState, glm::ivec2(pos), ACTIVITY::TYPE::PLATFORM);
+					this->spawnHover(gameState, glm::ivec2(pos), Activity::TYPE::PLATFORM);
 				}
 				break;
 			}
@@ -95,9 +95,9 @@ void ActivitySelector::shrinkTarget() {
 	}
 }
 
-void ActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
+void ActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType) {
 	switch (activityType) {
-		case ACTIVITY::PLATFORM:
+		case Activity::TYPE::PLATFORM:
 			this->target.set(Locator<ReferenceManager<Activity>>::get()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false));
 			break;
 		default:
@@ -105,7 +105,7 @@ void ActivitySelector::spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY
 	}
 }
 
-void ActivitySelector::rotateHover(MOVEABLE::ROT rot) {
+void ActivitySelector::rotateHover(Activity::ROT rot) {
 	if (this->type == SELECTION_TYPE::HOVERING && this->target.isValid()) {
 		auto t = this->target.get();
 		auto center = t->getOrigin();

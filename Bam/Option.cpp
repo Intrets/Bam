@@ -37,7 +37,7 @@ void OptionManager::readFromFile() {
 
 			OPTIONS2 optionIndex = f->second;
 
-			data[optionIndex]->set(parts[2]);
+			data[static_cast<size_t>(optionIndex)]->set(parts[2]);
 		}
 		file.close();
 	}

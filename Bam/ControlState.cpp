@@ -49,14 +49,14 @@ ControlState::ControlState() {
 
 void ControlState::cycleStates() {
 	for (auto& state : this->controlState) {
-		state &= ~CONTROLSTATE::CONTROLSTATE_PRESSED;
-		state &= ~CONTROLSTATE::CONTROLSTATE_RELEASED;
-		state &= ~CONTROLSTATE::CONTROLSTATE_REPEAT;
+		state &= ~ControlState::CONTROLSTATE_PRESSED;
+		state &= ~ControlState::CONTROLSTATE_RELEASED;
+		state &= ~ControlState::CONTROLSTATE_REPEAT;
 	}
 	this->charBuffer.clear();
 	this->scrollDistance = 0;
-	this->controlState[CONTROLS::MOUSE_POS_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
-	this->controlState[CONTROLS::EVERY_TICK] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+	this->controlState[static_cast<int32_t>(CONTROLS::MOUSE_POS_CHANGED)] = ControlState::CONTROLSTATE_PRESSED;
+	this->controlState[static_cast<int32_t>(CONTROLS::EVERY_TICK)] = ControlState::CONTROLSTATE_PRESSED;
 
 	this->consumed.fill(false);
 }
@@ -66,15 +66,15 @@ std::string ControlState::getCharBuffer() {
 }
 
 void ControlState::consumeControl(CONTROLS control) {
-	this->consumed[control] = true;
+	this->consumed[static_cast<size_t>(control)] = true;
 }
 
 bool ControlState::activated(BindControl bindControl) {
-	if (this->consumed[bindControl.control]) {
+	if (this->consumed[static_cast<size_t>(bindControl.control)]) {
 		return false;
 	}
 	else {
-		return this->controlState[bindControl.control] & bindControl.state;
+		return this->controlState[static_cast<size_t>(bindControl.control)] & bindControl.state;
 	}
 }
 
@@ -86,20 +86,20 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 
 	if (key == GLFW_KEY_ENTER && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		this->charBuffer.push_back('\n');
-		this->controlState[CHAR_BUFFER_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+		this->controlState[static_cast<size_t>(CONTROLS::CHAR_BUFFER_CHANGED)] = ControlState::CONTROLSTATE_PRESSED;
 	}
 
 	switch (action) {
 		case GLFW_REPEAT:
-			this->controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_REPEAT;
+			this->controlState[static_cast<size_t>(keyToControl[key])] |= ControlState::CONTROLSTATE_REPEAT;
 			break;
 		case GLFW_PRESS:
-			this->controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_DOWN;
-			this->controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_PRESSED;
+			this->controlState[static_cast<size_t>(keyToControl[key])] |= ControlState::CONTROLSTATE_DOWN;
+			this->controlState[static_cast<size_t>(keyToControl[key])] |= ControlState::CONTROLSTATE_PRESSED;
 			break;
 		case GLFW_RELEASE:
-			this->controlState[keyToControl[key]] &= ~CONTROLSTATE::CONTROLSTATE_DOWN;
-			this->controlState[keyToControl[key]] |= CONTROLSTATE::CONTROLSTATE_RELEASED;
+			this->controlState[static_cast<size_t>(keyToControl[key])] &= ~ControlState::CONTROLSTATE_DOWN;
+			this->controlState[static_cast<size_t>(keyToControl[key])] |= ControlState::CONTROLSTATE_RELEASED;
 			break;
 		default:
 			break;
@@ -110,7 +110,7 @@ void ControlState::char_callback(GLFWwindow* window, unsigned int character) {
 	if (character > 127) {
 		return;
 	}
-	this->controlState[CHAR_BUFFER_CHANGED] = CONTROLSTATE::CONTROLSTATE_PRESSED;
+	this->controlState[static_cast<size_t>(CONTROLS::CHAR_BUFFER_CHANGED)] = ControlState::CONTROLSTATE_PRESSED;
 	char c = static_cast<char>(character);
 	this->charBuffer.push_back(c);
 }
@@ -124,15 +124,15 @@ void ControlState::scroll_callback(GLFWwindow* w, double xoffset, double yoffset
 	}
 
 	if (scrollDistance < 0) {
-		this->controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_PRESSED;
-		this->controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_UP;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_DOWN)] = ControlState::CONTROLSTATE_PRESSED;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_UP)] = ControlState::CONTROLSTATE_UP;
 	}
 	else if (scrollDistance > 0) {
-		this->controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_PRESSED;
-		this->controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_UP;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_UP)] = ControlState::CONTROLSTATE_PRESSED;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_DOWN)] = ControlState::CONTROLSTATE_UP;
 	}
 	else {
-		this->controlState[SCROLL_UP] = CONTROLSTATE::CONTROLSTATE_UP;
-		this->controlState[SCROLL_DOWN] = CONTROLSTATE::CONTROLSTATE_UP;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_UP)] = ControlState::CONTROLSTATE_UP;
+		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_DOWN)] = ControlState::CONTROLSTATE_UP;
 	}
 }

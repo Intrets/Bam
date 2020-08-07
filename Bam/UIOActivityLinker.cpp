@@ -9,7 +9,7 @@
 UIOActivityLinker::UIOActivityLinker(Handle self) {
 	this->selfHandle = self;
 
-	addGlobalBind({ CONTROLS::ACTION0, CONTROLSTATE::CONTROLSTATE_PRESSED },
+	addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED },
 				  [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
 		if (!params.player.selection.target.isValid()) {
 			return BIND_RESULT::CONTINUE;
