@@ -34,7 +34,7 @@ bool FPSLimiter::ready() {
 
 double FPSLimiter::getTimeTillNextRender() {
 	double remaining = 0.0;
-	switch (Option<OPTIONS2::GR_FRAMESYNCMODE, int>::getVal()) {
+	switch (Option<OPTION::GR_FRAMESYNCMODE, int>::getVal()) {
 		case OFF:
 			remaining = 0.0;
 			break;

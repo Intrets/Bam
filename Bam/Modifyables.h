@@ -291,7 +291,7 @@ public:
 	virtual std::ostream& toStream(void* base_, std::ostream& out) {
 		T* base = static_cast<T*>(base_);
 		auto t = static_cast<Member*>(&(base->*ptr));
-		out << MOVEABLE::DIR_NAMES[*t];
+		out << Activity::GET_NAME(*t);
 		return out;
 	};
 

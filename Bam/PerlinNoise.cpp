@@ -28,7 +28,7 @@ void PerlinNoise::fillTexture(bool fillTexture) {
 	for (int32_t i = 0; i < dpos.x; i++) {
 		for (int32_t j = 0; j < dpos.y; j++) {
 			float value = 1.0f;
-			for (size_t k = 0; k < layers.size(); k++) {
+			for (int32_t k = 0; k < layers.size(); k++) {
 				// TODO: value cant handle big coords?
 				value *= glm::pow(layers[k].value(static_cast<float>(pos.x + i), static_cast<float>(pos.y + j)), weights[k]);
 			}

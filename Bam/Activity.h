@@ -12,17 +12,6 @@ class GameState;
 struct StaticWorldRenderInfo;
 struct RenderInfo;
 
-namespace MOVEABLE
-{
-	const std::vector<std::string> DIR_NAMES{
-		"up",
-		"right",
-		"down",
-		"left",
-		"stationary"
-	};
-}
-
 // TODO: better runtime type system??
 namespace ACTIVITY
 {
@@ -55,7 +44,39 @@ public:
 		STATIONARY,
 	};
 
-	static DIR REV_DIR(DIR dir) {
+	static Activity::DIR CLOCKWISE(Activity::DIR dir) {
+		return static_cast<Activity::DIR>((static_cast<int32_t>(dir) + 1) % 4);
+	}
+
+	static Activity::DIR COUNTERWISE(Activity::DIR dir) {
+		return static_cast<Activity::DIR>((static_cast<int32_t>(dir) + 3) % 4);
+	}
+	
+	static std::string GET_NAME(DIR dir) {
+		switch (dir) {
+			case Activity::DIR::UP:
+				return "up";
+				break;
+			case Activity::DIR::RIGHT:
+				return "right";
+				break;
+			case Activity::DIR::DOWN:
+				return "down";
+				break;
+			case Activity::DIR::LEFT:
+				return "left";
+				break;
+			case Activity::DIR::STATIONARY:
+				return "stationary";
+				break;
+			default:
+				assert(0);
+				return "";
+				break;
+		}
+	}
+
+	static DIR FLIP(DIR dir) {
 		switch (dir) {
 			case DIR::UP:
 				return Activity::DIR::DOWN;

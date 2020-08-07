@@ -180,7 +180,7 @@ bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgn
 }
 
 void Platform::removeMoveableTracesLocal(GameState& gameState) {
-	for (auto& dir : this->blockedDirections[(movementDirection + 2) % 4]) {
+	for (auto& dir : this->blockedDirections[Activity::FLIP(movementDirection)]) {
 		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
 	}
 }

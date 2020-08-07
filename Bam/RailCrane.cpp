@@ -22,7 +22,7 @@ RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool lea
 	Grouper(self, pos) {
 	this->length = 6;
 	this->orientation = Activity::DIR::RIGHT;
-	this->anchorDirection = RAILCRANE::DIR::STATIONARY;
+	this->anchorDirection = RailCrane::DIR::STATIONARY;
 	this->anchorIndexPos = 0;
 
 	if (leavetraces) {
@@ -40,10 +40,10 @@ void RailCrane::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 	switch (rotation) {
 		case Activity::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - 1);
-			this->orientation = static_cast<Activity::DIR>(static_cast<int32_t>(this->orientation + 1) % 4);
+			this->orientation = Activity::CLOCKWISE(this->orientation);
 			break;
 		case Activity::ROT::COUNTERCLOCKWISE:
-			this->orientation = static_cast<Activity::DIR>(static_cast<int32_t>(this->orientation + 3) % 4);
+			this->orientation = Activity::COUNTERWISE(this->orientation);
 			d = glm::ivec2(-d.y - 1, d.x);
 			break;
 		default:
@@ -53,19 +53,19 @@ void RailCrane::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 }
 
 bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
-	switch (type) {
-		case RAILCRANE::LEFT:
+	switch (static_cast<RailCrane::DIR>(type)) {
+		case RailCrane::DIR::LEFT:
 			{
 				if (this->anchorIndexPos == 0) {
 					return false;
 				}
 				if (this->child.isNotNull()) {
-					return this->child.get()->canMoveUp(gameState, Activity::REV_DIR(this->orientation));
+					return this->child.get()->canMoveUp(gameState, Activity::FLIP(this->orientation));
 				}
 				return true;
 				break;
 			}
-		case RAILCRANE::RIGHT:
+		case RailCrane::DIR::RIGHT:
 			{
 				if (this->anchorIndexPos == this->length - 1) {
 					return false;
@@ -84,19 +84,19 @@ bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
 
 void RailCrane::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
-	switch (type) {
-		case RAILCRANE::LEFT:
+	switch (static_cast<RailCrane::DIR>(type)) {
+		case RailCrane::DIR::LEFT:
 			if (this->child.isNotNull()) {
-				this->child.get()->applyMoveUpForced(gameState, Activity::REV_DIR(this->orientation), pace);
+				this->child.get()->applyMoveUpForced(gameState, Activity::FLIP(this->orientation), pace);
 			}
-			this->anchorDirection = RAILCRANE::LEFT;
+			this->anchorDirection = RailCrane::DIR::LEFT;
 			this->anchorIndexPos--;
 			break;
-		case RAILCRANE::RIGHT:
+		case RailCrane::DIR::RIGHT:
 			if (this->child.isNotNull()) {
 				this->child.get()->applyMoveUpForced(gameState, this->orientation, pace);
 			}
-			this->anchorDirection = RAILCRANE::RIGHT;
+			this->anchorDirection = RailCrane::DIR::RIGHT;
 			this->anchorIndexPos++;
 			break;
 		default:
@@ -113,7 +113,7 @@ bool RailCrane::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIg
 
 bool RailCrane::canFillTracesLocal(GameState& gameState) {
 	auto dir = Activity::getDirection(this->orientation);
-	return !gameState.staticWorld.isOccupied(this->origin) 
+	return !gameState.staticWorld.isOccupied(this->origin)
 		&& !gameState.staticWorld.isOccupied(this->origin + dir * (1 + this->length));
 }
 
@@ -137,7 +137,7 @@ void RailCrane::leaveActivityTracesLocal(GameState& gameState) {
 
 void RailCrane::removeMoveableTracesLocal(GameState& gameState) {
 	auto d = Activity::getDirection(this->orientation);
-	auto pos = this->origin + Activity::getDirection(Activity::REV_DIR(this->movementDirection));
+	auto pos = this->origin + Activity::getDirection(Activity::FLIP(this->movementDirection));
 	gameState.staticWorld.removeTraceFilter(pos, this->selfHandle);
 	gameState.staticWorld.removeTraceFilter(pos + d * (1 + this->length), this->selfHandle);
 }
@@ -210,12 +210,12 @@ void RailCrane::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderIn
 	pos = moveableOrigin + static_cast<float>(1 + this->anchorIndexPos) * orientationDir;
 	if (this->active) {
 		switch (this->anchorDirection) {
-			case RAILCRANE::LEFT:
+			case RailCrane::DIR::LEFT:
 				activityDir = -Activity::getDirection(this->orientation);
 				pos += orientationDir;
 				pos += activityScale * activityDir;
 				break;
-			case RAILCRANE::RIGHT:
+			case RailCrane::DIR::RIGHT:
 				activityDir = Activity::getDirection(this->orientation);
 				pos -= orientationDir;
 				pos += activityScale * activityDir;

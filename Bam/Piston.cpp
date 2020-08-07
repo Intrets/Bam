@@ -14,7 +14,7 @@ Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR 
 	Grouper(self, pos),
 	length(0),
 	headDir(dir) {
-	state = PISTON::STATIONARY;
+	state = Piston::DIR::STATIONARY;
 
 	if (leaveTraces) {
 		this->fillTracesLocalForced(gameState);
@@ -55,8 +55,8 @@ Activity::TYPE Piston::getType() {
 
 bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 	auto headDirection = Activity::getDirection(this->headDir);
-	switch (type) {
-		case PISTON::EXTEND:
+	switch (static_cast<Piston::DIR>(type)) {
+		case Piston::DIR::EXTEND:
 			{
 				if (this->child.isNotNull()) {
 					return this->child.get()->canMoveUp(gameState, this->headDir);
@@ -67,7 +67,7 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 				}
 			}
 			break;
-		case PISTON::RETRACT:
+		case Piston::DIR::RETRACT:
 			{
 				if (this->length == 0) {
 					return false;
@@ -76,7 +76,7 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 					return true;
 				}
 				std::vector<Activity*> extraIgnore{ this };
-				return this->child.get()->canMoveUp(gameState, Activity::REV_DIR(this->headDir), extraIgnore);
+				return this->child.get()->canMoveUp(gameState, Activity::FLIP(this->headDir), extraIgnore);
 			}
 			break;
 		default:
@@ -209,7 +209,7 @@ void Piston::save(Saver& saver) {
 	Grouper::save(saver);
 	saver.store<glm::ivec2>(this->direction);
 	saver.store<Activity::DIR>(this->headDir);
-	saver.store<PISTON::DIR>(this->state);
+	saver.store<Piston::DIR>(this->state);
 	saver.store(this->length);
 }
 
@@ -217,7 +217,7 @@ bool Piston::load(Loader& loader) {
 	Grouper::load(loader);
 	loader.retrieve<glm::ivec2>(this->direction);
 	loader.retrieve<Activity::DIR>(this->headDir);
-	loader.retrieve<PISTON::DIR>(this->state);
+	loader.retrieve<Piston::DIR>(this->state);
 	loader.retrieve(this->length);
 
 	auto s = Locator<BlockIDTextures>::get();
@@ -264,8 +264,8 @@ void Piston::removeTracesLocalForced(GameState& gameState) {
 void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
 	glm::ivec2 headDirection = Activity::getDirection(this->headDir);
-	switch (type) {
-		case PISTON::EXTEND:
+	switch (static_cast<Piston::DIR>(type)) {
+		case Piston::DIR::EXTEND:
 			{
 				auto next = this->origin + (this->length + 2) * headDirection;
 				gameState.staticWorld.leaveTrace(next, this->selfHandle);
@@ -276,12 +276,12 @@ void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 				this->length++;
 			}
 			break;
-		case PISTON::RETRACT:
+		case Piston::DIR::RETRACT:
 			{
 				auto headpos = this->origin + (this->length + 1) * headDirection;
 				gameState.staticWorld.removeTraceFilter(headpos, this->selfHandle);
 				if (this->child.isNotNull()) {
-					this->child.get()->applyMoveUpForced(gameState, Activity::REV_DIR(this->headDir), pace);
+					this->child.get()->applyMoveUpForced(gameState, Activity::FLIP(this->headDir), pace);
 				}
 				this->direction = -headDirection;
 				this->length--;

@@ -10,7 +10,7 @@
 
 class OptionManager;
 
-enum class OPTIONS2
+enum class OPTION
 {
 	GR_RENDERTHREAD,
 	GR_FRAMESYNCMODE,
@@ -22,10 +22,9 @@ enum class OPTIONS2
 
 class _OptionBase
 {
-
 };
 
-template<OPTIONS2 A, class T>
+template<OPTION A, class T>
 class Option : public _OptionBase
 {
 public:
@@ -33,12 +32,12 @@ public:
 	static void setVal(T val);
 };
 
-template<OPTIONS2 A, class T>
+template<OPTION A, class T>
 inline T Option<A, T>::getVal() {
 	return Locator<OptionManager>::get()->getVal<T>(A);
 }
 
-template<OPTIONS2 A, class T>
+template<OPTION A, class T>
 inline void Option<A, T>::setVal(T val) {
 	Locator<OptionManager>::get()->setVal(A, val);
 }
@@ -100,20 +99,20 @@ inline std::ostream& operator<< (std::ostream& out, OptionValue<T>& D) {
 class OptionManager
 {
 private:
-	std::array<std::unique_ptr<_OptionValueBase>, static_cast<size_t>(OPTIONS2::OPTIONS2_MAX)> data;
-	std::unordered_map<std::string, OPTIONS2> nameMap;
+	std::array<std::unique_ptr<_OptionValueBase>, static_cast<size_t>(OPTION::OPTIONS2_MAX)> data;
+	std::unordered_map<std::string, OPTION> nameMap;
 
 	void defaultValues();
 
 	template<class T>
-	void initVal(OPTIONS2 option, T val, std::string name, std::string description);
+	void initVal(OPTION option, T val, std::string name, std::string description);
 
 public:
 	template<class T>
-	T getVal(OPTIONS2 option);
+	T getVal(OPTION option);
 
 	template<class T>
-	void setVal(OPTIONS2 option, T val);
+	void setVal(OPTION option, T val);
 
 	void readFromFile();
 	void writeToFile();
@@ -123,17 +122,17 @@ public:
 };
 
 template<class T>
-inline T OptionManager::getVal(OPTIONS2 option) {
+inline T OptionManager::getVal(OPTION option) {
 	return static_cast<OptionValue<T>*>(this->data[static_cast<size_t>(option)].get())->val;
 }
 
 template<class T>
-inline void OptionManager::setVal(OPTIONS2 option, T val) {
+inline void OptionManager::setVal(OPTION option, T val) {
 	static_cast<OptionValue<T>*>(this->data[static_cast<size_t>(option)].get())->setVal(val);
 }
 
 template<class T>
-inline void OptionManager::initVal(OPTIONS2 option, T val, std::string name, std::string description) {
+inline void OptionManager::initVal(OPTION option, T val, std::string name, std::string description) {
 	this->data[static_cast<size_t>(option)] = std::make_unique<OptionValue<T>>(val, name, description);
 	this->nameMap[name] = option;
 }

@@ -90,14 +90,14 @@ inline bool Saver::store(Activity::DIR t) {
 }
 
 template<>
-inline bool Saver::store(PISTON::DIR t) {
+inline bool Saver::store(Piston::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
 	store(s);
 	return true;
 }
 
 template<>
-inline bool Saver::store(RAILCRANE::DIR t) {
+inline bool Saver::store(RailCrane::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
 	store(s);
 	return true;

@@ -78,7 +78,7 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("UI Logic");
 
 			Locator<Timer>::ref().newTiming("Game Logic");
-			if (Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal()) {
+			if (Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
 				logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
 			}
 			else {

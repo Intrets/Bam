@@ -8,11 +8,11 @@
 
 
 void OptionManager::defaultValues() {
-	initVal(OPTIONS2::CL_VIEWPORTSCALE, 20.0f, "cl_viewportscale", "");
-	initVal(OPTIONS2::GR_DEBUG, false, "gr_debug", "");
-	initVal(OPTIONS2::GR_FRAMESYNCMODE, 0, "gr_framesyncmode", "");
-	initVal(OPTIONS2::UI_SCALE, 1.0f, "ui_scale", "");
-	initVal(OPTIONS2::GR_RENDERTHREAD, false, "gr_renderthread", "seperate render and game logic threads");
+	initVal(OPTION::CL_VIEWPORTSCALE, 20.0f, "cl_viewportscale", "");
+	initVal(OPTION::GR_DEBUG, false, "gr_debug", "");
+	initVal(OPTION::GR_FRAMESYNCMODE, 0, "gr_framesyncmode", "");
+	initVal(OPTION::UI_SCALE, 1.0f, "ui_scale", "");
+	initVal(OPTION::GR_RENDERTHREAD, false, "gr_renderthread", "seperate render and game logic threads");
 }
 
 void OptionManager::readFromFile() {
@@ -35,7 +35,7 @@ void OptionManager::readFromFile() {
 				continue;
 			}
 
-			OPTIONS2 optionIndex = f->second;
+			OPTION optionIndex = f->second;
 
 			data[static_cast<size_t>(optionIndex)]->set(parts[2]);
 		}

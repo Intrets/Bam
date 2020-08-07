@@ -42,7 +42,7 @@ private:
 	struct hash
 	{
 		std::size_t operator()(glm::ivec2 const& s) const noexcept {
-			return s.x + (1 << 16) * s.y;
+			return static_cast<size_t>(s.x) + (1ULL << 16) * static_cast<size_t>(s.y);
 		}
 	};
 

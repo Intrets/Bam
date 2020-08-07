@@ -86,7 +86,7 @@ void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
 
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
 	glm::vec2 viewport(ratio, 1.0f);
-	viewport *= Option<OPTIONS2::CL_VIEWPORTSCALE, float>::getVal();
+	viewport *= Option<OPTION::CL_VIEWPORTSCALE, float>::getVal();
 
 	this->cursorScreen = glm::vec2(x, y);
 	this->cursorWorld = cam + this->cursorScreen * viewport;
@@ -240,11 +240,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Debug Render", 1);
-			ptr->color = Option<OPTIONS2::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<OPTIONS2::GR_DEBUG, bool>::setVal(!Option<OPTIONS2::GR_DEBUG, bool>::getVal());
+				Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTIONS2::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 
@@ -255,11 +255,11 @@ UIState::UIState() {
 		}
 		{
 			auto [testbutton, ptr] = constructButtonWithText("Toggle Seperate Render Thread", 1);
-			ptr->color = Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 			ptr->onRelease = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
-				Option<OPTIONS2::GR_RENDERTHREAD, bool>::setVal(!Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal());
+				Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTIONS2::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			};
 

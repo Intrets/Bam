@@ -15,7 +15,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	glfwGetFramebufferSize(window, &frameSizeX, &frameSizeY);
 	float ratio = frameSizeX / static_cast<float>(frameSizeY);
 	glm::vec2 viewport(ratio, 1.0f);
-	viewport *= Option<OPTIONS2::CL_VIEWPORTSCALE, float>::getVal();
+	viewport *= Option<OPTION::CL_VIEWPORTSCALE, float>::getVal();
 	renderInfo.frameSize = { frameSizeX, frameSizeY };
 	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.player.getCameraPosition(), glm::vec3(viewport, 200.0f) };
 
@@ -44,7 +44,7 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 
 	this->textRenderer.render(renderInfo.textRenderInfo, Locator<Fonts>::ref(), 0, renderInfo.cameraInfo);
 
-	if (Option<OPTIONS2::GR_DEBUG, bool>::getVal()) {
+	if (Option<OPTION::GR_DEBUG, bool>::getVal()) {
 		this->debugRenderer.render(0, renderInfo);
 	}
 

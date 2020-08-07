@@ -34,7 +34,11 @@ inline T PeriodAvarage<T>::zero() {
 template<class T>
 inline PeriodAvarage<T>::PeriodAvarage(int32_t historySize, double timePeriod_) :
 	history(historySize),
-	timePeriod(timePeriod_) {
+	timePeriod(timePeriod_),
+	current(this->zero()),
+	currentTime(0.0),
+	measurements(0)
+{
 }
 
 template<class T>

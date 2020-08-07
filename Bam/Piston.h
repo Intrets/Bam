@@ -3,20 +3,16 @@
 #include "Grouper.h"
 #include "Activity.h"
 
-// TODO: move into class
-namespace PISTON
+class Piston : public Grouper
 {
-	typedef enum
+public:
+	enum class DIR
 	{
 		STATIONARY,
 		RETRACT,
 		EXTEND,
-	} DIR;
-}
-
-class Piston : public Grouper
-{
-public:
+	};
+	
 	int32_t cogTex;
 	int32_t ropeTex;
 	int32_t headTex;
@@ -25,8 +21,7 @@ public:
 	glm::ivec2 direction;
 	Activity::DIR headDir;
 
-	PISTON::DIR state = PISTON::STATIONARY;
-
+	Piston::DIR state = Piston::DIR::STATIONARY;
 
 	Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces = true);
 	Piston() = default;

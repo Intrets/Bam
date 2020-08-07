@@ -2,26 +2,22 @@
 
 #include "Grouper.h"
 
-// TODO: move into class
-namespace RAILCRANE
+class RailCrane : public Grouper
 {
-	typedef enum
+public:
+	enum class DIR
 	{
 		STATIONARY,
 		LEFT,
 		RIGHT,
-	} DIR;
-}
+	};
 
-class RailCrane : public Grouper 
-{
-public:
 	int32_t supportTex;
 	int32_t shaftTex;
 	int32_t anchorTex;
 
 	Activity::DIR orientation;
-	RAILCRANE::DIR anchorDirection;
+	RailCrane::DIR anchorDirection;
 	int32_t length;
 	int32_t anchorIndexPos;
 
@@ -47,7 +43,7 @@ public:
 	// Traces Activity
 	virtual void removeActivityTracesLocal(GameState& gameState) override;
 	virtual void leaveActivityTracesLocal(GameState& gameState) override;
-	
+
 	// Traces Moveable
 	virtual void removeMoveableTracesLocal(GameState& gameState) override;
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
