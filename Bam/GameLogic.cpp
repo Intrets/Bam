@@ -1,6 +1,7 @@
 #include "common.h"
 #include "GameLogic.h"
 #include "GameState.h"
+#include "Timer.h"
 #include <iostream>
 
 bool GameLogic::ready() {
@@ -8,6 +9,7 @@ bool GameLogic::ready() {
 }
 
 int GameLogic::runStep(GameState& gameState) {
+	Locator<Timer>::ref().newTiming("Game Logic");
 	gameState.tick++;
 	this->nextStep += this->stepTime;
 	this->step++;
@@ -18,5 +20,6 @@ int GameLogic::runStep(GameState& gameState) {
 	gameState.activityPaceHandler.finish(gameState);
 	gameState.activityPaceHandler.cycle();
 
+	Locator<Timer>::ref().endTiming("Game Logic");
 	return 0;
 }

@@ -16,7 +16,7 @@
 #define NOCOPY(T) T(const T&) = delete; T& operator=(const T&) = delete;
 
 
-#define MAX_STATIC_DRAW 10000 
+#define MAX_STATIC_DRAW 1000000 
 
 #define CHUNKSIZE 32
 

@@ -18,7 +18,7 @@ public:
 	glm::vec2 getCursorPositionScreen();
 	
 	void run(State& state);
-	void updateSize(GLFWwindow* window);
+	bool updateSize(GLFWwindow* window);
 	void updateCursor(GLFWwindow* window, glm::vec2 cam);
 	void appendRenderInfo(GameState& gameState, RenderInfo& renderInfo);
 

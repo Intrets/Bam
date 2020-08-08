@@ -60,10 +60,14 @@ void UIState::run(State& state) {
 	}
 }
 
-void UIState::updateSize(GLFWwindow* window) {
+bool UIState::updateSize(GLFWwindow* window) {
 	int32_t x;
 	int32_t y;
 	glfwGetWindowSize(window, &x, &y);
+
+	if (x <= 0 || y <= 0) {
+		return false;
+	}
 
 	ScreenRectangle r;
 	r.screenPixels = glm::ivec2(x, y);
@@ -71,6 +75,7 @@ void UIState::updateSize(GLFWwindow* window) {
 	for (auto& UI : this->UIs) {
 		UI.get()->updateSize(r);
 	}
+	return true;
 }
 
 void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
@@ -127,20 +132,6 @@ UIState::UIState() {
 		sized.get()->updateSize(r);
 
 		this->UIs.push_back(std::move(sized));
-	}
-
-	// text edit test window
-	{
-		auto text = constructTextEdit();
-
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(text), "text edit test");
-		test2.get()->screenRectangle.setWidth(0.4f);
-		test2.get()->screenRectangle.setHeight(0.4f);
-
-		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-		test3.get()->updateSize(r);
-
-		this->UIs.push_back(std::move(test3));
 	}
 
 	// save/load and other stuff
@@ -319,6 +310,20 @@ UIState::UIState() {
 			state.player.pos.y += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
+
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_IN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			using viewport =  Option<OPTION::CL_VIEWPORTSCALE, float>;
+			viewport::setVal(viewport::getVal() * 0.95f);
+			return BIND_RESULT::CONTINUE;
+		});
+
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_OUT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+			std::cout << "called\n";
+			using viewport =  Option<OPTION::CL_VIEWPORTSCALE, float>;
+			viewport::setVal(viewport::getVal() / 0.95f);
+			return BIND_RESULT::CONTINUE;
+		});
+
 
 		this->UIs.push_back(std::move(movement));
 	}

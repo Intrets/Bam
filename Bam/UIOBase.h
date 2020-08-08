@@ -38,6 +38,7 @@ protected:
 
 	std::vector<Bind> globalBinds;
 	std::vector<Bind> focussedBinds;
+	std::vector<Bind> clickBinds;
 
 public:
 	ScreenRectangle screenRectangle;
@@ -51,9 +52,11 @@ public:
 
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
+	void addClickBind(BindControl bindControl, CallBack callBack);
 
 	virtual CallBackBindResult runGlobalBinds(State& state);
 	virtual CallBackBindResult runFocussedBinds(State& state);
+	virtual CallBackBindResult runClickBinds(State& state);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 

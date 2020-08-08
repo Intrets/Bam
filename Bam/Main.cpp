@@ -59,8 +59,10 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().newTiming("Render Loop");
 
 			Locator<Timer>::ref().newTiming("Prepare render");
-			state.uiState.updateSize(window);
-			renderer.prepareRender(window, renderInfo, state);
+			rendering = state.uiState.updateSize(window);
+			if (rendering) {
+				renderer.prepareRender(window, renderInfo, state);
+			}
 			Locator<Timer>::ref().endTiming("Prepare render");
 		}
 
@@ -77,13 +79,11 @@ void mainLoop(GLFWwindow* window) {
 			state.uiState.run(state);
 			Locator<Timer>::ref().endTiming("UI Logic");
 
-			Locator<Timer>::ref().newTiming("Game Logic");
 			if (Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
 				logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
 			}
 			else {
 				gameLogic.runStep(state.gameState);
-				Locator<Timer>::ref().endTiming("Game Logic");
 			}
 		}
 
@@ -98,7 +98,6 @@ void mainLoop(GLFWwindow* window) {
 
 		if (logicThread.joinable()) {
 			logicThread.join();
-			Locator<Timer>::ref().endTiming("Game Logic");
 		}
 
 		{
@@ -109,6 +108,6 @@ void mainLoop(GLFWwindow* window) {
 			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::microseconds((long) 500));
+		std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
 	}
 }
