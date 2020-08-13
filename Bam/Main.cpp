@@ -11,6 +11,7 @@
 #include "UIState.h"
 #include "State.h"
 #include "Timer.h"
+#include "Option.h"
 
 ControlState controlState;
 

@@ -8,6 +8,7 @@
 #include "DebugRenderInfo.h"
 #include "SelectionRenderInfo.h"
 #include "TextRenderInfo.h"
+#include "StaticWorldRenderInfo.h"
 
 struct RenderInfo
 {
