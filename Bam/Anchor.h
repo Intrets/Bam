@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Activity.h"
-#include "GameState.h"
 #include "ReferenceManager.h"
+
+class GameState;
 
 class Anchor : public Activity
 {

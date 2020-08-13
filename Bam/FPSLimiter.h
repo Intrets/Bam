@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CircularArray.h"
-#include "Option.h"
 
 typedef enum
 {

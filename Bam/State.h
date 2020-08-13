@@ -9,6 +9,7 @@ class ControlState;
 struct State
 {
 	GameState gameState;
+	// Has to live in global for letting glfw handle key input and mouse input
 	ControlState& controlState;
 	UIState uiState;
 	Player player;

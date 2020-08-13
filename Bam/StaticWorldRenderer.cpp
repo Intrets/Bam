@@ -7,7 +7,7 @@
 #include "CameraInfo.h"
 #include "BlockIDTextures.h"
 #include "GLEnableWrapper.h"
-
+#include "StaticWorldRenderInfo.h"
 #include "ModelResource.h"
 #include "ModelStore.h"
 

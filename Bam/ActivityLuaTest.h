@@ -1,15 +1,14 @@
 #pragma once
 
-#include "ActivitySelector.h"
-
-#ifndef SOL_DEFINE
-#define SOL_DEFINE
-#include "sol/sol.hpp"
-#endif 
+#include <unordered_set>
+#include <string>
+#include <sol/sol.hpp>
 
 class GameState;
 class Saver;
 class Loader;
+struct RenderInfo;
+typedef int32_t Handle;
 
 class ActivityLuaTest 
 {

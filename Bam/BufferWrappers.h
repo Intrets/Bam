@@ -1,7 +1,5 @@
 #pragma once
 
-#include "common.h"
-
 namespace bwo
 {
 	class VertexArrayObject

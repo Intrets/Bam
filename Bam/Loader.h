@@ -5,10 +5,7 @@
 #include "Piston.h"
 #include "RailCrane.h"
 
-#ifndef SOL_DEFINE
-#define SOL_DEFINE
-#include "sol/sol.hpp"
-#endif 
+#include <sol/sol.hpp>
 
 class GameState;
 

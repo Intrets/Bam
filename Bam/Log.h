@@ -1,8 +1,8 @@
 #pragma once
 
 #include <sstream>
-#include <vector>
 #include <mutex>
+#include <vector>
 
 class Log
 {

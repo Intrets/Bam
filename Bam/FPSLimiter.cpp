@@ -1,7 +1,7 @@
 #include "common.h"
 
 #include "FPSLimiter.h"
-
+#include "Option.h"
 
 FPSLimiter::FPSLimiter() :
 	renderFrameTimeTarget(1 / 60.0),

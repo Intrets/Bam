@@ -3,7 +3,6 @@
 #include "StaticWorldRenderer.h"
 #include "TextRenderer.h"
 #include "UIbackgroundRenderer.h"
-#include "Option.h"
 #include "DebugRenderer.h"
 #include "SelectionHighlightRenderer.h"
 

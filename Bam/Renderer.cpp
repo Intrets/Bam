@@ -6,6 +6,7 @@
 #include "State.h"
 #include "BlitRenderer.h"
 #include "Fonts.h"
+#include "Option.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;

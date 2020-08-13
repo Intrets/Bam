@@ -1,8 +1,10 @@
 #pragma once
-#include "ScreenRectangle.h"
-#include "ReferenceManager.h"
+
 #include <optional>
 #include <variant>
+
+#include "ScreenRectangle.h"
+#include "ReferenceManager.h"
 #include "ControlState.h"
 
 class UIOBase;

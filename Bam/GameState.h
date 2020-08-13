@@ -1,8 +1,5 @@
 #pragma once
 
-#include <array>
-#include <memory>
-
 #include "StaticWorld.h"
 
 #include "ActivityPaceHandler.h"

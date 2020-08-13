@@ -1,7 +1,9 @@
 #pragma once
-#include "ReferenceManager.h"
 
 class Saver;
 class Activity;
+
+template<class>
+class ReferenceManager;
 
 bool save(Saver& saver, ReferenceManager<Activity>& manager);

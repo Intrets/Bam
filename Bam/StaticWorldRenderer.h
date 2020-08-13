@@ -3,10 +3,10 @@
 #include <array>
 
 #include "BufferWrappers.h"
-#include "StaticWorldRenderInfo.h"
 
 struct CameraInfo;
 class StaticWorldChunk;
+struct StaticWorldRenderInfo;
 
 class StaticWorldRenderer
 {

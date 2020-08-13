@@ -11,10 +11,9 @@
 #include "RenderInfo.h"
 #include "StringHelpers.h"
 
-#ifndef SOL_DEFINE
-#define SOL_DEFINE
-#include "sol/sol.hpp"
-#endif 
+#include "ActivitySelector.h"
+
+#include <sol/sol.hpp>
 
 static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 	auto type = t.get_type();
@@ -103,7 +102,8 @@ void ActivityLuaTest::load(Loader& loader) {
 		sol::object key = loader.retrieveObject(state, cache);
 		sol::object value = loader.retrieveObject(state, cache);
 		Locator<Log>::ref() << Log::OPEN{} << "key: " << key.as<std::string>() << " value: " << value.as<std::string>() << "\n" << Log::CLOSE{};
-		state[key] = value;
+		// TODO: error? no global operator[] found for sol::object
+		//state[key] = value;
 	}
 }
 
