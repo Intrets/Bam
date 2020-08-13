@@ -8,7 +8,6 @@
 #include "RenderInfo.h"
 #include "ControlState.h"
 #include <thread>
-#include "FPSDisplay.h"
 #include "UIState.h"
 #include "State.h"
 #include "Timer.h"
@@ -41,7 +40,6 @@ void mainLoop(GLFWwindow* window) {
 	state.uiState.updateSize(window);
 
 	FPSLimiter fpsLimiter;
-	FPSDisplay fpsDisplay;
 
 	GameLogic gameLogic;
 
@@ -92,7 +90,6 @@ void mainLoop(GLFWwindow* window) {
 			fpsLimiter.renderStart();
 			renderer.render(window, renderInfo);
 			fpsLimiter.renderFinish();
-			fpsDisplay.displayFPS(window);
 			Locator<Timer>::ref().endTiming("Render");
 		}
 

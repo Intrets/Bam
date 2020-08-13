@@ -38,9 +38,12 @@ protected:
 
 	std::vector<Bind> globalBinds;
 	std::vector<Bind> focussedBinds;
-	std::vector<Bind> clickBinds;
+	std::vector<Bind> onHoverBinds;
+	std::vector<Bind> activeBinds;
 
 public:
+	bool active = false;
+
 	ScreenRectangle screenRectangle;
 
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
@@ -52,11 +55,13 @@ public:
 
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
-	void addClickBind(BindControl bindControl, CallBack callBack);
+	void addOnHoverBind(BindControl bindControl, CallBack callBack);
+	void addActiveBind(BindControl bindControl, CallBack callBack);
 
 	virtual CallBackBindResult runGlobalBinds(State& state);
 	virtual CallBackBindResult runFocussedBinds(State& state);
-	virtual CallBackBindResult runClickBinds(State& state);
+	virtual CallBackBindResult runOnHoverBinds(State& state);
+	virtual CallBackBindResult runActiveBinds(State& state);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 

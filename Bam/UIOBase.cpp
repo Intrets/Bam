@@ -31,14 +31,19 @@ bool UIOBase::contains(glm::vec2 p) {
 }
 
 void UIOBase::addGlobalBind(BindControl bindControl, CallBack callBack) {
-	globalBinds.push_back(std::make_pair(bindControl, callBack));
+	this->globalBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
 void UIOBase::addFocussedBind(BindControl bindControl, CallBack callBack) {
-	focussedBinds.push_back(std::make_pair(bindControl, callBack));
+	this->focussedBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
-void UIOBase::addClickBind(BindControl bindControl, CallBack callBack) {
+void UIOBase::addOnHoverBind(BindControl bindControl, CallBack callBack) {
+	this->onHoverBinds.push_back(std::make_pair(bindControl, callBack));
+}
+
+void UIOBase::addActiveBind(BindControl bindControl, CallBack callBack) {
+	this->activeBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
 CallBackBindResult UIOBase::runGlobalBinds(State& state) {
@@ -89,10 +94,37 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runClickBinds(State& state) {
+CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 	CallBackBindResult sumResult = 0;
 	if (!this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
-		for (auto [control, bind] : clickBinds) {
+		return sumResult;
+	}
+	for (auto [control, bind] : onHoverBinds) {
+		if (state.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(state, this);
+			sumResult |= bindResult;
+			if (bindResult & BIND_RESULT::CONSUME) {
+				state.controlState.consumeControl(control.control);
+			}
+			if (sumResult & BIND_RESULT::STOP) {
+				return sumResult;
+			}
+		}
+	}
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runOnHoverBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+	return sumResult;
+}
+
+CallBackBindResult UIOBase::runActiveBinds(State& state) {
+	CallBackBindResult sumResult = 0;
+	if (this->active) {
+		for (auto [control, bind] : activeBinds) {
 			if (state.controlState.activated(control)) {
 				CallBackBindResult bindResult = bind(state, this);
 				sumResult |= bindResult;
@@ -105,7 +137,15 @@ CallBackBindResult UIOBase::runClickBinds(State& state) {
 			}
 		}
 	}
-	return CallBackBindResult();
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runActiveBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+	return sumResult;
 }
 
 int32_t UIOBase::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

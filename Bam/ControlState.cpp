@@ -66,7 +66,7 @@ std::string ControlState::getCharBuffer() {
 }
 
 void ControlState::consumeControl(CONTROLS control) {
-	this->consumed[static_cast<size_t>(control)] = true;
+ 	this->consumed[static_cast<size_t>(control)] = true;
 }
 
 bool ControlState::activated(BindControl bindControl) {

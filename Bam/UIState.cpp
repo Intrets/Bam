@@ -38,9 +38,40 @@ glm::vec2 UIState::getCursorPositionScreen() {
 }
 
 void UIState::run(State& state) {
+	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
+		auto& UI = *it;
+		CallBackBindResult clickedResult = UI.get()->runOnHoverBinds(state);
+		if (clickedResult & BIND_RESULT::CLOSE) {
+			it = this->UIs.erase(it);
+		}
+		else if (clickedResult & BIND_RESULT::FOCUS) {
+			auto temp = std::move(UI);
+			it = this->UIs.erase(it);
+			this->UIs.push_front(std::move(temp));
+		}
+		else {
+			++it;
+		}
+		if (clickedResult & BIND_RESULT::STOP) {
+			return;
+		}
+	}
+
 	CallBackBindResult focussedResult = this->UIs.front().get()->runFocussedBinds(state);
 	if (focussedResult & BIND_RESULT::CLOSE) {
 		this->UIs.pop_front();
+	}
+	if (focussedResult & BIND_RESULT::STOP) {
+		return;
+	}
+
+	// FEATURE: decide if active binds should be run for all UIs and not just the one in front 
+	CallBackBindResult activeResult = this->UIs.front().get()->runActiveBinds(state);
+	if (activeResult & BIND_RESULT::CLOSE) {
+		this->UIs.pop_front();
+	}
+	if (activeResult & BIND_RESULT::STOP) {
+		return;
 	}
 
 	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
@@ -56,6 +87,9 @@ void UIState::run(State& state) {
 		}
 		else {
 			++it;
+		}
+		if (uiResult & BIND_RESULT::STOP) {
+			return;
 		}
 	}
 }
@@ -312,14 +346,13 @@ UIState::UIState() {
 		});
 
 		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_IN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			using viewport =  Option<OPTION::CL_VIEWPORTSCALE, float>;
+			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() * 0.95f);
 			return BIND_RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_OUT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-			std::cout << "called\n";
-			using viewport =  Option<OPTION::CL_VIEWPORTSCALE, float>;
+			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() / 0.95f);
 			return BIND_RESULT::CONTINUE;
 		});

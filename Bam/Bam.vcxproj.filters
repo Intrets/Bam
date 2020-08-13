@@ -247,9 +247,6 @@
     <ClCompile Include="SingleBlockActivity.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="FPSDisplay.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="TextRenderer.cpp">
       <Filter>Renderer\UI</Filter>
     </ClCompile>
@@ -543,9 +540,6 @@
     </ClInclude>
     <ClInclude Include="SingleBlockActivity.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSDisplay.h">
-      <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="TextRenderer.h">
       <Filter>Renderer\UI</Filter>

@@ -17,15 +17,12 @@ UIOButton::UIOButton(Handle self) {
 
 	this->selfHandle = self;
 
-	addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
-		if (this->contains(state.uiState.getCursorPositionScreen())) {
-			this->down = true;
-			return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
-		}
-		return BIND_RESULT::CONTINUE;
+	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+		this->down = true;
+		return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 	});
 
-	addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
 		if (this->down) {
 			this->down = false;
 			return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;

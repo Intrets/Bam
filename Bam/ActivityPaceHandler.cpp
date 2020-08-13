@@ -1,8 +1,8 @@
 #include "common.h"
-#include "ActivityPaceHandler.h"
-#include "GameState.h"
 
-#include "Activity.h"
+#include "ActivityPaceHandler.h"
+
+#include "GameState.h"
 #include "Saver.h"
 #include "Loader.h"
 

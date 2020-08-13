@@ -14,7 +14,8 @@
 
 #include "Log.h"
 
-#define OPENGL_DEBUG true
+// TODO: keep runtime option, get value from config/command line argument
+bool OPENGL_DEBUG  = true;
 
 GLFWwindow* window;
 
@@ -133,6 +134,9 @@ MessageCallback(GLenum source,
 
 static int initGLFW() {
 	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+	if (OPENGL_DEBUG) {
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
@@ -175,7 +179,7 @@ static int initGLFW() {
 
 	glfwSwapInterval(0);
 
-	if (OPENGL_DEBUG) {
+	if (OPENGL_DEBUG && (GLEW_ARB_debug_output || GLEW_KHR_debug)) {
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(MessageCallback, 0);
 	}

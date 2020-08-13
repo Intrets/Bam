@@ -18,7 +18,12 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	this->topBarPtr = topBar.get();
 
 	auto [close, closePtr_] = constructButtonWithText("x", glm::ivec2(20, 20), 1);
-	//auto closePtr = closePtr_;
+	auto closePtr = closePtr_;
+
+	closePtr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+		return BIND_RESULT::CLOSE;
+	};
+
 	topBar.get()->addElement(std::move(close));
 
 	auto [minimize, minimizePtr_] = constructButtonWithText("_", glm::ivec2(20, 20), 1);
