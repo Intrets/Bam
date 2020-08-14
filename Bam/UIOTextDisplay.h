@@ -5,14 +5,22 @@
 
 class UIOTextDisplay : public UIOBase
 {
+private:
+	bool lineWrap;
+
 public:
 	Text text;
+	bool shrinkToFit;
 
 	UIOTextDisplay(Handle self);
+	UIOTextDisplay(Handle self, bool lineWrap);
 
 	virtual void translate(glm::vec2 p) override;
 
+	virtual	CallBackBindResult runActiveBinds(State& state) override;
+
 	void setText(std::string text_);
+	void setText(std::vector<std::string> text_);
 	void moveCursor(glm::ivec2 p);
 	void insertText(std::string text_);
 	void backspaceChar();

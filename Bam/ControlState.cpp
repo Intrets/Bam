@@ -55,6 +55,7 @@ void ControlState::cycleStates() {
 	}
 	this->charBuffer.clear();
 	this->scrollDistance = 0;
+	this->blockUserInput = false;
 	this->controlState[static_cast<int32_t>(CONTROLS::MOUSE_POS_CHANGED)] = ControlState::CONTROLSTATE_PRESSED;
 	this->controlState[static_cast<int32_t>(CONTROLS::EVERY_TICK)] = ControlState::CONTROLSTATE_PRESSED;
 
@@ -66,16 +67,26 @@ std::string ControlState::getCharBuffer() {
 }
 
 void ControlState::consumeControl(CONTROLS control) {
- 	this->consumed[static_cast<size_t>(control)] = true;
+	this->consumed[static_cast<size_t>(control)] = true;
 }
 
 bool ControlState::activated(BindControl bindControl) {
 	if (this->consumed[static_cast<size_t>(bindControl.control)]) {
 		return false;
 	}
-	else {
-		return this->controlState[static_cast<size_t>(bindControl.control)] & bindControl.state;
+	if (this->blockUserInput) {
+		switch (bindControl.control) {
+			case CONTROLS::CHAR_BUFFER_CHANGED:
+			case CONTROLS::EVERY_TICK:
+			case CONTROLS::MOUSE_POS_CHANGED:
+			case CONTROLS::ACTION0:
+				break;
+			default:
+				return false;
+				break;
+		}
 	}
+	return this->controlState[static_cast<size_t>(bindControl.control)] & bindControl.state;
 }
 
 void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, int32_t action, int32_t mods) {

@@ -21,16 +21,23 @@ public:
 	UIOConstructer<T>& setPtr(T*& ptr);
 	UIOConstructer<UIOPad> addPadding(UIOSizeType padding);
 
+	UIOConstructer<T>& addBaseBind(void (*f) (UIOBase* ptr));
+	UIOConstructer<T>& addBind(void (*f) (T* ptr));
+	UIOConstructer<T>& addBindCapture(std::function<void(T*)> f);
+
 	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
 	UIOConstructer<UIOConstrainSize> align(UIOConstrainSize::ALIGNMENT align);
 	UIOConstructer<UIOColoredBackground> background(glm::vec4 color);
 	UIOConstructer<UIOButton> button();
 
+	UIOConstructer<UIOButton>& onRelease(CallBack f);
+	UIOConstructer<UIOButton>& onPress(CallBack f);
+
 	UniqueReference<UIOBase, T> get();
 
 	template<class ...Args>
-	static UIOConstructer<T> makeConstructor(Args&& ...args);
+	static UIOConstructer<T> makeConstructer(Args&& ...args);
 };
 
 template<class T>
@@ -48,6 +55,12 @@ template<class T>
 inline UIOConstructer<UIOPad> UIOConstructer<T>::addPadding(UIOSizeType padding) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	return UIOConstructer<UIOPad>(refMan->makeUniqueRef<UIOPad>(std::move(object), padding));
+}
+
+template<class T>
+inline UIOConstructer<T>& UIOConstructer<T>::addBindCapture(std::function<void(T*)> f) {
+	f(this->object.get());
+	return *this;
 }
 
 template<>
@@ -95,7 +108,7 @@ inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::align(UIOConstrainSiz
 template<class T>
 inline UIOConstructer<UIOColoredBackground> UIOConstructer<T>::background(glm::vec4 color) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
-	return UIOConstructer<UIOColoredBackground>(refMan->makeUniqueRef<UIOColoredBackground>(std::move(this->object), color));
+	return UIOConstructer<UIOColoredBackground>(refMan->makeUniqueRef<UIOColoredBackground>(color, std::move(this->object)));
 }
 
 template<class T>
@@ -105,13 +118,49 @@ inline UIOConstructer<UIOButton> UIOConstructer<T>::button() {
 	return UIOConstructer<UIOButton>(std::move(button));
 }
 
+template<>
+inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onRelease(CallBack f) {
+	this->object.get()->onRelease = f;
+	return *this;
+}
+
+template<class T>
+inline UIOConstructer<UIOButton>& UIOConstructer<T>::onRelease(CallBack f) {
+	static_assert(0);
+	return UIOConstructer<UIOButton>();
+}
+
+template<>
+inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onPress(CallBack f) {
+	this->object.get()->onPress = f;
+	return *this;
+}
+
+template<class T>
+inline UIOConstructer<UIOButton>& UIOConstructer<T>::onPress(CallBack f) {
+	static_assert(0);
+	return UIOConstructer<UIOButton>();
+}
+
 template<class T>
 inline UniqueReference<UIOBase, T> UIOConstructer<T>::get() {
 	return std::move(this->object);
 }
 
 template<class T>
+inline UIOConstructer<T>& UIOConstructer<T>::addBaseBind(void(*f)(UIOBase* ptr)) {
+	f(this->object.get());
+	return *this;
+}
+
+template<class T>
+inline UIOConstructer<T>& UIOConstructer<T>::addBind(void(*f)(T* ptr)) {
+	f(this->object.get());
+	return *this;
+}
+
+template<class T>
 template<class ...Args>
-inline UIOConstructer<T> UIOConstructer<T>::makeConstructor(Args && ...args) {
+inline UIOConstructer<T> UIOConstructer<T>::makeConstructer(Args && ...args) {
 	return UIOConstructer(Locator<ReferenceManager<UIOBase>>::get()->makeUniqueRef<T>(std::forward<Args>(args)...));
 }

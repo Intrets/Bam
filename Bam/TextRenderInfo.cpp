@@ -167,7 +167,10 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 }
 
 bool Text::deleteChar() {
-	if (this->cursor.y >= this->lines.size() - 2) {
+	if (this->cursor.y >= this->lines.size() - 1) {
+		return false;
+	}
+	if (this->cursor.y == this->lines.size() - 2 && this->cursor.x == this->lines[this->cursor.y].size() - 1) {
 		return false;
 	}
 	if (this->cursor.x == this->lines[this->cursor.y].size() - 1) {

@@ -311,6 +311,7 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOConstructButtons.cpp" />
@@ -321,7 +322,7 @@
     <ClCompile Include="UIOSimpleTextDisplay.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
-    <ClCompile Include="UIOTextEdit2.cpp" />
+    <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
@@ -401,6 +402,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOConstructButtons.h" />
@@ -411,7 +413,7 @@
     <ClInclude Include="UIOSimpleTextDisplay.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOProxy.h" />
-    <ClInclude Include="UIOTextEdit2.h" />
+    <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />

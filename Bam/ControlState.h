@@ -74,6 +74,7 @@ public:
 
 	std::string getCharBuffer();
 	int32_t scrollDistance;
+	bool blockUserInput;
 
 	void consumeControl(CONTROLS control);
 

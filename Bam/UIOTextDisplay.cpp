@@ -10,6 +10,12 @@
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	this->selfHandle = self;
+	this->lineWrap = false;
+}
+
+UIOTextDisplay::UIOTextDisplay(Handle self, bool lineWrap_) {
+	this->selfHandle = self;
+	this->lineWrap = lineWrap_;
 }
 
 void UIOTextDisplay::translate(glm::vec2 p) {
@@ -23,7 +29,11 @@ void UIOTextDisplay::translate(glm::vec2 p) {
 void UIOTextDisplay::setText(std::string text_) {
 	this->text.setString(text_);
 	this->moveCursor(glm::ivec2(0));
+}
 
+void UIOTextDisplay::setText(std::vector<std::string> text_) {
+	this->text.setLines(text_);
+	this->moveCursor(glm::ivec2(0));
 }
 
 void UIOTextDisplay::moveCursor(glm::ivec2 p) {
@@ -50,24 +60,37 @@ void UIOTextDisplay::deleteChar() {
 	}
 }
 
+CallBackBindResult UIOTextDisplay::runActiveBinds(State& state) {
+	auto result = UIOBase::runActiveBinds(state);
+	if (this->active) {
+		state.controlState.blockUserInput = true;
+	}
+	return result;
+}
+
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
 		this->text.invalidateCache();
 	}
-	this->screenRectangle = newScreenRectangle;
-	return this->screenRectangle;
+	if (this->shrinkToFit) {
+		// TODO: font customization/setting in text
+		this->text.makeRenderInfo(newScreenRectangle, Fonts::Font::ROBOTO_12, false);
+
+		auto& renderInfo = this->text.cachedRenderInfo.value();
+		glm::vec2 screenSize = renderInfo.getRenderedScreenSize();
+		newScreenRectangle.setWidth(screenSize.x);
+		newScreenRectangle.setHeight(screenSize.y);
+		this->screenRectangle = newScreenRectangle;
+		return this->screenRectangle;
+	}
+	else {
+		this->screenRectangle = newScreenRectangle;
+		return this->screenRectangle;
+	}
 }
 
 int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, true);
-
-	if (this->active) {
-
-		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.9f, 0.0f, 0.9f, 1.0f), depth++);
-	}
-	else {
-		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.9f, 0.9f, 0.9f, 1.0f), depth++);
-	}
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, this->lineWrap);
 
 	return depth;
 }

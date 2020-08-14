@@ -95,9 +95,6 @@
     <Filter Include="States">
       <UniqueIdentifier>{5a7c42d5-94e7-46ca-8b9a-a764b41e8cbf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Logic\User IO Controllers\Constructors">
-      <UniqueIdentifier>{22ec3228-e39b-4532-a771-59e42dd763c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Logic\User IO Controllers\Components">
       <UniqueIdentifier>{37b63987-1c2a-4bdc-9575-183f242488b5}</UniqueIdentifier>
     </Filter>
@@ -109,6 +106,9 @@
     </Filter>
     <Filter Include="Game\Logic\User IO Controllers\User Interactables\Visible">
       <UniqueIdentifier>{f45cee8f-5da2-4df6-8c38-25b69a355aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Logic\User IO Controllers\Constructers">
+      <UniqueIdentifier>{22ec3228-e39b-4532-a771-59e42dd763c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +365,6 @@
     <ClCompile Include="UIOWindow.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
-    <ClCompile Include="UIOTextEdit2.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
-    </ClCompile>
     <ClCompile Include="UIOGrid.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
@@ -378,7 +375,7 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
     <ClCompile Include="UIOConstructButtons.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Misc</Filter>
@@ -387,10 +384,14 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
     <ClCompile Include="UIOConstructer.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="Colors.cpp">
       <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOBinds.cpp" />
+    <ClCompile Include="UIOTextConstructers.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -659,9 +660,6 @@
     <ClInclude Include="UIOWindow.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
-    <ClInclude Include="UIOTextEdit2.h">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
-    </ClInclude>
     <ClInclude Include="UIOGrid.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
@@ -672,7 +670,7 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
     <ClInclude Include="UIOConstructButtons.h">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Misc</Filter>
@@ -684,10 +682,14 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
     <ClInclude Include="UIOConstructer.h">
-      <Filter>Game\Logic\User IO Controllers\Constructors</Filter>
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="Colors.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOBinds.h" />
+    <ClInclude Include="UIOTextConstructers.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
