@@ -7,6 +7,9 @@
 #include "UIOPad.h"
 #include "UIOConstrainSize.h"
 #include "UIOSizeType.h"
+#include "UIOTextConstructers.h"
+#include "UIOTextDisplay.h"
+#include "UIOConstructer.h"
 
 std::pair<UniqueReference<UIOBase, UIOBase>, UIOButton*> constructButtonWithText(std::string text, int32_t padding) {
 	auto& refMan = Locator<ReferenceManager<UIOBase>>::ref();

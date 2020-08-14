@@ -5,8 +5,10 @@
 class UIOBase;
 class UIOButton;
 class UIOConstrainSize;
+class UIOPad;
 
-
+template<class>
+class UIOConstructer;
 
 std::pair<UniqueReference<UIOBase, UIOBase>, UIOButton*> constructButtonWithText(std::string text, int32_t padding = 0);
 

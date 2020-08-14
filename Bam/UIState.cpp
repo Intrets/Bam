@@ -281,7 +281,6 @@ UIState::UIState() {
 			list.get()->addElement(std::move(a));
 		}
 		{
-			//auto a = UIOConstructer<UIOTextDisplay>
 			UIOButton* ptr;
 			auto a = constructSingleLineDisplayText("Toggle Seperate Render Thread")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
@@ -340,6 +339,89 @@ UIState::UIState() {
 		test2.get()->screenRectangle.setWidth(0.31f);
 		test2.get()->screenRectangle.setHeight(1.7f);
 		test2.get()->screenRectangle.translate({ -1.0f, 1.0f });
+
+		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		test3.get()->updateSize(r);
+
+		this->UIs.push_back(std::move(test3));
+	}
+
+	// lua test window
+	{
+		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+
+		{
+			UIOGrid* dirsPtr;
+			auto dirs = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(5, 1))
+				.setPtr(dirsPtr)
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.align(UIOConstrainSize::ALIGNMENT::TOP)
+				.get();
+
+			{
+				UIOTextDisplay* textPtr;
+
+				auto text = constructSingleLineTextEdit("1")
+					.setPtr(textPtr)
+					.background(COLORS::BACKGROUND)
+					.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+					.get();
+
+				dirsPtr->addElement(std::move(text));
+
+				for (auto [buttonName, dir_] : {
+					std::make_tuple("Left", Activity::DIR::LEFT),
+					std::make_tuple("Right", Activity::DIR::RIGHT),
+					std::make_tuple("Up", Activity::DIR::UP),
+					std::make_tuple("Down", Activity::DIR::DOWN),
+					 }) {
+					Activity::DIR dir = dir_;
+					UIOButton* ptr;
+					auto a = constructSingleLineDisplayText(buttonName)
+						.align(UIOConstrainSize::ALIGNMENT::CENTER)
+						.button()
+						.setPtr(ptr)
+						.onRelease(
+							[dir, textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+					{
+						std::string in = textPtr->text.lines.front();
+						int n;
+						try {
+							n = std::stoi(in);
+							n = glm::clamp(n, 1, 50);
+						}
+						catch (...) {
+							n = 10;
+						}
+
+						if (params.player.selection.target.isValid()) {
+							bool success = params.player.selection.target.get()->applyMoveRoot(params.gameState, dir, n);
+							if (success) {
+								Locator<Log>::ref() << Log::OPEN{} << "moving with pace " << n << "\n" << Log::CLOSE{};
+							}
+							return BIND_RESULT::CONTINUE;
+
+						}
+						else {
+							return BIND_RESULT::CONTINUE;
+						}
+					})
+						.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+						.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+						.get();
+
+					dirsPtr->addElement(std::move(a));
+				}
+			}
+
+			list.get()->addElement(std::move(dirs));
+		}
+
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "lua test");
+		test2.get()->screenRectangle.setWidth(0.4f);
+		test2.get()->screenRectangle.setHeight(1.7f);
+		test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
 
 		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
 

@@ -158,9 +158,9 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 		a *= this->lastScreenRectangle.size();
 		b *= this->lastScreenRectangle.size();
 
-		//a += screenRectangle.getBottomRight();
 		a += this->lastScreenRectangle.getBottomLeft();
-		renderInfo.uiRenderInfo.addRectangle(a, a + b, { 1.0f, 0.5f, 0.5f, 0.5f });
+		glm::vec2 db = glm::vec2(b.x, b.y / 10);
+		renderInfo.uiRenderInfo.addRectangle(a, a + db, { 1.0f, 0.5f, 0.5f, 0.5f });
 	}
 
 	return depth + 1;
