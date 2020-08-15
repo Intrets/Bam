@@ -239,12 +239,6 @@ bool Activity::load(Loader& loader) {
 void Activity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 }
 
-std::ostream& Activity::getSimpleInfo(std::ostream& out) {
-	std::string typeName = ACTIVITY::TYPE_NAMES[static_cast<int32_t>(this->getType())];
-	out << typeName << ": " << this->selfHandle;
-	return out;
-}
-
 void Activity::stopActivity(GameState& gameState) {
 	this->activityType = 0;
 	this->active = false;

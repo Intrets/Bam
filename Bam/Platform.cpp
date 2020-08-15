@@ -149,6 +149,10 @@ void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInf
 	}
 }
 
+Activity::TYPE Platform::getType() {
+	return Activity::TYPE::PLATFORM;
+}
+
 bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
 	glm::ivec2 movedOrigin = origin + getDirection(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);

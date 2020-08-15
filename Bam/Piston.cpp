@@ -8,6 +8,7 @@
 #include "ActivityIgnoringGroup.h"
 #include "BlockIDTextures.h"
 #include "RenderInfo.h"
+#include "Anchor.h"
 
 Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces) :
 	Grouper(self, pos),

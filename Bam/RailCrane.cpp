@@ -10,11 +10,6 @@
 #include "Saver.h"
 #include "Loader.h"
 
-std::stringstream& RailCrane::getMembers(std::stringstream& out) {
-	// TODO: insert return statement here
-	return out;
-}
-
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces) :
 	Grouper(self, pos) {
 	this->length = 6;
