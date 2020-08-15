@@ -8,9 +8,6 @@
 #include "UIOList.h"
 #include "UIOConstructButtons.h"
 
-//TODO remove
-#include "RenderInfo.h"
-
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	this->selfHandle = self;
@@ -162,6 +159,7 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
 	this->main = main_.get();
+	this->addElement(std::move(main_));
 }
 
 UIOWindow::UIOWindow(Handle self) {
@@ -178,7 +176,6 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.5f) , 100);
 	if (minimized) {
 		return topBarPtr->addRenderInfo(gameState, renderInfo, depth + 1);
 	}

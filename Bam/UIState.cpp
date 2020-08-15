@@ -170,7 +170,17 @@ UIState::UIState() {
 
 	// save/load and other stuff
 	{
-		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+		UIOList* listPtr;
+		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
+			.setPtr(listPtr)
+			.window("LUA test", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::RESIZEVERTICAL)
+			.get();
+
+		this->UIs.push_back(std::move(window));
+
+		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
 		{
 			UIOTextDisplay* ptr;
 			auto text = constructDisplayText("").setPtr(ptr)
@@ -189,10 +199,10 @@ UIState::UIState() {
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 120))
 				.get();
 
-			list.get()->addElement(std::move(text));
+			listPtr->addElement(std::move(text));
 		}
 		{
-			list.get()->addElement(
+			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
 				.get()
@@ -205,7 +215,7 @@ UIState::UIState() {
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			list.get()->addElement(std::move(text));
+			listPtr->addElement(std::move(text));
 
 			auto saveButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructer("save")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
@@ -223,11 +233,11 @@ UIState::UIState() {
 				Saver(name).saveGame(params.gameState);
 				return BIND_RESULT::CONTINUE;
 			})
-				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			list.get()->addElement(std::move(saveButton));
+			listPtr->addElement(std::move(saveButton));
 
 			auto loadButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructer("load")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
@@ -245,14 +255,14 @@ UIState::UIState() {
 				Loader(name).loadGame(params.gameState);
 				return BIND_RESULT::CONTINUE;
 			})
-				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			list.get()->addElement(std::move(loadButton));
+			listPtr->addElement(std::move(loadButton));
 		}
 		{
-			list.get()->addElement(
+			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
 				.get()
@@ -272,13 +282,13 @@ UIState::UIState() {
 				self->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			})
-				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
 			ptr->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 
-			list.get()->addElement(std::move(a));
+			listPtr->addElement(std::move(a));
 		}
 		{
 			UIOButton* ptr;
@@ -294,16 +304,16 @@ UIState::UIState() {
 				self->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 				return BIND_RESULT::CONTINUE;
 			})
-				.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
 			ptr->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
 
-			list.get()->addElement(std::move(a));
+			listPtr->addElement(std::move(a));
 		}
 		{
-			list.get()->addElement(
+			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
 				.get()
@@ -332,41 +342,21 @@ UIState::UIState() {
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 100))
 				.get();
 
-			list.get()->addElement(std::move(a));
+			listPtr->addElement(std::move(a));
 		}
-
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "debug stuff");
-		test2.get()->screenRectangle.setWidth(0.31f);
-		test2.get()->screenRectangle.setHeight(1.7f);
-		test2.get()->screenRectangle.translate({ -1.0f, 1.0f });
-
-		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
-		test3.get()->updateSize(r);
-
-		this->UIs.push_back(std::move(test3));
 	}
 
 	// lua test window
 	{
-		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
 		UIOList* listPtr;
 		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
 			.setPtr(listPtr)
+			.window("LUA test", { {0.5f, -0.8f}, {1.0f, 1.0f} },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::RESIZEVERTICAL)
 			.get();
 
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(window), "lua test");
-		test2.get()->screenRectangle.setWidth(0.4f);
-		test2.get()->screenRectangle.setHeight(1.7f);
-		test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
-
-		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
-		test3.get()->updateSize(r);
-
-		this->UIs.push_back(std::move(test3));
-
-		//this->UIs.push_back(std::move(window));
+		this->UIs.push_back(std::move(window));
 
 		{
 			UIOGrid* dirsPtr;
@@ -424,7 +414,7 @@ UIState::UIState() {
 							return BIND_RESULT::CONTINUE;
 						}
 					})
-						.addPadding(UIOSizeType(UIOSizeType::PX, 1))
+						.pad(UIOSizeType(UIOSizeType::PX, 1))
 						.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 						.get();
 
@@ -443,17 +433,6 @@ UIState::UIState() {
 
 			listPtr->addElement(std::move(luaEditor));
 		}
-
-		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "lua test");
-		//test2.get()->screenRectangle.setWidth(0.4f);
-		//test2.get()->screenRectangle.setHeight(1.7f);
-		//test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
-
-		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
-
-		//test3.get()->updateSize(r);
-
-		//this->UIs.push_back(std::move(test3));
 	}
 
 	// wasd movement in world

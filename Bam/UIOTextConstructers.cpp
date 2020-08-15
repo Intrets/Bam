@@ -59,12 +59,12 @@ UIOConstructer<UIOTextDisplay> constructDisplayText(std::string text) {
 	return UIOConstructer<UIOTextDisplay>(std::move(res));
 }
 
-UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text) {
+UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text, bool shrink) {
 	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
 	auto ptr = res.get();
-	ptr->text.addLine(text);
+	ptr->text.setString(text);
 	ptr->text.cursorIndex = -1;
-	ptr->shrinkToFit = true;
+	ptr->shrinkToFit = shrink;
 
 	return UIOConstructer<UIOTextDisplay>(std::move(res));
 }

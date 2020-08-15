@@ -12,6 +12,6 @@ UIOConstructer<UIOTextDisplay> constructSingleLineTextEdit(std::string text);
 
 UIOConstructer<UIOTextDisplay> constructDisplayText(std::string text);
 
-UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text);
+UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text, bool shrink = true);
 
 

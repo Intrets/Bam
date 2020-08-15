@@ -8,12 +8,12 @@ class UIOWindow : public UIOBase
 public:
 	enum TYPE
 	{
-		MINIMISE,
-		CLOSE,
-		RESIZE,
-		RESIZEHORIZONTAL,
-		RESIZEVERTICAL,
-		MOVE,
+		MINIMISE = 1 << 0,
+		CLOSE = 1 << 1,
+		RESIZE = 1 << 2,
+		RESIZEHORIZONTAL = 1 << 3,
+		RESIZEVERTICAL = 1 << 4,
+		MOVE = 1 << 5
 	};
 
 
