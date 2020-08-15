@@ -25,9 +25,5 @@ public:
 	virtual Activity::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
-
-	// Modifying 
-	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
-	virtual std::stringstream& getMembers(std::stringstream& out) override;
 };
 

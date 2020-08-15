@@ -2,7 +2,6 @@
 #include "Activity.h"
 #include "GameState.h"
 #include "Anchor.h"
-#include "Modifyables.h"
 #include "ActivityIgnoringGroup.h"
 #include "Saver.h"
 #include "Loader.h"
@@ -238,16 +237,6 @@ bool Activity::load(Loader& loader) {
 }
 
 void Activity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-}
-
-void Activity::fillModifyingMap(ModifyerBase& modifyer) {
-	modifyer.modifyables["self"] = std::make_unique<ModifyableInt<Activity>>(&Activity::selfHandle);
-	modifyer.modifyables["parent"] = std::make_unique<ModifyableAnchorRef<Activity>>(&Activity::parentRef);
-	modifyer.modifyables["rootMove"] = std::make_unique<ModifyableDoRootMove<Activity>>(&Activity::applyMoveUp);
-	//modifyer.modifyables["currentMove"] = std::make_unique<ModifyableDoRootMove<Activity>>(&Activity::applyMoveOLD);
-	modifyer.modifyables["pos"] = std::make_unique<ModifyableIVec2<Activity>>(&Activity::origin);
-	modifyer.modifyables["movePace"] = std::make_unique<ModifyableInt<Activity>>(&Activity::movingPace);
-	modifyer.modifyables["applyActivityLocalForced"] = std::make_unique<ModifyableDoActivity<Activity>>(&Activity::applyActivityLocal);
 }
 
 std::ostream& Activity::getSimpleInfo(std::ostream& out) {

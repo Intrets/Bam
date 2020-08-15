@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ModifyingInterface.h"
 #include "ReferenceManager.h"
 
 #include <initializer_list>
@@ -32,7 +31,7 @@ namespace ACTIVITY
 
 class Anchor;
 
-class Activity : public ModifyingInterface
+class Activity 
 {
 public:
 	enum DIR
@@ -236,10 +235,5 @@ public:
 	// Render
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) = 0;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
-
-	// Modifying
-	virtual void fillModifyingMap(ModifyerBase& modifyer) override;
-	using ModifyingInterface::getSimpleInfo;
-	virtual std::ostream& getSimpleInfo(std::ostream& out) override;
 };
 

@@ -9,7 +9,6 @@
 #include "ControlState.h"
 #include "Main.h"
 #include "InitManagers.h"
-#include "InitModifyables.h"
 #include <sstream>
 
 #include "Log.h"
@@ -189,7 +188,6 @@ static int initGLFW() {
 
 int main() {
 	initGLFW();
-	initModifyables();
 	initManagers(window);
 	mainLoop(window);
 }

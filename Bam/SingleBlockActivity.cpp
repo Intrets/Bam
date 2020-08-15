@@ -66,10 +66,6 @@ void SingleBlockActivity::appendStaticRenderInfo(GameState& gameState, StaticWor
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex);
 }
 
-void SingleBlockActivity::fillModifyingMap(ModifyerBase& modifyer) {
-	Activity::fillModifyingMap(modifyer);
-}
-
 void SingleBlockActivity::save(Saver& saver) {
 	Activity::save(saver);
 	saver.storeString(this->texName);

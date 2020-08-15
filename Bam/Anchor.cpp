@@ -2,7 +2,6 @@
 
 #include "Anchor.h"
 #include "GameState.h"
-#include "Modifyables.h"
 #include <sstream>
 #include "ActivityIgnoringGroup.h"
 #include "Saver.h"
@@ -85,29 +84,6 @@ bool Anchor::load(Loader& loader) {
 		this->children.push_back(WeakReference<Activity, Activity>(handle));
 	}
 	return true;
-}
-
-void Anchor::fillModifyingMap(ModifyerBase& modifyer) {
-	Activity::fillModifyingMap(modifyer);
-	modifyer.modifyables["children"] = std::make_unique<ModifyableAddChild>(&Anchor::addChild);
-
-}
-
-void Anchor::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Anchor>>::get()->modifyables;
-	if (modifyer.count(name) != 0) {
-		modifyer[name]->modify(this, gameState, value);
-	}
-}
-
-std::stringstream& Anchor::getMembers(std::stringstream& out) {
-	out << "^ Anchor members: ^\n";
-	for (auto& member : Locator<Modifyer<Anchor>>::get()->modifyables) {
-		out << member.first << ": ";
-		member.second->toStream(this, out) << "\n";
-	}
-	out << "v Anchor members: v\n";
-	return out;
 }
 
 Activity::TYPE Anchor::getType() {

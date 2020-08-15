@@ -6,7 +6,6 @@
 #include "StaticWorldRenderer.h"
 #include "Anchor.h"
 #include "StaticWorldChunk.h"	
-#include "Modifyables.h"
 #include "Saver.h"
 #include "Loader.h"
 #include "RenderInfo.h"
@@ -221,27 +220,6 @@ bool Platform::load(Loader& loader) {
 
 	calculateBlockedDirections();
 	return true;
-}
-
-void Platform::fillModifyingMap(ModifyerBase& modifyer) {
-	Activity::fillModifyingMap(modifyer);
-}
-
-void Platform::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Platform>>::get()->modifyables;
-	if (modifyer.count(name) != 0) {
-		modifyer[name]->modify(this, gameState, value);
-	}
-}
-
-std::stringstream& Platform::getMembers(std::stringstream& out) {
-	out << "^ Platform members: ^\n";
-	for (auto& member : Locator<Modifyer<Platform>>::get()->modifyables) {
-		out << member.first << ": ";
-		member.second->toStream(this, out) << "\n";
-	}
-	out << "v Platform members: v\n";
-	return out;
 }
 
 void Platform::getTreeMembers(std::vector<Activity*>& members) {

@@ -58,10 +58,5 @@ public:
 	// Render
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
 	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
-
-	// Modifying
-	virtual void fillModifyingMap(ModifyerBase& modifier) override;
-	virtual void modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) override;
-	virtual std::stringstream& getMembers(std::stringstream& out) override;
 };
 

@@ -10,9 +10,6 @@
 #include "Saver.h"
 #include "Loader.h"
 
-void RailCrane::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-}
-
 std::stringstream& RailCrane::getMembers(std::stringstream& out) {
 	// TODO: insert return statement here
 	return out;

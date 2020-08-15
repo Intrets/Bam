@@ -5,15 +5,6 @@
 #include "GameState.h"
 #include <iostream>
 
-void Activator::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-}
-
-std::stringstream& Activator::getMembers(std::stringstream& out) {
-	// TODO: insert return statement here
-	assert(false);
-	return out;
-}
-
 Activator::Activator(Handle self, GameState& gameState, glm::ivec2 pos, std::string name, bool leaveTrace) : SingleBlockActivity(self, gameState, pos, name, leaveTrace) {
 }
 

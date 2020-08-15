@@ -5,7 +5,6 @@
 #include "Saver.h"
 #include "GameState.h"
 #include "StaticWorldRenderInfo.h"
-#include "Modifyables.h"
 #include "ActivityIgnoringGroup.h"
 #include "BlockIDTextures.h"
 #include "RenderInfo.h"
@@ -24,29 +23,6 @@ Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR 
 	this->headTex = t->getBlockTextureID("grabber.dds");
 	this->ropeTex = t->getBlockTextureID("rope.dds");
 	this->cogTex = t->getBlockTextureID("cog.dds");
-}
-
-void Piston::fillModifyingMap(ModifyerBase& modifier) {
-	Activity::fillModifyingMap(modifier);
-	modifier.modifyables["headdirection"] = std::make_unique<ModifyableDIR<Piston>>(&Piston::headDir);
-	modifier.modifyables["child"] = std::make_unique<ModifyableFuncWeakRef<Piston, Anchor>>(&Piston::addChild, &Piston::child);
-}
-
-void Piston::modifyMember(GameState& gameState, std::string& name, std::vector<std::string>& value) {
-	auto& modifyer = Locator<Modifyer<Piston>>::get()->modifyables;
-	if (modifyer.count(name) != 0) {
-		modifyer[name]->modify(this, gameState, value);
-	}
-}
-
-std::stringstream& Piston::getMembers(std::stringstream& out) {
-	out << "^ Piston members: ^\n";
-	for (auto& member : Locator<Modifyer<Piston>>::get()->modifyables) {
-		out << member.first << ": ";
-		member.second->toStream(this, out) << "\n";
-	}
-	out << "v Piston members: v\n";
-	return out;
 }
 
 Activity::TYPE Piston::getType() {

@@ -56,9 +56,6 @@
     <Filter Include="Game\StaticWorld\Activities\Utils">
       <UniqueIdentifier>{02a7e6b1-78ab-435f-bacd-cc211a963a75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Modifyables">
-      <UniqueIdentifier>{cda8b4b0-4ef2-4744-a65a-ed07629fb5b7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Memory\Data\Managers">
       <UniqueIdentifier>{933b8fc8-b481-43a3-921a-70454ad798e0}</UniqueIdentifier>
     </Filter>
@@ -208,12 +205,6 @@
     <ClCompile Include="Loader.cpp">
       <Filter>Game\Serial</Filter>
     </ClCompile>
-    <ClCompile Include="Modifyables.cpp">
-      <Filter>Game\Modifyables</Filter>
-    </ClCompile>
-    <ClCompile Include="ModifyingInterface.cpp">
-      <Filter>Game\Modifyables</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManagerModel.cpp">
       <Filter>Memory\Data\Managers\Models</Filter>
     </ClCompile>
@@ -274,9 +265,6 @@
     <ClCompile Include="Bam.cpp" />
     <ClCompile Include="RailCrane.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="InitModifyables.cpp">
-      <Filter>Program Control\Inits</Filter>
     </ClCompile>
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
@@ -503,12 +491,6 @@
     <ClInclude Include="Loader.h">
       <Filter>Game\Serial</Filter>
     </ClInclude>
-    <ClInclude Include="Modifyables.h">
-      <Filter>Game\Modifyables</Filter>
-    </ClInclude>
-    <ClInclude Include="ModifyingInterface.h">
-      <Filter>Game\Modifyables</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManagerModel.h">
       <Filter>Memory\Data\Managers\Models</Filter>
     </ClInclude>
@@ -569,9 +551,6 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="RailCrane.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="InitModifyables.h">
-      <Filter>Program Control\Inits</Filter>
     </ClInclude>
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>

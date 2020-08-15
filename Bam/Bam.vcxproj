@@ -289,7 +289,6 @@
     <ClCompile Include="GLEnableWrapper.cpp" />
     <ClCompile Include="Grouper.cpp" />
     <ClCompile Include="InitManagers.cpp" />
-    <ClCompile Include="InitModifyables.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Loader.cpp" />
@@ -299,8 +298,6 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
     <ClCompile Include="ModelStore.cpp" />
-    <ClCompile Include="Modifyables.cpp" />
-    <ClCompile Include="ModifyingInterface.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="PassThroughRenderer.cpp" />
     <ClCompile Include="PathManager.cpp" />
@@ -387,13 +384,10 @@
     <ClInclude Include="GLEnableWrapper.h" />
     <ClInclude Include="Grouper.h" />
     <ClInclude Include="InitManagers.h" />
-    <ClInclude Include="InitModifyables.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
-    <ClInclude Include="Modifyables.h" />
-    <ClInclude Include="ModifyingInterface.h" />
     <ClInclude Include="PassThroughRenderer.h" />
     <ClInclude Include="PeriodAverage.h" />
     <ClInclude Include="Piston.h" />
