@@ -6,6 +6,13 @@
 #include "UIOConstrainSize.h"
 #include "UIOColoredBackground.h"
 #include "UIOButton.h"
+#include "UIOWindow.h"
+#include "UIOList.h"
+#include "UIOConstructButtons.h"
+#include "UIOTextDisplay.h"
+#include "UIOTextConstructers.h"
+#include "UIOFreeSize.h"
+#include "Rectangle.h"
 
 template<class T>
 class UIOConstructer
@@ -38,6 +45,11 @@ public:
 
 	template<class ...Args>
 	static UIOConstructer<T> makeConstructer(Args&& ...args);
+
+	UIOConstructer(UIOConstructer&& other);
+	UIOConstructer& operator=(UIOConstructer&& other);
+
+	NOCOPY(UIOConstructer);
 };
 
 template<class T>
@@ -47,7 +59,7 @@ inline UIOConstructer<T>::UIOConstructer(UniqueReference<UIOBase, T> obj) {
 
 template<class T>
 inline UIOConstructer<T>& UIOConstructer<T>::setPtr(T*& ptr) {
-	ptr = object.get();
+	ptr = this->object.get();
 	return *this;
 }
 
@@ -145,6 +157,19 @@ inline UIOConstructer<UIOButton>& UIOConstructer<T>::onPress(CallBack f) {
 template<class T>
 inline UniqueReference<UIOBase, T> UIOConstructer<T>::get() {
 	return std::move(this->object);
+}
+
+template<class T>
+inline UIOConstructer<T>::UIOConstructer(UIOConstructer&& other) {
+	this->object = std::move(other.object);
+}
+
+template<class T>
+inline UIOConstructer<T>& UIOConstructer<T>::operator=(UIOConstructer&& other) {
+	if (this != &other) {
+		this->object = std::move(other.object);
+	}
+	return *this;
 }
 
 template<class T>

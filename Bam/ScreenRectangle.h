@@ -1,4 +1,7 @@
 #pragma once
+
+struct Rectangle;
+
 struct ScreenRectangle
 {
 	glm::ivec2 screenPixels;
@@ -11,6 +14,7 @@ struct ScreenRectangle
 	void scaleAnchorTopLeft(glm::vec2 s);
 
 	void set(glm::vec2 p1, glm::vec2 p2);
+	void set(Rectangle rec);
 
 	void setTopLeft(glm::vec2 p);
 	void setBottomRight(glm::vec2 p);

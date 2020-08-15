@@ -16,3 +16,4 @@ ScreenRectangle UIOFreeSize::updateSize(ScreenRectangle newScreenRectangle) {
 	}
 	return this->screenRectangle;
 }
+

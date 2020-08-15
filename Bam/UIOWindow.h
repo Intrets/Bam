@@ -6,6 +6,17 @@
 class UIOWindow : public UIOBase
 {
 public:
+	enum TYPE
+	{
+		MINIMISE,
+		CLOSE,
+		RESIZE,
+		RESIZEHORIZONTAL,
+		RESIZEVERTICAL,
+		MOVE,
+	};
+
+
 	UIOBase* main;
 	UIOBase* topBarPtr;
 
@@ -14,6 +25,8 @@ public:
 	glm::vec2 mousePressedPosOffset;
 
 	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title);
+	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_);
+	UIOWindow(Handle self);
 	UIOWindow() = default;
 	virtual ~UIOWindow() = default;
 

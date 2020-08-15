@@ -341,7 +341,7 @@ inline UniqueReference<B, T>::~UniqueReference() {
 template<class B, class T>
 template<class N>
 inline UniqueReference<B, T>::UniqueReference(UniqueReference<B, N>&& other) {
-	WeakReferenceBase::handle = other.handle;
+	this->handle = other.handle;
 	other.handle = 0;
 }
 
@@ -353,8 +353,8 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B
 			return *this;
 		}
 	}
-	WeakReference<B, T>::deleteObject();
-	WeakReference<B, T>::handle = other.handle;
+	this->deleteObject();
+	this->handle = other.handle;
 	other.handle = 0;
 	return *this;
 }

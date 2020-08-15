@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "ScreenRectangle.h"
+#include "Rectangle.h"
 
 glm::vec2 ScreenRectangle::getTopLeft() {
 	return glm::vec2(this->bot.x, this->top.y);
@@ -56,6 +57,11 @@ void ScreenRectangle::scaleAnchorTopLeft(glm::vec2 s) {
 void ScreenRectangle::set(glm::vec2 p1, glm::vec2 p2) {
 	this->bot = glm::min(p1, p2);
 	this->top = glm::max(p1, p2);
+}
+
+void ScreenRectangle::set(Rectangle rec) {
+	this->bot = rec.bot;
+	this->top = rec.top;
 }
 
 void ScreenRectangle::setTopLeft(glm::vec2 p) {

@@ -12,9 +12,9 @@
 #include <GLM/gtx/transform.hpp>
 #pragma warning(pop)
 
-#define NOCOPYMOVE(T) T(const T&) = delete; T(T&&) = delete; T& operator=(const T&) = delete; T& operator=(T&&) = delete;
 #define NOCOPY(T) T(const T&) = delete; T& operator=(const T&) = delete;
-
+#define NOMOVE(T) T(T&&) = delete; T& operator=(T&&) = delete;
+#define NOCOPYMOVE(T) NOCOPY(T) NOMOVE(T)
 
 #define MAX_STATIC_DRAW 1000000 
 

@@ -252,41 +252,40 @@ void Text::moveCursor(glm::ivec2 p) {
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
 	}
-	else {
-		auto maybeCursorQuad = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
-		if (maybeCursorQuad.has_value()) {
-			glm::vec4& cursorQuad = maybeCursorQuad.value();
-			Rectangle cursorRect;
-			cursorRect.bot = glm::vec2(cursorQuad[0], cursorQuad[1]);
-			cursorRect.top = cursorRect.bot + glm::vec2(cursorQuad[2], cursorQuad[3]);
 
-			Rectangle viewRect;
-			viewRect.bot = glm::vec2(-1.0f) + this->view;
-			viewRect.top = glm::vec2(1.0f) + this->view;
+	auto maybeCursorQuad = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
+	if (maybeCursorQuad.has_value()) {
+		glm::vec4& cursorQuad = maybeCursorQuad.value();
+		Rectangle cursorRect;
+		cursorRect.bot = glm::vec2(cursorQuad[0], cursorQuad[1]);
+		cursorRect.top = cursorRect.bot + glm::vec2(cursorQuad[2], cursorQuad[3]);
 
-			float leftDist = cursorRect.getLeft() - viewRect.getLeft();
-			float rightDist = viewRect.getRight() - cursorRect.getRight();
+		Rectangle viewRect;
+		viewRect.bot = glm::vec2(-1.0f) + this->view;
+		viewRect.top = glm::vec2(1.0f) + this->view;
 
-			float botDist = cursorRect.getBot() - viewRect.getBot();
-			float topDist = viewRect.getTop() - cursorRect.getTop();
+		float leftDist = cursorRect.getLeft() - viewRect.getLeft();
+		float rightDist = viewRect.getRight() - cursorRect.getRight();
 
-			if (leftDist < 0.0f) {
-				this->view.x += leftDist;
-			}
-			else if (rightDist < 0.0f) {
-				this->view.x -= rightDist;
-			}
+		float botDist = cursorRect.getBot() - viewRect.getBot();
+		float topDist = viewRect.getTop() - cursorRect.getTop();
 
-			if (botDist < 0.0f) {
-				this->view.y += botDist;
-			}
-			else if (topDist < 0.0f) {
-				this->view.y -= topDist;
-			}
+		if (leftDist < 0.0f) {
+			this->view.x += leftDist;
+		}
+		else if (rightDist < 0.0f) {
+			this->view.x -= rightDist;
 		}
 
-		this->cachedRenderInfo.value().offset = -this->view;
+		if (botDist < 0.0f) {
+			this->view.y += botDist;
+		}
+		else if (topDist < 0.0f) {
+			this->view.y -= topDist;
+		}
 	}
+
+	this->cachedRenderInfo.value().offset = -this->view;
 }
 
 void Text::selectIndex(int32_t index) {
@@ -316,7 +315,7 @@ void Text::addString(std::string text) {
 }
 
 void Text::setString(std::string text) {
-	this->lines = std::vector<std::string>{text};
+	this->lines = std::vector<std::string>{ text };
 	this->invalidateCache();
 }
 

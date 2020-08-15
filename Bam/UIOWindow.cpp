@@ -8,6 +8,9 @@
 #include "UIOList.h"
 #include "UIOConstructButtons.h"
 
+//TODO remove
+#include "RenderInfo.h"
+
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	this->selfHandle = self;
@@ -20,14 +23,16 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	auto [close, closePtr_] = constructButtonWithText("x", glm::ivec2(20, 20), 1);
 	auto closePtr = closePtr_;
 
-	closePtr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	closePtr->onPress = [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
 		return BIND_RESULT::CLOSE;
 	};
 
 	topBar.get()->addElement(std::move(close));
 
 	auto [minimize, minimizePtr_] = constructButtonWithText("_", glm::ivec2(20, 20), 1);
-	minimizePtr_->onPress = ([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+	minimizePtr_->onPress = ([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
 		this->minimized = !this->minimized;
 		return BIND_RESULT::CONTINUE;
 	});
@@ -51,12 +56,14 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 
 	this->addElement(std::move(mainPad));
 
-	auto setMoveOrigin = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto setMoveOrigin = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		this->mousePressedPosOffset = this->screenRectangle.getTopLeft() - state.uiState.getCursorPositionScreen();
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto move = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto move = [=](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		if (titleBarPtr->down) {
 			this->moveTopLeftTo(state.uiState.getCursorPositionScreen() + this->mousePressedPosOffset);
 		}
@@ -100,7 +107,8 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	addElement(std::move(cornerConstrain));
 
 
-	auto scaleVertical = [this, bottomBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto scaleVertical = [this, bottomBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		if (bottomBarPtr->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.y = state.uiState.getCursorPositionScreen().y;
@@ -113,7 +121,8 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleHorizontal = [this, rightBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto scaleHorizontal = [this, rightBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		if (rightBarPtr->down) {
 			auto bottomRight = this->screenRectangle.getBottomRight();
 			bottomRight.x = state.uiState.getCursorPositionScreen().x;
@@ -126,7 +135,8 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 		return BIND_RESULT::CONTINUE;
 	};
 
-	auto scaleDiagonal = [this, cornerBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	auto scaleDiagonal = [this, cornerBarPtr](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		if (cornerBarPtr->down) {
 			auto bottomRight = state.uiState.getCursorPositionScreen();
 			if (bottomRight.x - this->screenRectangle.bot.x < 0.2f) {
@@ -149,6 +159,15 @@ UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::
 	this->topBarPtr->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, setMoveOrigin);
 }
 
+UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
+	this->selfHandle = self;
+	this->main = main_.get();
+}
+
+UIOWindow::UIOWindow(Handle self) {
+	this->selfHandle = self;
+}
+
 ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
 
@@ -159,6 +178,7 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, glm::vec4(0.5f) , 100);
 	if (minimized) {
 		return topBarPtr->addRenderInfo(gameState, renderInfo, depth + 1);
 	}

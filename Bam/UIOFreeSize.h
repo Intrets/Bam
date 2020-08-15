@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
+#include "Rectangle.h"
 
 class UIOFreeSize : public UIOBase
 {

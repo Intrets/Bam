@@ -349,7 +349,24 @@ UIState::UIState() {
 
 	// lua test window
 	{
-		auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+		UIOList* listPtr;
+		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
+			.setPtr(listPtr)
+			.get();
+
+		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(window), "lua test");
+		test2.get()->screenRectangle.setWidth(0.4f);
+		test2.get()->screenRectangle.setHeight(1.7f);
+		test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
+
+		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		test3.get()->updateSize(r);
+
+		this->UIs.push_back(std::move(test3));
+
+		//this->UIs.push_back(std::move(window));
 
 		{
 			UIOGrid* dirsPtr;
@@ -415,19 +432,28 @@ UIState::UIState() {
 				}
 			}
 
-			list.get()->addElement(std::move(dirs));
+			listPtr->addElement(std::move(dirs));
 		}
 
-		auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "lua test");
-		test2.get()->screenRectangle.setWidth(0.4f);
-		test2.get()->screenRectangle.setHeight(1.7f);
-		test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
+		{
+			auto luaEditor = constructTextEdit("99999999999999999999999999")
+				.background(COLORS::BACKGROUND)
+				.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f))
+				.get();
 
-		auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+			listPtr->addElement(std::move(luaEditor));
+		}
 
-		test3.get()->updateSize(r);
+		//auto test2 = refMan->makeUniqueRef<UIOWindow>(std::move(list), "lua test");
+		//test2.get()->screenRectangle.setWidth(0.4f);
+		//test2.get()->screenRectangle.setHeight(1.7f);
+		//test2.get()->screenRectangle.translate({ 1.0f - 0.4f, 1.0f });
 
-		this->UIs.push_back(std::move(test3));
+		//auto test3 = refMan->makeUniqueRef<UIOFreeSize>(std::move(test2));
+
+		//test3.get()->updateSize(r);
+
+		//this->UIs.push_back(std::move(test3));
 	}
 
 	// wasd movement in world
