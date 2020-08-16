@@ -48,6 +48,16 @@ bool PathManager::openSave(std::ofstream& file, std::string name) {
 	return file.is_open();
 }
 
+bool PathManager::openLUA(std::ifstream& file, std::string name) {
+	file.open(this->paths[RESOURCE_PATH::LUA] + name);
+	return file.is_open();
+}
+
+bool PathManager::openLUA(std::ofstream& file, std::string name) {
+	file.open(this->paths[RESOURCE_PATH::LUA] + name);
+	return file.is_open();
+}
+
 PathManager::PathManager() {
 	std::string r = "C:/Users/Intrets/source/Repos/Bam/Bam/";
 	this->paths[RESOURCE_PATH::CONFIG] = r + "config/";
@@ -56,6 +66,7 @@ PathManager::PathManager() {
 	this->paths[RESOURCE_PATH::SAVE] = r + "saves/";
 	this->files[RESOURCE_FILE::OPTIONS] = r + "config/options.txt";
 	this->paths[RESOURCE_PATH::FONTS] = r + "Resources/";
+	this->paths[RESOURCE_PATH::LUA] = r + "saves/LUA/";
 }
 
 PathManager::~PathManager() {

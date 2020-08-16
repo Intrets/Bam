@@ -33,6 +33,7 @@
 
 #include "ActivityLuaTest.h"
 #include "UIOActivityLuaTest.h"
+#include <fstream>
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -187,7 +188,7 @@ UIState::UIState() {
 		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
 		{
 			UIOTextDisplay* ptr;
-			auto text = constructDisplayText("").setPtr(ptr)
+			auto text = TextConstructer::constructDisplayText("").setPtr(ptr)
 				.addBind([](UIOTextDisplay* ptr)
 			{
 				ptr->addGlobalBind(
@@ -214,7 +215,7 @@ UIState::UIState() {
 		}
 		{
 			UIOTextDisplay* textPtr;
-			auto text = constructSingleLineTextEdit("test.save").setPtr(textPtr)
+			auto text = TextConstructer::constructSingleLineTextEdit("test.save").setPtr(textPtr)
 				.background(COLORS::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
@@ -274,7 +275,7 @@ UIState::UIState() {
 		}
 		{
 			UIOButton* ptr;
-			auto a = constructSingleLineDisplayText("Debug Render")
+			auto a = TextConstructer::constructSingleLineDisplayText("Debug Render")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
 				.button()
 				.setPtr(ptr)
@@ -296,7 +297,7 @@ UIState::UIState() {
 		}
 		{
 			UIOButton* ptr;
-			auto a = constructSingleLineDisplayText("Toggle Seperate Render Thread")
+			auto a = TextConstructer::constructSingleLineDisplayText("Toggle Seperate Render Thread")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
 				.button()
 				.setPtr(ptr)
@@ -324,7 +325,7 @@ UIState::UIState() {
 			);
 		}
 		{
-			auto a = constructDisplayText("")
+			auto a = TextConstructer::constructDisplayText("")
 				.addBaseBind(UIOBinds::Base::activatable)
 				.addBind([](UIOTextDisplay* ptr)
 			{
@@ -378,7 +379,7 @@ UIState::UIState() {
 			{
 				UIOTextDisplay* textPtr;
 
-				auto text = constructSingleLineTextEdit("1")
+				auto text = TextConstructer::constructSingleLineTextEdit("1")
 					.setPtr(textPtr)
 					.background(COLORS::BACKGROUND)
 					.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
@@ -394,7 +395,7 @@ UIState::UIState() {
 					 }) {
 					Activity::DIR dir = dir_;
 					UIOButton* ptr;
-					auto a = constructSingleLineDisplayText(buttonName)
+					auto a = TextConstructer::constructSingleLineDisplayText(buttonName)
 						.align(UIOConstrainSize::ALIGNMENT::CENTER)
 						.button()
 						.setPtr(ptr)
@@ -436,13 +437,48 @@ UIState::UIState() {
 
 		UIOTextDisplay* luaTextPtr;
 		{
-			auto luaEditor = constructTextEdit("test(h ,1)")
+			auto luaEditor = TextConstructer::constructTextEdit("test(h ,1)")
 				.setPtr(luaTextPtr)
 				.background(COLORS::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f))
 				.get();
 
 			listPtr->addElement(std::move(luaEditor));
+		}
+
+		// list of vars to be watched
+		UIOTextDisplay* watchTextPtr;
+		// text window to display watched vars
+		UIOTextDisplay* displayTextPtr;
+		// name of .lua file
+		UIOTextDisplay* fileTextPtr;
+
+		{
+			UIOGrid* watchGridPtr;
+			auto watchGrid = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(2, 1))
+				.setPtr(watchGridPtr)
+				.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.9f))
+				.get();
+
+			{
+				watchGridPtr->addElement(
+					TextConstructer::constructTextEdit("")
+					.setPtr(watchTextPtr)
+					.background(COLORS::BACKGROUND)
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.get()
+				);
+
+				watchGridPtr->addElement(
+					TextConstructer::constructDisplayText("")
+					.setPtr(displayTextPtr)
+					.background(COLORS::BACKGROUND)
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.get()
+				);
+			}
+
+			listPtr->addElement(std::move(watchGrid));
 		}
 
 		{
@@ -453,16 +489,35 @@ UIState::UIState() {
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
+			auto fileText =
+				TextConstructer::constructSingleLineTextEdit("")
+				.setPtr(fileTextPtr)
+				.background(COLORS::BACKGROUND)
+				.get();
+
 			listPtr->addElement(std::move(luaControl));
 
 			{
 				// Load
 				luaControlPtr->addElement(
-					constructSingleLineDisplayText("Load")
+					TextConstructer::constructSingleLineDisplayText("Load")
 					.align(UIOConstrainSize::ALIGNMENT::CENTER)
 					.button()
-					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+					.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
+					std::string name = fileTextPtr->text.lines.front();
+					name.resize(name.size() - 1);
+
+					std::ifstream file;
+					Locator<PathManager>::ref().openLUA(file, name);
+
+					luaTextPtr->setText("");
+
+					std::string line;
+					while (std::getline(file, line)) {
+						luaTextPtr->text.addLine(line);
+					}
+
 					return BIND_RESULT::CONTINUE;
 				})
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
@@ -471,11 +526,24 @@ UIState::UIState() {
 
 				// Save
 				luaControlPtr->addElement(
-					constructSingleLineDisplayText("Save")
+					TextConstructer::constructSingleLineDisplayText("Save")
 					.align(UIOConstrainSize::ALIGNMENT::CENTER)
 					.button()
-					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+					.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
+					std::string name = fileTextPtr->text.lines.front();
+					name.resize(name.size() - 1);
+
+					std::ofstream file;
+
+					Locator<PathManager>::ref().openLUA(file, name);
+
+					for (auto& line : luaTextPtr->text.lines) {
+						file << line;
+					}
+
+					file.close();
+
 					return BIND_RESULT::CONTINUE;
 				})
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
@@ -484,7 +552,7 @@ UIState::UIState() {
 
 				// Run
 				luaControlPtr->addElement(
-					constructSingleLineDisplayText("Run")
+					TextConstructer::constructSingleLineDisplayText("Run")
 					.align(UIOConstrainSize::ALIGNMENT::CENTER)
 					.button()
 					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -500,12 +568,70 @@ UIState::UIState() {
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 
-				// File Name Field
+				// Read Vars
 				luaControlPtr->addElement(
-					constructSingleLineTextEdit("")
-					.background(COLORS::BACKGROUND)
-					.get()
-				);
+					TextConstructer::constructSingleLineDisplayText("Vars")
+					.align(UIOConstrainSize::ALIGNMENT::CENTER)
+					.button()
+					.onRelease([luaTestPtr, watchTextPtr, displayTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				{
+					displayTextPtr->text.setLines({ "Watched variables: ", "" });
+					for (auto line : watchTextPtr->text.lines) {
+						if (line.size() < 2) {
+							return BIND_RESULT::CONTINUE;
+						}
+						line.resize(line.size() - 1);
+
+						sol::object object = luaTestPtr->lua.state[line];
+						auto type = object.get_type();
+						std::string out = "invalid";
+
+						switch (type) {
+							case sol::type::none:
+								break;
+							case sol::type::lua_nil:
+								break;
+							case sol::type::string:
+								out = object.as<std::string>();
+								break;
+							case sol::type::number:
+								if (object.is<int>()) {
+									out = std::to_string(object.as<int32_t>());
+								}
+								else {
+									out = std::to_string(object.as<double>());
+								}
+								break;
+							case sol::type::thread:
+								break;
+							case sol::type::boolean:
+								out = object.as<bool>() ? "true" : "false";
+								break;
+							case sol::type::function:
+								break;
+							case sol::type::userdata:
+								break;
+							case sol::type::lightuserdata:
+								break;
+							case sol::type::table:
+								break;
+							case sol::type::poly:
+								break;
+							default:
+								break;
+						}
+
+						displayTextPtr->text.addLine(line + ": " + out);
+					}
+
+					return BIND_RESULT::CONTINUE;
+				})
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
+					.get());
+
+				// File Name Field
+				luaControlPtr->addElement(std::move(fileText));
 			}
 		}
 	}

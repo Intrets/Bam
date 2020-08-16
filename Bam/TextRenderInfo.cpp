@@ -239,7 +239,12 @@ void Text::moveCursor(glm::ivec2 p) {
 	this->cursor += p;
 	this->cursor = glm::max(this->cursor, glm::ivec2(0));
 
-	this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 2));
+	if (this->lines.size() == 1) {
+		this->cursor.y = 0;
+	}
+	else {
+		this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 2));
+	}
 	this->cursor.x = glm::min(this->cursor.x, static_cast<int32_t>(this->lines[this->cursor.y].size()) - 1);
 
 	if (this->cursor.y < previous.y) {

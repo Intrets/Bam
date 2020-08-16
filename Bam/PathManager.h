@@ -24,6 +24,7 @@ public:
 		SHADERS,
 		SAVE,
 		FONTS,
+		LUA,
 	};
 
 	GLuint LoadFont(std::string name);
@@ -36,6 +37,9 @@ public:
 	bool openFile(std::ofstream& file, RESOURCE_FILE t);
 	bool openSave(std::ifstream& file, std::string name);
 	bool openSave(std::ofstream& file, std::string name);
+
+	bool openLUA(std::ifstream& file, std::string name);
+	bool openLUA(std::ofstream& file, std::string name);
 
 	PathManager();
 	~PathManager();

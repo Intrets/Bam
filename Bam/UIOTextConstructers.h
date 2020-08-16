@@ -6,12 +6,13 @@
 template<class>
 class UIOConstructer;
 
-UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text);
+namespace TextConstructer
+{
+	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text);
 
-UIOConstructer<UIOTextDisplay> constructSingleLineTextEdit(std::string text);
+	UIOConstructer<UIOTextDisplay> constructSingleLineTextEdit(std::string text);
 
-UIOConstructer<UIOTextDisplay> constructDisplayText(std::string text);
+	UIOConstructer<UIOTextDisplay> constructDisplayText(std::string text);
 
-UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text, bool shrink = true);
-
-
+	UIOConstructer<UIOTextDisplay> constructSingleLineDisplayText(std::string text, bool shrink = true);
+}

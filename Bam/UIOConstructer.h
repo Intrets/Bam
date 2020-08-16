@@ -295,7 +295,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	windowPtr->addElement(std::move(topBar));
 
 	if (types & UIOWindow::TYPE::CLOSE) {
-		auto close = constructSingleLineDisplayText("x")
+		auto close = TextConstructer::constructSingleLineDisplayText("x")
 			.align(UIOConstrainSize::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -311,7 +311,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	}
 
 	if (types & UIOWindow::TYPE::MINIMISE) {
-		auto close = constructSingleLineDisplayText("_")
+		auto close = TextConstructer::constructSingleLineDisplayText("_")
 			.align(UIOConstrainSize::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -329,7 +329,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 	UIOButton* titleBarPtr;
 	if (types & UIOWindow::TYPE::MOVE) {
-		auto titleBar = constructSingleLineDisplayText(title)
+		auto titleBar = TextConstructer::constructSingleLineDisplayText(title)
 			.button()
 			.addFocussedBind(
 				{ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
@@ -347,7 +347,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		topList->addElement(std::move(titleBar));
 	}
 	else {
-		auto titleBar = constructSingleLineDisplayText(title, false)
+		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
 			.background(COLORS::FOREGROUND)
 			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 			.get();
