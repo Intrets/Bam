@@ -29,6 +29,9 @@
 #include "UIOColoredBackground.h"
 #include "UIOConstructer.h"
 #include "UIOBinds.h"
+#include "StringHelpers.h"
+
+#include "ActivityLuaTest.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -425,13 +428,32 @@ UIState::UIState() {
 			listPtr->addElement(std::move(dirs));
 		}
 
+		UIOTextDisplay* luaTextPtr;
 		{
-			auto luaEditor = constructTextEdit("99999999999999999999999999")
+			auto luaEditor = constructTextEdit("test(h ,1)")
+				.setPtr(luaTextPtr)
 				.background(COLORS::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f))
 				.get();
 
 			listPtr->addElement(std::move(luaEditor));
+		}
+
+		{
+			auto run = constructSingleLineDisplayText("Run LUA test", true)
+				.button()
+				.onRelease([luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				if (params.player.selection.target.isValid()) {
+					ActivityLuaTest test;
+					test.runScript(params.gameState, params.player.selection.target.handle);
+					test.state.script(join(luaTextPtr->text.lines));
+				}
+				return BIND_RESULT::CONTINUE;
+			})
+				.get();
+
+			listPtr->addElement(std::move(run));
 		}
 	}
 

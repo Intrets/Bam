@@ -63,16 +63,12 @@ static std::string getNameString(sol::object& object) {
 };
 
 bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
-	return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
+	return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 10);
 }
 
-void ActivityLuaTest::runScript(GameState& gameState) {
-	//if (!target.isValid()) {
-	//	Locator<Log>::ref() << "no target\n";
-	//	return;
-	//}
-	//gameStateRef = &gameState;
-	//state["h"] = target.handle;
+void ActivityLuaTest::runScript(GameState& gameState, Handle h) {
+	gameStateRef = &gameState;
+	state["h"] = h;
 }
 
 void ActivityLuaTest::save(Saver& saver) {
@@ -110,6 +106,12 @@ void ActivityLuaTest::load(Loader& loader) {
 ActivityLuaTest::ActivityLuaTest() {
 	state.open_libraries(sol::lib::base, sol::lib::table);
 	state.script("");
+	//state.set_function("test", &ActivityLuaTest::applyActivity, *this);
+	state.set_function("test", [this](Handle h, int32_t type) -> bool
+	{
+		std::cout << h << " " << type << " ------------------\n";
+		return this->applyActivity(h, type);
+	});
 
 	for (auto& test : state) {
 		ignore.insert(getNameString(test.first));

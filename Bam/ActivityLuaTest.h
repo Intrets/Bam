@@ -21,7 +21,7 @@ public:
 
 	bool applyActivity(Handle h, int32_t type);
 
-	void runScript(GameState& gameState);
+	void runScript(GameState& gameState, Handle h);
 	void save(Saver& saver);
 	void load(Loader& loader);
 

@@ -377,10 +377,13 @@
     <ClCompile Include="Colors.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOTextConstructers.cpp">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
+    <ClCompile Include="UIOBinds.cpp">
+      <Filter>Game\Logic\User IO Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -666,9 +669,11 @@
     <ClInclude Include="Colors.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOTextConstructers.h">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOBinds.h">
+      <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
