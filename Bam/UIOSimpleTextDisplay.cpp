@@ -14,7 +14,7 @@ ScreenRectangle UIOSimpleTextDisplay::updateSize(ScreenRectangle newScreenRectan
 }
 
 int32_t UIOSimpleTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, true);
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, true, 0, false);
 	return depth;
 }
 

@@ -7,6 +7,7 @@ class UIOTextDisplay : public UIOBase
 {
 private:
 	bool lineWrap;
+	int32_t ticksSelected;
 
 public:
 	Text text;

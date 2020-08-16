@@ -13,7 +13,7 @@ namespace UIOBinds
 			ptr->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				if (!ptr->screenRectangle.contains(params.uiState.getCursorPositionScreen())) {
-					ptr->active = false;
+					ptr->deactivate();
 					return BIND_RESULT::CONTINUE;
 				}
 				return BIND_RESULT::CONTINUE;
@@ -21,7 +21,7 @@ namespace UIOBinds
 
 			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
-				ptr->active = true;
+				ptr->activate();
 				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
 			});
 		}

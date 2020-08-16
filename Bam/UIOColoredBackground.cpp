@@ -22,7 +22,7 @@ ScreenRectangle UIOColoredBackground::updateSize(ScreenRectangle newScreenRectan
 }
 
 int32_t UIOColoredBackground::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	depth = this->main->addRenderInfo(gameState, renderInfo, depth + 1);
+	depth = this->main->addRenderInfo(gameState, renderInfo, depth);
 	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, this->color, depth++);
 	return depth;
 }

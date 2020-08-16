@@ -384,6 +384,7 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
     <ClCompile Include="StringHelpers.cpp" />
+    <ClCompile Include="UIOActivityLuaTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -675,6 +676,7 @@
     <ClInclude Include="UIOBinds.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="UIOActivityLuaTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

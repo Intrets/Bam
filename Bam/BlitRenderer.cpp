@@ -9,6 +9,7 @@ void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& wo
 
 	GLEnabler glEnabler;
 	glEnabler.enable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->offset.set(offset_);
 

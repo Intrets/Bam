@@ -45,7 +45,7 @@ public:
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
 	UIOConstructer<UIOConstrainSize> align(UIOConstrainSize::ALIGNMENT align);
 	UIOConstructer<UIOColoredBackground> background(glm::vec4 color);
-	UIOConstructer<UIOButton> button();
+	UIOConstructer<UIOButton> button(bool shrink = false);
 	UIOConstructer<UIOFreeSize> window(std::string title, Rectangle size, int32_t types);
 	UIOConstructer<UIOFreeSize> free();
 
@@ -257,8 +257,8 @@ inline UIOConstructer<UIOColoredBackground> UIOConstructer<T>::background(glm::v
 }
 
 template<class T>
-inline UIOConstructer<UIOButton> UIOConstructer<T>::button() {
-	return UIOConstructer<UIOButton>::makeConstructer(std::move(this->object));
+inline UIOConstructer<UIOButton> UIOConstructer<T>::button(bool shrink) {
+	return UIOConstructer<UIOButton>::makeConstructer(std::move(this->object), shrink);
 }
 
 template<class T>

@@ -106,34 +106,16 @@ void ActivityLuaTest::load(Loader& loader) {
 ActivityLuaTest::ActivityLuaTest() {
 	state.open_libraries(sol::lib::base, sol::lib::table);
 	state.script("");
-	//state.set_function("test", &ActivityLuaTest::applyActivity, *this);
 	state.set_function("test", [this](Handle h, int32_t type) -> bool
 	{
-		std::cout << h << " " << type << " ------------------\n";
 		return this->applyActivity(h, type);
 	});
 
 	for (auto& test : state) {
 		ignore.insert(getNameString(test.first));
 	}
-
-	//addBind({ CONTROLS::ACTION3, CONTROLSTATE::CONTROLSTATE_PRESSED }, [](GameState& gameState, LogicSequencer* self_) {
-	//	auto self = static_cast<ActivityLuaTest*>(self_);
-	//	self->runScript(gameState);
-	//	return std::make_pair(CONTINUATION::CONTINUE, std::nullopt);
-	//});
 }
 
 void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
-	//ActivitySelector::appendRenderInfoInternal(gameState, renderInfo);
-	renderInfo.uiRenderInfo.addRectangle({ 1,1 }, { 0.5,-1 }, { 0,0,0,1 });
-	std::vector<std::string> lines;
-	split(0, text, lines, '\n');
-
-	//renderInfo.textRenderInfo.addTexts(
-	//	*renderInfo.textRenderInfo.textRendererRef,
-	//	renderInfo.cameraInfo,
-	//	{ 0.5,1 }, 0, 20, lines
-	//);
 }
 

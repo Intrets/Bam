@@ -7,22 +7,26 @@
 #include "Colors.h"
 
 UIOButton::UIOButton(Handle self) {
-	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		return BIND_RESULT::CONTINUE;
 	};
 
-	this->onRelease = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->onRelease = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		return BIND_RESULT::CONTINUE;
 	};
 
 	this->selfHandle = self;
 
-	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		this->down = true;
 		return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 	});
 
-	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult {
+	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	{
 		if (this->down) {
 			this->down = false;
 			return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;
@@ -38,9 +42,17 @@ UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) : UIOB
 	this->addElement(std::move(main));
 }
 
+UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main, bool shrink) :
+	UIOButton(self, std::move(main)) {
+	this->shrinkToFit = shrink;
+}
+
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 	if (this->maybeMain) {
-		this->maybeMain.value()->updateSize(newScreenRectangle);
+		auto temp = this->maybeMain.value()->updateSize(newScreenRectangle);
+		if (this->shrinkToFit) {
+			newScreenRectangle = temp;
+		}
 	}
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;

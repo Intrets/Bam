@@ -32,6 +32,7 @@
 #include "StringHelpers.h"
 
 #include "ActivityLuaTest.h"
+#include "UIOActivityLuaTest.h"
 
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
@@ -361,6 +362,11 @@ UIState::UIState() {
 
 		this->UIs.push_back(std::move(window));
 
+		auto luaTest = UIOConstructer<UIOActivityLuaTest>::makeConstructer().get();
+		auto luaTestPtr = luaTest.get();
+
+		listPtr->addElement(std::move(luaTest));
+
 		{
 			UIOGrid* dirsPtr;
 			auto dirs = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(5, 1))
@@ -440,20 +446,67 @@ UIState::UIState() {
 		}
 
 		{
-			auto run = constructSingleLineDisplayText("Run LUA test", true)
-				.button()
-				.onRelease([luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				if (params.player.selection.target.isValid()) {
-					ActivityLuaTest test;
-					test.runScript(params.gameState, params.player.selection.target.handle);
-					test.state.script(join(luaTextPtr->text.lines));
-				}
-				return BIND_RESULT::CONTINUE;
-			})
+			UIOList* luaControlPtr;
+			auto luaControl = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::LEFT)
+				.setPtr(luaControlPtr)
+				.padTop(UIOSizeType(UIOSizeType::PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			listPtr->addElement(std::move(run));
+			listPtr->addElement(std::move(luaControl));
+
+			{
+				// Load
+				luaControlPtr->addElement(
+					constructSingleLineDisplayText("Load")
+					.align(UIOConstrainSize::ALIGNMENT::CENTER)
+					.button()
+					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				{
+					return BIND_RESULT::CONTINUE;
+				})
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
+					.get());
+
+				// Save
+				luaControlPtr->addElement(
+					constructSingleLineDisplayText("Save")
+					.align(UIOConstrainSize::ALIGNMENT::CENTER)
+					.button()
+					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				{
+					return BIND_RESULT::CONTINUE;
+				})
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
+					.get());
+
+				// Run
+				luaControlPtr->addElement(
+					constructSingleLineDisplayText("Run")
+					.align(UIOConstrainSize::ALIGNMENT::CENTER)
+					.button()
+					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				{
+					if (params.player.selection.target.isValid()) {
+
+						luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.handle);
+						luaTestPtr->lua.state.script(join(luaTextPtr->text.lines));
+					}
+					return BIND_RESULT::CONTINUE;
+				})
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
+					.get());
+
+				// File Name Field
+				luaControlPtr->addElement(
+					constructSingleLineTextEdit("")
+					.background(COLORS::BACKGROUND)
+					.get()
+				);
+			}
 		}
 	}
 

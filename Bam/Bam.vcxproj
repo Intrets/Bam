@@ -309,6 +309,7 @@
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
@@ -397,6 +398,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIOActivityLuaTest.h" />
     <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />

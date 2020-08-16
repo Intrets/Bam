@@ -6,6 +6,7 @@
 #include "StringHelpers.h"
 #include "RenderInfo.h"
 #include "Rectangle.h"
+#include "Colors.h"
 
 WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_) {
 	this->screenRectangle = rect;
@@ -142,13 +143,13 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 	this->cachedRenderInfo = textInfo;
 }
 
-int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap) {
+int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor) {
 	if (!cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(screenRectangle, font, wrap);
 	}
-
 	auto& textRenderInfo = cachedRenderInfo.value();
-	textRenderInfo.setDepth(depth);
+
+	textRenderInfo.setDepth(depth++);
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
 
 	if (indexInVector(this->cursorIndex, textRenderInfo.pos)) {
@@ -159,11 +160,15 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 		b *= this->lastScreenRectangle.size();
 
 		a += this->lastScreenRectangle.getBottomLeft();
-		glm::vec2 db = glm::vec2(b.x, b.y / 10);
-		renderInfo.uiRenderInfo.addRectangle(a, a + db, { 1.0f, 0.5f, 0.5f, 0.5f });
+		//glm::vec2 db = glm::vec2(b.x, b.y / 10);
+
+		if (renderCursor && tick % 60 < 30) {
+			renderInfo.uiRenderInfo.addRectangle(a, a + b, COLORS::CURSOR, depth++);
+		}
 	}
 
-	return depth + 1;
+
+	return depth;
 }
 
 bool Text::deleteChar() {

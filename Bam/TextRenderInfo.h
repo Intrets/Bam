@@ -85,7 +85,7 @@ public:
 	void invalidateCache();
 	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap);
 
-	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap);
+	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor);
 
 	bool deleteChar();
 	bool backspaceChar();

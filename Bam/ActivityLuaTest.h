@@ -13,7 +13,6 @@ typedef int32_t Handle;
 class ActivityLuaTest 
 {
 public:
-	std::string text;
 	sol::state state;
 	GameState* gameStateRef;
 

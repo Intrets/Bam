@@ -32,6 +32,8 @@ typedef std::function<CallBackBindResult(UIOCallBackParams& UIOCallBackParams, U
 class UIOBase
 {
 protected:
+	bool active = false;
+
 	Handle selfHandle;
 
 	std::vector<UniqueReference<UIOBase, UIOBase>> elements;
@@ -44,11 +46,12 @@ protected:
 	std::vector<Bind> activeBinds;
 
 public:
-	bool active = false;
-
 	ScreenRectangle screenRectangle;
 
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
+
+	void activate();
+	void deactivate();
 
 	virtual void translate(glm::vec2 p);
 	void setScreenPixels(glm::ivec2 px);

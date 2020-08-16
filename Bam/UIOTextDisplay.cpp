@@ -7,6 +7,7 @@
 #include "TextRenderer.h"
 #include "UIOCallBackParams.h"
 #include "TextRenderInfo.h"
+#include "Colors.h"
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	this->selfHandle = self;
@@ -38,6 +39,7 @@ void UIOTextDisplay::setText(std::vector<std::string> text_) {
 
 void UIOTextDisplay::moveCursor(glm::ivec2 p) {
 	this->text.moveCursor(p);
+	this->ticksSelected = 0;
 }
 
 void UIOTextDisplay::insertText(std::string text_) {
@@ -90,7 +92,17 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, this->lineWrap);
+	int32_t ticks = gameState.tick;
+	if (this->ticksSelected < 30) {
+		ticks = 0;
+	}
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, this->lineWrap, ticks, this->active);
+
+	if (this->active) {
+		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, COLORS::FOCUSSED, depth++);
+
+		this->ticksSelected++;
+	}
 
 	return depth;
 }

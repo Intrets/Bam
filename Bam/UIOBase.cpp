@@ -7,6 +7,14 @@ void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	this->elements.push_back(std::move(element));
 }
 
+void UIOBase::activate() {
+	this->active = true;
+}
+
+void UIOBase::deactivate() {
+	this->active = false;
+}
+
 void UIOBase::translate(glm::vec2 p) {
 	this->screenRectangle.translate(p);
 	//this->updateSize(this->screenRectangle);
