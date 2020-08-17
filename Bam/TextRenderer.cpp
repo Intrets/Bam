@@ -10,6 +10,7 @@
 #include "TextRenderInfo.h"
 #include "BlitRenderer.h"
 #include "Fonts.h"
+#include "Colors.h"
 
 void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint target, CameraInfo& cameraInfo) {
 	for (auto& info : textRenderInfo.windowTextRenderInfos) {
@@ -23,7 +24,8 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint t
 			fonts.fontAtlas.ID,
 			info.depth,
 			false,
-			info.offset
+			info.offset,
+			COLORS::TEXT
 		);
 	}
 }

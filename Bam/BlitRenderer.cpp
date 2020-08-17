@@ -3,15 +3,21 @@
 #include "BlitRenderer.h"
 #include "GLEnableWrapper.h"
 
-void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset_) {
+void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset_, std::optional<glm::vec4> maybeColor) {
 	this->VAO.bind();
 	this->program.use();
 
 	GLEnabler glEnabler;
 	glEnabler.enable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->offset.set(offset_);
+
+	if (maybeColor.has_value()) {
+		this->color.set(maybeColor.value());
+	}
+	else {
+		this->color.set(glm::vec4(1.0f));
+	}
 
 	if (depth_.has_value()) {
 		glEnabler.enable(GL_DEPTH_TEST);
@@ -60,10 +66,10 @@ void BlitRenderer::render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& wo
 	this->VAO.unbind();
 }
 
-void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical) {
+void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, std::optional<glm::vec4> maybeColor) {
 	std::vector uvv{ uv };
 	std::vector worldv{ world };
-	this->render(uvv, worldv, target, viewport, texture, depth_, flipUVvertical, glm::vec2(0.0f));
+	this->render(uvv, worldv, target, viewport, texture, depth_, flipUVvertical, glm::vec2(0.0f), maybeColor);
 }
 
 BlitRenderer::BlitRenderer() :
@@ -71,7 +77,8 @@ BlitRenderer::BlitRenderer() :
 	UVflip("UVflip", this->program),
 	texture_t("texture_t", this->program, 0),
 	depth("depth", this->program),
-	offset("offset", this->program) {
+	offset("offset", this->program),
+	color("c", this->program) {
 	this->VAO.gen(3);
 
 	static const GLfloat g_quad_vertex_buffer_data[] = {

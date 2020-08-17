@@ -17,13 +17,14 @@ private:
 	bwo::Uniform1f UVflip;
 	bwo::Uniform1f depth;
 	bwo::Uniform2fv offset;
+	bwo::Uniform4fv color;
 
 public:
 	int32_t const MAX_BATCH_SIZE = 1000;
 
-	void render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset);
+	void render(std::vector<glm::vec4>& uv, std::vector<glm::vec4>& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset, std::optional<glm::vec4> color = std::nullopt);
 
-	void render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool fromTexture);
+	void render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool fromTexture, std::optional<glm::vec4> color = std::nullopt);
 
 	BlitRenderer();
 	~BlitRenderer();
