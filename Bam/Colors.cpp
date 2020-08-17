@@ -24,13 +24,8 @@ glm::vec4 COLORS::hex(std::string h) {
 
 glm::vec4 COLORS::hex(uint32_t h) {
 	int32_t r, g, b, a;
-	if (h <= 0xffffff) {
-		a = 255;
-	}
-	else {
-		a = h & 0xff;
-		h >>= 8;
-	}
+	a = h & 0xff;
+	h >>= 8;
 	b = h & 0xff;
 	h >>= 8;
 	g = h & 0xff;
@@ -42,4 +37,8 @@ glm::vec4 COLORS::hex(uint32_t h) {
 
 glm::vec4 COLORS::DARKEN(glm::vec4 color) {
 	return color * glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
+}
+
+glm::vec4 COLORS::LIGHTEN(glm::vec4 color) {
+	return color / glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
 }

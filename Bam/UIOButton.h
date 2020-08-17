@@ -2,10 +2,14 @@
 
 #include "UIOBase.h"
 
+#include "Colors.h"
+
 class UIOButton : public UIOBase
 {
 private:
 	bool shrinkToFit;
+	bool highlighted;
+
 public:
 	CallBack onPress;
 	CallBack onRelease;
@@ -13,7 +17,8 @@ public:
 	std::optional<UIOBase*> maybeMain;
 
 	bool down = false;
-	glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	glm::vec4 color = COLORS::BACKGROUND;
 
 	UIOButton(Handle self);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);

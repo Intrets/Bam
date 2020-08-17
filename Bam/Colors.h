@@ -17,8 +17,8 @@ constexpr uint32_t char_to_hex(const char c) {
 };
 
 constexpr uint32_t operator"" _hex(const char* c, std::size_t size) {
-	int32_t hex = 0;
-	int32_t offset = 0;
+	uint32_t hex = 0;
+	uint32_t offset = 0;
 	if (size == 7 || size == 6) {
 		hex = 0xff;
 	}
@@ -27,7 +27,7 @@ constexpr uint32_t operator"" _hex(const char* c, std::size_t size) {
 		offset += 2;
 	}
 
-	for (int32_t i = 0; i < 6; i++) {
+	for (uint32_t i = 0; i < 6; i++) {
 		hex += char_to_hex(c[size - i - 1 - offset]) << (4 * (i + 2));
 	}
 	return hex;
@@ -46,9 +46,10 @@ namespace COLORS
 	static glm::vec4 GREEN = rgb(153, 255, 153);
 
 	glm::vec4 DARKEN(glm::vec4 color);
+	glm::vec4 LIGHTEN(glm::vec4 color);
 
-	static glm::vec4 TEXT = hex("#dec165"_hex);
-	static glm::vec4 BACKGROUND = hex("#25120z"_hex);
-	static glm::vec4 FOREGROUND = hex("#e55a1c"_hex);
-	static glm::vec4 FOCUSSED = rgb(242, 242, 242);
+	static glm::vec4 TEXT = hex("#104070"_hex);
+	static glm::vec4 BACKGROUND = hex("#d7d7af"_hex);
+	static glm::vec4 FOREGROUND = hex("#e6ddc1"_hex);
+	static glm::vec4 FOCUSSED = hex("#e0dfbc"_hex);
 }

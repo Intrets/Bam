@@ -19,6 +19,21 @@ UIOButton::UIOButton(Handle self) {
 
 	this->selfHandle = self;
 
+	this->addOnHoverBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+						 [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		self_->activate();
+		return BIND_RESULT::CONTINUE;
+	});
+
+	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED,ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		if (!self_->screenRectangle.contains(params.uiState.getCursorPositionScreen())) {
+			self_->deactivate();
+		}
+		return BIND_RESULT::CONTINUE;
+	});
+
 	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{
 		this->down = true;
@@ -63,6 +78,10 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	if (down) {
 		c = COLORS::DARKEN(c);
 	}
+	else if (this->active) {
+		c = COLORS::LIGHTEN(c);
+	}
+
 	if (this->maybeMain) {
 		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);
 	}
