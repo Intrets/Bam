@@ -184,7 +184,7 @@ inline UIOConstructer<T>& UIOConstructer<T>::addActiveBind(BindControl bindContr
 
 template<class T>
 inline UIOConstructer<T>& UIOConstructer<T>::addGlobalBind(BindControl bindControl, CallBack callBack) {
-	this->object.get()->addGLobalBind(bindControl, callBack);
+	this->object.get()->addGlobalBind(bindControl, callBack);
 	return *this;
 }
 

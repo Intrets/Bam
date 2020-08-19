@@ -18,6 +18,8 @@ public:
 
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
+	std::function<void(sol::variadic_args va)> printFunctionVA = [](sol::variadic_args va)
+	{};
 
 	std::unordered_set<std::string> ignore;
 
@@ -26,8 +28,6 @@ public:
 	void runScript(GameState& gameState, Handle h);
 	void save(Saver& saver);
 	void load(Loader& loader);
-
-	void print(std::string string);
 
 	ActivityLuaTest();
 	~ActivityLuaTest() = default;

@@ -103,10 +103,6 @@ void ActivityLuaTest::load(Loader& loader) {
 	}
 }
 
-void ActivityLuaTest::print(std::string string) {
-	this->printFunction(string);
-}
-
 ActivityLuaTest::ActivityLuaTest() {
 	state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
 	state.script("");
@@ -115,10 +111,47 @@ ActivityLuaTest::ActivityLuaTest() {
 		return this->applyActivity(h, type);
 	});
 
-	//state.set_function("print", &ActivityLuaTest::print, this);
-	state.set_function("print", [this](std::string text)
+	state.set_function("print", [this](sol::variadic_args va)
 	{
-		this->print(text);
+		std::stringstream out;
+		for (const auto& a : va) {
+			auto type = a.get_type();
+			switch (type) {
+				case sol::type::string:
+				case sol::type::number:
+				case sol::type::boolean:
+					out << a.as<std::string>();
+					break;
+				case sol::type::none:
+					out << "~[none type]~";
+					break;
+				case sol::type::lua_nil:
+					out << "~[nil]~";
+					break;
+				case sol::type::thread:
+					out << "~[thread]~";
+					break;
+				case sol::type::function:
+					out << "~[function]~";
+					break;
+				case sol::type::userdata:
+					out << "~[userdata]~";
+					break;
+				case sol::type::lightuserdata:
+					out << "~[lightuserdata]~";
+					break;
+				case sol::type::table:
+					out << "~[table]~";
+					break;
+				case sol::type::poly:
+					out << "~[poly]~";
+					break;
+				default:
+					break;
+			}
+			out << " ";
+		}
+		this->printFunction(out.str());
 	});
 
 	for (auto& test : state) {

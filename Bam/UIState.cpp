@@ -448,7 +448,8 @@ UIState::UIState() {
 		// list of vars to be watched
 		UIOTextDisplay* watchTextPtr;
 		// text window to display watched vars
-		UIOTextDisplay* displayTextPtr;
+		UIOTextDisplay* displayWatchTextPtr;
+		UIOTextDisplay* outputTextPtr;
 		// name of .lua file
 		UIOTextDisplay* fileTextPtr;
 
@@ -468,9 +469,25 @@ UIState::UIState() {
 					.get()
 				);
 
+				UIOGrid* outputGridPtr;
+
 				watchGridPtr->addElement(
-					TextConstructer::constructDisplayText("")
-					.setPtr(displayTextPtr)
+					UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(1, 2))
+					.setPtr(outputGridPtr)
+					.get()
+				);
+
+				outputGridPtr->addElement(
+					TextConstructer::constructDisplayText("watch")
+					.setPtr(displayWatchTextPtr)
+					.background(COLORS::BACKGROUND)
+					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.get()
+				);
+
+				outputGridPtr->addElement(
+					TextConstructer::constructDisplayText("output")
+					.setPtr(outputTextPtr)
 					.background(COLORS::BACKGROUND)
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
 					.get()
@@ -569,9 +586,9 @@ UIState::UIState() {
 					TextConstructer::constructSingleLineDisplayText("Vars")
 					.align(UIOConstrainSize::ALIGNMENT::CENTER)
 					.button()
-					.onRelease([luaTestPtr, watchTextPtr, displayTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+					.addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, ControlState::CONTROLSTATE_PRESSED }, [luaTestPtr, watchTextPtr, displayWatchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					displayTextPtr->text.setLines({ "Watched variables: ", "" });
+					displayWatchTextPtr->text.setLines({ "Watched variables: ", "" });
 					for (auto line : watchTextPtr->text.lines) {
 						if (line.size() < 2) {
 							return BIND_RESULT::CONTINUE;
@@ -617,9 +634,9 @@ UIState::UIState() {
 								break;
 						}
 
-						displayTextPtr->text.addLine(line + ": " + out);
-						displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
+						displayWatchTextPtr->text.addLine(line + ": " + out);
 					}
+					displayWatchTextPtr->text.moveCursor(glm::ivec2(0, watchTextPtr->text.lines.size() + 1));
 
 					return BIND_RESULT::CONTINUE;
 				})
@@ -627,10 +644,15 @@ UIState::UIState() {
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 
-				luaTestPtr->lua.printFunction = [displayTextPtr](std::string text)
+				luaTestPtr->lua.printFunction = [outputTextPtr](std::string text)
 				{
-					displayTextPtr->text.addLine(text);
-					displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
+					std::vector<std::string> lines;
+					split(0, text, lines, '\n', true);
+					for (auto& line : lines) {
+						outputTextPtr->text.addLine(line);
+					}
+
+					outputTextPtr->text.moveCursor(glm::ivec2(0, lines.size()));
 
 					return BIND_RESULT::CONTINUE;
 				};
