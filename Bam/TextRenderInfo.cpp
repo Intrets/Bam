@@ -233,32 +233,24 @@ void Text::insertString(std::string text) {
 }
 
 void Text::moveCursor(glm::ivec2 p) {
-	glm::ivec2 previous = this->cursor;
-	this->cursorIndex -= previous.x;
-
 	this->cursor += p;
 	this->cursor = glm::max(this->cursor, glm::ivec2(0));
-	this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size()) - 1);
 
 	if (this->lines.size() == 1) {
 		this->cursor.y = 0;
 	}
 	else {
-		this->cursor.y = glm::min(this->cursor.y, static_cast<int32_t>(this->lines.size() - 2));
+		this->cursor.y = glm::clamp(this->cursor.y, 0, static_cast<int32_t>(this->lines.size()) - 2);
 	}
-	this->cursor.x = glm::min(this->cursor.x, static_cast<int32_t>(this->lines[this->cursor.y].size()) - 1);
 
-	if (this->cursor.y < previous.y) {
-		for (int32_t line = this->cursor.y; line < previous.y; line++) {
-			this->cursorIndex -= static_cast<int32_t>(this->lines[line].size());
-		}
-	}
-	else {
-		for (int32_t line = previous.y; line < this->cursor.y; line++) {
-			this->cursorIndex += static_cast<int32_t>(this->lines[line].size());
-		}
+	this->cursor.x = glm::clamp(this->cursor.x, 0, static_cast<int32_t>(this->lines[this->cursor.y].size() - 1));
+
+	this->cursorIndex = 0;
+	for (int32_t line = 0; line < this->cursor.y; line++) {
+		this->cursorIndex += static_cast<int32_t>(this->lines[line].size());
 	}
 	this->cursorIndex += this->cursor.x;
+
 
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
@@ -335,5 +327,8 @@ void Text::setLines(std::vector<std::string> lines_) {
 	for (auto& line : lines_) {
 		lines.push_back(line + "\n");
 	}
+	this->cursor = glm::ivec2(0, 0);
+	this->cursorIndex = 0;
+	this->moveCursor(glm::ivec2(0, 0));
 	this->invalidateCache();
 }

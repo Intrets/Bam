@@ -178,7 +178,7 @@ UIState::UIState() {
 		UIOList* listPtr;
 		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
 			.setPtr(listPtr)
-			.window("LUA test", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
+			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
 					UIOWindow::TYPE::RESIZEVERTICAL)
 			.get();
@@ -489,7 +489,7 @@ UIState::UIState() {
 				.get();
 
 			auto fileText =
-				TextConstructer::constructSingleLineTextEdit("")
+				TextConstructer::constructSingleLineTextEdit("test.lua")
 				.setPtr(fileTextPtr)
 				.background(COLORS::BACKGROUND)
 				.get();
@@ -618,6 +618,7 @@ UIState::UIState() {
 						}
 
 						displayTextPtr->text.addLine(line + ": " + out);
+						displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
 					}
 
 					return BIND_RESULT::CONTINUE;
@@ -629,10 +630,8 @@ UIState::UIState() {
 				luaTestPtr->lua.printFunction = [displayTextPtr](std::string text)
 				{
 					displayTextPtr->text.addLine(text);
+					displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
 
-					if (displayTextPtr->text.lines.size() != 0) {
-						displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
-					}
 					return BIND_RESULT::CONTINUE;
 				};
 
