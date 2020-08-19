@@ -344,7 +344,6 @@ UIState::UIState() {
 
 			})
 				.background(COLORS::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 100))
 				.get();
 
 			listPtr->addElement(std::move(a));
@@ -557,11 +556,8 @@ UIState::UIState() {
 					.button()
 					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					if (params.player.selection.target.isValid()) {
-
-						luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.handle);
-						luaTestPtr->lua.state.script(join(luaTextPtr->text.lines));
-					}
+					luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.handle);
+					luaTestPtr->lua.state.script(join(luaTextPtr->text.lines));
 					return BIND_RESULT::CONTINUE;
 				})
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
@@ -629,6 +625,16 @@ UIState::UIState() {
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
+
+				luaTestPtr->lua.printFunction = [displayTextPtr](std::string text)
+				{
+					displayTextPtr->text.addLine(text);
+
+					if (displayTextPtr->text.lines.size() != 0) {
+						displayTextPtr->text.moveCursor(glm::ivec2(0, 1));
+					}
+					return BIND_RESULT::CONTINUE;
+				};
 
 				// File Name Field
 				luaControlPtr->addElement(std::move(fileText));

@@ -50,6 +50,6 @@ namespace COLORS
 
 	static glm::vec4 TEXT = hex("#104070"_hex);
 	static glm::vec4 BACKGROUND = hex("#d7d7af"_hex);
-	static glm::vec4 FOREGROUND = hex("#e6ddc1"_hex);
+	static glm::vec4 FOREGROUND = hex("#CDCDA5"_hex);
 	static glm::vec4 FOCUSSED = hex("#e0dfbc"_hex);
 }

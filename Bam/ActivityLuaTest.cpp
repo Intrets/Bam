@@ -103,12 +103,22 @@ void ActivityLuaTest::load(Loader& loader) {
 	}
 }
 
+void ActivityLuaTest::print(std::string string) {
+	this->printFunction(string);
+}
+
 ActivityLuaTest::ActivityLuaTest() {
-	state.open_libraries(sol::lib::base, sol::lib::table);
+	state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
 	state.script("");
 	state.set_function("test", [this](Handle h, int32_t type) -> bool
 	{
 		return this->applyActivity(h, type);
+	});
+
+	//state.set_function("print", &ActivityLuaTest::print, this);
+	state.set_function("print", [this](std::string text)
+	{
+		this->print(text);
 	});
 
 	for (auto& test : state) {

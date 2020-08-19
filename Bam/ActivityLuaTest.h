@@ -10,11 +10,14 @@ class Loader;
 struct RenderInfo;
 typedef int32_t Handle;
 
-class ActivityLuaTest 
+class ActivityLuaTest
 {
 public:
 	sol::state state;
 	GameState* gameStateRef;
+
+	std::function<void(std::string line)> printFunction = [](std::string)
+	{};
 
 	std::unordered_set<std::string> ignore;
 
@@ -23,6 +26,8 @@ public:
 	void runScript(GameState& gameState, Handle h);
 	void save(Saver& saver);
 	void load(Loader& loader);
+
+	void print(std::string string);
 
 	ActivityLuaTest();
 	~ActivityLuaTest() = default;
