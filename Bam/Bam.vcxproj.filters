@@ -217,9 +217,6 @@
     <ClCompile Include="BlockIDTextures.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="FPSLimiter.cpp">
-      <Filter>Program Control</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Program Control</Filter>
     </ClCompile>
@@ -507,9 +504,6 @@
     </ClInclude>
     <ClInclude Include="BlockIDTextures.h">
       <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSLimiter.h">
-      <Filter>Program Control</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">
       <Filter>Program Control</Filter>

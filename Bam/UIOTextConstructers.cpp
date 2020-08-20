@@ -58,9 +58,6 @@ namespace TextConstructer
 		auto ptr = res.get();
 		ptr->text.addLine(text);
 
-		UIOBinds::TextEdit::up(ptr);
-		UIOBinds::TextEdit::down(ptr);
-
 		UIOBinds::TextEdit::viewDown(ptr);
 		UIOBinds::TextEdit::viewUp(ptr);
 

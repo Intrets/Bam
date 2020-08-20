@@ -283,7 +283,6 @@
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
     <ClCompile Include="Fonts.cpp" />
-    <ClCompile Include="FPSLimiter.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
@@ -381,7 +380,6 @@
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
     <ClInclude Include="Fonts.h" />
-    <ClInclude Include="FPSLimiter.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />

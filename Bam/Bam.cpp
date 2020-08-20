@@ -164,8 +164,7 @@ static int initGLFW() {
 		return -1;
 	}
 
-	printf("OpenGL version supported by this platform (%s): \n",
-		   glGetString(GL_VERSION));
+	printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
 
 	// constrain cursor to window
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -176,7 +175,7 @@ static int initGLFW() {
 	// back culling
 	//glDisable(GL_CULL_FACE);
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 	if (OPENGL_DEBUG && (GLEW_ARB_debug_output || GLEW_KHR_debug)) {
 		glEnable(GL_DEBUG_OUTPUT);

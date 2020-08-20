@@ -1,12 +1,16 @@
 #pragma once
+
+
 class TickLimiter
 {
 private:
-	double tickTime;
 	double lastTick;
+	double tickTime;
 
 public:
-	bool ready();
+	TickLimiter();
+
 	void advance();
+	bool ready();
 };
 

@@ -1,9 +1,9 @@
 #include "common.h"
 
 #include "Main.h"
+
 #include "GameLogic.h"
 #include "Renderer.h"
-#include "FPSLimiter.h"
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "ControlState.h"
@@ -41,62 +41,62 @@ void mainLoop(GLFWwindow* window) {
 	State state(controlState);
 	state.uiState.updateSize(window);
 
-	FPSLimiter fpsLimiter;
-	TickLimiter tickLimiter;
-
 	GameLogic gameLogic;
+
+	TickLimiter tickLimiter;
 
 	Renderer renderer;
 
 	std::thread logicThread;
 
+	bool stateChanged;
+
 	while (!glfwWindowShouldClose(window)) {
 		RenderInfo renderInfo;
 
-		bool rendering = fpsLimiter.ready();
+		Locator<Timer>::ref().endTiming("Render Loop");
+		Locator<Timer>::ref().newTiming("Render Loop");
 
-		if (rendering) {
-			Locator<Timer>::ref().endTiming("Render Loop");
-			Locator<Timer>::ref().newTiming("Render Loop");
+		Locator<Timer>::ref().newTiming("Prepare render");
+		state.uiState.updateSize(window);
+		renderer.prepareRender(window, renderInfo, state);
+		Locator<Timer>::ref().endTiming("Prepare render");
 
-			Locator<Timer>::ref().newTiming("Prepare render");
-			rendering = state.uiState.updateSize(window);
-			if (rendering) {
-				renderer.prepareRender(window, renderInfo, state);
+		Locator<Timer>::ref().newTiming("UI Logic");
+		state.controlState.cycleStates();
+		glfwPollEvents();
+
+		state.uiState.updateCursor(window, state.player.getCameraPosition());
+
+		state.uiState.run(state);
+		Locator<Timer>::ref().endTiming("UI Logic");
+
+		const static auto gameTick = [&]()
+		{
+			if (tickLimiter.ready()) {
 			}
-			Locator<Timer>::ref().endTiming("Prepare render");
-		}
-
-		//if (gameLogic.ready()) {
-		if (tickLimiter.ready()){
-			tickLimiter.advance();
-			Locator<Timer>::ref().endTiming("Game Loop");
-			Locator<Timer>::ref().newTiming("Game Loop");
-
-			Locator<Timer>::ref().newTiming("UI Logic");
-			state.controlState.cycleStates();
-			glfwPollEvents();
-
-			state.uiState.updateCursor(window, state.player.getCameraPosition());
-
-			state.uiState.run(state);
-			Locator<Timer>::ref().endTiming("UI Logic");
-
-			if (Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
-				logicThread = std::thread(&GameLogic::runStep, &gameLogic, std::ref(state.gameState));
-			}
-			else {
+			for (int32_t i = 0; i < 10; i++) {
+				if (!tickLimiter.ready()) {
+					break;
+				}
+				stateChanged = true;
 				gameLogic.runStep(state.gameState);
+				tickLimiter.advance();
+				Locator<Timer>::ref().endTiming("Game Loop");
+				Locator<Timer>::ref().newTiming("Game Loop");
 			}
+		};
+
+		if (Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
+			logicThread = std::thread(gameTick);
+		}
+		else {
+			gameTick();
 		}
 
-		if (rendering) {
-			Locator<Timer>::ref().newTiming("Render");
-			fpsLimiter.renderStart();
-			renderer.render(window, renderInfo);
-			fpsLimiter.renderFinish();
-			Locator<Timer>::ref().endTiming("Render");
-		}
+		Locator<Timer>::ref().newTiming("Render");
+		renderer.render(window, renderInfo);
+		Locator<Timer>::ref().endTiming("Render");
 
 		if (logicThread.joinable()) {
 			logicThread.join();
@@ -110,6 +110,6 @@ void mainLoop(GLFWwindow* window) {
 			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::microseconds((long) 1000));
+		//sleep(1_ms);
 	}
 }

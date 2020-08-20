@@ -12,6 +12,7 @@ class OptionManager;
 
 enum class OPTION
 {
+	LO_TICKSPERSECOND,
 	GR_RENDERTHREAD,
 	GR_FRAMESYNCMODE,
 	GR_DEBUG,

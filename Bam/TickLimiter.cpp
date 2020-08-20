@@ -2,10 +2,17 @@
 
 #include "TickLimiter.h"
 
-bool TickLimiter::ready() {
-	return glfwGetTime() >= tickTime + lastTick;
+#include "Option.h"
+
+TickLimiter::TickLimiter() {
+	this->tickTime = 1.0 / static_cast<double>(Option<OPTION::LO_TICKSPERSECOND, int32_t>::getVal());
 }
 
 void TickLimiter::advance() {
-	lastTick += tickTime;
+	lastTick += this->tickTime;
+	this->tickTime = 1.0 / static_cast<double>(Option<OPTION::LO_TICKSPERSECOND, int32_t>::getVal());
+}
+
+bool TickLimiter::ready() {
+	return glfwGetTime() >= this->lastTick + this->tickTime;
 }

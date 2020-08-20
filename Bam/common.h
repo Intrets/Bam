@@ -16,7 +16,7 @@
 #define NOMOVE(T) T(T&&) = delete; T& operator=(T&&) = delete;
 #define NOCOPYMOVE(T) NOCOPY(T) NOMOVE(T)
 
-#define MAX_STATIC_DRAW 1000000 
+#define MAX_STATIC_DRAW 2000000 
 
 #define CHUNKSIZE 32
 

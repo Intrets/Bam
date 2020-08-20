@@ -1,7 +1,6 @@
 #include "common.h"
 #include "Renderer.h"
 #include "CameraInfo.h"
-#include "FPSLimiter.h"
 #include "RenderInfo.h"
 #include "State.h"
 #include "BlitRenderer.h"

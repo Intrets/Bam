@@ -106,38 +106,6 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 		textInfo.addString(font, line);
 	}
 
-	auto maybeCursorQuad = textInfo.getCursorPos(this->cursorIndex);
-	if (maybeCursorQuad.has_value()) {
-		glm::vec4& cursorQuad = maybeCursorQuad.value();
-		Rectangle cursorRect;
-		cursorRect.bot = glm::vec2(cursorQuad[0], cursorQuad[1]);
-		cursorRect.top = cursorRect.bot + glm::vec2(cursorQuad[2], cursorQuad[3]);
-
-		Rectangle viewRect;
-		viewRect.bot = glm::vec2(-1.0f) + this->view;
-		viewRect.top = glm::vec2(1.0f) + this->view;
-
-		float leftDist = cursorRect.getLeft() - viewRect.getLeft();
-		float rightDist = viewRect.getRight() - cursorRect.getRight();
-
-		float botDist = cursorRect.getBot() - viewRect.getBot();
-		float topDist = viewRect.getTop() - cursorRect.getTop();
-
-		if (leftDist < 0.0f) {
-			this->view.x += leftDist;
-		}
-		else if (rightDist < 0.0f) {
-			this->view.x -= rightDist;
-		}
-
-		if (botDist < 0.0f) {
-			this->view.y += botDist;
-		}
-		else if (topDist < 0.0f) {
-			this->view.y -= topDist;
-		}
-	}
-
 	this->cachedRenderInfo = textInfo;
 }
 
