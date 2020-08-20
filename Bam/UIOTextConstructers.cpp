@@ -27,6 +27,9 @@ namespace TextConstructer
 		UIOBinds::TextEdit::del(ptr);
 		UIOBinds::TextEdit::tab(ptr);
 
+		UIOBinds::TextEdit::viewDown(ptr);
+		UIOBinds::TextEdit::viewUp(ptr);
+
 		return UIOConstructer<UIOTextDisplay>(std::move(res));
 	}
 
@@ -57,6 +60,9 @@ namespace TextConstructer
 
 		UIOBinds::TextEdit::up(ptr);
 		UIOBinds::TextEdit::down(ptr);
+
+		UIOBinds::TextEdit::viewDown(ptr);
+		UIOBinds::TextEdit::viewUp(ptr);
 
 		return UIOConstructer<UIOTextDisplay>(std::move(res));
 	}

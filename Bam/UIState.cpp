@@ -527,8 +527,7 @@ UIState::UIState() {
 					std::ifstream file;
 					Locator<PathManager>::ref().openLUA(file, name);
 
-					luaTextPtr->setText("");
-
+					luaTextPtr->text.empty();
 					std::string line;
 					while (std::getline(file, line)) {
 						luaTextPtr->text.addLine(line);

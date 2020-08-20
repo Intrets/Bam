@@ -20,7 +20,7 @@ int32_t UIOSimpleTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& re
 
 UIOSimpleTextDisplay::UIOSimpleTextDisplay(Handle self, std::string text_) {
 	this->selfHandle = self;
-	this->text.addString(text_);
+	this->text.addLine(text_);
 	this->text.cursorIndex = -1;
 }
 

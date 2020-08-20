@@ -146,5 +146,25 @@ namespace UIOBinds
 				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 			});
 		}
+
+		void viewUp(UIOTextDisplay* ptr) {
+			ptr->addOnHoverBind({ ControlState::CONTROLS::SCROLL_UP, ControlState::CONTROLSTATE_PRESSED },
+								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				ptr->text.moveView({ 0,-1 });
+				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+			});
+		}
+
+		void viewDown(UIOTextDisplay* ptr) {
+			ptr->addOnHoverBind({ ControlState::CONTROLS::SCROLL_DOWN, ControlState::CONTROLSTATE_PRESSED },
+								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				ptr->text.moveView({ 0,1 });
+				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+			});
+		}
 	}
 }

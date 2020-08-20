@@ -21,6 +21,7 @@ public:
 	glm::vec2 offset;
 
 	// total size of entire text in [-1, 1] in screenRectangle space 
+	// value in [0, inf)
 	glm::vec2 renderedSize;
 
 	// in [-1, 1] in screenRectangle space
@@ -89,12 +90,19 @@ public:
 
 	bool deleteChar();
 	bool backspaceChar();
+
 	void insertString(std::string text);
+
 	void moveCursor(glm::ivec2 p);
+	void moveView(glm::ivec2 p);
+
 	void selectIndex(int32_t index);
 
+	// (!) will be left in invalid state if no lines are added and cache invalidated (!)
+	void empty();
+
 	void addLine(std::string text);
-	void addString(std::string text);
+
 	void setString(std::string text);
 	void setLines(std::vector<std::string> lines);
 };

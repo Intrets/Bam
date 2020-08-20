@@ -138,8 +138,6 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 		}
 	}
 
-	textInfo.offset = -this->view;
-
 	this->cachedRenderInfo = textInfo;
 }
 
@@ -149,6 +147,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	}
 	auto& textRenderInfo = cachedRenderInfo.value();
 
+	textRenderInfo.offset = -this->view;
 	textRenderInfo.setDepth(depth++);
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
 
@@ -160,13 +159,11 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 		b *= this->lastScreenRectangle.size();
 
 		a += this->lastScreenRectangle.getBottomLeft();
-		//glm::vec2 db = glm::vec2(b.x, b.y / 10);
 
 		if (renderCursor && tick % 60 < 30) {
 			renderInfo.uiRenderInfo.addRectangle(a, a + b, COLORS::CURSOR, depth++);
 		}
 	}
-
 
 	return depth;
 }
@@ -251,7 +248,6 @@ void Text::moveCursor(glm::ivec2 p) {
 	}
 	this->cursorIndex += this->cursor.x;
 
-
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
 	}
@@ -287,8 +283,43 @@ void Text::moveCursor(glm::ivec2 p) {
 			this->view.y -= topDist;
 		}
 	}
+}
 
-	this->cachedRenderInfo.value().offset = -this->view;
+void Text::moveView(glm::ivec2 p) {
+	if (!this->cachedRenderInfo.has_value()) {
+		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
+	}
+	int32_t pxHeight = Locator<Fonts>::ref().getFont(this->lastFont).charSize[0].y;
+	if (this->lastScreenRectangle.screenPixels.y == 0) {
+		return;
+	}
+
+	float height = this->lastScreenRectangle.getHeight() / 2.0f * this->lastScreenRectangle.screenPixels.y;
+
+	float lineHeight = 2.0f * pxHeight / height;
+
+	this->view += lineHeight * glm::vec2(p);
+
+	if (!this->cachedRenderInfo.has_value()) {
+		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
+	}
+
+	this->cachedRenderInfo.value().renderedSize;
+	auto renderedHeight = this->cachedRenderInfo.value().renderedSize.y;
+
+	float topStop = renderedHeight;
+	float botStop = lineHeight;
+
+	if (this->view.y < 0.0f) {
+		if (topStop + view.y < lineHeight) {
+			view.y = lineHeight - topStop;
+		}
+	}
+	else {
+		if (view.y > botStop - lineHeight) {
+			view.y = botStop - lineHeight;
+		}
+	}
 }
 
 void Text::selectIndex(int32_t index) {
@@ -306,27 +337,28 @@ void Text::selectIndex(int32_t index) {
 	}
 }
 
+void Text::empty() {
+	this->lines = { "" };
+}
+
 void Text::addLine(std::string text) {
 	this->lines.back().append(text + "\n");
 	this->lines.push_back("");
 	this->invalidateCache();
 }
 
-void Text::addString(std::string text) {
-	this->lines.back().append(text);
-	this->invalidateCache();
-}
-
 void Text::setString(std::string text) {
-	this->lines = std::vector<std::string>{ text };
-	this->invalidateCache();
+	this->empty();
+	this->addLine(text);
 }
 
 void Text::setLines(std::vector<std::string> lines_) {
-	lines = {};
+	this->lines = {};
 	for (auto& line : lines_) {
 		lines.push_back(line + "\n");
 	}
+	this->lines.push_back("");
+
 	this->cursor = glm::ivec2(0, 0);
 	this->cursorIndex = 0;
 	this->moveCursor(glm::ivec2(0, 0));
