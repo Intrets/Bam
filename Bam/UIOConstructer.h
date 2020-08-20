@@ -337,7 +337,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
-				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreen() + windowPtr->mousePressedPosOffset);
+				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) + windowPtr->mousePressedPosOffset);
 			}
 			return BIND_RESULT::CONTINUE;
 		})
@@ -363,7 +363,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
-				bottomRight.y = params.uiState.getCursorPositionScreen().y;
+				bottomRight.y = params.uiState.getCursorPositionScreenClamped(0.99f).y;
 				if (windowPtr->screenRectangle.top.y - bottomRight.y < 0.2f) {
 					bottomRight.y = windowPtr->screenRectangle.top.y - 0.2f;
 				}
@@ -389,7 +389,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
-				bottomRight.x = params.uiState.getCursorPositionScreen().x;
+				bottomRight.x = params.uiState.getCursorPositionScreenClamped(0.99f).x;
 				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
 				}
@@ -415,7 +415,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
-				auto bottomRight = params.uiState.getCursorPositionScreen();
+				auto bottomRight = params.uiState.getCursorPositionScreenClamped(0.99f);
 				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
 				}

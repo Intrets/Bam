@@ -16,6 +16,7 @@ public:
 
 	glm::vec2 getCursorPositionWorld();
 	glm::vec2 getCursorPositionScreen();
+	glm::vec2 getCursorPositionScreenClamped(float c);
 	
 	void run(State& state);
 	bool updateSize(GLFWwindow* window);

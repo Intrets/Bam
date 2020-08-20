@@ -43,6 +43,10 @@ glm::vec2 UIState::getCursorPositionScreen() {
 	return this->cursorScreen;
 }
 
+glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
+	return glm::clamp(this->getCursorPositionScreen(), -c, c);
+}
+
 void UIState::run(State& state) {
 	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
 		auto& UI = *it;
@@ -180,7 +184,8 @@ UIState::UIState() {
 			.setPtr(listPtr)
 			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::RESIZEVERTICAL)
+					UIOWindow::TYPE::RESIZEVERTICAL |
+					UIOWindow::TYPE::MOVE)
 			.get();
 
 		this->UIs.push_back(std::move(window));
