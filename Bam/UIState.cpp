@@ -135,7 +135,7 @@ void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
 	glm::vec2 viewport(ratio, 1.0f);
 	viewport *= Option<OPTION::CL_VIEWPORTSCALE, float>::getVal();
 
-	this->cursorScreen = glm::vec2(x, y);
+	this->cursorScreen = glm::clamp(glm::vec2(x, y), -1.0f, 1.0f);
 	this->cursorWorld = cam + this->cursorScreen * viewport;
 }
 
