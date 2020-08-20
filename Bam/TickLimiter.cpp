@@ -5,6 +5,7 @@
 #include "Option.h"
 
 TickLimiter::TickLimiter() {
+	this->lastTick = glfwGetTime();
 	this->tickTime = 1.0 / static_cast<double>(Option<OPTION::LO_TICKSPERSECOND, int32_t>::getVal());
 }
 

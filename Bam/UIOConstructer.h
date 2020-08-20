@@ -311,7 +311,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	}
 
 	if (types & UIOWindow::TYPE::MINIMISE) {
-		auto close = TextConstructer::constructSingleLineDisplayText("_")
+		auto close = TextConstructer::constructSingleLineDisplayText(" _")
 			.align(UIOConstrainSize::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
