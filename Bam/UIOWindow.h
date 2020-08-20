@@ -24,7 +24,6 @@ public:
 
 	glm::vec2 mousePressedPosOffset;
 
-	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_, std::string title);
 	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOWindow(Handle self);
 	UIOWindow() = default;
