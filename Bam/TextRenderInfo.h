@@ -98,7 +98,7 @@ public:
 
 	void selectIndex(int32_t index);
 
-	// (!) will be left in invalid state if no lines are added and cache invalidated (!)
+	// (!) will be left in invalid state if no lines are added (!)
 	void empty();
 
 	void addLine(std::string text);

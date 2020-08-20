@@ -304,10 +304,10 @@ void Text::moveView(glm::ivec2 p) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
 	}
 
-	this->cachedRenderInfo.value().renderedSize;
-	auto renderedHeight = this->cachedRenderInfo.value().renderedSize.y;
+	// margin from top
+	float topStop = this->cachedRenderInfo.value().renderedSize.y;
 
-	float topStop = renderedHeight;
+	// margin from bottom 
 	float botStop = lineHeight;
 
 	if (this->view.y < 0.0f) {
@@ -339,6 +339,7 @@ void Text::selectIndex(int32_t index) {
 
 void Text::empty() {
 	this->lines = { "" };
+	this->invalidateCache();
 }
 
 void Text::addLine(std::string text) {

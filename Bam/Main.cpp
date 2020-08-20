@@ -12,6 +12,7 @@
 #include "State.h"
 #include "Timer.h"
 #include "Option.h"
+#include "TickLimiter.h"
 
 ControlState controlState;
 
@@ -41,6 +42,7 @@ void mainLoop(GLFWwindow* window) {
 	state.uiState.updateSize(window);
 
 	FPSLimiter fpsLimiter;
+	TickLimiter tickLimiter;
 
 	GameLogic gameLogic;
 
@@ -65,7 +67,9 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("Prepare render");
 		}
 
-		if (gameLogic.ready()) {
+		//if (gameLogic.ready()) {
+		if (tickLimiter.ready()){
+			tickLimiter.advance();
 			Locator<Timer>::ref().endTiming("Game Loop");
 			Locator<Timer>::ref().newTiming("Game Loop");
 

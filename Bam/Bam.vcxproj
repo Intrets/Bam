@@ -308,6 +308,7 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StringHelpers.cpp" />
+    <ClCompile Include="TickLimiter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="UIOBinds.cpp" />
@@ -397,6 +398,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TickLimiter.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIOActivityLuaTest.h" />
     <ClInclude Include="UIOBinds.h" />
