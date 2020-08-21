@@ -13,3 +13,7 @@ std::vector<std::string> Log::getLines() {
 	this->lines.clear();
 	return res;
 }
+
+void Log::putStreamLine(std::stringstream ss) {
+	this->putLine(ss.str());
+}

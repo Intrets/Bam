@@ -97,7 +97,7 @@ void ActivityLuaTest::load(Loader& loader) {
 	for (int i = 0; i < size; i++) {
 		sol::object key = loader.retrieveObject(state, cache);
 		sol::object value = loader.retrieveObject(state, cache);
-		Locator<Log>::ref() << Log::OPEN{} << "key: " << key.as<std::string>() << " value: " << value.as<std::string>() << "\n" << Log::CLOSE{};
+		Locator<Log>::ref().putStreamLine(std::stringstream() << "key: " << key.as<std::string>() << " value: " << value.as<std::string>());
 		// TODO: error? no global operator[] found for sol::object
 		//state[key] = value;
 	}

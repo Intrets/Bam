@@ -34,10 +34,12 @@ UIOButton::UIOButton(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		this->down = true;
-		return this->onPress(state, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+		auto self = static_cast<UIOButton*>(self_);
+		self->down = true;
+		self->mousePressOffset = params.uiState.getCursorPositionScreen() - self->screenRectangle.getTopLeft();
+		return self->onPress(params, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 	});
 
 	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult

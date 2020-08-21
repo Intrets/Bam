@@ -10,7 +10,8 @@ UIOActivityLinker::UIOActivityLinker(Handle self) {
 	this->selfHandle = self;
 
 	addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED },
-				  [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult {
+				  [&](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
 		if (!params.player.selection.target.isValid()) {
 			return BIND_RESULT::CONTINUE;
 		}
@@ -18,7 +19,7 @@ UIOActivityLinker::UIOActivityLinker(Handle self) {
 		auto maybeTarget = params.gameState.staticWorld.getActivity(glm::floor(cursor));
 		if (maybeTarget) {
 			auto& target = maybeTarget.value();
-			Locator<Log>::ref() << Log::OPEN{} << Linker::link(params.gameState, params.player.selection.target, target) << "\n" << Log::CLOSE{};
+			Locator<Log>::ref().putStreamLine(std::stringstream() << Linker::link(params.gameState, params.player.selection.target, target));
 			return BIND_RESULT::CONSUME;
 		}
 		return BIND_RESULT::CONTINUE;

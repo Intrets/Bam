@@ -44,7 +44,7 @@ namespace UIOBinds
 					auto maybeIndex = ptr->text.cachedRenderInfo.value().getIndex(click);
 					if (maybeIndex.has_value()) {
 						ptr->text.selectIndex(maybeIndex.value());
-						Locator<Log>::ref() << Log::OPEN{} << maybeIndex.value() << "\n" << Log::CLOSE{};
+						Locator<Log>::ref().putStreamLine(std::stringstream() << maybeIndex.value());
 					}
 				}
 

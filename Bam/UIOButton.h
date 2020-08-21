@@ -13,6 +13,8 @@ private:
 public:
 	CallBack onPress;
 	CallBack onRelease;
+
+	glm::vec2 mousePressOffset;
 	
 	std::optional<UIOBase*> maybeMain;
 

@@ -185,6 +185,8 @@ UIState::UIState() {
 			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
 					UIOWindow::TYPE::RESIZEVERTICAL |
+					UIOWindow::TYPE::RESIZEHORIZONTAL |
+					UIOWindow::TYPE::RESIZE |
 					UIOWindow::TYPE::MOVE)
 			.get();
 
@@ -419,7 +421,7 @@ UIState::UIState() {
 						if (params.player.selection.target.isValid()) {
 							bool success = params.player.selection.target.get()->applyMoveRoot(params.gameState, dir, n);
 							if (success) {
-								Locator<Log>::ref() << Log::OPEN{} << "moving with pace " << n << "\n" << Log::CLOSE{};
+								Locator<Log>::ref().putStreamLine(std::stringstream() << "moving with pace " << n);
 							}
 							return BIND_RESULT::CONTINUE;
 

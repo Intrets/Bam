@@ -337,7 +337,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
-				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) + windowPtr->mousePressedPosOffset);
+				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) - self->mousePressOffset);
 			}
 			return BIND_RESULT::CONTINUE;
 		})
@@ -363,7 +363,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
-				bottomRight.y = params.uiState.getCursorPositionScreenClamped(0.99f).y;
+				bottomRight.y =
+					params.uiState.getCursorPositionScreenClamped(0.99f).y
+					- self->mousePressOffset.y - self->screenRectangle.size().y;
 				if (windowPtr->screenRectangle.top.y - bottomRight.y < 0.2f) {
 					bottomRight.y = windowPtr->screenRectangle.top.y - 0.2f;
 				}
@@ -389,7 +391,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
-				bottomRight.x = params.uiState.getCursorPositionScreenClamped(0.99f).x;
+				bottomRight.x =
+					params.uiState.getCursorPositionScreenClamped(0.99f).x
+					- self->mousePressOffset.x + self->screenRectangle.size().x;
 				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
 				}
@@ -415,7 +419,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
-				auto bottomRight = params.uiState.getCursorPositionScreenClamped(0.99f);
+				auto bottomRight =
+					params.uiState.getCursorPositionScreenClamped(0.99f)
+					- self->mousePressOffset + glm::vec2(1.0f, -1.0f) * self->screenRectangle.size();
 				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
 				}

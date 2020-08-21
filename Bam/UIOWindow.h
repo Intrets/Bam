@@ -22,8 +22,6 @@ public:
 
 	bool minimized = false;
 
-	glm::vec2 mousePressedPosOffset;
-
 	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOWindow(Handle self);
 	UIOWindow() = default;
