@@ -39,7 +39,7 @@ public:
 	UIOConstructer<T>& addFocussedBind(BindControl bindControl, CallBack callBack);
 	UIOConstructer<T>& addActiveBind(BindControl bindControl, CallBack callBack);
 	UIOConstructer<T>& addGlobalBind(BindControl bindControl, CallBack callBack);
-	UIOConstructer<T>& addHoverBind(BindControl bindControl, CallBack callBack);
+	UIOConstructer<T>& addOnHoverBind(BindControl bindControl, CallBack callBack);
 
 	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
@@ -189,8 +189,8 @@ inline UIOConstructer<T>& UIOConstructer<T>::addGlobalBind(BindControl bindContr
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addHoverBind(BindControl bindControl, CallBack callBack) {
-	this->object.get()->addHoverBind(bindControl, callBack);
+inline UIOConstructer<T>& UIOConstructer<T>::addOnHoverBind(BindControl bindControl, CallBack callBack) {
+	this->object.get()->addOnHoverBind(bindControl, callBack);
 	return *this;
 }
 

@@ -594,11 +594,10 @@ UIState::UIState() {
 					.button()
 					.addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, ControlState::CONTROLSTATE_PRESSED }, [luaTestPtr, watchTextPtr, displayWatchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					//displayWatchTextPtr->text.setLines({ "Watched variables: ", "" });
 					displayWatchTextPtr->text.empty();
 					for (auto line : watchTextPtr->text.lines) {
 						if (line.size() < 2) {
-							return BIND_RESULT::CONTINUE;
+							continue;
 						}
 						line.resize(line.size() - 1);
 
