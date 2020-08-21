@@ -14,6 +14,7 @@ void OptionManager::defaultValues() {
 	initVal(OPTION::UI_SCALE, 1.0f, "ui_scale", "");
 	initVal(OPTION::GR_RENDERTHREAD, false, "gr_renderthread", "seperate render and game logic threads");
 	initVal<int32_t>(OPTION::LO_TICKSPERSECOND, 60, "lo_tickspersecond", "logic ticks per second");
+	initVal<int32_t>(OPTION::GR_FRAMERATE, 60, "gr_framerate", "target framerate");
 }
 
 void OptionManager::readFromFile() {

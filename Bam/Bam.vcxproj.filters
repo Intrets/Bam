@@ -382,7 +382,12 @@
     </ClCompile>
     <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="UIOActivityLuaTest.cpp" />
-    <ClCompile Include="TickLimiter.cpp" />
+    <ClCompile Include="RenderLimiter.cpp">
+      <Filter>Program Control</Filter>
+    </ClCompile>
+    <ClCompile Include="TickLimiter.cpp">
+      <Filter>Program Control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -672,7 +677,12 @@
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="UIOActivityLuaTest.h" />
-    <ClInclude Include="TickLimiter.h" />
+    <ClInclude Include="RenderLimiter.h">
+      <Filter>Program Control</Filter>
+    </ClInclude>
+    <ClInclude Include="TickLimiter.h">
+      <Filter>Program Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
