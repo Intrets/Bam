@@ -25,7 +25,7 @@ void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint t
 			info.depth,
 			false,
 			info.offset,
-			COLORS::TEXT
+			COLORS::UI::TEXT
 		);
 	}
 }

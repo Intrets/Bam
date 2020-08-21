@@ -99,7 +99,7 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, Fonts::Font::ROBOTO_12, depth, this->lineWrap, ticks, this->active);
 
 	if (this->active) {
-		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, COLORS::FOCUSSED, depth++);
+		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, COLORS::UI::FOCUSSED, depth++);
 
 		this->ticksSelected++;
 	}

@@ -388,6 +388,8 @@
     <ClCompile Include="TickLimiter.cpp">
       <Filter>Program Control</Filter>
     </ClCompile>
+    <ClCompile Include="UIOActivityInterface.cpp" />
+    <ClCompile Include="UIOConstructActivityInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -683,6 +685,8 @@
     <ClInclude Include="TickLimiter.h">
       <Filter>Program Control</Filter>
     </ClInclude>
+    <ClInclude Include="UIOActivityInterface.h" />
+    <ClInclude Include="UIOConstructActivityInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

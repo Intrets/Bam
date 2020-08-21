@@ -35,6 +35,9 @@
 #include "UIOActivityLuaTest.h"
 #include <fstream>
 
+#include "UIOConstructActivityInterface.h"
+#include "UIOActivityInterface.h"
+
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
 }
@@ -156,6 +159,10 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
+	{
+
+	}
+
 	// Hotbar
 	{
 		UIOHotbar* hotbarPtr;
@@ -180,7 +187,7 @@ UIState::UIState() {
 	// save/load and other stuff
 	{
 		UIOList* listPtr;
-		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
+		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::DOWN)
 			.setPtr(listPtr)
 			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
@@ -192,7 +199,7 @@ UIState::UIState() {
 
 		this->UIs.push_back(std::move(window));
 
-		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIRECTION::DOWN);
+		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIR::DOWN);
 		{
 			UIOTextDisplay* ptr;
 			auto text = TextConstructer::constructDisplayText("").setPtr(ptr)
@@ -207,7 +214,7 @@ UIState::UIState() {
 					return BIND_RESULT::CONTINUE;
 				});
 			})
-				.background(COLORS::BACKGROUND)
+				.background(COLORS::UI::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 120))
 				.get();
 
@@ -223,7 +230,7 @@ UIState::UIState() {
 		{
 			UIOTextDisplay* textPtr;
 			auto text = TextConstructer::constructSingleLineTextEdit("test.save").setPtr(textPtr)
-				.background(COLORS::BACKGROUND)
+				.background(COLORS::UI::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
@@ -291,14 +298,14 @@ UIState::UIState() {
 			{
 				Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
 				return BIND_RESULT::CONTINUE;
 			})
 				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			ptr->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
 
 			listPtr->addElement(std::move(a));
 		}
@@ -313,14 +320,14 @@ UIState::UIState() {
 			{
 				Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+				self->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
 				return BIND_RESULT::CONTINUE;
 			})
 				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			ptr->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::GREEN : COLORS::RED;
+			ptr->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
 
 			listPtr->addElement(std::move(a));
 		}
@@ -350,7 +357,7 @@ UIState::UIState() {
 				});
 
 			})
-				.background(COLORS::BACKGROUND)
+				.background(COLORS::UI::BACKGROUND)
 				.get();
 
 			listPtr->addElement(std::move(a));
@@ -360,7 +367,7 @@ UIState::UIState() {
 	// lua test window
 	{
 		UIOList* listPtr;
-		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::DOWN)
+		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::DOWN)
 			.setPtr(listPtr)
 			.window("LUA test", { {0.5f, -0.8f}, {1.0f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
@@ -387,7 +394,7 @@ UIState::UIState() {
 
 				auto text = TextConstructer::constructSingleLineTextEdit("1")
 					.setPtr(textPtr)
-					.background(COLORS::BACKGROUND)
+					.background(COLORS::UI::BACKGROUND)
 					.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 					.get();
 
@@ -445,7 +452,7 @@ UIState::UIState() {
 		{
 			auto luaEditor = TextConstructer::constructTextEdit("test(h ,1)")
 				.setPtr(luaTextPtr)
-				.background(COLORS::BACKGROUND)
+				.background(COLORS::UI::BACKGROUND)
 				.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.5f))
 				.get();
 
@@ -471,7 +478,7 @@ UIState::UIState() {
 				watchGridPtr->addElement(
 					TextConstructer::constructTextEdit("")
 					.setPtr(watchTextPtr)
-					.background(COLORS::BACKGROUND)
+					.background(COLORS::UI::BACKGROUND)
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
 					.get()
 				);
@@ -487,7 +494,7 @@ UIState::UIState() {
 				outputGridPtr->addElement(
 					TextConstructer::constructDisplayText("watch")
 					.setPtr(displayWatchTextPtr)
-					.background(COLORS::BACKGROUND)
+					.background(COLORS::UI::BACKGROUND)
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
 					.get()
 				);
@@ -495,7 +502,7 @@ UIState::UIState() {
 				outputGridPtr->addElement(
 					TextConstructer::constructDisplayText("output")
 					.setPtr(outputTextPtr)
-					.background(COLORS::BACKGROUND)
+					.background(COLORS::UI::BACKGROUND)
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
 					.get()
 				);
@@ -506,7 +513,7 @@ UIState::UIState() {
 
 		{
 			UIOList* luaControlPtr;
-			auto luaControl = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::LEFT)
+			auto luaControl = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 				.setPtr(luaControlPtr)
 				.padTop(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
@@ -515,7 +522,7 @@ UIState::UIState() {
 			auto fileText =
 				TextConstructer::constructSingleLineTextEdit("test.lua")
 				.setPtr(fileTextPtr)
-				.background(COLORS::BACKGROUND)
+				.background(COLORS::UI::BACKGROUND)
 				.get();
 
 			listPtr->addElement(std::move(luaControl));

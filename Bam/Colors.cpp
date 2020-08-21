@@ -11,6 +11,14 @@ glm::vec4 COLORS::rgba(int32_t r, int32_t g, int32_t b, int32_t a) {
 	return glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
 }
 
+glm::vec4 COLORS::rgba(int32_t r, int32_t g, int32_t b, float a) {
+	return rgba(r, g, b, static_cast<int32_t>(glm::round(255.0f * a)));
+}
+
+glm::vec4 COLORS::rgba(int32_t r, int32_t g, int32_t b, double a) {
+	return rgba(r, g, b, static_cast<int32_t>(glm::round(255.0 * a)));
+}
+
 glm::vec4 COLORS::hex(std::string h) {
 	if (h[0] == '#') {
 		h.erase(0, 1);

@@ -6,7 +6,7 @@
 class UIOColoredBackground : public UIOBase
 {
 public:
-	glm::vec4 color = COLORS::BACKGROUND;
+	glm::vec4 color = COLORS::UI::BACKGROUND;
 
 	UIOBase* main;
 

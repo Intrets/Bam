@@ -103,21 +103,17 @@ void mainLoop(GLFWwindow* window) {
 
 		if (rendering) {
 			rendering = false;
-			Locator<Timer>::ref().newTiming("Render");
 			renderer.render(window, renderInfo);
-			Locator<Timer>::ref().endTiming("Render");
-		}
 
-		if (logicThread.joinable()) {
-			logicThread.join();
-		}
-
-		{
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR) {
 				Locator<Log>::ref().putStreamLine(std::stringstream() << "OpenGL ERROR: " << std::hex << err << std::dec);
 				std::cout << "OpenGL ERROR: " << std::hex << err << std::dec << "\n";
 			}
+		}
+
+		if (logicThread.joinable()) {
+			logicThread.join();
 		}
 	}
 }

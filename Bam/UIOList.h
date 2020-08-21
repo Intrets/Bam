@@ -5,7 +5,7 @@
 class UIOList : public UIOBase
 {
 public:
-	enum class DIRECTION
+	enum class DIR
 	{
 		LEFT,
 		RIGHT,
@@ -13,9 +13,9 @@ public:
 		DOWN,
 	};
 
-	DIRECTION direction;
+	DIR direction;
 
-	UIOList(Handle self, DIRECTION dir);
+	UIOList(Handle self, DIR dir);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

@@ -35,21 +35,33 @@ constexpr uint32_t operator"" _hex(const char* c, std::size_t size) {
 
 namespace COLORS
 {
-
-	glm::vec4 rgb(int32_t r, int32_t g, int32_t b);
-	glm::vec4 rgba(int32_t r, int32_t g, int32_t b, int32_t a);
-	glm::vec4 hex(std::string h);
-	glm::vec4 hex(uint32_t h);
-
-	static glm::vec4 CURSOR = rgb(191, 0, 0);
-	static glm::vec4 RED = rgb(255, 153, 153);
-	static glm::vec4 GREEN = rgb(153, 255, 153);
-
 	glm::vec4 DARKEN(glm::vec4 color);
 	glm::vec4 LIGHTEN(glm::vec4 color);
 
-	static glm::vec4 TEXT = hex("#104070"_hex);
-	static glm::vec4 BACKGROUND = hex("#d7d7af"_hex);
-	static glm::vec4 FOREGROUND = hex("#CDCDA5"_hex);
-	static glm::vec4 FOCUSSED = hex("#e0dfbc"_hex);
+	glm::vec4 rgb(int32_t r, int32_t g, int32_t b);
+	glm::vec4 rgba(int32_t r, int32_t g, int32_t b, int32_t a);
+	glm::vec4 rgba(int32_t r, int32_t g, int32_t b, float a);
+	glm::vec4 rgba(int32_t r, int32_t g, int32_t b, double a);
+	glm::vec4 hex(std::string h);
+	glm::vec4 hex(uint32_t h);
+
+	namespace UI
+	{
+		static glm::vec4 CURSOR = rgb(191, 0, 0);
+		static glm::vec4 RED = rgb(255, 153, 153);
+		static glm::vec4 GREEN = rgb(153, 255, 153);
+
+
+		static glm::vec4 TEXT = hex("#104070"_hex);
+		static glm::vec4 BACKGROUND = hex("#d7d7af"_hex);
+		static glm::vec4 FOREGROUND = hex("#CDCDA5"_hex);
+		static glm::vec4 FOCUSSED = hex("#e0dfbc"_hex);
+	}
+
+	namespace GR
+	{
+		static glm::vec4 SELECTION = rgba(50, 50, 255, 0.1);
+		static glm::vec4 HIGHLIGHT = rgba(50, 255, 50, 0.1);
+
+	}
 }

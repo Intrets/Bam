@@ -6,6 +6,7 @@
 #include "BlitRenderer.h"
 #include "Fonts.h"
 #include "Option.h"
+#include "Timer.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;
@@ -30,6 +31,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
+	Locator<Timer>::ref().newTiming("Render");
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -47,8 +50,11 @@ void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
 	if (Option<OPTION::GR_DEBUG, bool>::getVal()) {
 		this->debugRenderer.render(0, renderInfo);
 	}
+	Locator<Timer>::ref().endTiming("Render");
 
+	Locator<Timer>::ref().newTiming("Swap Wait");
 	glfwSwapBuffers(window);
+	Locator<Timer>::ref().endTiming("Swap Wait");
 }
 
 Renderer::Renderer() {

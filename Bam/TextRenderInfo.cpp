@@ -129,7 +129,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 		a += this->lastScreenRectangle.getBottomLeft();
 
 		if (renderCursor && tick % 60 < 30) {
-			renderInfo.uiRenderInfo.addRectangle(a, a + b, COLORS::CURSOR, depth++);
+			renderInfo.uiRenderInfo.addRectangle(a, a + b, COLORS::UI::CURSOR, depth++);
 		}
 	}
 
@@ -266,7 +266,7 @@ void Text::moveView(glm::ivec2 p) {
 
 	float lineHeight = 2.0f * pxHeight / height;
 
-	this->view += lineHeight * glm::vec2(p);
+	this->view += lineHeight * glm::vec2(p) * 1.4f;
 
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);

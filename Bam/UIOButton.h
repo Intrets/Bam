@@ -20,7 +20,7 @@ public:
 
 	bool down = false;
 
-	glm::vec4 color = COLORS::BACKGROUND;
+	glm::vec4 color = COLORS::UI::BACKGROUND;
 
 	UIOButton(Handle self);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);

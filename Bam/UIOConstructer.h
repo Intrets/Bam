@@ -285,7 +285,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	windowPtr->screenRectangle.set(size);
 
 	UIOList* topList;
-	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIRECTION::LEFT)
+	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 		.setPtr(topList)
 		.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 		.align(UIOConstrainSize::ALIGNMENT::TOP)
@@ -348,7 +348,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	}
 	else {
 		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
-			.background(COLORS::FOREGROUND)
+			.background(COLORS::UI::FOREGROUND)
 			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 			.get();
 		topList->addElement(std::move(titleBar));

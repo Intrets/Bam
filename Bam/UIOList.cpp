@@ -2,7 +2,7 @@
 
 #include "UIOList.h"
 
-UIOList::UIOList(Handle self, DIRECTION dir) {
+UIOList::UIOList(Handle self, DIR dir) {
 	this->selfHandle = self;
 	this->direction = dir;
 }
@@ -16,28 +16,28 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 		ScreenRectangle newRec = element.get()->updateSize(rec);
 
 		switch (this->direction) {
-			case DIRECTION::LEFT:
+			case DIR::LEFT:
 				{
 					glm::vec2 p = rec.getTopRight() - newRec.getTopRight();
 					element.get()->translate(p);
 					rec.top.x -= newRec.getWidth();
 				}
 				break;
-			case DIRECTION::RIGHT:
+			case DIR::RIGHT:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);
 					rec.bot.x += newRec.getWidth();
 				}
 				break;
-			case DIRECTION::UP:
+			case DIR::UP:
 				{
 					glm::vec2 p = rec.getBottomLeft() - newRec.getBottomLeft();
 					element.get()->translate(p);
 					rec.bot.y += newRec.getHeight();
 				}
 				break;
-			case DIRECTION::DOWN:
+			case DIR::DOWN:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);

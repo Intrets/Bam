@@ -175,7 +175,7 @@ static int initGLFW() {
 	// back culling
 	//glDisable(GL_CULL_FACE);
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 	if (OPENGL_DEBUG && (GLEW_ARB_debug_output || GLEW_KHR_debug)) {
 		glEnable(GL_DEBUG_OUTPUT);
