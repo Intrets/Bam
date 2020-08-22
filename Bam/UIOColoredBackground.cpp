@@ -17,8 +17,10 @@ UIOColoredBackground::UIOColoredBackground(Handle self, glm::vec4 c, UniqueRefer
 }
 
 ScreenRectangle UIOColoredBackground::updateSize(ScreenRectangle newScreenRectangle) {
-	this->screenRectangle = newScreenRectangle;
-	return this->main->updateSize(newScreenRectangle);
+	//this->screenRectangle = newScreenRectangle;
+	this->screenRectangle = this->main->updateSize(newScreenRectangle);
+	return this->screenRectangle;
+	//return this->main->updateSize(newScreenRectangle);
 }
 
 int32_t UIOColoredBackground::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

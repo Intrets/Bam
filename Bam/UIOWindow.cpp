@@ -7,6 +7,7 @@
 #include "State.h"
 #include "UIOList.h"
 #include "UIOConstructButtons.h"
+#include "RenderInfo.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
@@ -28,11 +29,16 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 }
 
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	glm::vec2 px = glm::vec2(1.0f) / glm::vec2(this->screenRectangle.screenPixels);
 	if (minimized) {
-		return topBarPtr->addRenderInfo(gameState, renderInfo, depth + 1);
+		depth = topBarPtr->addRenderInfo(gameState, renderInfo, depth++);
+		renderInfo.uiRenderInfo.addRectangle(this->topBarPtr->screenRectangle.bot - px, this->topBarPtr->screenRectangle.top + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
+		return depth;
 	}
 	else {
-		return this->UIOBase::addRenderInfo(gameState, renderInfo, depth + 1);
+		depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth++);
+		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot - px, this->screenRectangle.top + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
+		return depth;
 	}
 }
 

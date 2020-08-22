@@ -4,8 +4,11 @@
 
 UIOShell::UIOShell(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
-	this->main = main_.get();
 	this->addElement(std::move(main_));
+}
+
+UIOShell::UIOShell(Handle self) {
+	this->selfHandle = self;
 }
 
 ScreenRectangle UIOShell::updateSize(ScreenRectangle newScreenRectangle) {

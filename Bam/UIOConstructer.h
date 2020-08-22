@@ -13,6 +13,7 @@
 #include "UIOTextConstructers.h"
 #include "UIOFreeSize.h"
 #include "Rectangle.h"
+#include "UIOShell.h"
 
 template<class T>
 class UIOConstructer
@@ -32,7 +33,7 @@ public:
 	UIOConstructer<UIOPad> padLeft(UIOSizeType padding);
 	UIOConstructer<UIOPad> padRight(UIOSizeType padding);
 
-	UIOConstructer<T>& addBaseBind(void (*f) (UIOBase* ptr));
+	UIOConstructer<T>& addBaseBind(std::function<void(UIOBase*)> f);
 	UIOConstructer<T>& addBind(void (*f) (T* ptr));
 	UIOConstructer<T>& addBindCapture(std::function<void(T*)> f);
 
@@ -374,6 +375,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			}
 			return BIND_RESULT::CONTINUE;
 		})
+			.padLeft(UIOSizeType(UIOSizeType::PX, 1))
+			.padTop(UIOSizeType(UIOSizeType::PX, 1))
 			.padRight(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? 10 : 0))
 			.constrainHeight(UIOSizeType(UIOSizeType::PX, 10))
 			.align(UIOConstrainSize::ALIGNMENT::BOTTOMLEFT)
@@ -402,6 +405,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			}
 			return BIND_RESULT::CONTINUE;
 		})
+			.padLeft(UIOSizeType(UIOSizeType::PX, 1))
 			.padTop(UIOSizeType(UIOSizeType::PX, 20))
 			.padBottom(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? 10 : 0))
 			.constrainWidth(UIOSizeType(UIOSizeType::PX, 10))
@@ -502,7 +506,7 @@ inline UIOConstructer<T>& UIOConstructer<T>::operator=(UIOConstructer&& other) {
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addBaseBind(void(*f)(UIOBase* ptr)) {
+inline UIOConstructer<T>& UIOConstructer<T>::addBaseBind(std::function<void(UIOBase*)> f) {
 	f(this->object.get());
 	return *this;
 }

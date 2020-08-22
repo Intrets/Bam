@@ -50,6 +50,7 @@ namespace COLORS
 		static glm::vec4 CURSOR = rgb(191, 0, 0);
 		static glm::vec4 RED = rgb(255, 153, 153);
 		static glm::vec4 GREEN = rgb(153, 255, 153);
+		static glm::vec4 WINDOWBACKGROUND = rgb(193, 193, 157);
 
 
 		static glm::vec4 TEXT = hex("#104070"_hex);

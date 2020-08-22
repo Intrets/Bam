@@ -4,6 +4,14 @@
 
 #include "Colors.h"
 
+UIOActivityInterface::UIOActivityInterface(Handle self) {
+	this->selfHandle = self;
+}
+
+void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
+	this->base.set(ref);
+}
+
 int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (this->base.isValid()) {
 		this->base.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);

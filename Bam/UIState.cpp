@@ -159,8 +159,15 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
+	// Interface
 	{
-
+		this->UIs.push_back(
+			Constructer::constructActivityInteractor()
+			.window("Interactor", { {0.5f, -0.8f}, {1.0f, 1.0f} },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::MOVE)
+			.get()
+		);
 	}
 
 	// Hotbar

@@ -5,7 +5,7 @@ class UIOConstructer;
 
 class UIOList;
 
-namespace ActivityInterfaceConstructer
+namespace Constructer 
 {
 	UIOConstructer<UIOList> constructActivityInteractor();
 }

@@ -5,9 +5,8 @@
 class UIOShell :public UIOBase
 {
 public:
-	UIOBase* main;
-
 	UIOShell(Handle self, UniqueReference<UIOBase, UIOBase> main_);
+	UIOShell(Handle self);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };
