@@ -20,12 +20,19 @@ class WeakReferenceBase
 public:
 	Handle handle = 0;
 
-	void clear() { handle = 0; };
+	void clear() {
+		handle = 0;
+	};
 
-	bool isNotNull() { return handle != 0; };
-	bool isNull() { return handle == 0; };
+	bool isNotNull() {
+		return handle != 0;
+	};
+	bool isNull() {
+		return handle == 0;
+	};
 
-	virtual ~WeakReferenceBase() {};
+	virtual ~WeakReferenceBase() {
+	};
 };
 
 template <class B, class T>
@@ -44,7 +51,9 @@ public:
 
 	WeakReference() = default;
 
-	WeakReference(Handle h) { handle = h; };
+	WeakReference(Handle h) {
+		handle = h;
+	};
 	virtual ~WeakReference() = default;
 };
 
@@ -86,7 +95,7 @@ template <class B, class T>
 class ManagedReference : public ManagedReferenceBase
 {
 public:
-	T* get();
+	T* get() const;
 
 	void set(Handle h);
 	void set(WeakReference<B, T> r);
@@ -153,7 +162,8 @@ public:
 			freeHandles.insert(i);
 		}
 	};
-	ReferenceManager() : ReferenceManager(1024) {};
+	ReferenceManager() : ReferenceManager(1024) {
+	};
 	~ReferenceManager();
 };
 
@@ -170,7 +180,7 @@ inline void WeakReference<B, T>::deleteObject() {
 }
 
 template<class B, class T>
-inline T* ManagedReference<B, T>::get() {
+inline T* ManagedReference<B, T>::get() const {
 	return static_cast<T*>(Locator<ReferenceManager<B>>::get()->data[handle].get());
 }
 
@@ -295,7 +305,8 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 		return;
 	}
 	auto range = managedReferences.equal_range(h);
-	for_each(range.first, range.second, [](ManagedReferencesType::value_type& ref) -> void {
+	for_each(range.first, range.second, [](ManagedReferencesType::value_type& ref) -> void
+	{
 		ref.second->invalidate();
 	});
 	freeData(h);

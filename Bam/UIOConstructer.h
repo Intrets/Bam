@@ -296,7 +296,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	windowPtr->addElement(std::move(topBar));
 
 	if (types & UIOWindow::TYPE::CLOSE) {
-		auto close = TextConstructer::constructSingleLineDisplayText("x")
+		auto close = TextConstructer::constructSingleLineDisplayText(" x")
 			.align(UIOConstrainSize::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult

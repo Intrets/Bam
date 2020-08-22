@@ -32,6 +32,7 @@ public:
 
 	// Tree Informations
 	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
 	// Render
 	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color);

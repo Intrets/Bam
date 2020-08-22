@@ -321,6 +321,7 @@
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOList.cpp" />
+    <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOSimpleTextDisplay.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
@@ -413,6 +414,7 @@
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOList.h" />
+    <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOSimpleTextDisplay.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOProxy.h" />

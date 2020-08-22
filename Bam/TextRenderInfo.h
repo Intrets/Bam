@@ -59,6 +59,8 @@ public:
 
 	std::optional<int32_t> getIndex(glm::vec2 p);
 
+	// first 2 Coordinates in [-1, 1] this->screenRectangle space. 
+	// second 2 size in same space.
 	std::optional<glm::vec4> getCursorPos(int32_t index);
 };
 

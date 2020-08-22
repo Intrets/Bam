@@ -45,6 +45,7 @@ public:
 
 	// Tree Information
 	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
 	// Serial
 	virtual Activity::TYPE getType() override;

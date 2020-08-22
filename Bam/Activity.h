@@ -225,10 +225,12 @@ public:
 
 	// Tree Informations
 	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
+	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
 	WeakReference<Activity, Activity> getRoot();
 
 	// Serial
 	virtual TYPE getType() = 0;
+	std::string getTypeName();
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);
 

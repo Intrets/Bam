@@ -390,6 +390,7 @@
     </ClCompile>
     <ClCompile Include="UIOActivityInterface.cpp" />
     <ClCompile Include="UIOConstructActivityInterface.cpp" />
+    <ClCompile Include="UIOListSelection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -687,6 +688,7 @@
     </ClInclude>
     <ClInclude Include="UIOActivityInterface.h" />
     <ClInclude Include="UIOConstructActivityInterface.h" />
+    <ClInclude Include="UIOListSelection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

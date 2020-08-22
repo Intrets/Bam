@@ -206,6 +206,10 @@ Handle Activity::getRootHandle() {
 
 }
 
+std::string Activity::getTypeName() {
+	return ACTIVITY::TYPE_NAMES[static_cast<int32_t>(this->getType())];
+}
+
 void Activity::save(Saver& saver) {
 	saver.store(this->getType());
 	saver.store(this->parentRef.handle);

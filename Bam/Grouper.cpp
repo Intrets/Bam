@@ -26,6 +26,13 @@ void Grouper::getTreeMembers(std::vector<Activity*>& members) {
 	}
 }
 
+void Grouper::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+	members.push_back({ depth, this });
+	if (this->child.isNotNull()) {
+		this->child.get()->getTreeMembersDepths(members, depth + 1);
+	}
+}
+
 void Grouper::save(Saver& saver) {
 	Activity::save(saver);
 	saver.store(this->child.handle);

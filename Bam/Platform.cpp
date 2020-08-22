@@ -153,6 +153,10 @@ Activity::TYPE Platform::getType() {
 	return Activity::TYPE::PLATFORM;
 }
 
+void Platform::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+	members.push_back({ depth, this });
+}
+
 bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
 	glm::ivec2 movedOrigin = origin + getDirection(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);

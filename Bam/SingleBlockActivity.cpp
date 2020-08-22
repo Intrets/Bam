@@ -48,6 +48,10 @@ void SingleBlockActivity::getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 
+void SingleBlockActivity::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+	members.push_back({ depth, this });
+}
+
 void SingleBlockActivity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 ori = this->origin;
 	if (this->moving) {

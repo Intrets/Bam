@@ -19,7 +19,8 @@ void Anchor::addChild(Handle h) {
 bool Anchor::removeChild(Handle h) {
 	auto newEnd = std::remove_if(
 		this->children.begin(), this->children.end(),
-		[=](WeakReference<Activity, Activity> t) -> bool {
+		[=](WeakReference<Activity, Activity> t) -> bool
+	{
 		return t.handle == h;
 	}
 	);
@@ -114,5 +115,12 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	for (auto& child : this->children) {
 		child.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,0.5,0.5 });
+	}
+}
+
+void Anchor::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+	members.push_back({ depth,this });
+	for (auto& child : this->children) {
+		child.get()->getTreeMembersDepths(members, depth + 1);
 	}
 }
