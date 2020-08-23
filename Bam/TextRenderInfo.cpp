@@ -91,11 +91,38 @@ std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {
 	return index->second;
 }
 
-std::optional<glm::vec4> WindowTextRenderInfo::getCursorPos(int32_t index) {
+std::optional<glm::vec4> WindowTextRenderInfo::getCursorPos(int32_t index) const {
 	if (indexInVector(index, this->pos)) {
 		return this->pos[index];
 	}
 	return std::nullopt;
+}
+
+std::vector<std::string> const& Text::getLines() const {
+	return this->lines;
+	// TODO: insert return statement here
+}
+
+std::optional<Rectangle> Text::getCursorQuadScreen() const {
+	if (!this->cachedRenderInfo.has_value()) {
+		return std::nullopt;
+	}
+	auto maybeCursorShape = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
+	if (!maybeCursorShape.has_value()) {
+		return std::nullopt;
+	}
+	auto cursorShape = maybeCursorShape.value();
+
+	glm::vec2 a = (glm::vec2(cursorShape[0], cursorShape[1]) - this->view) / 2.0f + 0.5f;
+	glm::vec2 b = glm::vec2(cursorShape[2], cursorShape[3]) / 2.0f;
+
+	a *= this->lastScreenRectangle.size();
+	b *= this->lastScreenRectangle.size();
+
+	a += this->lastScreenRectangle.getBottomLeft();
+	b += a;
+
+	return Rectangle{ a, b };
 }
 
 void Text::invalidateCache() {
@@ -125,17 +152,12 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	textRenderInfo.setDepth(depth++);
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
 
-	if (indexInVector(this->cursorIndex, textRenderInfo.pos)) {
-		glm::vec4 v = textRenderInfo.pos[this->cursorIndex];
-		glm::vec2 a = (glm::vec2(v[0], v[1]) - this->view) / 2.0f + 0.5f;
-		glm::vec2 b = glm::vec2(v[2], v[3]) / 2.0f;
-		a *= this->lastScreenRectangle.size();
-		b *= this->lastScreenRectangle.size();
+	if (renderCursor && tick % 60 < 30) {
+		auto const& maybeQuad = this->getCursorQuadScreen();
 
-		a += this->lastScreenRectangle.getBottomLeft();
-
-		if (renderCursor && tick % 60 < 30) {
-			renderInfo.uiRenderInfo.addRectangle(a, a + b, COLORS::UI::CURSOR, depth++);
+		if (maybeQuad.has_value()) {
+			auto const& quad = maybeQuad.value();
+			renderInfo.uiRenderInfo.addRectangle(quad.bot, quad.top, COLORS::UI::CURSOR, depth++);
 		}
 	}
 
@@ -201,6 +223,10 @@ void Text::insertString(std::string text) {
 		}
 	}
 	this->invalidateCache();
+}
+
+void Text::hideCursor() {
+	this->cursorIndex = -1;
 }
 
 void Text::moveCursor(glm::ivec2 p) {

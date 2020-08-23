@@ -46,7 +46,7 @@ inline std::pair<glm::ivec2, glm::ivec2> floordivmod(glm::ivec2 v, int32_t y) {
 }
 
 template<class T>
-inline bool indexInVector(size_t i, std::vector<T>& V) {
+inline bool indexInVector(size_t const i, std::vector<T> const& V) {
 	return i >= 0 && i < V.size();
 }
 

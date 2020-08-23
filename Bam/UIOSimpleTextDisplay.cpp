@@ -21,13 +21,13 @@ int32_t UIOSimpleTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& re
 UIOSimpleTextDisplay::UIOSimpleTextDisplay(Handle self, std::string text_) {
 	this->selfHandle = self;
 	this->text.addLine(text_);
-	this->text.cursorIndex = -1;
+	this->text.hideCursor();
 }
 
 UIOSimpleTextDisplay::UIOSimpleTextDisplay(Handle self, std::vector<std::string> text_) {
 	this->selfHandle = self;
 	this->text.setLines(text_);
-	this->text.cursorIndex = -1;
+	this->text.hideCursor();
 }
 
 void UIOSimpleTextDisplay::updateText(std::string text_) {

@@ -8,9 +8,9 @@ struct ScreenRectangle
 	glm::vec2 bot;
 	glm::vec2 top;
 
-	glm::ivec2 getPixelSize();
-	glm::ivec2 getPixelPos();
-	bool contains(glm::vec2 p);
+	glm::ivec2 getPixelSize() const ;
+	glm::ivec2 getPixelPos() const ;
+	bool contains(glm::vec2 p) const ;
 	void scaleAnchorTopLeft(glm::vec2 s);
 
 	void set(glm::vec2 p1, glm::vec2 p2);
@@ -25,16 +25,16 @@ struct ScreenRectangle
 	void setHeight(float h);
 	void setWidth(float w);
 
-	bool equals(ScreenRectangle& other);
+	bool equals(ScreenRectangle& other) const ;
 
-	glm::vec2 getTopLeft();
-	glm::vec2 getBottomRight();
-	glm::vec2 getTopRight();
-	glm::vec2 getBottomLeft();
+	glm::vec2 getTopLeft() const;
+	glm::vec2 getBottomRight() const;
+	glm::vec2 getTopRight() const;
+	glm::vec2 getBottomLeft() const;
 
-	float getWidth();
-	float getHeight();
+	float getWidth() const ;
+	float getHeight() const ;
 
-	glm::vec2 size();
+	glm::vec2 size() const;
 };
 

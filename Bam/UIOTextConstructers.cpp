@@ -68,7 +68,7 @@ namespace TextConstructer
 		auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
 		auto ptr = res.get();
 		ptr->text.setString(text);
-		ptr->text.cursorIndex = -1;
+		ptr->text.hideCursor();
 		ptr->shrinkToFit = shrink;
 
 		return UIOConstructer<UIOTextDisplay>(std::move(res));

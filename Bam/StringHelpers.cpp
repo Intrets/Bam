@@ -30,7 +30,7 @@ void split(size_t n, std::string& in, std::vector<std::string>& out, char c, boo
 	}
 }
 
-std::string join(std::vector<std::string>& in, std::optional<char> c) {
+std::string join(std::vector<std::string> const& in, std::optional<char> c) {
 	if (in.size() == 0) {
 		return "";
 	}
@@ -42,6 +42,6 @@ std::string join(std::vector<std::string>& in, std::optional<char> c) {
 		}
 	}
 	out << in.back();
-	
+
 	return out.str();
 }

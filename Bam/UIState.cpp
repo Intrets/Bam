@@ -248,10 +248,10 @@ UIState::UIState() {
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
-				if (textPtr->text.lines.size() == 0) {
+				if (textPtr->text.getLines().size() == 0) {
 					return BIND_RESULT::CONTINUE;
 				}
-				auto name = textPtr->text.lines.front();
+				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
 
 				Locator<Log>::ref().putLine("saving: " + name);
@@ -270,10 +270,10 @@ UIState::UIState() {
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
-				if (textPtr->text.lines.size() == 0) {
+				if (textPtr->text.getLines().size() == 0) {
 					return BIND_RESULT::CONTINUE;
 				}
-				auto name = textPtr->text.lines.front();
+				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
 
 				Locator<Log>::ref().putLine("loading: " + name);
@@ -422,7 +422,7 @@ UIState::UIState() {
 						.onRelease(
 							[dir, textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 					{
-						std::string in = textPtr->text.lines.front();
+						std::string in = textPtr->text.getLines().front();
 						int n;
 						try {
 							n = std::stoi(in);
@@ -542,7 +542,7 @@ UIState::UIState() {
 					.button()
 					.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					std::string name = fileTextPtr->text.lines.front();
+					std::string name = fileTextPtr->text.getLines().front();
 					name.resize(name.size() - 1);
 
 					std::ifstream file;
@@ -567,14 +567,14 @@ UIState::UIState() {
 					.button()
 					.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					std::string name = fileTextPtr->text.lines.front();
+					std::string name = fileTextPtr->text.getLines().front();
 					name.resize(name.size() - 1);
 
 					std::ofstream file;
 
 					Locator<PathManager>::ref().openLUA(file, name);
 
-					for (auto& line : luaTextPtr->text.lines) {
+					for (auto const& line : luaTextPtr->text.getLines()) {
 						file << line;
 					}
 
@@ -594,7 +594,7 @@ UIState::UIState() {
 					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.handle);
-					luaTestPtr->lua.state.script(join(luaTextPtr->text.lines));
+					luaTestPtr->lua.state.script(join(luaTextPtr->text.getLines()));
 					return BIND_RESULT::CONTINUE;
 				})
 					.pad(UIOSizeType(UIOSizeType::PX, 1))
@@ -609,7 +609,7 @@ UIState::UIState() {
 					.addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, ControlState::CONTROLSTATE_PRESSED }, [luaTestPtr, watchTextPtr, displayWatchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					displayWatchTextPtr->text.empty();
-					for (auto line : watchTextPtr->text.lines) {
+					for (auto line : watchTextPtr->text.getLines()) {
 						if (line.size() < 2) {
 							continue;
 						}

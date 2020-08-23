@@ -61,7 +61,7 @@ public:
 
 	// first 2 Coordinates in [-1, 1] this->screenRectangle space. 
 	// second 2 size in same space.
-	std::optional<glm::vec4> getCursorPos(int32_t index);
+	std::optional<glm::vec4> getCursorPos(int32_t index) const;
 };
 
 struct TextRenderInfo
@@ -71,12 +71,12 @@ struct TextRenderInfo
 
 class Text
 {
-public:
+private:
 	std::vector<std::string> lines = { "" };
-
 	glm::ivec2 cursor;
 	int32_t cursorIndex;
 
+public:
 	std::optional<WindowTextRenderInfo> cachedRenderInfo;
 	ScreenRectangle lastScreenRectangle;
 	Fonts::Font lastFont;
@@ -84,6 +84,9 @@ public:
 
 	// TODO: make view behave less weird when resizing window
 	glm::vec2 view = { 0.0f, 0.0f };
+
+	std::vector<std::string> const& getLines() const;
+	std::optional<Rectangle> getCursorQuadScreen() const;
 
 	void invalidateCache();
 	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap);
@@ -95,6 +98,7 @@ public:
 
 	void insertString(std::string text);
 
+	void hideCursor();
 	void moveCursor(glm::ivec2 p);
 	void moveView(glm::ivec2 p);
 

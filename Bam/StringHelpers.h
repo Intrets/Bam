@@ -7,5 +7,5 @@
 
 void split(size_t n, std::string& in, std::vector<std::string>& out, char c = ' ', bool emptySegments = false);
 
-std::string join(std::vector<std::string>& in, std::optional<char> c = std::nullopt);
+std::string join(std::vector<std::string> const& in, std::optional<char> c = std::nullopt);
 

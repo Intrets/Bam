@@ -3,45 +3,45 @@
 #include "ScreenRectangle.h"
 #include "Rectangle.h"
 
-glm::vec2 ScreenRectangle::getTopLeft() {
+glm::vec2 ScreenRectangle::getTopLeft() const {
 	return glm::vec2(this->bot.x, this->top.y);
 }
 
-glm::vec2 ScreenRectangle::getBottomRight() {
+glm::vec2 ScreenRectangle::getBottomRight() const {
 	return glm::vec2(this->top.x, this->bot.y);
 }
 
-glm::vec2 ScreenRectangle::getTopRight() {
+glm::vec2 ScreenRectangle::getTopRight() const {
 	return this->top;
 }
 
-glm::vec2 ScreenRectangle::getBottomLeft() {
+glm::vec2 ScreenRectangle::getBottomLeft() const {
 	return this->bot;
 }
 
-float ScreenRectangle::getWidth() {
+float ScreenRectangle::getWidth() const {
 	return this->top.x - this->bot.x;
 }
 
-float ScreenRectangle::getHeight() {
+float ScreenRectangle::getHeight() const {
 	return this->top.y - this->bot.y;
 }
 
-glm::vec2 ScreenRectangle::size() {
+glm::vec2 ScreenRectangle::size() const {
 	return glm::abs(this->bot - this->top);
 }
 
-glm::ivec2 ScreenRectangle::getPixelSize() {
+glm::ivec2 ScreenRectangle::getPixelSize() const {
 	return this->screenPixels;
 }
 
-glm::ivec2 ScreenRectangle::getPixelPos() {
+glm::ivec2 ScreenRectangle::getPixelPos() const {
 	// TODO
 	assert(false);
 	return glm::ivec2(0);
 }
 
-bool ScreenRectangle::contains(glm::vec2 p) {
+bool ScreenRectangle::contains(glm::vec2 p) const {
 	return (this->bot.x <= p.x) && (p.x <= this->top.x) && (this->bot.y <= p.y) && (p.y <= this->top.y);
 }
 
@@ -95,7 +95,7 @@ void ScreenRectangle::setWidth(float w) {
 	this->top.x = this->bot.x + w;
 }
 
-bool ScreenRectangle::equals(ScreenRectangle& other) {
+bool ScreenRectangle::equals(ScreenRectangle& other) const {
 	return this->bot == other.bot && this->top == other.top && this->screenPixels == other.screenPixels;
 }
 

@@ -11,7 +11,7 @@ template<class T>
 class UIOListSelection : public UIOBase
 {
 private:
-	int32_t selection;
+	//int32_t selection;
 	UIOTextDisplay* textDisplay;
 
 	std::vector<T> list;
@@ -31,6 +31,7 @@ public:
 
 template<class T>
 std::optional<const T&> UIOListSelection<T>::getSelected() {
+	//int32_t selection = this->textDisplay->text.cursor;
 	if (indexInVector(this->selection, this->list)) {
 		return this->list[this->selection];
 	}
@@ -82,33 +83,21 @@ template<class T>
 inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 
-	if (this->textDisplay->text.cachedRenderInfo.has_value()) {
-		auto index = this->textDisplay->text.cursorIndex;
+	auto maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen();
 
-		auto maybeCursorShape = this->textDisplay->text.cachedRenderInfo.value().getCursorPos(index);
-		if (maybeCursorShape.has_value()) {
-			glm::vec4 cursorShape = maybeCursorShape.value();
+	if (maybeCursorQuad.has_value()) {
+		auto const& cursorQuad = maybeCursorQuad.value();
 
-			glm::vec2 a = (glm::vec2(cursorShape[0], cursorShape[1]) - this->textDisplay->text.view) / 2.0f + 0.5f;
-			glm::vec2 b = glm::vec2(cursorShape[2], cursorShape[3]) / 2.0f;
-			a *= this->screenRectangle.size();
-			b *= this->screenRectangle.size();
+		float a = glm::max(this->screenRectangle.bot.y, cursorQuad.bot.y);
+		float b = glm::min(this->screenRectangle.top.y, cursorQuad.top.y);
 
-			a += this->screenRectangle.getBottomLeft();
-			b += a;
+		if (a < b) {
+			glm::vec2 bot = { this->screenRectangle.bot.x, a };
+			glm::vec2 top = { this->screenRectangle.top.x, b };
 
-			a.y = glm::max(this->screenRectangle.bot.y, a.y);
-			b.y = glm::min(this->screenRectangle.top.y, b.y);
-
-			if (a.y < b.y) {
-				glm::vec2 bot = { this->screenRectangle.bot.x, a.y };
-				glm::vec2 top = { this->screenRectangle.top.x, b.y };
-
-				renderInfo.uiRenderInfo.addRectangle(bot, top, COLORS::UI::CURSOR, depth++);
-			}
+			renderInfo.uiRenderInfo.addRectangle(bot, top, COLORS::UI::CURSOR, depth++);
 		}
 	}
 
 	return depth;
-
 }
