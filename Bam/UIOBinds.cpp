@@ -48,7 +48,7 @@ namespace UIOBinds
 					}
 				}
 
-				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS ;
 			});
 		}
 
