@@ -8,7 +8,10 @@ class UIOActivityInterface : public UIOBase
 {
 private:
 	ManagedReference<Activity, Activity> base;
+	int32_t baseSelectionTick;
+
 	ManagedReference<Activity, Activity> target;
+	int32_t targetSelectionTick;
 
 public:
 	UIOActivityInterface(Handle self);

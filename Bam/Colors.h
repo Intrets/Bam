@@ -61,8 +61,8 @@ namespace COLORS
 
 	namespace GR
 	{
-		static glm::vec4 SELECTION = rgba(50, 50, 255, 0.1);
-		static glm::vec4 HIGHLIGHT = rgba(50, 255, 50, 0.1);
+		static glm::vec4 SELECTION = rgba(50, 50, 255, 0.5);
+		static glm::vec4 HIGHLIGHT = rgba(50, 255, 50, 0.5);
 
 	}
 }

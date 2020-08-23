@@ -50,10 +50,10 @@ inline bool indexInVector(size_t const i, std::vector<T> const& V) {
 	return i >= 0 && i < V.size();
 }
 
-//template<class T, int i>
-//inline bool indexInVector(size_t const i, std::array<T, i> const& V) {
-//	return i >= 0 && i < V.size();
-//}
+inline bool periodic(int32_t val, int32_t on, int32_t off, int32_t offset = 0) {
+	return ((val + offset) % (on + off)) <= on;
+}
+
 
 template<class T, size_t s>
 inline bool indexInArray(size_t const i, std::array<T, s>& A) {

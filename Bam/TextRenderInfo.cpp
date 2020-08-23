@@ -152,7 +152,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	textRenderInfo.setDepth(depth++);
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
 
-	if (renderCursor && tick % 60 < 30) {
+	if (renderCursor && periodic(tick, 30, 30)) {
 		auto const& maybeQuad = this->getCursorQuadScreen();
 
 		if (maybeQuad.has_value()) {

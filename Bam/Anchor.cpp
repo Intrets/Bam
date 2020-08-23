@@ -114,7 +114,7 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 
 void Anchor::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	for (auto& child : this->children) {
-		child.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,0.5,0.5 });
+		child.get()->appendSelectionInfo(gameState, renderInfo, color);
 	}
 }
 
