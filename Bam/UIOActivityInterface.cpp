@@ -11,6 +11,7 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 
 void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
 	this->base.set(ref);
+	this->target.unset();
 	this->baseSelectionTick = 0;
 }
 
