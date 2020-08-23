@@ -106,6 +106,8 @@ public:
 	void moveCursor(glm::ivec2 p);
 	void moveView(glm::ivec2 p);
 
+	glm::ivec2 getCursor();
+
 	void selectIndex(int32_t index);
 
 	// (!) will be left in invalid state if no lines are added (!)

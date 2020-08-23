@@ -322,6 +322,10 @@ void Text::moveView(glm::ivec2 p) {
 	}
 }
 
+glm::ivec2 Text::getCursor() {
+	return this->cursor;
+}
+
 void Text::selectIndex(int32_t index) {
 	int32_t lineIndex = 0;
 	int32_t i = index;

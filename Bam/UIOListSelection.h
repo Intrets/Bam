@@ -21,7 +21,7 @@ public:
 	UIOListSelection(Handle self);
 	UIOListSelection(Handle self, std::function<std::string(T const&)> f);
 
-	std::optional<const T&> getSelected();
+	std::optional<T*> getSelected();
 	void setList(std::vector<T>& l);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
@@ -29,10 +29,10 @@ public:
 };
 
 template<class T>
-std::optional<const T&> UIOListSelection<T>::getSelected() {
-	//int32_t selection = this->textDisplay->text.cursor;
-	if (indexInVector(this->selection, this->list)) {
-		return this->list[this->selection];
+std::optional<T*> UIOListSelection<T>::getSelected() {
+	auto selection = this->textDisplay->text.getCursor().y;
+	if (indexInVector(selection, this->list)) {
+		return &this->list[selection];
 	}
 	else {
 		return std::nullopt;

@@ -12,9 +12,16 @@ void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
 	this->base.set(ref);
 }
 
+void UIOActivityInterface::setTarget(WeakReference<Activity, Activity> ref) {
+	this->target.set(ref);
+}
+
 int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (this->base.isValid()) {
-		this->base.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+		this->base.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+	}
+	if (this->target.isValid()) {
+		this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
 	}
 	return depth;
 }

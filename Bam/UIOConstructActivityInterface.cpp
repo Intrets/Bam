@@ -63,6 +63,20 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor() {
 		}
 		return BIND_RESULT::CONTINUE;
 	})
+		.addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOListSelection<PairType>*>(self_);
+
+		auto maybeSelected = self->getSelected();
+
+		if (maybeSelected.has_value()) {
+			auto [depth, selected] = *maybeSelected.value();
+
+			interfacePtr->setTarget(selected);
+		}
+
+		return BIND_RESULT::CONTINUE;
+	})
 		.get();
 
 	outerListPtr->addElement(std::move(treeDisplay));
