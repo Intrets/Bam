@@ -60,6 +60,15 @@ void UIOBase::addActiveBind(BindControl bindControl, CallBack callBack) {
 
 CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 	CallBackBindResult sumResult = 0;
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+
 	for (auto [control, bind] : this->globalBinds) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
@@ -72,18 +81,21 @@ CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 			}
 		}
 	}
-	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
-		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
-			return sumResult;
-		}
-	}
+
 	return sumResult;
 }
 
 CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 	CallBackBindResult sumResult = 0;
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+
 	for (auto [control, bind] : this->focussedBinds) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
@@ -96,13 +108,7 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 			}
 		}
 	}
-	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
-		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
-			return sumResult;
-		}
-	}
+
 	return sumResult;
 }
 
@@ -111,6 +117,15 @@ CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 	if (!this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
 		return sumResult;
 	}
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runOnHoverBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+
 	for (auto [control, bind] : onHoverBinds) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
@@ -123,18 +138,21 @@ CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 			}
 		}
 	}
-	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runOnHoverBinds(state);
-		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
-			return sumResult;
-		}
-	}
+
 	return sumResult;
 }
 
 CallBackBindResult UIOBase::runActiveBinds(State& state) {
 	CallBackBindResult sumResult = 0;
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runActiveBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+
 	if (this->active) {
 		for (auto [control, bind] : activeBinds) {
 			if (state.controlState.activated(control)) {
@@ -150,13 +168,6 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 		}
 	}
 
-	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runActiveBinds(state);
-		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
-			return sumResult;
-		}
-	}
 	return sumResult;
 }
 
