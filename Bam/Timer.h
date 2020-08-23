@@ -7,7 +7,6 @@
 
 struct Timing
 {
-	//CircularArray<double> history;
 	PeriodAvarage<double> history;
 	double timing;
 	std::optional<double> maybeStart;

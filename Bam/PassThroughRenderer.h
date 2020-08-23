@@ -5,7 +5,7 @@
 // TODO: rework
 class PassThroughRenderer
 {
-public:
+private:
 	bwo::Program program;
 
 	bwo::VertexArrayObject VAO;
@@ -14,6 +14,7 @@ public:
 	bwo::Buffer quad;
 	bwo::Buffer frameBuffer;
 
+public:
 	// 2D -> 2D array
 	void render2DArray(GLuint arrayTextureTarget, int32_t layer, int32_t mipmap, int32_t x1, int32_t x2, int32_t y1, int32_t y2, GLuint textureSource);
 

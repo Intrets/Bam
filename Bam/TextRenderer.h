@@ -11,7 +11,7 @@ class Fonts;
 class TextRenderer
 {
 public:
-	void render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint target, CameraInfo& camInfo);
+	void render(TextRenderInfo const& textRenderInfo, Fonts const& fonts, GLuint target, CameraInfo const& camInfo);
 
 	TextRenderer();
 	~TextRenderer();

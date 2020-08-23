@@ -20,10 +20,6 @@ bool Saver::saveGame(GameState& gameState) {
 	return true;
 }
 
-void Saver::close() {
-	this->out.close();
-}
-
 Saver::Saver(std::string file) {
 	Locator<PathManager>::get()->openSave(this->out, file);
 }
@@ -32,6 +28,6 @@ Saver::Saver() {
 }
 
 Saver::~Saver() {
-	close();
+	this->out.close();
 }
 

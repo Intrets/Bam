@@ -6,7 +6,7 @@
 #include "GLEnableWrapper.h"
 #include "RenderInfo.h"
 
-void DebugRenderer::render(GLuint target, RenderInfo& renderInfo) {
+void DebugRenderer::render(GLuint target, RenderInfo const& renderInfo) {
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
 	glViewport(0, 0, renderInfo.cameraInfo.x, renderInfo.cameraInfo.y);
 
@@ -47,7 +47,7 @@ DebugRenderer::DebugRenderer() :
 DebugRenderer::~DebugRenderer() {
 }
 
-void DebugRenderer::renderVector(std::vector<glm::vec2>& line, int32_t type, RenderInfo& renderInfo) {
+void DebugRenderer::renderVector(std::vector<glm::vec2> const& line, int32_t type, RenderInfo const& renderInfo) {
 	GLEnabler glEnabler;
 
 	glEnabler.disable(GL_DEPTH_TEST).disable(GL_BLEND);

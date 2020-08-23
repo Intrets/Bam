@@ -7,7 +7,7 @@ struct CameraInfo;
 
 class UIbackgroundRenderer
 {
-public:
+private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 
@@ -16,7 +16,8 @@ public:
 	bwo::Buffer scales;
 	bwo::Buffer colors;
 
-	void render(UIRenderInfo& renderInfo, GLuint target, CameraInfo& camInfo);
+public:
+	void render(UIRenderInfo const& renderInfo, GLuint target, CameraInfo const& camInfo);
 
 	UIbackgroundRenderer();
 	~UIbackgroundRenderer();

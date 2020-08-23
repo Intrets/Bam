@@ -6,7 +6,7 @@ struct RenderInfo;
 
 class SelectionHighlightRenderer
 {
-public:
+private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 	bwo::Buffer offset;
@@ -15,9 +15,10 @@ public:
 
 	bwo::UniformMatrix4fv VP;
 
+public:
 	SelectionHighlightRenderer();
 	~SelectionHighlightRenderer();
 	
-	void render(RenderInfo& info, GLuint target);
+	void render(RenderInfo const& info, GLuint target);
 };
 

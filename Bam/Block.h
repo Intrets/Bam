@@ -24,7 +24,7 @@ private:
 	bool save(Saver& saver);
 
 public:
-	bool isOccupied(ActivityIgnoringGroup& ignore);
+	bool isOccupied(ActivityIgnoringGroup const& ignore);
 	bool isOccupied();
 
 	bool isOccluded();

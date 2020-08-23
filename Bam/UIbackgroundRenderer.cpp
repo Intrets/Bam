@@ -6,7 +6,7 @@
 #include "GLEnableWrapper.h"
 #include "UIRenderInfo.h"
 
-void UIbackgroundRenderer::render(UIRenderInfo& renderInfo, GLuint target, CameraInfo& cameraInfo) {
+void UIbackgroundRenderer::render(UIRenderInfo const& renderInfo, GLuint target, CameraInfo const& cameraInfo) {
 	if (renderInfo.positions.empty()) {
 		return;
 	}

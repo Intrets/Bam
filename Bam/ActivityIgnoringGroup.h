@@ -12,7 +12,7 @@ public:
 	void add(Handle h);
 	void prepare();
 
-	bool contains(Handle h);
+	bool contains(Handle h) const;
 
 	ActivityIgnoringGroup(std::vector<Activity*>& members);
 	ActivityIgnoringGroup(std::vector<Activity*>& members, std::vector<Activity*>& members2);

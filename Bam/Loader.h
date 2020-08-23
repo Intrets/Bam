@@ -11,11 +11,12 @@ class GameState;
 
 class Loader
 {
-public:
+private:
 	int32_t loc = 0;
 
 	std::ifstream in;
 
+public:
 	template<class T>
 	bool retrieve(T& t);
 

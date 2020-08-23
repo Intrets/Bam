@@ -21,7 +21,7 @@ class StaticWorld
 public:
 	std::optional<WeakReference<Activity, Activity>> getActivity(glm::ivec2 pos);
 
-	bool isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore);
+	bool isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore);
 	bool isOccupied(glm::ivec2 pos);
 
 	void appendStaticRenderInfo(RenderInfo& renderInfo);

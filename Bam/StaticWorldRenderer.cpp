@@ -14,8 +14,7 @@
 StaticWorldRenderer::StaticWorldRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("StaticWorldShader.vert", "StaticWorldShader.frag")),
 	texture("myTextureSampler", this->program, 0),
-	VP("VP", this->program)
-{
+	VP("VP", this->program) {
 	this->VAO.gen(5);
 
 	ModelResource tempp("devtile.obj");
@@ -123,7 +122,7 @@ StaticWorldRenderer::StaticWorldRenderer() :
 StaticWorldRenderer::~StaticWorldRenderer() {
 }
 
-void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, CameraInfo & cameraInfo) {
+void StaticWorldRenderer::render(StaticWorldRenderInfo const& info, GLuint target, CameraInfo const& cameraInfo) {
 	ModelResource tempp("devtile.obj");
 
 	this->VAO.bind();
@@ -134,7 +133,7 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindFramebuffer(GL_FRAMEBUFFER, target);
-	glViewport(0, 0, cameraInfo.x, cameraInfo.y); 
+	glViewport(0, 0, cameraInfo.x, cameraInfo.y);
 
 	this->texture.set(Locator<BlockIDTextures>::get()->getTextureArrayID());
 
@@ -163,7 +162,7 @@ void StaticWorldRenderer::render(StaticWorldRenderInfo & info, GLuint target, Ca
 	this->VAO.unbind();
 }
 
-void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> infos, GLuint target, CameraInfo & cameraInfo) {
+void StaticWorldRenderer::render(std::vector<StaticWorldRenderInfo*> const& infos, GLuint target, CameraInfo const& cameraInfo) {
 	ModelResource temp("devtile.obj");
 
 	this->VAO.bind();

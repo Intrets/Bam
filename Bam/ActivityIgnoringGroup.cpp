@@ -11,7 +11,7 @@ void ActivityIgnoringGroup::prepare() {
 	std::sort(this->sortedHandles.begin(), this->sortedHandles.end());
 }
 
-bool ActivityIgnoringGroup::contains(Handle h) {
+bool ActivityIgnoringGroup::contains(Handle h) const {
 	return std::binary_search(this->sortedHandles.begin(), this->sortedHandles.end(), h);
 }
 

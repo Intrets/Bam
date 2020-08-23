@@ -5,7 +5,7 @@
 #include "Loader.h"
 #include "Saver.h"
 
-bool Block::isOccupied(ActivityIgnoringGroup& ignore) {
+bool Block::isOccupied(ActivityIgnoringGroup const& ignore) {
 	if (this->m.isNotNull()) {
 		return !ignore.contains(this->m.handle);
 	}

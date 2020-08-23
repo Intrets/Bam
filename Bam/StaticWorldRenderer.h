@@ -23,7 +23,7 @@ public:
 	StaticWorldRenderer();
 	~StaticWorldRenderer();
 
-	void render(StaticWorldRenderInfo& info, GLuint target, CameraInfo& cameraInfo);
-	void render(std::vector<StaticWorldRenderInfo*> infos, GLuint target, CameraInfo& cameraInfo);
+	void render(StaticWorldRenderInfo const& info, GLuint target, CameraInfo const& cameraInfo);
+	void render(std::vector<StaticWorldRenderInfo*> const& infos, GLuint target, CameraInfo const& cameraInfo);
 };
 

@@ -30,7 +30,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	uiState.appendRenderInfo(gameState, renderInfo);
 }
 
-void Renderer::render(GLFWwindow* window, RenderInfo& renderInfo) {
+void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	Locator<Timer>::ref().newTiming("Render");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

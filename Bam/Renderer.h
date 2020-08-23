@@ -24,7 +24,7 @@ private:
 public:
 	void prepareRender(GLFWwindow* window, RenderInfo& target, State& state);
 
-	void render(GLFWwindow* window, RenderInfo& renderInfo);
+	void render(GLFWwindow* window, RenderInfo const& renderInfo);
 
 	Renderer();
 	~Renderer();

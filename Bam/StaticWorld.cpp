@@ -106,7 +106,7 @@ Block* StaticWorld::getBlockRef(glm::ivec2 pos) {
 	return &(getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y]);
 }
 
-bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup& ignore) {
+bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore) {
 	auto p = floordivmod(pos, CHUNKSIZE);
 	return getChunkByIndex(p.first.x, p.first.y)->isOccupied(p.second, ignore);
 }

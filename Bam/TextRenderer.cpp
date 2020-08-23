@@ -12,7 +12,7 @@
 #include "Fonts.h"
 #include "Colors.h"
 
-void TextRenderer::render(TextRenderInfo& textRenderInfo, Fonts& fonts, GLuint target, CameraInfo& cameraInfo) {
+void TextRenderer::render(TextRenderInfo const& textRenderInfo, Fonts const& fonts, GLuint target, CameraInfo const& cameraInfo) {
 	for (auto& info : textRenderInfo.windowTextRenderInfos) {
 		glm::ivec2 bot = glm::round((info.screenRectangle.getBottomLeft() / 2.0f + 0.5f) * glm::vec2(info.screenRectangle.getPixelSize()));
 		glm::ivec2 size = glm::round(info.screenRectangle.getAbsSize() / 2.0f * glm::vec2(info.screenRectangle.getPixelSize()));

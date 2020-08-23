@@ -50,7 +50,7 @@ bool StaticWorldChunk::isOccupied(glm::ivec2& pos) {
 	return this->staticWorld[pos.x][pos.y].isOccupied();
 }
 
-bool StaticWorldChunk::isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore) {
+bool StaticWorldChunk::isOccupied(glm::ivec2& pos, ActivityIgnoringGroup const& ignore) {
 	return this->staticWorld[pos.x][pos.y].isOccupied(ignore);
 }
 

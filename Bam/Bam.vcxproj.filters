@@ -371,7 +371,6 @@
     <ClCompile Include="UIOBinds.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="RenderLimiter.cpp">
       <Filter>Program Control</Filter>
@@ -379,9 +378,18 @@
     <ClCompile Include="TickLimiter.cpp">
       <Filter>Program Control</Filter>
     </ClCompile>
-    <ClCompile Include="UIOActivityInterface.cpp" />
-    <ClCompile Include="UIOConstructActivityInterface.cpp" />
-    <ClCompile Include="UIOListSelection.cpp" />
+    <ClCompile Include="UIOConstructActivityInterface.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOActivityInterface.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOListSelection.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelpers.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -668,9 +676,15 @@
     <ClInclude Include="TickLimiter.h">
       <Filter>Program Control</Filter>
     </ClInclude>
-    <ClInclude Include="UIOActivityInterface.h" />
-    <ClInclude Include="UIOConstructActivityInterface.h" />
-    <ClInclude Include="UIOListSelection.h" />
+    <ClInclude Include="UIOConstructActivityInterface.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOActivityInterface.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOListSelection.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

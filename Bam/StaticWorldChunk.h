@@ -17,7 +17,7 @@ public:
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 
 	bool isOccupied(glm::ivec2& pos);
-	bool isOccupied(glm::ivec2& pos, ActivityIgnoringGroup& ignore);
+	bool isOccupied(glm::ivec2& pos, ActivityIgnoringGroup const& ignore);
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);

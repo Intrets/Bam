@@ -11,7 +11,6 @@ template<class T>
 class UIOListSelection : public UIOBase
 {
 private:
-	//int32_t selection;
 	UIOTextDisplay* textDisplay;
 
 	std::vector<T> list;

@@ -74,7 +74,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 SelectionHighlightRenderer::~SelectionHighlightRenderer() {
 }
 
-void SelectionHighlightRenderer::render(RenderInfo & info, GLuint target) {
+void SelectionHighlightRenderer::render(RenderInfo const& info, GLuint target) {
 	ModelResource tempp("devtile.obj");
 
 	this->VAO.bind();
