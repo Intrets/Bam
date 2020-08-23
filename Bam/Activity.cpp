@@ -53,7 +53,7 @@ bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir, std::vector<Ac
 	return true;
 }
 
-glm::vec2 Activity::getMovingOrigin(GameState& gameState) {
+glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
 	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(this->origin);
 	if (this->moving) {
@@ -238,9 +238,6 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve(this->moving);
 	loader.retrieve(this->origin);
 	return true;
-}
-
-void Activity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 }
 
 void Activity::stopActivity(GameState& gameState) {

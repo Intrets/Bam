@@ -43,7 +43,7 @@ Anchor::~Anchor() {
 void Anchor::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 }
 
-void Anchor::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+void Anchor::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 }
 
 bool Anchor::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
@@ -112,7 +112,7 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 	Activity::applyActivityLocalForced(gameState, type, pace);
 }
 
-void Anchor::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+void Anchor::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	for (auto& child : this->children) {
 		child.get()->appendSelectionInfo(gameState, renderInfo, { 0.5,0.5,0.5,0.5 });
 	}

@@ -14,7 +14,7 @@ public:
 
 	void setBase(WeakReference<Activity, Activity> ref);
 
-	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
+	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

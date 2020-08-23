@@ -50,8 +50,8 @@ public:
 	virtual bool load(Loader& loader) override;
 
 	// Render
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
-	virtual void appendStaticRenderInfo(GameState & gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
+	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
+	virtual void appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo & staticWorldRenderInfo) override;
 
 	virtual Activity::TYPE getType() override;
 };

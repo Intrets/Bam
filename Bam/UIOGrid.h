@@ -4,9 +4,10 @@
 
 class UIOGrid : public UIOBase
 {
-public:
+private:
 	glm::ivec2 size;
 
+public:
 	UIOGrid(Handle self, glm::ivec2 size_);
 
 	// Inherited via UIOBase

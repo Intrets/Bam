@@ -70,6 +70,10 @@ CallBackBindResult UIOTextDisplay::runActiveBinds(State& state) {
 	return result;
 }
 
+void UIOTextDisplay::setShrinkToFit(bool b) {
+	this->shrinkToFit = b;
+}
+
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
 		this->text.invalidateCache();
@@ -91,7 +95,7 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	}
 }
 
-int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOTextDisplay::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t ticks = gameState.tick;
 	if (this->ticksSelected < 30) {
 		ticks = 0;

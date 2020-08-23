@@ -20,13 +20,19 @@ public:
 		CENTER,
 	};
 
+private:
 	UIOBase* main;
+
+private:
+	template<class T>
+	friend class UIOConstructer;
 
 	std::optional<UIOSizeType> maybeHeight;
 	std::optional<UIOSizeType> maybeWidth;
 
 	UIOConstrainSize::ALIGNMENT alignment = UIOConstrainSize::ALIGNMENT::CENTER;
 
+public:
 	UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOConstrainSize() = default;
 	~UIOConstrainSize() = default;

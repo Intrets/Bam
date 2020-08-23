@@ -168,7 +168,7 @@ bool RailCrane::load(Loader& loader) {
 	return true;
 }
 
-void RailCrane::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+void RailCrane::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 d = Activity::getDirection(this->orientation);
 	glm::vec2 pos = getMovingOrigin(gameState);
 	float size = static_cast<float>(1 + this->length);
@@ -180,7 +180,7 @@ void RailCrane::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo
 	}
 }
 
-void RailCrane::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+void RailCrane::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	glm::vec2 orientationDir = Activity::getDirection(this->orientation);
 	glm::vec2 moveableOrigin = getMovingOrigin(gameState);
 

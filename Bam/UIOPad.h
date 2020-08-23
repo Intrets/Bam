@@ -5,14 +5,22 @@
 
 class UIOPad : public UIOBase
 {
-public:
+private:
 	UIOBase* main;
+
+private:
+	template<class T>
+	friend class UIOConstructer;
+
+	// TODO: refactor hotbar class
+	friend class UIOHotbar;
 
 	std::optional<UIOSizeType> top;
 	std::optional<UIOSizeType> bottom;
 	std::optional<UIOSizeType> left;
 	std::optional<UIOSizeType> right;
 
+public:
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
 

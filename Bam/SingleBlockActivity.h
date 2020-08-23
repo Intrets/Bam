@@ -35,8 +35,8 @@ public:
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
 	// Render
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color);
-	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
+	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
+	virtual void appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
 
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);

@@ -50,6 +50,16 @@ inline bool indexInVector(size_t const i, std::vector<T> const& V) {
 	return i >= 0 && i < V.size();
 }
 
+//template<class T, int i>
+//inline bool indexInVector(size_t const i, std::array<T, i> const& V) {
+//	return i >= 0 && i < V.size();
+//}
+
+template<class T, size_t s>
+inline bool indexInArray(size_t const i, std::array<T, s>& A) {
+	return i >= 0 && i < s;
+}
+
 inline int32_t idot(glm::ivec2 v1, glm::ivec2 v2) {
 	return v1.x * v2.x + v1.y * v2.y;
 }

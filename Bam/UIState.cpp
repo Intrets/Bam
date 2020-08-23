@@ -179,14 +179,12 @@ UIState::UIState() {
 			.get();
 
 		// selector
-		hotbarPtr->tools[0] = refMan->makeUniqueRef<UIOActivitySelector>();
+		hotbarPtr->addTool(0, refMan->makeUniqueRef<UIOActivitySelector>());
 
 		// linker
-		auto linker = refMan->makeUniqueRef<UIOActivityLinker>();
-		hotbarPtr->tools[1] = std::move(linker);
+		hotbarPtr->addTool(1, refMan->makeUniqueRef<UIOActivityLinker>());
 
 		this->UIs.push_back(std::move(hotbar));
-
 	}
 
 	// save/load and other stuff
@@ -303,14 +301,14 @@ UIState::UIState() {
 			{
 				Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
+				self->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 				return BIND_RESULT::CONTINUE;
 			})
 				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			ptr->color = Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
+			ptr->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
 			listPtr->addElement(std::move(a));
 		}
@@ -325,14 +323,14 @@ UIState::UIState() {
 			{
 				Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
-				self->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
+				self->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 				return BIND_RESULT::CONTINUE;
 			})
 				.pad(UIOSizeType(UIOSizeType::PX, 1))
 				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 				.get();
 
-			ptr->color = Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED;
+			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
 			listPtr->addElement(std::move(a));
 		}

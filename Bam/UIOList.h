@@ -13,8 +13,10 @@ public:
 		DOWN,
 	};
 
+private:
 	DIR direction;
 
+public:
 	UIOList(Handle self, DIR dir);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;

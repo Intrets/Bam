@@ -110,7 +110,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 	origin = center + d;
 }
 
-void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+void Platform::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
@@ -123,7 +123,7 @@ void Platform::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo,
 
 }
 
-void Platform::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {

@@ -4,6 +4,9 @@
 
 class UIOProxy : public UIOBase
 {
+private:
+	ManagedReference<UIOBase, UIOBase> main;
+
 public:
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 
@@ -12,9 +15,6 @@ public:
 	virtual CallBackBindResult runGlobalBinds(State& state) override;
 	virtual CallBackBindResult runFocussedBinds(State& state) override;
 
-	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
-
-private:
-	ManagedReference<UIOBase, UIOBase> main;
+	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth);
 };
 

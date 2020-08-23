@@ -52,7 +52,7 @@ void SingleBlockActivity::getTreeMembersDepths(std::vector<std::pair<int32_t, Ac
 	members.push_back({ depth, this });
 }
 
-void SingleBlockActivity::appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+void SingleBlockActivity::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
@@ -61,7 +61,7 @@ void SingleBlockActivity::appendSelectionInfo(GameState& gameState, RenderInfo& 
 	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1), color);
 }
 
-void SingleBlockActivity::appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;

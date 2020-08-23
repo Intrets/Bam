@@ -99,7 +99,7 @@ public:
 		}
 	}
 
-	glm::ivec2 getDirection(Activity::DIR dir) {
+	static glm::ivec2 getDirection(Activity::DIR dir) {
 		switch (dir) {
 			case Activity::DIR::UP:
 				return glm::ivec2(0, 1);
@@ -147,7 +147,7 @@ private:
 	Handle getRootHandle();
 
 protected:
-	glm::vec2 getMovingOrigin(GameState& gameState);
+	glm::vec2 getMovingOrigin(GameState const& gameState) const;
 
 	int32_t activityPace = 10;
 	int32_t activityTickStart = 0;
@@ -235,7 +235,7 @@ public:
 	virtual bool load(Loader& loader);
 
 	// Render
-	virtual void appendSelectionInfo(GameState& gameState, RenderInfo& renderInfo, glm::vec4 color) = 0;
-	virtual void appendStaticRenderInfo(GameState& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
+	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) = 0;
+	virtual void appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) = 0;
 };
 

@@ -160,7 +160,7 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 	return sumResult;
 }
 
-int32_t UIOBase::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOBase::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t maxDepth = 0;
 	for (auto& element : this->elements) {
 		maxDepth = glm::max(maxDepth, element.get()->addRenderInfo(gameState, renderInfo, depth));

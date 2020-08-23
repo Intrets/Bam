@@ -69,7 +69,7 @@ namespace TextConstructer
 		auto ptr = res.get();
 		ptr->text.setString(text);
 		ptr->text.hideCursor();
-		ptr->shrinkToFit = shrink;
+		ptr->setShrinkToFit(shrink);
 
 		return UIOConstructer<UIOTextDisplay>(std::move(res));
 	}
