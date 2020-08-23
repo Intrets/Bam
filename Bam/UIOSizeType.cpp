@@ -1,7 +1,7 @@
 #include "common.h"
 
 #include "UIOSizeType.h"
-#include "ScreenRectangle.h"
+#include "Rectangle.h"
 
 UIOSizeType::UIOSizeType(UIOSizeType::TYPE t, int32_t val) {
 	this->type = t;

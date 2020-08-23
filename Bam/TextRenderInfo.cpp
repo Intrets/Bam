@@ -17,7 +17,7 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 	FontInfo& fontInfo = Locator<Fonts>::ref().getFont(font);
 
 	for (char c : text) {
-		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.screenPixels) / this->screenRectangle.size() * 4.0f;
+		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.getPixelSize()) / this->screenRectangle.getAbsSize() * 4.0f;
 
 		glm::vec2 addPos;
 
@@ -70,7 +70,7 @@ void WindowTextRenderInfo::setDepth(float depth_) {
 }
 
 glm::vec2 WindowTextRenderInfo::getRenderedScreenSize() {
-	return this->screenRectangle.size() * this->renderedSize / 2.0f;
+	return this->screenRectangle.getAbsSize() * this->renderedSize / 2.0f;
 }
 
 std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {
@@ -116,8 +116,8 @@ std::optional<Rectangle> Text::getCursorQuadScreen() const {
 	glm::vec2 a = (glm::vec2(cursorShape[0], cursorShape[1]) - this->view) / 2.0f + 0.5f;
 	glm::vec2 b = glm::vec2(cursorShape[2], cursorShape[3]) / 2.0f;
 
-	a *= this->lastScreenRectangle.size();
-	b *= this->lastScreenRectangle.size();
+	a *= this->lastScreenRectangle.getAbsSize();
+	b *= this->lastScreenRectangle.getAbsSize();
 
 	a += this->lastScreenRectangle.getBottomLeft();
 	b += a;
@@ -157,7 +157,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 
 		if (maybeQuad.has_value()) {
 			auto const& quad = maybeQuad.value();
-			renderInfo.uiRenderInfo.addRectangle(quad.bot, quad.top, COLORS::UI::CURSOR, depth++);
+			renderInfo.uiRenderInfo.addRectangle(quad.getBottomLeft(), quad.getTopRight(), COLORS::UI::CURSOR, depth++);
 		}
 	}
 
@@ -256,12 +256,12 @@ void Text::moveCursor(glm::ivec2 p) {
 	if (maybeCursorQuad.has_value()) {
 		glm::vec4& cursorQuad = maybeCursorQuad.value();
 		Rectangle cursorRect;
-		cursorRect.bot = glm::vec2(cursorQuad[0], cursorQuad[1]);
-		cursorRect.top = cursorRect.bot + glm::vec2(cursorQuad[2], cursorQuad[3]);
+		cursorRect.getBottomLeft() = glm::vec2(cursorQuad[0], cursorQuad[1]);
+		cursorRect.getTopRight() = cursorRect.getBottomLeft() + glm::vec2(cursorQuad[2], cursorQuad[3]);
 
 		Rectangle viewRect;
-		viewRect.bot = glm::vec2(-1.0f) + this->view;
-		viewRect.top = glm::vec2(1.0f) + this->view;
+		viewRect.getBottomLeft() = glm::vec2(-1.0f) + this->view;
+		viewRect.getTopRight() = glm::vec2(1.0f) + this->view;
 
 		float leftDist = cursorRect.getLeft() - viewRect.getLeft();
 		float rightDist = viewRect.getRight() - cursorRect.getRight();
@@ -290,11 +290,11 @@ void Text::moveView(glm::ivec2 p) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
 	}
 	int32_t pxHeight = Locator<Fonts>::ref().getFont(this->lastFont).charSize[0].y;
-	if (this->lastScreenRectangle.screenPixels.y == 0) {
+	if (this->lastScreenRectangle.getPixelSize().y == 0) {
 		return;
 	}
 
-	float height = this->lastScreenRectangle.getHeight() / 2.0f * this->lastScreenRectangle.screenPixels.y;
+	float height = this->lastScreenRectangle.getHeight() / 2.0f * this->lastScreenRectangle.getPixelSize().y;
 
 	float lineHeight = 2.0f * pxHeight / height;
 

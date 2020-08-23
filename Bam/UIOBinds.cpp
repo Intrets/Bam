@@ -36,7 +36,7 @@ namespace UIOBinds
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 
 				glm::vec2 click = params.uiState.getCursorPositionScreen() - ptr->getScreenRectangle().getBottomLeft();
-				click /= ptr->getScreenRectangle().size();
+				click /= ptr->getScreenRectangle().getAbsSize();
 				click = click * 2.0f - 1.0f;
 				click += ptr->text.view;
 

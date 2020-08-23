@@ -115,7 +115,7 @@ bool UIState::updateSize(GLFWwindow* window) {
 	}
 
 	ScreenRectangle r;
-	r.screenPixels = glm::ivec2(x, y);
+	r.setPixelSize(glm::ivec2(x, y));
 	r.set({ -1,-1 }, { 1,1 });
 	for (auto& UI : this->UIs) {
 		UI.get()->updateSize(r);

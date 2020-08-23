@@ -266,9 +266,6 @@
     <ClCompile Include="ActivityLuaTest.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenRectangle.cpp">
-      <Filter>Game\Logic\User IO Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="UIOSizeType.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
@@ -555,9 +552,6 @@
     </ClInclude>
     <ClInclude Include="ActivityLuaTest.h">
       <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="ScreenRectangle.h">
-      <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
     <ClInclude Include="UIOSizeType.h">
       <Filter>Game\Logic\User IO Controllers</Filter>

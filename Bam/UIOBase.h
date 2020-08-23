@@ -3,7 +3,7 @@
 #include <optional>
 #include <variant>
 
-#include "ScreenRectangle.h"
+#include "Rectangle.h"
 #include "ReferenceManager.h"
 #include "ControlState.h"
 

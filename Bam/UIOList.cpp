@@ -20,28 +20,32 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 				{
 					glm::vec2 p = rec.getTopRight() - newRec.getTopRight();
 					element.get()->translate(p);
-					rec.top.x -= newRec.getWidth();
+					rec.translateRight(-newRec.getWidth());
+					//rec.top.x -= newRec.getWidth();
 				}
 				break;
 			case DIR::RIGHT:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);
-					rec.bot.x += newRec.getWidth();
+					rec.translateLeft(newRec.getWidth());
+					//rec.bot.x += newRec.getWidth();
 				}
 				break;
 			case DIR::UP:
 				{
 					glm::vec2 p = rec.getBottomLeft() - newRec.getBottomLeft();
 					element.get()->translate(p);
-					rec.bot.y += newRec.getHeight();
+					rec.translateBottom(newRec.getHeight());
+					//rec.bot.y += newRec.getHeight();
 				}
 				break;
 			case DIR::DOWN:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);
-					rec.top.y -= newRec.getHeight();
+					rec.translateTop(-newRec.getHeight());
+					//rec.top.y -= newRec.getHeight();
 				}
 				break;
 			default:

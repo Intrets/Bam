@@ -365,9 +365,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
 				bottomRight.y =
 					params.uiState.getCursorPositionScreenClamped(0.99f).y
-					- self->mousePressOffset.y - self->screenRectangle.size().y;
-				if (windowPtr->screenRectangle.top.y - bottomRight.y < 0.2f) {
-					bottomRight.y = windowPtr->screenRectangle.top.y - 0.2f;
+					- self->mousePressOffset.y - self->screenRectangle.getAbsSize().y;
+				if (windowPtr->screenRectangle.getTop() - bottomRight.y < 0.2f) {
+					bottomRight.y = windowPtr->screenRectangle.getTop() - 0.2f;
 				}
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);
@@ -395,9 +395,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
 				bottomRight.x =
 					params.uiState.getCursorPositionScreenClamped(0.99f).x
-					- self->mousePressOffset.x + self->screenRectangle.size().x;
-				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
-					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
+					- self->mousePressOffset.x + self->screenRectangle.getAbsSize().x;
+				if (bottomRight.x - windowPtr->screenRectangle.getLeft() < 0.2f) {
+					bottomRight.x = windowPtr->screenRectangle.getLeft() + 0.2f;
 				}
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);
@@ -424,12 +424,12 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			if (self->down) {
 				auto bottomRight =
 					params.uiState.getCursorPositionScreenClamped(0.99f)
-					- self->mousePressOffset + glm::vec2(1.0f, -1.0f) * self->screenRectangle.size();
-				if (bottomRight.x - windowPtr->screenRectangle.bot.x < 0.2f) {
-					bottomRight.x = windowPtr->screenRectangle.bot.x + 0.2f;
+					- self->mousePressOffset + glm::vec2(1.0f, -1.0f) * self->screenRectangle.getAbsSize();
+				if (bottomRight.x - windowPtr->screenRectangle.getLeft() < 0.2f) {
+					bottomRight.x = windowPtr->screenRectangle.getLeft() + 0.2f;
 				}
-				if (windowPtr->screenRectangle.top.y - bottomRight.y < 0.2f) {
-					bottomRight.y = windowPtr->screenRectangle.top.y - 0.2f;
+				if (windowPtr->screenRectangle.getTop() - bottomRight.y < 0.2f) {
+					bottomRight.y = windowPtr->screenRectangle.getTop() - 0.2f;
 				}
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);

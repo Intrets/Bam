@@ -331,7 +331,6 @@
     <ClCompile Include="ResourceManagerModel.cpp" />
     <ClCompile Include="ResourceManagerTexture.cpp" />
     <ClCompile Include="Saver.cpp" />
-    <ClCompile Include="ScreenRectangle.cpp" />
     <ClCompile Include="SelectionHighlightRenderer.cpp" />
     <ClCompile Include="SelectionRenderInfo.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
@@ -419,7 +418,6 @@
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
     <ClInclude Include="Saver.h" />
-    <ClInclude Include="ScreenRectangle.h" />
     <ClInclude Include="SelectionHighlightRenderer.h" />
     <ClInclude Include="SelectionRenderInfo.h" />
     <ClInclude Include="SingleBlockActivity.h" />

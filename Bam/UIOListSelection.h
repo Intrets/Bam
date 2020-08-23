@@ -88,12 +88,12 @@ inline int32_t UIOListSelection<T>::addRenderInfo(GameState const& gameState, Re
 	if (maybeCursorQuad.has_value()) {
 		auto const& cursorQuad = maybeCursorQuad.value();
 
-		float a = glm::max(this->screenRectangle.bot.y, cursorQuad.bot.y);
-		float b = glm::min(this->screenRectangle.top.y, cursorQuad.top.y);
+		float a = glm::max(this->screenRectangle.getBot(), cursorQuad.getBot());
+		float b = glm::min(this->screenRectangle.getTop(), cursorQuad.getTop());
 
 		if (a < b) {
-			glm::vec2 bot = { this->screenRectangle.bot.x, a };
-			glm::vec2 top = { this->screenRectangle.top.x, b };
+			glm::vec2 bot = { this->screenRectangle.getLeft(), a };
+			glm::vec2 top = { this->screenRectangle.getRight(), b };
 
 			renderInfo.uiRenderInfo.addRectangle(bot, top, COLORS::UI::CURSOR, depth++);
 		}

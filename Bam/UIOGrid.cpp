@@ -12,7 +12,7 @@ ScreenRectangle UIOGrid::updateSize(ScreenRectangle newScreenRectangle) {
 
 	//glm::vec2 pos = newScreenRectangle.getTopLeft();
 	glm::vec2 pos = glm::vec2(0.0f, 0.0f);
-	glm::vec2 gridSize = newScreenRectangle.size() / glm::vec2(size);
+	glm::vec2 gridSize = newScreenRectangle.getAbsSize() / glm::vec2(size);
 
 	ScreenRectangle rec = newScreenRectangle;
 	rec.setWidth(gridSize.x);

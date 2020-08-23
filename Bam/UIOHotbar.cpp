@@ -142,14 +142,14 @@ ScreenRectangle UIOHotbar::updateSize(ScreenRectangle newScreenRectangle) {
 int32_t UIOHotbar::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	renderInfo.uiRenderInfo.addRectangle(
-		this->slotSize[this->selected]->getScreenRectangle().top,
-		this->slotSize[this->selected]->getScreenRectangle().bot,
+		this->slotSize[this->selected]->getScreenRectangle().getTopRight(),
+		this->slotSize[this->selected]->getScreenRectangle().getBottomLeft(),
 		{ 1,0,0,1 },
 		depth++
 	);
 	renderInfo.uiRenderInfo.addRectangle(
-		this->getScreenRectangle().top,
-		this->getScreenRectangle().bot,
+		this->getScreenRectangle().getTopRight(),
+		this->getScreenRectangle().getBottomLeft(),
 		{ 0.5f,0.5f,0.5f,1 },
 		depth++
 	);

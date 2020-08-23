@@ -28,7 +28,7 @@ void UIOBase::translate(glm::vec2 p) {
 }
 
 void UIOBase::setScreenPixels(glm::ivec2 px) {
-	this->screenRectangle.screenPixels = px;
+	this->screenRectangle.setPixelSize(px);
 	for (auto& element : this->elements) {
 		element.get()->setScreenPixels(px);
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-struct ScreenRectangle;
+class ScreenRectangle;
 
 struct UIOSizeType
 {

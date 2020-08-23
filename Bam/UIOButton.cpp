@@ -91,7 +91,7 @@ int32_t UIOButton::addRenderInfo(GameState const& gameState, RenderInfo& renderI
 	if (this->maybeMain) {
 		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);
 	}
-	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.bot, this->screenRectangle.top, c, depth++);
+	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.getBottomLeft(), this->screenRectangle.getTopRight(), c, depth++);
 	return depth;
 }
 
