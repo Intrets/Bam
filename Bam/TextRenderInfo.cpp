@@ -80,7 +80,13 @@ std::optional<int32_t> WindowTextRenderInfo::getIndex(glm::vec2 p) {
 	}
 	auto index = line->second.find(glm::vec2(p.x));
 	if (index == line->second.end()) {
-		return std::nullopt;
+		if (line->second.size() == 0) {
+			return std::nullopt;
+		}
+		else {
+			auto t = line->second.end();
+			return (--t)->second;
+		}
 	}
 	return index->second;
 }
