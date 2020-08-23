@@ -45,8 +45,14 @@ protected:
 	std::vector<Bind> onHoverBinds;
 	std::vector<Bind> activeBinds;
 
-public:
+protected:
+	template<class T>
+	friend class UIOConstructer;
+
 	ScreenRectangle screenRectangle;
+
+public:
+	ScreenRectangle const& getScreenRectangle() const;
 
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
 
@@ -56,7 +62,7 @@ public:
 	virtual void translate(glm::vec2 p);
 	void setScreenPixels(glm::ivec2 px);
 	void moveTopLeftTo(glm::vec2 p);
-	bool contains(glm::vec2 p);
+	bool contains(glm::vec2 p) const;
 
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);

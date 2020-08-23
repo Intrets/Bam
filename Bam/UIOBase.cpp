@@ -3,6 +3,10 @@
 #include "UIOBase.h"
 #include "State.h"
 
+ScreenRectangle const& UIOBase::getScreenRectangle() const {
+	return this->screenRectangle;
+}
+
 void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	this->elements.push_back(std::move(element));
 }
@@ -34,7 +38,7 @@ void UIOBase::moveTopLeftTo(glm::vec2 p) {
 	translate(p - this->screenRectangle.getTopLeft());
 }
 
-bool UIOBase::contains(glm::vec2 p) {
+bool UIOBase::contains(glm::vec2 p) const {
 	return this->screenRectangle.contains(p);
 }
 

@@ -12,7 +12,7 @@ namespace UIOBinds
 		void activatable(UIOBase* ptr) {
 			ptr->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
-				if (!ptr->screenRectangle.contains(params.uiState.getCursorPositionScreen())) {
+				if (!ptr->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 					ptr->deactivate();
 					return BIND_RESULT::CONTINUE;
 				}
@@ -35,8 +35,8 @@ namespace UIOBinds
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 
-				glm::vec2 click = params.uiState.getCursorPositionScreen() - ptr->screenRectangle.getBottomLeft();
-				click /= ptr->screenRectangle.size();
+				glm::vec2 click = params.uiState.getCursorPositionScreen() - ptr->getScreenRectangle().getBottomLeft();
+				click /= ptr->getScreenRectangle().size();
 				click = click * 2.0f - 1.0f;
 				click += ptr->text.view;
 

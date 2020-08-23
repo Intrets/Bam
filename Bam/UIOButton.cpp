@@ -28,7 +28,7 @@ UIOButton::UIOButton(Handle self) {
 
 	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED,ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (!self_->screenRectangle.contains(params.uiState.getCursorPositionScreen())) {
+		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 			self_->deactivate();
 		}
 		return BIND_RESULT::CONTINUE;
@@ -38,7 +38,7 @@ UIOButton::UIOButton(Handle self) {
 	{
 		auto self = static_cast<UIOButton*>(self_);
 		self->down = true;
-		self->mousePressOffset = params.uiState.getCursorPositionScreen() - self->screenRectangle.getTopLeft();
+		self->mousePressOffset = params.uiState.getCursorPositionScreen() - self->getScreenRectangle().getTopLeft();
 		return self->onPress(params, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
 	});
 

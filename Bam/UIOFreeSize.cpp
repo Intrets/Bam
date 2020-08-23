@@ -10,7 +10,7 @@ UIOFreeSize::UIOFreeSize(Handle self, UniqueReference<UIOBase, UIOBase> main) {
 ScreenRectangle UIOFreeSize::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
 	for (auto& element : this->elements) {
-		auto r = element.get()->screenRectangle;
+		ScreenRectangle r = element.get()->getScreenRectangle();
 		r.screenPixels = newScreenRectangle.screenPixels;
 		element.get()->updateSize(r);
 	}
