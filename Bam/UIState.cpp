@@ -15,12 +15,10 @@
 #include "UIOActivitySelector.h"
 #include "Option.h"
 #include "UIOTextConstructers.h"
-#include "UIOSimpleTextDisplay.h"
 #include "UIOGrid.h"
 #include "UIOList.h"
 #include "UIOPad.h"
 #include "UIOSizeType.h"
-#include "UIOConstructButtons.h"
 #include "Saver.h"
 #include "Loader.h"
 #include "UIOEmpty.h"
@@ -243,7 +241,7 @@ UIState::UIState() {
 
 			listPtr->addElement(std::move(text));
 
-			auto saveButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructer("save")
+			auto saveButton = TextConstructer::constructSingleLineDisplayText("save")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -265,7 +263,7 @@ UIState::UIState() {
 
 			listPtr->addElement(std::move(saveButton));
 
-			auto loadButton = UIOConstructer<UIOSimpleTextDisplay>::makeConstructer("load")
+			auto loadButton = TextConstructer::constructSingleLineDisplayText("load")
 				.align(UIOConstrainSize::ALIGNMENT::CENTER)
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult

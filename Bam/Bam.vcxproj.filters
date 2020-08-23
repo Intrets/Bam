@@ -341,9 +341,6 @@
     <ClCompile Include="UIOShell.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOSimpleTextDisplay.cpp">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClCompile>
     <ClCompile Include="UIOTextDisplay.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
@@ -358,9 +355,6 @@
     </ClCompile>
     <ClCompile Include="UIOEmpty.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOConstructButtons.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Misc</Filter>
@@ -637,9 +631,6 @@
     <ClInclude Include="UIOShell.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOSimpleTextDisplay.h">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClInclude>
     <ClInclude Include="UIOTextDisplay.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
@@ -654,9 +645,6 @@
     </ClInclude>
     <ClInclude Include="UIOEmpty.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOConstructButtons.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Misc</Filter>

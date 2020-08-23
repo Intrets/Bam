@@ -76,9 +76,13 @@ private:
 	glm::ivec2 cursor;
 	int32_t cursorIndex;
 
+private:
+	ScreenRectangle lastScreenRectangle;
+
+	friend class UIOTextDisplay;
+
 public:
 	std::optional<WindowTextRenderInfo> cachedRenderInfo;
-	ScreenRectangle lastScreenRectangle;
 	Fonts::Font lastFont;
 	bool lastWrap;
 

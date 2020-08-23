@@ -6,7 +6,6 @@
 #include "GameState.h"
 #include "State.h"
 #include "UIOList.h"
-#include "UIOConstructButtons.h"
 #include "RenderInfo.h"
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
