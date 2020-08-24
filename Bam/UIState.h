@@ -11,6 +11,8 @@ private:
 	glm::vec2 cursorScreen;
 	glm::vec2 cursorWorld;
 
+	CallBackBindResult runFrontBinds(State& state);
+
 public:
 	std::list<UniqueReference<UIOBase, UIOBase>> UIs;
 

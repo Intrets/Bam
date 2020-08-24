@@ -56,9 +56,9 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	}
 	Locator<Timer>::ref().endTiming("Render");
 
-	Locator<Timer>::ref().newTiming("Swap Wait");
+	Locator<Timer>::ref().newTiming("Swap Buffers");
 	glfwSwapBuffers(window);
-	Locator<Timer>::ref().endTiming("Swap Wait");
+	Locator<Timer>::ref().endTiming("Swap Buffers");
 }
 
 Renderer::Renderer() {

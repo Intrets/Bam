@@ -36,6 +36,79 @@
 #include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
 
+CallBackBindResult UIState::runFrontBinds(State& state) {
+	{
+		CallBackBindResult activeResult = this->UIs.front().get()->runOnHoverBinds(state);
+		CallBackBindResult res = 0;
+		bool shouldExit = false;
+		if (activeResult & BIND_RESULT::CLOSE) {
+			this->UIs.pop_front();
+			shouldExit = true;
+		}
+		if (activeResult & BIND_RESULT::STOP) {
+			res |= BIND_RESULT::STOP;
+			shouldExit = true;
+		}
+
+		if (shouldExit) {
+			return res;
+		}
+	}
+	{
+		CallBackBindResult activeResult = this->UIs.front().get()->runFocussedBinds(state);
+		CallBackBindResult res = 0;
+		bool shouldExit = false;
+		if (activeResult & BIND_RESULT::CLOSE) {
+			this->UIs.pop_front();
+			shouldExit = true;
+		}
+		if (activeResult & BIND_RESULT::STOP) {
+			res |= BIND_RESULT::STOP;
+			shouldExit = true;
+		}
+
+		if (shouldExit) {
+			return res;
+		}
+	}
+	{
+		CallBackBindResult activeResult = this->UIs.front().get()->runActiveBinds(state);
+		CallBackBindResult res = 0;
+		bool shouldExit = false;
+		if (activeResult & BIND_RESULT::CLOSE) {
+			this->UIs.pop_front();
+			shouldExit = true;
+		}
+		if (activeResult & BIND_RESULT::STOP) {
+			res |= BIND_RESULT::STOP;
+			shouldExit = true;
+		}
+
+		if (shouldExit) {
+			return res;
+		}
+	}
+	{
+		CallBackBindResult activeResult = this->UIs.front().get()->runGlobalBinds(state);
+		CallBackBindResult res = 0;
+		bool shouldExit = false;
+		if (activeResult & BIND_RESULT::CLOSE) {
+			this->UIs.pop_front();
+			shouldExit = true;
+		}
+		if (activeResult & BIND_RESULT::STOP) {
+			res |= BIND_RESULT::STOP;
+			shouldExit = true;
+		}
+
+		if (shouldExit) {
+			return res;
+		}
+	}
+	
+	return BIND_RESULT::CONTINUE;
+}
+
 glm::vec2 UIState::getCursorPositionWorld() {
 	return this->cursorWorld;
 }
@@ -49,7 +122,17 @@ glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
 }
 
 void UIState::run(State& state) {
-	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
+	auto res = this->runFrontBinds(state);
+
+	if (res & BIND_RESULT::STOP) {
+		return;
+	}
+
+	if (this->UIs.empty()) {
+		return;
+	}
+
+	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
 		auto& UI = *it;
 		CallBackBindResult clickedResult = UI.get()->runOnHoverBinds(state);
 		if (clickedResult & BIND_RESULT::CLOSE) {
@@ -68,24 +151,7 @@ void UIState::run(State& state) {
 		}
 	}
 
-	CallBackBindResult focussedResult = this->UIs.front().get()->runFocussedBinds(state);
-	if (focussedResult & BIND_RESULT::CLOSE) {
-		this->UIs.pop_front();
-	}
-	if (focussedResult & BIND_RESULT::STOP) {
-		return;
-	}
-
-	// FEATURE: decide if active binds should be run for all UIs and not just the one in front 
-	CallBackBindResult activeResult = this->UIs.front().get()->runActiveBinds(state);
-	if (activeResult & BIND_RESULT::CLOSE) {
-		this->UIs.pop_front();
-	}
-	if (activeResult & BIND_RESULT::STOP) {
-		return;
-	}
-
-	for (auto it = this->UIs.begin(); it != this->UIs.end();) {
+	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
 		auto& UI = *it;
 		CallBackBindResult uiResult = UI.get()->runGlobalBinds(state);
 		if (uiResult & BIND_RESULT::CLOSE) {
