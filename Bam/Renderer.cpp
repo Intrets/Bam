@@ -25,9 +25,13 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::get();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
+	Locator<Timer>::ref().newTiming("Prepare Static");
 	gameState.appendStaticRenderInfo(renderInfo);
+	Locator<Timer>::ref().endTiming("Prepare Static");
 
+	Locator<Timer>::ref().newTiming("Prepare UI");
 	uiState.appendRenderInfo(gameState, renderInfo);
+	Locator<Timer>::ref().endTiming("Prepare UI");
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {

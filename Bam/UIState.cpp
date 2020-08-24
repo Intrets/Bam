@@ -218,7 +218,7 @@ UIState::UIState() {
 				});
 			})
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 120))
+				.constrainHeight(UIOSizeType(UIOSizeType::PX, 180))
 				.get();
 
 			listPtr->addElement(std::move(text));

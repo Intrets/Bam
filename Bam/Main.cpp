@@ -65,8 +65,10 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("Render Loop");
 			Locator<Timer>::ref().newTiming("Render Loop");
 
-			Locator<Timer>::ref().newTiming("Prepare render");
+			Locator<Timer>::ref().newTiming("UI update size");
 			state.uiState.updateSize(window);
+			Locator<Timer>::ref().endTiming("UI update size");
+			Locator<Timer>::ref().newTiming("Prepare render");
 			renderer.prepareRender(window, renderInfo, state);
 			Locator<Timer>::ref().endTiming("Prepare render");
 
