@@ -8,7 +8,7 @@ class UIOTextDisplay : public UIOBase
 private:
 	bool lineWrap;
 	int32_t ticksSelected;
-
+	bool clickSupport;
 	bool shrinkToFit;
 
 public:
@@ -22,6 +22,7 @@ public:
 	virtual	CallBackBindResult runActiveBinds(State& state) override;
 
 	void setShrinkToFit(bool b);
+	void setClickSupport(bool b);
 
 	void setText(std::string text_);
 	void setText(std::vector<std::string> text_);

@@ -8,9 +8,10 @@
 #include "Rectangle.h"
 #include "Colors.h"
 
-WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_) {
-	this->screenRectangle = rect;
-	this->lineWrap = lineWrap_;
+WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_, bool clickSupport_) :
+	screenRectangle(rect),
+	lineWrap(lineWrap_),
+	clickSelect(clickSupport_) {
 }
 
 void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
@@ -30,14 +31,16 @@ void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
 
 		this->laneHeight = glm::max(this->laneHeight, size.y);
 
-		glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
-		glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
+		if (this->clickSelect) {
+			glm::vec2 vertRange = glm::vec2(addPos.y, addPos.y + size.y);
+			glm::vec2 horRange = glm::vec2(addPos.x, addPos.x + size.x);
 
-		auto it = this->lines.find(vertRange);
-		if (it == this->lines.end()) {
-			it = this->lines.insert({ vertRange, {} }).first;
+			auto it = this->lines.find(vertRange);
+			if (it == this->lines.end()) {
+				it = this->lines.insert({ vertRange, {} }).first;
+			}
+			it->second[horRange] = static_cast<int32_t>(uvs.size());
 		}
-		it->second[horRange] = static_cast<int32_t>(uvs.size());
 
 
 		this->pos.push_back(glm::vec4(addPos, size));
@@ -129,11 +132,12 @@ void Text::invalidateCache() {
 	this->cachedRenderInfo = std::nullopt;
 }
 
-void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap) {
+void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap, bool clickSupport) {
 	this->lastScreenRectangle = screenRectangle;
 	this->lastFont = font;
 	this->lastWrap = wrap;
-	WindowTextRenderInfo textInfo(screenRectangle, wrap);
+	this->lastClickSupport = clickSupport;
+	WindowTextRenderInfo textInfo(screenRectangle, wrap, clickSupport);
 
 	for (auto& line : lines) {
 		textInfo.addString(font, line);
@@ -142,9 +146,9 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 	this->cachedRenderInfo = textInfo;
 }
 
-int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor) {
+int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport) {
 	if (!cachedRenderInfo.has_value()) {
-		this->makeRenderInfo(screenRectangle, font, wrap);
+		this->makeRenderInfo(screenRectangle, font, wrap, clickSupport);
 	}
 	auto& textRenderInfo = cachedRenderInfo.value();
 
@@ -249,7 +253,7 @@ void Text::moveCursor(glm::ivec2 p) {
 	this->cursorIndex += this->cursor.x;
 
 	if (!this->cachedRenderInfo.has_value()) {
-		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
+		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap, this->lastClickSupport);
 	}
 
 	auto maybeCursorQuad = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
@@ -287,7 +291,7 @@ void Text::moveCursor(glm::ivec2 p) {
 
 void Text::moveView(glm::ivec2 p) {
 	if (!this->cachedRenderInfo.has_value()) {
-		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
+		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap, this->lastClickSupport);
 	}
 	int32_t pxHeight = Locator<Fonts>::ref().getFont(this->lastFont).charSize[0].y;
 	if (this->lastScreenRectangle.getPixelSize().y == 0) {
@@ -301,7 +305,7 @@ void Text::moveView(glm::ivec2 p) {
 	this->view += lineHeight * glm::vec2(p) * 1.4f;
 
 	if (!this->cachedRenderInfo.has_value()) {
-		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap);
+		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap, this->lastClickSupport);
 	}
 
 	// margin from top

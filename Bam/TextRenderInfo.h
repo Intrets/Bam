@@ -46,9 +46,13 @@ public:
 		}
 	};
 
+	// click to select characters support
+	bool clickSelect;
+
+	// lines for click cursor selecting
 	std::map<glm::vec2, std::map<glm::vec2, int32_t, cmp>, cmp> lines;
 
-	WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap = false);
+	WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap = false, bool clickSupport_ = false);
 
 	void addString(Fonts::Font font, std::string text);
 	void newLine();
@@ -78,6 +82,7 @@ private:
 
 private:
 	ScreenRectangle lastScreenRectangle;
+	bool lastClickSupport;
 
 	friend class UIOTextDisplay;
 
@@ -93,9 +98,9 @@ public:
 	std::optional<Rectangle> getCursorQuadScreen() const;
 
 	void invalidateCache();
-	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap);
+	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap, bool clickSupport);
 
-	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor);
+	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport);
 
 	bool deleteChar();
 	bool backspaceChar();

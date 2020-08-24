@@ -30,6 +30,7 @@ namespace UIOBinds
 	namespace TextEdit
 	{
 		void clickSelect(UIOTextDisplay* ptr) {
+			ptr->setClickSupport(true);
 			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED },
 								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{

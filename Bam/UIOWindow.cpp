@@ -62,8 +62,15 @@ CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
 	auto result = UIOBase::runOnHoverBinds(state);
 
-	if (this->screenRectangle.contains(state.uiState.getCursorPositionScreen()) && state.controlState.activated({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED })) {
-		state.controlState.consumeControl(ControlState::CONTROLS::ACTION0);
+	if (state.controlState.activated({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED })) {
+		if (minimized) {
+			if (this->topBarPtr->getScreenRectangle().contains(state.uiState.getCursorPositionScreen())) {
+				state.controlState.consumeControl(ControlState::CONTROLS::ACTION0);
+			}
+		}
+		else if (this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
+			state.controlState.consumeControl(ControlState::CONTROLS::ACTION0);
+		}
 	}
 
 	return result;
