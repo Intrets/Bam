@@ -2,16 +2,17 @@
 
 #include "UIOSizeType.h"
 #include "Rectangle.h"
+#include "Option.h"
 
 UIOSizeType::UIOSizeType(UIOSizeType::TYPE t, int32_t val) {
 	this->type = t;
-	assert(t == UIOSizeType::PX);
+	assert(t == UIOSizeType::STATIC_PX || t == UIOSizeType::PX);
 	this->px = val;
 }
 
 UIOSizeType::UIOSizeType(UIOSizeType::TYPE t, float val) {
 	this->type = t;
-	assert(t != UIOSizeType::PX);
+	assert(t != UIOSizeType::STATIC_PX);
 	this->absolute_height = val;
 }
 
@@ -20,6 +21,12 @@ float UIOSizeType::getWidth(ScreenRectangle screenRectangle) {
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (this->type) {
 		case UIOSizeType::PX:
+			widthS = Option<OPTION::UI_SCALE, float>::getVal() * 2.0f * static_cast<float>(this->px) / pixelSize.x;
+			break;
+		case UIOSizeType::FH:
+			widthS = Option<OPTION::UI_SCALE, float>::getVal() * this->relative * 2.0f * 17.0f / pixelSize.x;
+			break;
+		case UIOSizeType::STATIC_PX:
 			widthS = 2 * static_cast<float>(this->px) / pixelSize.x;
 			break;
 		case UIOSizeType::ABSOLUTE_HEIGHT:
@@ -46,6 +53,12 @@ float UIOSizeType::getHeight(ScreenRectangle screenRectangle) {
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (type) {
 		case UIOSizeType::PX:
+			heightS = Option<OPTION::UI_SCALE, float>::getVal() * 2 * static_cast<float>(this->px) / pixelSize.y;
+			break;
+		case UIOSizeType::FH:
+			heightS = Option<OPTION::UI_SCALE, float>::getVal() * this->relative * 2.0f * 17.0f / pixelSize.y;
+			break;
+		case UIOSizeType::STATIC_PX:
 			heightS = 2 * static_cast<float>(this->px) / pixelSize.y;
 			break;
 		case UIOSizeType::ABSOLUTE_HEIGHT:

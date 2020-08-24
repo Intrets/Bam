@@ -268,7 +268,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(this->object));
 	auto mainPadPtr = mainPad.get();
-	mainPadPtr->top = { UIOSizeType::PX, 20 };
+	mainPadPtr->top = { UIOSizeType::FH, 1.2f };
 	if (types & UIOWindow::TYPE::RESIZE) {
 		types |= UIOWindow::TYPE::RESIZEHORIZONTAL | UIOWindow::TYPE::RESIZEVERTICAL;
 	}
@@ -290,7 +290,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 		.setPtr(topList)
 		.addBind(UIOBinds::Base::focusable)
-		.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+		.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 		.align(UIOConstrainSize::ALIGNMENT::TOP)
 		.get();
 
@@ -305,9 +305,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		{
 			return BIND_RESULT::CLOSE;
 		})
-			.pad(UIOSizeType(UIOSizeType::PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
-			.constrainWidth(UIOSizeType(UIOSizeType::PX, 20))
+			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
 			.get();
 
 		topList->addElement(std::move(close));
@@ -322,9 +322,9 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			windowPtr->minimized = !windowPtr->minimized;
 			return BIND_RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
-			.constrainWidth(UIOSizeType(UIOSizeType::PX, 20))
+			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
 			.get();
 
 		topList->addElement(std::move(close));
@@ -345,14 +345,14 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			return BIND_RESULT::CONTINUE;
 		})
 			.setPtr(titleBarPtr)
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 			.get();
 		topList->addElement(std::move(titleBar));
 	}
 	else {
 		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
 			.background(COLORS::UI::FOREGROUND)
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 			.get();
 		topList->addElement(std::move(titleBar));
 	}
@@ -377,8 +377,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			}
 			return BIND_RESULT::CONTINUE;
 		})
-			.padLeft(UIOSizeType(UIOSizeType::PX, 1))
-			.padTop(UIOSizeType(UIOSizeType::PX, 1))
+			.padLeft(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.padTop(UIOSizeType(UIOSizeType::STATIC_PX, 1))
 			.padRight(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? 10 : 0))
 			.constrainHeight(UIOSizeType(UIOSizeType::PX, 10))
 			.align(UIOConstrainSize::ALIGNMENT::BOTTOMLEFT)
@@ -407,8 +407,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			}
 			return BIND_RESULT::CONTINUE;
 		})
-			.padLeft(UIOSizeType(UIOSizeType::PX, 1))
-			.padTop(UIOSizeType(UIOSizeType::PX, 20))
+			.padLeft(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.padTop(UIOSizeType(UIOSizeType::FH, 1.2f))
 			.padBottom(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? 10 : 0))
 			.constrainWidth(UIOSizeType(UIOSizeType::PX, 10))
 			.align(UIOConstrainSize::ALIGNMENT::RIGHT)

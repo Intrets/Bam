@@ -4,10 +4,14 @@ class ScreenRectangle;
 
 struct UIOSizeType
 {
-	enum TYPE { PX, ABSOLUTE_HEIGHT, ABSOLUTE_WIDTH, RELATIVE_HEIGHT, RELATIVE_WIDTH } type;
+	enum TYPE
+	{
+		FH, PX, STATIC_PX, ABSOLUTE_HEIGHT, ABSOLUTE_WIDTH, RELATIVE_HEIGHT, RELATIVE_WIDTH
+	} type;
 	union
 	{
 		int32_t px;
+		float relative;
 		float absolute_height;
 		float absolute_width;
 		float relative_height;

@@ -221,7 +221,7 @@ UIState::UIState() {
 				});
 			})
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 180))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 10.0f))
 				.get();
 
 			listPtr->addElement(std::move(text));
@@ -229,7 +229,7 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
+				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
 				.get()
 			);
 		}
@@ -237,7 +237,7 @@ UIState::UIState() {
 			UIOTextDisplay* textPtr;
 			auto text = TextConstructer::constructSingleLineTextEdit("test.save").setPtr(textPtr)
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			listPtr->addElement(std::move(text));
@@ -258,8 +258,8 @@ UIState::UIState() {
 				Saver(name).saveGame(params.gameState);
 				return BIND_RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			listPtr->addElement(std::move(saveButton));
@@ -280,8 +280,8 @@ UIState::UIState() {
 				Loader(name).loadGame(params.gameState);
 				return BIND_RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			listPtr->addElement(std::move(loadButton));
@@ -289,7 +289,7 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
+				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
 				.get()
 			);
 		}
@@ -307,8 +307,8 @@ UIState::UIState() {
 				self->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 				return BIND_RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			ptr->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
@@ -329,8 +329,8 @@ UIState::UIState() {
 				self->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 				return BIND_RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
@@ -340,7 +340,7 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 5))
+				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
 				.get()
 			);
 		}
@@ -391,7 +391,7 @@ UIState::UIState() {
 			UIOGrid* dirsPtr;
 			auto dirs = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(5, 1))
 				.setPtr(dirsPtr)
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.align(UIOConstrainSize::ALIGNMENT::TOP)
 				.get();
 
@@ -401,7 +401,7 @@ UIState::UIState() {
 				auto text = TextConstructer::constructSingleLineTextEdit("1")
 					.setPtr(textPtr)
 					.background(COLORS::UI::BACKGROUND)
-					.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+					.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 					.get();
 
 				dirsPtr->addElement(std::move(text));
@@ -443,8 +443,8 @@ UIState::UIState() {
 							return BIND_RESULT::CONTINUE;
 						}
 					})
-						.pad(UIOSizeType(UIOSizeType::PX, 1))
-						.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+						.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+						.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 						.get();
 
 					dirsPtr->addElement(std::move(a));
@@ -485,7 +485,7 @@ UIState::UIState() {
 					TextConstructer::constructTextEdit("")
 					.setPtr(watchTextPtr)
 					.background(COLORS::UI::BACKGROUND)
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
 					.get()
 				);
 
@@ -501,7 +501,7 @@ UIState::UIState() {
 					TextConstructer::constructDisplayText("watch")
 					.setPtr(displayWatchTextPtr)
 					.background(COLORS::UI::BACKGROUND)
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
 					.get()
 				);
 
@@ -509,7 +509,7 @@ UIState::UIState() {
 					TextConstructer::constructDisplayText("output")
 					.setPtr(outputTextPtr)
 					.background(COLORS::UI::BACKGROUND)
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
 					.get()
 				);
 			}
@@ -521,8 +521,8 @@ UIState::UIState() {
 			UIOList* luaControlPtr;
 			auto luaControl = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 				.setPtr(luaControlPtr)
-				.padTop(UIOSizeType(UIOSizeType::PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
+				.padTop(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 				.get();
 
 			auto fileText =
@@ -555,7 +555,8 @@ UIState::UIState() {
 
 					return BIND_RESULT::CONTINUE;
 				})
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+					.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 
@@ -581,7 +582,8 @@ UIState::UIState() {
 
 					return BIND_RESULT::CONTINUE;
 				})
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+					.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 
@@ -596,7 +598,8 @@ UIState::UIState() {
 					luaTestPtr->lua.state.script(join(luaTextPtr->text.getLines()));
 					return BIND_RESULT::CONTINUE;
 				})
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+					.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 
@@ -658,7 +661,8 @@ UIState::UIState() {
 
 					return BIND_RESULT::CONTINUE;
 				})
-					.pad(UIOSizeType(UIOSizeType::PX, 1))
+					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+					.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 					.constrainWidth(UIOSizeType(UIOSizeType::PX, 60))
 					.get());
 

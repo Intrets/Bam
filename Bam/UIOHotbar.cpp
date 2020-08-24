@@ -46,10 +46,10 @@ UIOHotbar::UIOHotbar(Handle self) {
 		this->slots.push_back(but.get());
 
 		auto e = refMan->makeUniqueRef<UIOPad>(std::move(but));
-		e.get()->bottom = { UIOSizeType::PX, 2 };
-		e.get()->top = { UIOSizeType::PX, 2 };
-		e.get()->left = { UIOSizeType::PX, 2 };
-		e.get()->right = { UIOSizeType::PX, 2 };
+		e.get()->bottom = { UIOSizeType::STATIC_PX, 2 };
+		e.get()->top = { UIOSizeType::STATIC_PX, 2 };
+		e.get()->left = { UIOSizeType::STATIC_PX, 2 };
+		e.get()->right = { UIOSizeType::STATIC_PX, 2 };
 
 		auto shell = refMan->makeUniqueRef<UIOShell>(std::move(e));
 
