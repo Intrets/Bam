@@ -37,75 +37,27 @@
 #include "UIOActivityInterface.h"
 
 CallBackBindResult UIState::runFrontBinds(State& state) {
-	{
-		CallBackBindResult activeResult = this->UIs.front().get()->runOnHoverBinds(state);
-		CallBackBindResult res = 0;
-		bool shouldExit = false;
-		if (activeResult & BIND_RESULT::CLOSE) {
-			this->UIs.pop_front();
-			shouldExit = true;
-		}
-		if (activeResult & BIND_RESULT::STOP) {
-			res |= BIND_RESULT::STOP;
-			shouldExit = true;
-		}
+	CallBackBindResult activeResult =
+		this->UIs.front().get()->runOnHoverBinds(state) |
+		this->UIs.front().get()->runFocussedBinds(state) |
+		this->UIs.front().get()->runActiveBinds(state) |
+		this->UIs.front().get()->runGlobalBinds(state);
+	CallBackBindResult res = 0;
 
-		if (shouldExit) {
-			return res;
-		}
+	bool shouldExit = false;
+	if (activeResult & BIND_RESULT::CLOSE) {
+		this->UIs.pop_front();
+		shouldExit = true;
 	}
-	{
-		CallBackBindResult activeResult = this->UIs.front().get()->runFocussedBinds(state);
-		CallBackBindResult res = 0;
-		bool shouldExit = false;
-		if (activeResult & BIND_RESULT::CLOSE) {
-			this->UIs.pop_front();
-			shouldExit = true;
-		}
-		if (activeResult & BIND_RESULT::STOP) {
-			res |= BIND_RESULT::STOP;
-			shouldExit = true;
-		}
+	if (activeResult & BIND_RESULT::STOP) {
+		res |= BIND_RESULT::STOP;
+		shouldExit = true;
+	}
 
-		if (shouldExit) {
-			return res;
-		}
+	if (shouldExit) {
+		return res;
 	}
-	{
-		CallBackBindResult activeResult = this->UIs.front().get()->runActiveBinds(state);
-		CallBackBindResult res = 0;
-		bool shouldExit = false;
-		if (activeResult & BIND_RESULT::CLOSE) {
-			this->UIs.pop_front();
-			shouldExit = true;
-		}
-		if (activeResult & BIND_RESULT::STOP) {
-			res |= BIND_RESULT::STOP;
-			shouldExit = true;
-		}
 
-		if (shouldExit) {
-			return res;
-		}
-	}
-	{
-		CallBackBindResult activeResult = this->UIs.front().get()->runGlobalBinds(state);
-		CallBackBindResult res = 0;
-		bool shouldExit = false;
-		if (activeResult & BIND_RESULT::CLOSE) {
-			this->UIs.pop_front();
-			shouldExit = true;
-		}
-		if (activeResult & BIND_RESULT::STOP) {
-			res |= BIND_RESULT::STOP;
-			shouldExit = true;
-		}
-
-		if (shouldExit) {
-			return res;
-		}
-	}
-	
 	return BIND_RESULT::CONTINUE;
 }
 
@@ -122,9 +74,9 @@ glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
 }
 
 void UIState::run(State& state) {
-	auto res = this->runFrontBinds(state);
+	auto front = this->runFrontBinds(state);
 
-	if (res & BIND_RESULT::STOP) {
+	if (front & BIND_RESULT::STOP) {
 		return;
 	}
 
@@ -132,42 +84,27 @@ void UIState::run(State& state) {
 		return;
 	}
 
-	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
-		auto& UI = *it;
-		CallBackBindResult clickedResult = UI.get()->runOnHoverBinds(state);
-		if (clickedResult & BIND_RESULT::CLOSE) {
-			it = this->UIs.erase(it);
-		}
-		else if (clickedResult & BIND_RESULT::FOCUS) {
-			auto temp = std::move(UI);
-			it = this->UIs.erase(it);
-			this->UIs.push_front(std::move(temp));
-		}
-		else {
-			++it;
-		}
-		if (clickedResult & BIND_RESULT::STOP) {
-			return;
-		}
-	}
+	state.controlState.writeConsumedBuffer();
 
 	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
 		auto& UI = *it;
-		CallBackBindResult uiResult = UI.get()->runGlobalBinds(state);
-		if (uiResult & BIND_RESULT::CLOSE) {
+		CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
+
+		if (res & BIND_RESULT::CLOSE) {
 			it = this->UIs.erase(it);
 		}
-		else if (uiResult & BIND_RESULT::FOCUS) {
+		else if (res & BIND_RESULT::FOCUS) {
 			auto temp = std::move(UI);
 			it = this->UIs.erase(it);
 			this->UIs.push_front(std::move(temp));
 		}
 		else {
-			++it;
+			it++;
 		}
-		if (uiResult & BIND_RESULT::STOP) {
+		if (res & BIND_RESULT::STOP) {
 			return;
 		}
+		state.controlState.writeConsumedBuffer();
 	}
 }
 
@@ -409,7 +346,7 @@ UIState::UIState() {
 		}
 		{
 			auto a = TextConstructer::constructDisplayText("")
-				.addBaseBind(UIOBinds::Base::activatable)
+				.addBind(UIOBinds::Base::activatable)
 				.addBind([](UIOTextDisplay* ptr)
 			{
 				ptr->addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult

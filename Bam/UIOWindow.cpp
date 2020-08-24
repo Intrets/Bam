@@ -29,7 +29,7 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 
 int32_t UIOWindow::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec2 px = glm::vec2(1.0f) / glm::vec2(this->screenRectangle.getPixelSize());
-	if (minimized) {
+	if (this->minimized) {
 		depth = topBarPtr->addRenderInfo(gameState, renderInfo, depth++);
 		renderInfo.uiRenderInfo.addRectangle(this->topBarPtr->getScreenRectangle().getBottomLeft() - px, this->topBarPtr->getScreenRectangle().getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
 		return depth;
@@ -42,7 +42,7 @@ int32_t UIOWindow::addRenderInfo(GameState const& gameState, RenderInfo& renderI
 }
 
 CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
-	if (minimized) {
+	if (this->minimized) {
 		return this->topBarPtr->runGlobalBinds(state);
 	}
 	else {
@@ -51,7 +51,7 @@ CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 }
 
 CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
-	if (minimized) {
+	if (this->minimized) {
 		return this->topBarPtr->runFocussedBinds(state);
 	}
 	else {
@@ -60,18 +60,19 @@ CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 }
 
 CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
-	auto result = UIOBase::runOnHoverBinds(state);
-
-	if (state.controlState.activated({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED })) {
-		if (minimized) {
-			if (this->topBarPtr->getScreenRectangle().contains(state.uiState.getCursorPositionScreen())) {
-				state.controlState.consumeControl(ControlState::CONTROLS::ACTION0);
-			}
-		}
-		else if (this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
-			state.controlState.consumeControl(ControlState::CONTROLS::ACTION0);
-		}
+	if (this->minimized) {
+		return this->topBarPtr->runOnHoverBinds(state);
 	}
+	else {
+		return  this->UIOBase::runOnHoverBinds(state);
+	}
+}
 
-	return result;
+CallBackBindResult UIOWindow::runActiveBinds(State& state) {
+	if (this->minimized) {
+		return this->topBarPtr->runActiveBinds(state);
+	}
+	else {
+		return this->UIOBase::runActiveBinds(state);
+	}
 }

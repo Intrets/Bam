@@ -77,6 +77,9 @@ public:
 	bool blockUserInput;
 
 	void consumeControl(CONTROLS control);
+	void consumeBufferControl(CONTROLS control);
+
+	void writeConsumedBuffer();
 
 	bool activated(BindControl bindControl);
 
@@ -87,7 +90,10 @@ public:
 private:
 	std::array<CONTROLS, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
 	std::array<int32_t, static_cast<size_t>(CONTROLS::CONTROLS_MAX)> controlState;
+
 	std::array<bool, static_cast<size_t>(CONTROLS::CONTROLS_MAX)> consumed;
+	std::array<bool, static_cast<size_t>(CONTROLS::CONTROLS_MAX)> consumedBuffer;
+
 	std::string charBuffer;
 };
 

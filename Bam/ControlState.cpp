@@ -60,6 +60,7 @@ void ControlState::cycleStates() {
 	this->controlState[static_cast<int32_t>(CONTROLS::EVERY_TICK)] = ControlState::CONTROLSTATE_PRESSED;
 
 	this->consumed.fill(false);
+	this->consumedBuffer.fill(false);
 }
 
 std::string ControlState::getCharBuffer() {
@@ -68,6 +69,17 @@ std::string ControlState::getCharBuffer() {
 
 void ControlState::consumeControl(CONTROLS control) {
 	this->consumed[static_cast<size_t>(control)] = true;
+}
+
+void ControlState::consumeBufferControl(CONTROLS control) {
+	this->consumedBuffer[static_cast<size_t>(control)] = true;
+}
+
+void ControlState::writeConsumedBuffer() {
+	for (int32_t i = 0; i < static_cast<int32_t>(ControlState::CONTROLS::CONTROLS_MAX); i++) {
+		this->consumed[i] = this->consumed[i] | this->consumedBuffer[i];
+	}
+	this->consumedBuffer.fill(false);
 }
 
 bool ControlState::activated(BindControl bindControl) {

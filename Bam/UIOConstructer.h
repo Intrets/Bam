@@ -13,6 +13,7 @@
 #include "UIOFreeSize.h"
 #include "Rectangle.h"
 #include "UIOShell.h"
+#include "UIOBinds.h"
 
 template<class T>
 class UIOConstructer
@@ -32,7 +33,7 @@ public:
 	UIOConstructer<UIOPad> padLeft(UIOSizeType padding);
 	UIOConstructer<UIOPad> padRight(UIOSizeType padding);
 
-	UIOConstructer<T>& addBaseBind(std::function<void(UIOBase*)> f);
+	UIOConstructer<T>& addBind(std::function<void(UIOBase*)> f);
 	UIOConstructer<T>& addBind(void (*f) (T* ptr));
 	UIOConstructer<T>& addBindCapture(std::function<void(T*)> f);
 
@@ -281,12 +282,14 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	UIOWindow* windowPtr;
 	auto window = UIOConstructer<UIOWindow>::makeConstructer(std::move(mainPad))
 		.setPtr(windowPtr)
+		.addBind(UIOBinds::Base::focusable)
 		.free();
 	windowPtr->screenRectangle.set(size);
 
 	UIOList* topList;
 	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 		.setPtr(topList)
+		.addBind(UIOBinds::Base::focusable)
 		.constrainHeight(UIOSizeType(UIOSizeType::PX, 20))
 		.align(UIOConstrainSize::ALIGNMENT::TOP)
 		.get();
@@ -505,7 +508,7 @@ inline UIOConstructer<T>& UIOConstructer<T>::operator=(UIOConstructer&& other) {
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addBaseBind(std::function<void(UIOBase*)> f) {
+inline UIOConstructer<T>& UIOConstructer<T>::addBind(std::function<void(UIOBase*)> f) {
 	f(this->object.get());
 	return *this;
 }

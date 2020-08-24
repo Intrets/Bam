@@ -74,7 +74,7 @@ CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 			CallBackBindResult bindResult = bind(state, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND_RESULT::CONSUME) {
-				state.controlState.consumeControl(control.control);
+				state.controlState.consumeBufferControl(control.control);
 			}
 			if (sumResult & BIND_RESULT::STOP) {
 				return sumResult;
@@ -100,7 +100,7 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
 			if (bindResult & BIND_RESULT::CONSUME) {
-				state.controlState.consumeControl(control.control);
+				state.controlState.consumeBufferControl(control.control);
 			}
 			sumResult |= bindResult;
 			if (sumResult & BIND_RESULT::STOP) {
@@ -131,7 +131,7 @@ CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 			CallBackBindResult bindResult = bind(state, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND_RESULT::CONSUME) {
-				state.controlState.consumeControl(control.control);
+				state.controlState.consumeBufferControl(control.control);
 			}
 			if (sumResult & BIND_RESULT::STOP) {
 				return sumResult;
@@ -159,7 +159,7 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 				CallBackBindResult bindResult = bind(state, this);
 				sumResult |= bindResult;
 				if (bindResult & BIND_RESULT::CONSUME) {
-					state.controlState.consumeControl(control.control);
+					state.controlState.consumeBufferControl(control.control);
 				}
 				if (sumResult & BIND_RESULT::STOP) {
 					return sumResult;

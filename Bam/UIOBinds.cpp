@@ -22,7 +22,14 @@ namespace UIOBinds
 			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				ptr->activate();
-				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
+				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+			});
+		}
+
+		void focusable(UIOBase* ptr) {
+			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME | BIND_RESULT::FOCUS;
 			});
 		}
 	}
@@ -49,7 +56,7 @@ namespace UIOBinds
 					}
 				}
 
-				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS ;
+				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
 			});
 		}
 

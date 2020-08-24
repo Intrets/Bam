@@ -8,6 +8,7 @@ namespace UIOBinds
 	namespace Base
 	{
 		void activatable(UIOBase* ptr);
+		void focusable(UIOBase* ptr);
 	}
 
 	namespace TextEdit
