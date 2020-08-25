@@ -58,7 +58,8 @@ UIOButton::UIOButton(Handle self) {
 	});
 }
 
-UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) : UIOButton(self) {
+UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) :
+	UIOButton(self) {
 	this->maybeMain = main.get();
 	this->addElement(std::move(main));
 }

@@ -61,6 +61,8 @@ void ControlState::cycleStates() {
 
 	this->consumed.fill(false);
 	this->consumedBuffer.fill(false);
+
+	this->modifiers = MODIFIER::NONE;
 }
 
 std::string ControlState::getCharBuffer() {
@@ -86,6 +88,7 @@ bool ControlState::activated(BindControl bindControl) {
 	if (this->consumed[static_cast<size_t>(bindControl.control)]) {
 		return false;
 	}
+
 	if (this->blockUserInput) {
 		switch (bindControl.control) {
 			case CONTROLS::CHAR_BUFFER_CHANGED:
@@ -98,6 +101,11 @@ bool ControlState::activated(BindControl bindControl) {
 				break;
 		}
 	}
+
+	if ((this->modifiers & bindControl.modifiers) != bindControl.modifiers) {
+		return false;
+	}
+
 	return this->controlState[static_cast<size_t>(bindControl.control)] & bindControl.state;
 }
 
@@ -110,6 +118,23 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 	if (key == GLFW_KEY_ENTER && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		this->charBuffer.push_back('\n');
 		this->controlState[static_cast<size_t>(CONTROLS::CHAR_BUFFER_CHANGED)] = ControlState::CONTROLSTATE_PRESSED;
+	}
+
+	switch (key) {
+		case GLFW_KEY_LEFT_SHIFT:
+		case GLFW_KEY_RIGHT_SHIFT:
+			this->modifiers |= MODIFIER::SHIFT;
+			break;
+		case GLFW_KEY_LEFT_CONTROL:
+		case GLFW_KEY_RIGHT_CONTROL:
+			this->modifiers |= MODIFIER::CONTROL;
+			break;
+		case GLFW_KEY_LEFT_ALT:
+		case GLFW_KEY_RIGHT_ALT:
+			this->modifiers |= MODIFIER::ALT;
+			break;
+		default:
+			break;
 	}
 
 	switch (action) {
@@ -158,4 +183,14 @@ void ControlState::scroll_callback(GLFWwindow* w, double xoffset, double yoffset
 		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_UP)] = ControlState::CONTROLSTATE_UP;
 		this->controlState[static_cast<size_t>(CONTROLS::SCROLL_DOWN)] = ControlState::CONTROLSTATE_UP;
 	}
+}
+
+BindControl::BindControl(ControlState::CONTROLS c, int32_t s) :
+	BindControl(c, s, 0) {
+}
+
+BindControl::BindControl(ControlState::CONTROLS c, int32_t s, int32_t m) :
+	control(c),
+	state(s),
+	modifiers(m) {
 }

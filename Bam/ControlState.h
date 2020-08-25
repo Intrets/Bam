@@ -68,6 +68,14 @@ public:
 		CONTROLSTATE_REPEAT = 1 << 3,
 	};
 
+	enum MODIFIER
+	{
+		NONE = 0,
+		SHIFT = 1 << 0,
+		CONTROL = 1 << 1,
+		ALT = 1 << 2,
+	};
+
 	ControlState();
 
 	void cycleStates();
@@ -94,13 +102,19 @@ private:
 	std::array<bool, static_cast<size_t>(CONTROLS::CONTROLS_MAX)> consumed;
 	std::array<bool, static_cast<size_t>(CONTROLS::CONTROLS_MAX)> consumedBuffer;
 
+	int32_t modifiers;
+
 	std::string charBuffer;
 };
 
 struct BindControl
 {
 	ControlState::CONTROLS control;
+	int32_t modifiers;
 	int32_t state;
+
+	BindControl(ControlState::CONTROLS control, int32_t state);
+	BindControl(ControlState::CONTROLS control, int32_t state, int32_t modifiers);
 
 	bool operator== (const BindControl& other) const {
 		return this->control == other.control && this->state == other.state;
