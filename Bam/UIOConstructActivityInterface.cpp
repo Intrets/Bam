@@ -72,7 +72,9 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor() {
 		if (maybeSelected.has_value()) {
 			auto [depth, selected] = *maybeSelected.value();
 
-			interfacePtr->setTarget(selected);
+			if (selected.isValid()) {
+				interfacePtr->setTarget(selected);
+			}
 		}
 
 		return BIND_RESULT::CONTINUE;
