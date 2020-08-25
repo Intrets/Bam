@@ -53,13 +53,13 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 		case UIOConstrainSize::ALIGNMENT::CENTER:
 			p.y -= this->screenRectangle.getHeight() / 2 - newScreenRectangle.getHeight() / 2;
 			p.x += this->screenRectangle.getWidth() / 2 - newScreenRectangle.getWidth() / 2;
+	p = glm::max(glm::vec2(0.0f, 0.0f), p);
 			break;
 
 		default:
 			break;
 	}
 
-	p = glm::max(glm::vec2(0.0f, 0.0f), p);
 
 	this->screenRectangle = newScreenRectangle;
 	this->translate(p);
