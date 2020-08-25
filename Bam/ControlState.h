@@ -113,6 +113,7 @@ struct BindControl
 	int32_t modifiers;
 	int32_t state;
 
+	BindControl(ControlState::CONTROLS control);
 	BindControl(ControlState::CONTROLS control, int32_t state);
 	BindControl(ControlState::CONTROLS control, int32_t state, int32_t modifiers);
 

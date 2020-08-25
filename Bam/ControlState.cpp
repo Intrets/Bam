@@ -185,6 +185,10 @@ void ControlState::scroll_callback(GLFWwindow* w, double xoffset, double yoffset
 	}
 }
 
+BindControl::BindControl(ControlState::CONTROLS c) :
+	BindControl(c, ControlState::CONTROLSTATE_PRESSED) {
+}
+
 BindControl::BindControl(ControlState::CONTROLS c, int32_t s) :
 	BindControl(c, s, 0) {
 }
