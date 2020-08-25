@@ -59,6 +59,8 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 			break;
 	}
 
+	p = glm::max(glm::vec2(0.0f, 0.0f), p);
+
 	this->screenRectangle = newScreenRectangle;
 	this->translate(p);
 
