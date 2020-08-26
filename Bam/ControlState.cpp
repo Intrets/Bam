@@ -25,18 +25,18 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_F7] = CONTROLS::TEST_SAVE;
 	this->keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 	this->keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
-	this->keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::TEST_EXIT;
+	this->keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::CANCEL;
 
-	this->keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_0;
-	this->keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_1;
-	this->keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_2;
-	this->keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_3;
-	this->keyToControl[GLFW_KEY_5] = CONTROLS::TOOL_4;
-	this->keyToControl[GLFW_KEY_6] = CONTROLS::TOOL_5;
-	this->keyToControl[GLFW_KEY_7] = CONTROLS::TOOL_6;
-	this->keyToControl[GLFW_KEY_8] = CONTROLS::TOOL_7;
-	this->keyToControl[GLFW_KEY_9] = CONTROLS::TOOL_8;
-	this->keyToControl[GLFW_KEY_0] = CONTROLS::TOOL_9;
+	this->keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_1;
+	this->keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_2;
+	this->keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_3;
+	this->keyToControl[GLFW_KEY_4] = CONTROLS::TOOL_4;
+	this->keyToControl[GLFW_KEY_5] = CONTROLS::TOOL_5;
+	this->keyToControl[GLFW_KEY_6] = CONTROLS::TOOL_6;
+	this->keyToControl[GLFW_KEY_7] = CONTROLS::TOOL_7;
+	this->keyToControl[GLFW_KEY_8] = CONTROLS::TOOL_8;
+	this->keyToControl[GLFW_KEY_9] = CONTROLS::TOOL_9;
+	this->keyToControl[GLFW_KEY_0] = CONTROLS::TOOL_0;
 
 	this->keyToControl[GLFW_KEY_Z] = CONTROLS::ACTION3;
 	this->keyToControl[GLFW_KEY_X] = CONTROLS::ACTION4;

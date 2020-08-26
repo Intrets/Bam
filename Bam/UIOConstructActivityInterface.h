@@ -4,8 +4,9 @@ template<class>
 class UIOConstructer;
 
 class UIOList;
+class UIOActivityInterface;
 
 namespace Constructer 
 {
-	UIOConstructer<UIOList> constructActivityInteractor();
+	UIOConstructer<UIOList> constructActivityInteractor(UIOActivityInterface*& ptr);
 }

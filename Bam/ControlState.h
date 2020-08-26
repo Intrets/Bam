@@ -56,6 +56,7 @@ public:
 		TAB,
 		CHAR_BUFFER_CHANGED,
 		EVERY_TICK,
+		CANCEL,
 		CONTROLS_MAX,
 	};
 

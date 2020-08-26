@@ -7,7 +7,7 @@
 class UIOActivityInterface : public UIOBase
 {
 public:
-	enum class USER_ACTION_TYPE 
+	enum class USER_ACTION_TYPE
 	{
 		NOTHING,
 		HOVERING,
@@ -21,13 +21,15 @@ private:
 	ManagedReference<Activity, Activity> target;
 	int32_t targetSelectionTick;
 
-	ManagedReference<Activity, Activity> cursor;
+	//ManagedReference<Activity, Activity> cursor;
+	UniqueReference<Activity, Activity> cursor;
 
 public:
 	USER_ACTION_TYPE type;
 
 	UIOActivityInterface(Handle self);
 
+	void cancel();
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
 

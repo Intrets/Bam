@@ -10,7 +10,7 @@
 
 #include "UIOListSelection.h"
 
-UIOConstructer<UIOList> Constructer::constructActivityInteractor() {
+UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
 	// Resulting outermost container
 	UIOList* outerListPtr;
 
@@ -18,7 +18,6 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor() {
 	outerList.setPtr(outerListPtr);
 
 	// Hidden functionality
-	UIOActivityInterface* interfacePtr;
 	outerListPtr->addElement(
 		UIOConstructer<UIOActivityInterface>::makeConstructer()
 		.setPtr(interfacePtr)

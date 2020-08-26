@@ -13,37 +13,17 @@
 UIOHotbar::UIOHotbar(Handle self) {
 	this->selfHandle = self;
 
-	addGlobalBind({ ControlState::CONTROLS::SCROLL_DOWN, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase*) -> CallBackBindResult
-	{
-		if (this->selected > 0) {
-			this->selected += params.controlState.scrollDistance;
-			this->selected = glm::clamp(this->selected, 0, 9);
-		}
-		return BIND_RESULT::CONTINUE;
-	});
-
-	addGlobalBind({ ControlState::CONTROLS::SCROLL_UP, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams& params, UIOBase*) -> CallBackBindResult
-	{
-		if (this->selected < this->slots.size() - 1) {
-			this->selected += params.controlState.scrollDistance;
-			this->selected = glm::clamp(this->selected, 0, 9);
-		}
-		return BIND_RESULT::CONTINUE;
-	});
-
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 1));
 
 	for (int32_t i = 0; i < 10; i++) {
 		auto but = refMan->makeUniqueRef<UIOButton>();
-		but.get()->onPress = [&, i](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		but.get()->onPress = [this, i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			this->selected = i;
+			this->activateTool(i, params);
 			return BIND_RESULT::CONTINUE;
 		};
-
-		this->slots.push_back(but.get());
 
 		auto e = refMan->makeUniqueRef<UIOPad>(std::move(but));
 		e.get()->bottom = { UIOSizeType::STATIC_PX, 2 };
@@ -51,83 +31,35 @@ UIOHotbar::UIOHotbar(Handle self) {
 		e.get()->left = { UIOSizeType::STATIC_PX, 2 };
 		e.get()->right = { UIOSizeType::STATIC_PX, 2 };
 
-		auto shell = refMan->makeUniqueRef<UIOShell>(std::move(e));
-
-		this->slotSize.push_back(shell.get());
-
-		tile.get()->addElement(std::move(shell));
+		tile.get()->addElement(std::move(e));
 	}
 
-	this->slots[0]->addGlobalBind({ ControlState::CONTROLS::TOOL_0, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 0;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[1]->addGlobalBind({ ControlState::CONTROLS::TOOL_1, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 1;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[2]->addGlobalBind({ ControlState::CONTROLS::TOOL_2, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 2;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[3]->addGlobalBind({ ControlState::CONTROLS::TOOL_3, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 3;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[4]->addGlobalBind({ ControlState::CONTROLS::TOOL_4, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 4;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[5]->addGlobalBind({ ControlState::CONTROLS::TOOL_5, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 5;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[6]->addGlobalBind({ ControlState::CONTROLS::TOOL_6, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 6;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[7]->addGlobalBind({ ControlState::CONTROLS::TOOL_7, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 7;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[8]->addGlobalBind({ ControlState::CONTROLS::TOOL_8, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 8;
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->slots[9]->addGlobalBind({ ControlState::CONTROLS::TOOL_9, ControlState::CONTROLSTATE_PRESSED }, [&](UIOCallBackParams&, UIOBase*) -> CallBackBindResult
-	{
-		this->selected = 9;
-		return BIND_RESULT::CONTINUE;
-	});
+	for (auto [bind, i] : {
+		std::make_tuple(ControlState::CONTROLS::TOOL_1, 0),
+		std::make_tuple(ControlState::CONTROLS::TOOL_2, 1),
+		std::make_tuple(ControlState::CONTROLS::TOOL_3, 2),
+		std::make_tuple(ControlState::CONTROLS::TOOL_4, 3),
+		std::make_tuple(ControlState::CONTROLS::TOOL_5, 4),
+		std::make_tuple(ControlState::CONTROLS::TOOL_6, 5),
+		std::make_tuple(ControlState::CONTROLS::TOOL_7, 6),
+		std::make_tuple(ControlState::CONTROLS::TOOL_8, 7),
+		std::make_tuple(ControlState::CONTROLS::TOOL_9, 8),
+		std::make_tuple(ControlState::CONTROLS::TOOL_0, 9) }) {
+		this->addGlobalBind({ bind }, [this, i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			this->activateTool(i, params);
+			return BIND_RESULT::CONTINUE;
+		});
+	}
 
 	addElement(std::move(tile));
 }
 
-bool UIOHotbar::addTool(int32_t slot, UniqueReference<UIOBase, UIOBase> tool) {
-	if (!indexInArray(slot, this->tools)) {
-		return false;
-	}
-	else {
-		this->tools[slot] = std::move(tool);
-		return true;
+void UIOHotbar::activateTool(int32_t slot, UIOCallBackParams& params) {
+	if (indexInArray(slot, this->tools)) {
+		if (this->tools[slot].has_value()) {
+			this->tools[slot].value()(params);
+		}
 	}
 }
 
@@ -142,12 +74,6 @@ ScreenRectangle UIOHotbar::updateSize(ScreenRectangle newScreenRectangle) {
 int32_t UIOHotbar::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	renderInfo.uiRenderInfo.addRectangle(
-		this->slotSize[this->selected]->getScreenRectangle().getTopRight(),
-		this->slotSize[this->selected]->getScreenRectangle().getBottomLeft(),
-		{ 1,0,0,1 },
-		depth++
-	);
-	renderInfo.uiRenderInfo.addRectangle(
 		this->getScreenRectangle().getTopRight(),
 		this->getScreenRectangle().getBottomLeft(),
 		{ 0.5f,0.5f,0.5f,1 },
@@ -156,20 +82,8 @@ int32_t UIOHotbar::addRenderInfo(GameState const& gameState, RenderInfo& renderI
 	return depth;
 }
 
-CallBackBindResult UIOHotbar::runGlobalBinds(State& state) {
-	auto& maybeSelected = this->tools[this->selected];
-	CallBackBindResult res = UIOBase::runGlobalBinds(state);
-	if (maybeSelected) {
-		res |= maybeSelected.value().get()->runGlobalBinds(state);
+void UIOHotbar::addTool(int32_t slot, std::function<void(UIOCallBackParams& params)> f) {
+	if (indexInArray(slot, this->tools)) {
+		this->tools[slot] = f;
 	}
-	return res;
-}
-
-CallBackBindResult UIOHotbar::runFocussedBinds(State& state) {
-	auto& maybeSelected = this->tools[this->selected];
-	CallBackBindResult res = UIOBase::runFocussedBinds(state);
-	if (maybeSelected) {
-		res |= maybeSelected.value().get()->runFocussedBinds(state);
-	}
-	return res;
 }

@@ -38,13 +38,13 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		self->updateCursorPos(params.uiState.getCursorPositionWorld());
 		return BIND_RESULT::CONTINUE;
 	});
+}
 
-	this->addFocussedBind({ ControlState::CONTROLS::ACTION1 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-	{
-		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PISTON);
-		return BIND_RESULT::CONTINUE;
-	});
+void UIOActivityInterface::cancel() {
+	this->cursor.deleteObject();
+	this->target.unset();
+	this->base.unset();
+	this->type = USER_ACTION_TYPE::NOTHING;
 }
 
 void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
@@ -59,7 +59,7 @@ void UIOActivityInterface::setTarget(WeakReference<Activity, Activity> ref) {
 }
 
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
-	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isValid()) {
+	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
 		this->cursor.get()->forceMoveOriginUp(glm::ivec2(pos) - this->cursor.get()->getOrigin());
 	}
 }
@@ -70,19 +70,17 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 			break;
 		case USER_ACTION_TYPE::HOVERING:
 			{
-				if (!this->cursor.isValid()) {
-					this->cursor.unset();
+				if (this->cursor.isNull()) {
 					this->type = USER_ACTION_TYPE::NOTHING;
 				}
 				else if (this->cursor.get()->fillTracesUp(gameState)) {
 					// TODO link with target
-					this->cursor.unset();
+					this->cursor.clear();
 					this->type = USER_ACTION_TYPE::NOTHING;
 				}
 				break;
 			}
 		case USER_ACTION_TYPE::SELECTED:
-			this->cursor.unset();
 			this->type = USER_ACTION_TYPE::NOTHING;
 			break;
 		default:
@@ -91,26 +89,33 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 }
 
 void UIOActivityInterface::spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType) {
-	if (this->type != USER_ACTION_TYPE::NOTHING) {
-		return;
-	}
-
-	this->type = USER_ACTION_TYPE::HOVERING;
-
-	switch (activityType) {
-		case Activity::TYPE::PLATFORM:
-			this->cursor.set(Locator<ReferenceManager<Activity>>::get()->makeRef<Platform>(gameState, glm::ivec2(6, 5), pos, false));
+	switch (this->type) {
+		case USER_ACTION_TYPE::SELECTED:
 			break;
-		case Activity::TYPE::PISTON:
-			this->cursor.set(Locator<ReferenceManager<Activity>>::get()->makeRef<Piston>(gameState, pos, Activity::DIR::DOWN, false));
+		case USER_ACTION_TYPE::HOVERING:
+			this->cursor.deleteObject();
+			this->type = USER_ACTION_TYPE::NOTHING;
+		case USER_ACTION_TYPE::NOTHING:
+			this->type = USER_ACTION_TYPE::HOVERING;
+			switch (activityType) {
+				case Activity::TYPE::PLATFORM:
+					this->cursor = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
+					break;
+				case Activity::TYPE::PISTON:
+					this->cursor = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, Activity::DIR::DOWN, false);
+					break;
+				default:
+					break;
+			}
 			break;
 		default:
 			break;
 	}
+
 }
 
 void UIOActivityInterface::rotateHover(Activity::ROT rot) {
-	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isValid()) {
+	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
 		auto t = this->cursor.get();
 		auto center = t->getOrigin();
 		t->rotateForcedUp(center, rot);
@@ -134,7 +139,7 @@ int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderIn
 			this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
 		}
 	}
-	if (this->cursor.isValid()) {
+	if (this->cursor.isNotNull()) {
 		this->cursor.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HOVER);
 	}
 	return depth;

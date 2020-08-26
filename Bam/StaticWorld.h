@@ -20,6 +20,7 @@ class StaticWorld
 {
 public:
 	std::optional<WeakReference<Activity, Activity>> getActivity(glm::ivec2 pos);
+	std::optional<WeakReference<Activity, Activity>> getActivity(glm::vec2 pos);
 
 	bool isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore);
 	bool isOccupied(glm::ivec2 pos);
@@ -37,6 +38,7 @@ public:
 	StaticWorldChunk* getChunkByIndex(int32_t i, int32_t j);
 	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
 	Block* getBlockRef(glm::ivec2 pos);
+	Block* getBlockRef(glm::vec2 pos);
 
 private:
 	struct hash

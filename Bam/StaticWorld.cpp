@@ -9,13 +9,17 @@
 #include "Block.h"
 
 std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::ivec2 pos) {
-	auto block = getBlockRef(pos);
+	auto block = this->getBlockRef(pos);
 	if (block->isActivity()) {
-		return std::make_optional(block->m);
+		return block->m;
 	}
 	else {
 		return std::nullopt;
 	}
+}
+
+std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::vec2 pos) {
+	return this->getActivity(glm::ivec2(glm::floor(pos)));
 }
 
 void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
@@ -104,6 +108,10 @@ Block* StaticWorld::getBlockRef(glm::ivec2 pos) {
 	auto global = r.first;
 	auto local = r.second;
 	return &(getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y]);
+}
+
+Block* StaticWorld::getBlockRef(glm::vec2 pos) {
+	return this->getBlockRef(glm::ivec2(glm::floor(pos)));
 }
 
 bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore) {

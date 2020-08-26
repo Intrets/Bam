@@ -160,10 +160,12 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
+
+	UIOActivityInterface* interfacePtr;
 	// Interface
 	{
 		this->UIs.push_back(
-			Constructer::constructActivityInteractor()
+			Constructer::constructActivityInteractor(interfacePtr)
 			.window("Interactor", { {0.5f - 0.04f, -0.8f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
 					UIOWindow::TYPE::MINIMISE |
 					UIOWindow::TYPE::MOVE)
@@ -181,11 +183,23 @@ UIState::UIState() {
 			.align(UIOConstrainSize::ALIGNMENT::BOTTOM)
 			.get();
 
+		hotbarPtr->addTool(0, [interfacePtr](UIOCallBackParams& params)
+		{
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PISTON);
+			return BIND_RESULT::CONTINUE;
+		});
+
+		hotbarPtr->addTool(1, [interfacePtr](UIOCallBackParams& params)
+		{
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PLATFORM);
+			return BIND_RESULT::CONTINUE;
+		});
+
 		// selector
-		hotbarPtr->addTool(0, refMan->makeUniqueRef<UIOActivitySelector>());
+		//hotbarPtr->addTool(0, refMan->makeUniqueRef<UIOActivitySelector>());
 
 		// linker
-		hotbarPtr->addTool(1, refMan->makeUniqueRef<UIOActivityLinker>());
+		//hotbarPtr->addTool(1, refMan->makeUniqueRef<UIOActivityLinker>());
 
 		this->UIs.push_back(std::move(hotbar));
 	}

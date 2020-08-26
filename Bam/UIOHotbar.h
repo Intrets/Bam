@@ -8,20 +8,14 @@ class UIOShell;
 class UIOHotbar : public UIOBase
 {
 private:
-	std::vector<UIOButton*> slots;
-	std::vector<UIOShell*> slotSize;
-
-	std::array<std::optional<UniqueReference<UIOBase, UIOBase>>, 10> tools;
-
-	int32_t selected = 0;
+	std::array<std::optional<std::function<void(UIOCallBackParams&)>>, 10> tools;
 
 public:
 	UIOHotbar(Handle self);
 
-	bool addTool(int32_t slot, UniqueReference<UIOBase, UIOBase> tool);
+	void activateTool(int32_t slot, UIOCallBackParams& params);
 
-	virtual CallBackBindResult runGlobalBinds(State& state) override;
-	virtual CallBackBindResult runFocussedBinds(State& state) override;
+	void addTool(int32_t slot, std::function<void(UIOCallBackParams& params)> f);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
