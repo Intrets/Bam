@@ -110,6 +110,20 @@ void Piston::appendSelectionInfo(GameState const& gameState, RenderInfo& renderI
 
 	glm::vec2 base = ori;
 	glm::vec2 head = grabberPos + headDirection * (1.0f + this->length) + glm::vec2(1.0f);
+
+	switch (this->headDir) {
+		case Activity::DIR::DOWN:
+		case Activity::DIR::LEFT:
+			base += glm::vec2(1.0f, 1.0f);
+			head -= glm::vec2(1.0f, 1.0f);
+			break;
+		case Activity::DIR::UP:
+		case Activity::DIR::RIGHT:
+			break;
+		default:
+			break;
+	}
+
 	renderInfo.selectionRenderInfo.addBox(base, head, color);
 }
 

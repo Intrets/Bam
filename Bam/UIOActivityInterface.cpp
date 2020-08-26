@@ -11,6 +11,19 @@
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
 
+	this->addFocussedBind({ ControlState::CONTROLS::ROTATER }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->rotateHover(Activity::ROT::CLOCKWISE);
+		return BIND_RESULT::CONTINUE;
+	});
+
+	this->addFocussedBind({ ControlState::CONTROLS::ROTATEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->rotateHover(Activity::ROT::COUNTERCLOCKWISE);
+		return BIND_RESULT::CONTINUE;
+	});
 
 	this->addFocussedBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
@@ -120,6 +133,9 @@ int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderIn
 		if (periodic(gameState.tick, 40, 20, -this->targetSelectionTick)) {
 			this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
 		}
+	}
+	if (this->cursor.isValid()) {
+		this->cursor.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HOVER);
 	}
 	return depth;
 }
