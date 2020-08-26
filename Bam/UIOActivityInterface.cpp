@@ -7,6 +7,7 @@
 #include "Platform.h"
 #include "Piston.h"
 #include "UIOCallBackParams.h"
+#include "Linker.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -81,7 +82,16 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 					this->type = USER_ACTION_TYPE::NOTHING;
 				}
 				else if (this->cursor.get()->fillTracesUp(gameState)) {
-					// TODO link with target
+					if (this->target.isValid()) {
+						if (this->target.get()->getType() == Activity::TYPE::PISTON) {
+							auto message = Linker::linkPiston(gameState, this->target, this->cursor);
+							Locator<Log>::ref().putLine(message);
+						}
+						else {
+							auto message = Linker::link(gameState, this->target, this->cursor);
+							Locator<Log>::ref().putLine(message);
+						}
+					}
 					this->cursor.clear();
 					this->type = USER_ACTION_TYPE::NOTHING;
 				}

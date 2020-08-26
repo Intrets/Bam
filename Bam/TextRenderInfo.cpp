@@ -260,12 +260,12 @@ void Text::moveCursor(glm::ivec2 p) {
 	if (maybeCursorQuad.has_value()) {
 		glm::vec4& cursorQuad = maybeCursorQuad.value();
 		Rectangle cursorRect;
-		cursorRect.getBottomLeft() = glm::vec2(cursorQuad[0], cursorQuad[1]);
-		cursorRect.getTopRight() = cursorRect.getBottomLeft() + glm::vec2(cursorQuad[2], cursorQuad[3]);
+		cursorRect.setBottomLeft(glm::vec2(cursorQuad[0], cursorQuad[1]));
+		cursorRect.setTopRight(cursorRect.getBottomLeft() + glm::vec2(cursorQuad[2], cursorQuad[3]));
 
 		Rectangle viewRect;
-		viewRect.getBottomLeft() = glm::vec2(-1.0f) + this->view;
-		viewRect.getTopRight() = glm::vec2(1.0f) + this->view;
+		viewRect.setBottomLeft(glm::vec2(-1.0f) + this->view);
+		viewRect.setTopRight(glm::vec2(1.0f) + this->view);
 
 		float leftDist = cursorRect.getLeft() - viewRect.getLeft();
 		float rightDist = viewRect.getRight() - cursorRect.getRight();
@@ -286,6 +286,7 @@ void Text::moveCursor(glm::ivec2 p) {
 		else if (topDist < 0.0f) {
 			this->view.y -= topDist;
 		}
+
 	}
 }
 
