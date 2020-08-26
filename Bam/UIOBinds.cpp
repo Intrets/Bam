@@ -32,6 +32,13 @@ namespace UIOBinds
 				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME | BIND_RESULT::FOCUS;
 			});
 		}
+		void blockWorldBinds(UIOBase* ptr) {
+			ptr->addOnHoverBind({ ControlState::CONTROLS::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				params.controlState.setBlockWorldBinds(true);
+				return BIND_RESULT::CONTINUE;
+			});
+		}
 	}
 
 	namespace TextEdit

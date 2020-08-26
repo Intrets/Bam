@@ -85,6 +85,9 @@ public:
 	int32_t scrollDistance;
 	bool blockUserInput;
 
+	void setBlockWorldBinds(bool b);
+	bool worldBindsBlocked();
+
 	void consumeControl(CONTROLS control);
 	void consumeBufferControl(CONTROLS control);
 
@@ -106,6 +109,8 @@ private:
 	int32_t modifiers;
 
 	std::string charBuffer;
+
+	bool blockWorldBinds;
 };
 
 struct BindControl

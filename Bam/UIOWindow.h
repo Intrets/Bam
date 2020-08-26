@@ -35,5 +35,6 @@ public:
 	virtual CallBackBindResult runFocussedBinds(State& state) override;
 	virtual CallBackBindResult runActiveBinds(State& state) override;
 	virtual CallBackBindResult runGlobalBinds(State& state) override;
+	virtual CallBackBindResult runGameWorldBinds(State& state) override;
 };
 

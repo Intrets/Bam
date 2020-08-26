@@ -58,6 +58,10 @@ void UIOBase::addActiveBind(BindControl bindControl, CallBack callBack) {
 	this->activeBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
+void UIOBase::addGameWorldBind(BindControl bindControl, CallBack callBack) {
+	this->gameWorldBinds.push_back(std::make_pair(bindControl, callBack));
+}
+
 CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 	CallBackBindResult sumResult = 0;
 
@@ -164,6 +168,33 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 				if (sumResult & BIND_RESULT::STOP) {
 					return sumResult;
 				}
+			}
+		}
+	}
+
+	return sumResult;
+}
+
+CallBackBindResult UIOBase::runGameWorldBinds(State& state) {
+	CallBackBindResult sumResult = 0;
+
+	for (auto& element : this->elements) {
+		CallBackBindResult elementResult = element.get()->runGameWorldBinds(state);
+		sumResult |= elementResult;
+		if (sumResult & BIND_RESULT::STOP) {
+			return sumResult;
+		}
+	}
+
+	for (auto [control, bind] : this->gameWorldBinds) {
+		if (state.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(state, this);
+			sumResult |= bindResult;
+			if (bindResult & BIND_RESULT::CONSUME) {
+				state.controlState.consumeBufferControl(control.control);
+			}
+			if (sumResult & BIND_RESULT::STOP) {
+				return sumResult;
 			}
 		}
 	}

@@ -106,6 +106,29 @@ void UIState::run(State& state) {
 		}
 		state.controlState.writeConsumedBuffer();
 	}
+
+	if (!state.controlState.worldBindsBlocked()) {
+		for (auto it = this->UIs.begin(); it != this->UIs.end();) {
+			auto& UI = *it;
+			CallBackBindResult res = UI.get()->runGameWorldBinds(state);
+
+			if (res & BIND_RESULT::CLOSE) {
+				it = this->UIs.erase(it);
+			}
+			else if (res & BIND_RESULT::FOCUS) {
+				auto temp = std::move(UI);
+				it = this->UIs.erase(it);
+				this->UIs.push_front(std::move(temp));
+			}
+			else {
+				it++;
+			}
+			if (res & BIND_RESULT::STOP) {
+				return;
+			}
+			state.controlState.writeConsumedBuffer();
+		}
+	}
 }
 
 bool UIState::updateSize(GLFWwindow* window) {

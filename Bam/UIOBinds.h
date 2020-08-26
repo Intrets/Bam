@@ -9,6 +9,8 @@ namespace UIOBinds
 	{
 		void activatable(UIOBase* ptr);
 		void focusable(UIOBase* ptr);
+		// Mouse is over UI, dont run world binds
+		void blockWorldBinds(UIOBase* ptr);
 	}
 
 	namespace TextEdit

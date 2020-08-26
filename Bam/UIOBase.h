@@ -41,10 +41,11 @@ protected:
 
 	using Bind = std::pair<BindControl, CallBack>;
 
-	std::vector<Bind> globalBinds;
-	std::vector<Bind> focussedBinds;
 	std::vector<Bind> onHoverBinds;
 	std::vector<Bind> activeBinds;
+	std::vector<Bind> focussedBinds;
+	std::vector<Bind> globalBinds;
+	std::vector<Bind> gameWorldBinds;
 
 protected:
 	template<class T>
@@ -69,11 +70,13 @@ public:
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
 	void addOnHoverBind(BindControl bindControl, CallBack callBack);
 	void addActiveBind(BindControl bindControl, CallBack callBack);
+	void addGameWorldBind(BindControl bindControl, CallBack callBack);
 
 	virtual CallBackBindResult runGlobalBinds(State& state);
 	virtual CallBackBindResult runFocussedBinds(State& state);
 	virtual CallBackBindResult runOnHoverBinds(State& state);
 	virtual CallBackBindResult runActiveBinds(State& state);
+	virtual CallBackBindResult runGameWorldBinds(State& state);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 

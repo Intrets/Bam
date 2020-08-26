@@ -50,6 +50,15 @@ CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 	}
 }
 
+CallBackBindResult UIOWindow::runGameWorldBinds(State& state) {
+	if (this->minimized) {
+		return this->topBarPtr->runGameWorldBinds(state);
+	}
+	else {
+		return this->UIOBase::runGameWorldBinds(state);
+	}
+}
+
 CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 	if (this->minimized) {
 		return this->topBarPtr->runFocussedBinds(state);

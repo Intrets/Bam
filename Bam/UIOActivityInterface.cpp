@@ -33,14 +33,14 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addFocussedBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->interact(params.gameState, params.uiState.getCursorPositionWorld());
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->updateCursorPos(params.uiState.getCursorPositionWorld());

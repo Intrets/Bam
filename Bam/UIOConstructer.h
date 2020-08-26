@@ -42,6 +42,7 @@ public:
 	UIOConstructer<T>& addActiveBind(BindControl bindControl, CallBack callBack);
 	UIOConstructer<T>& addGlobalBind(BindControl bindControl, CallBack callBack);
 	UIOConstructer<T>& addOnHoverBind(BindControl bindControl, CallBack callBack);
+	UIOConstructer<T>& addGameWorldBind(BindControl bindControl, CallBack callBack);
 
 	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
@@ -197,6 +198,12 @@ inline UIOConstructer<T>& UIOConstructer<T>::addOnHoverBind(BindControl bindCont
 	return *this;
 }
 
+template<class T>
+inline UIOConstructer<T>& UIOConstructer<T>::addGameWorldBind(BindControl bindControl, CallBack callBack) {
+	this->object.get()->addGameWorldBind(BindControl, callBack);
+	return *this;
+}
+
 //--------------------------------------------------------------------------------
 // constrainHeight
 //--------------------------------------------------------------------------------
@@ -285,6 +292,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	auto window = UIOConstructer<UIOWindow>::makeConstructer(std::move(mainPad))
 		.setPtr(windowPtr)
 		.addBind(UIOBinds::Base::focusable)
+		.addBind(UIOBinds::Base::blockWorldBinds)
 		.free();
 	windowPtr->screenRectangle.set(size);
 
@@ -292,6 +300,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
 		.setPtr(topList)
 		.addBind(UIOBinds::Base::focusable)
+		.addBind(UIOBinds::Base::blockWorldBinds)
 		.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
 		.align(UIOConstrainSize::ALIGNMENT::TOP)
 		.get();

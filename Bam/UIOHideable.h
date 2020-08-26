@@ -25,6 +25,7 @@ public:
 	virtual CallBackBindResult runFocussedBinds(State& state) override;
 	virtual CallBackBindResult runOnHoverBinds(State& state) override;
 	virtual CallBackBindResult runActiveBinds(State& state) override;
+	virtual CallBackBindResult runGameWorldBinds(State& state) override;
 
 	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
 

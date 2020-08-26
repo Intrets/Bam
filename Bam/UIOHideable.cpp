@@ -81,6 +81,20 @@ CallBackBindResult UIOHideable::runActiveBinds(State& state) {
 	}
 }
 
+CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
+	if (!this->hidden) {
+		int32_t res = this->UIOBase::runGameWorldBinds(state);
+		if (res & BIND_RESULT::HIDE) {
+			res &= ~BIND_RESULT::HIDE;
+			this->hidden = true;
+		}
+		return res;
+	}
+	else {
+		return BIND_RESULT::CONTINUE;
+	}
+}
+
 int32_t UIOHideable::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (!this->hidden) {
 		return this->UIOBase::addRenderInfo(gameState, renderInfo, depth);

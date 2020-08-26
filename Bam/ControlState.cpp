@@ -63,10 +63,19 @@ void ControlState::cycleStates() {
 	this->consumedBuffer.fill(false);
 
 	this->modifiers = MODIFIER::NONE;
+	this->blockWorldBinds = false;
 }
 
 std::string ControlState::getCharBuffer() {
 	return this->charBuffer;
+}
+
+void ControlState::setBlockWorldBinds(bool b) {
+	this->blockWorldBinds = b;
+}
+
+bool ControlState::worldBindsBlocked() {
+	return this->blockWorldBinds;
 }
 
 void ControlState::consumeControl(CONTROLS control) {
