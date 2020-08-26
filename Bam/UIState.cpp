@@ -162,13 +162,18 @@ UIState::UIState() {
 
 
 	UIOActivityInterface* interfacePtr;
+	UIOHideable* interfaceHideablePtr;
+
 	// Interface
 	{
 		this->UIs.push_back(
 			Constructer::constructActivityInteractor(interfacePtr)
 			.window("Interactor", { {0.5f - 0.04f, -0.8f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
 					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE)
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::HIDE)
+			.hideable()
+			.setPtr(interfaceHideablePtr)
 			.get()
 		);
 	}
@@ -183,14 +188,16 @@ UIState::UIState() {
 			.align(UIOConstrainSize::ALIGNMENT::BOTTOM)
 			.get();
 
-		hotbarPtr->addTool(0, [interfacePtr](UIOCallBackParams& params)
+		hotbarPtr->addTool(0, [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
+			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PISTON);
 			return BIND_RESULT::CONTINUE;
 		});
 
-		hotbarPtr->addTool(1, [interfacePtr](UIOCallBackParams& params)
+		hotbarPtr->addTool(1, [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
+			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PLATFORM);
 			return BIND_RESULT::CONTINUE;
 		});
@@ -727,17 +734,17 @@ UIState::UIState() {
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_IN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::SCROLL_UP }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
-			viewport::setVal(viewport::getVal() * 0.95f);
+			viewport::setVal(viewport::getVal() * 0.8f);
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::ZOOM_OUT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::SCROLL_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
-			viewport::setVal(viewport::getVal() / 0.95f);
+			viewport::setVal(viewport::getVal() / 0.8f);
 			return BIND_RESULT::CONTINUE;
 		});
 

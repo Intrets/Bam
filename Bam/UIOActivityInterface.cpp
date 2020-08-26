@@ -11,6 +11,13 @@
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
 
+	this->addFocussedBind({ ControlState::CONTROLS::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->cancel();
+		return BIND_RESULT::CONTINUE | BIND_RESULT::HIDE;
+	});
+
 	this->addFocussedBind({ ControlState::CONTROLS::ROTATER }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);

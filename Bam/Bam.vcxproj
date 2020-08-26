@@ -319,6 +319,7 @@
     <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
+    <ClCompile Include="UIOHideable.cpp" />
     <ClCompile Include="UIOList.cpp" />
     <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
@@ -409,6 +410,7 @@
     <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
+    <ClInclude Include="UIOHideable.h" />
     <ClInclude Include="UIOList.h" />
     <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOInvisible.h" />

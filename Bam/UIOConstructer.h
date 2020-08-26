@@ -14,6 +14,7 @@
 #include "Rectangle.h"
 #include "UIOShell.h"
 #include "UIOBinds.h"
+#include "UIOHideable.h"
 
 template<class T>
 class UIOConstructer
@@ -49,6 +50,7 @@ public:
 	UIOConstructer<UIOButton> button(bool shrink = false);
 	UIOConstructer<UIOFreeSize> window(std::string title, Rectangle size, int32_t types);
 	UIOConstructer<UIOFreeSize> free();
+	UIOConstructer<UIOHideable> hideable(bool focusOnShow = true);
 
 	UIOConstructer<UIOButton>& onRelease(CallBack f);
 	UIOConstructer<UIOButton>& onPress(CallBack f);
@@ -312,6 +314,22 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 		topList->addElement(std::move(close));
 	}
+	else if (types & UIOWindow::TYPE::HIDE) {
+		auto hide = TextConstructer::constructSingleLineDisplayText(" x")
+			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.button()
+			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			return BIND_RESULT::HIDE;
+		})
+			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.get();
+
+		topList->addElement(std::move(hide));
+
+	}
 
 	if (types & UIOWindow::TYPE::MINIMISE) {
 		auto close = TextConstructer::constructSingleLineDisplayText(" _")
@@ -453,6 +471,11 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 template<class T>
 inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::free() {
 	return UIOConstructer<UIOFreeSize>::makeConstructer(std::move(this->object));
+}
+
+template<class T>
+inline UIOConstructer<UIOHideable> UIOConstructer<T>::hideable(bool focusOnShow) {
+	return UIOConstructer<UIOHideable>::makeConstructer(std::move(this->object), focusOnShow);
 }
 
 //--------------------------------------------------------------------------------

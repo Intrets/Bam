@@ -21,6 +21,7 @@ enum BIND_RESULT
 	STOP = 1 << 2,
 	FOCUS = 1 << 3,
 	CONSUME = 1 << 4,
+	HIDE = 1 << 5,
 };
 
 typedef int32_t CallBackBindResult;

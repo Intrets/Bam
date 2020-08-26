@@ -390,6 +390,7 @@
     <ClCompile Include="StringHelpers.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="UIOHideable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -685,6 +686,7 @@
     <ClInclude Include="UIOListSelection.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
+    <ClInclude Include="UIOHideable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

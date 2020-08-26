@@ -13,7 +13,8 @@ public:
 		RESIZE = 1 << 2,
 		RESIZEHORIZONTAL = 1 << 3,
 		RESIZEVERTICAL = 1 << 4,
-		MOVE = 1 << 5
+		MOVE = 1 << 5,
+		HIDE = 1 << 6,
 	};
 
 
