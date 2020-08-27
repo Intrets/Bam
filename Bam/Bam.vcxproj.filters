@@ -391,6 +391,7 @@
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="UIOHideable.cpp" />
+    <ClCompile Include="ActivityHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -687,6 +688,7 @@
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
     <ClInclude Include="UIOHideable.h" />
+    <ClInclude Include="ActivityHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

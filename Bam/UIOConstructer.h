@@ -47,6 +47,16 @@ public:
 	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
 	UIOConstructer<UIOConstrainSize> align(UIOConstrainSize::ALIGNMENT align);
+	UIOConstructer<UIOConstrainSize> alignCenter();
+	UIOConstructer<UIOConstrainSize> alignTop();
+	UIOConstructer<UIOConstrainSize> alignBottom();
+	UIOConstructer<UIOConstrainSize> alignLeft();
+	UIOConstructer<UIOConstrainSize> alignRight();
+	UIOConstructer<UIOConstrainSize> alignBottomLeft();
+	UIOConstructer<UIOConstrainSize> alignBottomRight();
+	UIOConstructer<UIOConstrainSize> alignTopLeft();
+	UIOConstructer<UIOConstrainSize> alignTopRight();
+
 	UIOConstructer<UIOColoredBackground> background(glm::vec4 color);
 	UIOConstructer<UIOButton> button(bool shrink = false);
 	UIOConstructer<UIOFreeSize> window(std::string title, Rectangle size, int32_t types);
@@ -256,6 +266,51 @@ inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::align(UIOConstrainSiz
 	auto res = refMan->makeUniqueRef<UIOConstrainSize>(std::move(this->object));
 	res.get()->alignment = align;
 	return UIOConstructer<UIOConstrainSize>(std::move(res));
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignCenter() {
+	return this->align(UIOConstrainSize::ALIGNMENT::CENTER);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTop() {
+	return this->align(UIOConstrainSize::ALIGNMENT::TOP);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottom() {
+	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOM);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignLeft() {
+	return this->align(UIOConstrainSize::ALIGNMENT::LEFT);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignRight() {
+	return this->align(UIOConstrainSize::ALIGNMENT::RIGHT);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottomLeft() {
+	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOMLEFT);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottomRight() {
+	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOMRIGHT);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTopLeft() {
+	return this->align(UIOConstrainSize::ALIGNMENT::TOPLEFT);
+}
+
+template<class T>
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTopRight() {
+	return this->align(UIOConstrainSize::ALIGNMENT::TOPRIGHT);
 }
 
 //--------------------------------------------------------------------------------
@@ -493,7 +548,7 @@ inline UIOConstructer<UIOHideable> UIOConstructer<T>::hideable(bool focusOnShow)
 
 template<>
 inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onRelease(CallBack f) {
-	this->object.get()->onRelease = f;
+	this->object.get()->setOnRelease(f);
 	return *this;
 }
 
@@ -509,7 +564,7 @@ inline UIOConstructer<UIOButton>& UIOConstructer<T>::onRelease(CallBack f) {
 
 template<>
 inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onPress(CallBack f) {
-	this->object.get()->onPress = f;
+	this->object.get()->setOnPress(f);
 	return *this;
 }
 

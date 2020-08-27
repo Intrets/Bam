@@ -10,6 +10,14 @@ void UIOButton::setColor(glm::vec4 c) {
 	this->color = c;
 }
 
+void UIOButton::setOnPress(CallBack f) {
+	this->onPress = f;
+}
+
+void UIOButton::setOnRelease(CallBack f) {
+	this->onRelease = f;
+}
+
 UIOButton::UIOButton(Handle self) {
 	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{

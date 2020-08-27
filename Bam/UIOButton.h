@@ -30,6 +30,9 @@ private:
 public:
 	void setColor(glm::vec4 c);
 
+	void setOnPress(CallBack f);
+	void setOnRelease(CallBack f);
+
 	UIOButton(Handle self);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main, bool shrink);

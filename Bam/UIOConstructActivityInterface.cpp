@@ -7,14 +7,13 @@
 #include "UIOActivityInterface.h"
 #include "UIOCallBackParams.h"
 #include "UIOTextConstructers.h"
-
 #include "UIOListSelection.h"
 
 UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
 	// Resulting outermost container
 	UIOList* outerListPtr;
 
-	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::DOWN);
+	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::UP);
 	outerList.setPtr(outerListPtr);
 
 	// Hidden functionality
@@ -23,6 +22,7 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 		.setPtr(interfacePtr)
 		.get()
 	);
+
 
 	// Display of the selected activity in the UIOActivityInterface
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
@@ -33,11 +33,11 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 	{
 		if (e.second.isValid()) {
 			std::stringstream out;
-			out << std::string(" ", e.first) << "id " << e.second.get()->selfHandle << " type " << e.second.get()->getTypeName();
+			out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type " << e.second.get()->getTypeName();
 			return out.str();
 		}
 		else {
-			return std::string(" ", e.first) + "invalid";
+			return std::string(e.first, ' ') + "invalid";
 		}
 	})
 		.addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -80,6 +80,20 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 	})
 		.get();
 
+	auto disconnectButton =
+		TextConstructer::constructSingleLineDisplayText(" disconnect")
+		.alignCenter()
+		.button()
+		.onRelease([interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		interfacePtr->splitTarget();
+		return BIND_RESULT::CONTINUE;
+	})
+		.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+		.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+		.get();
+
+	outerListPtr->addElement(std::move(disconnectButton));
 	outerListPtr->addElement(std::move(treeDisplay));
 
 	return std::move(outerList);

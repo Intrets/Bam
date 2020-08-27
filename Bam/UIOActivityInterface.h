@@ -11,7 +11,6 @@ public:
 	{
 		NOTHING,
 		HOVERING,
-		SELECTED,
 	};
 
 private:
@@ -32,6 +31,7 @@ public:
 	void cancel();
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
+	void splitTarget();
 
 	void updateCursorPos(glm::vec2 pos);
 

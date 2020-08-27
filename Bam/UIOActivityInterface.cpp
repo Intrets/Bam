@@ -8,6 +8,7 @@
 #include "Piston.h"
 #include "UIOCallBackParams.h"
 #include "Linker.h"
+#include "ActivityHelpers.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -66,6 +67,20 @@ void UIOActivityInterface::setTarget(WeakReference<Activity, Activity> ref) {
 	this->targetSelectionTick = 0;
 }
 
+void UIOActivityInterface::splitTarget() {
+	switch (this->type) {
+		case USER_ACTION_TYPE::HOVERING:
+			break;
+		case USER_ACTION_TYPE::NOTHING:
+			if (this->base.isValid() && this->target.isValid() && sameGroup(this->base, this->target)) {
+				this->target.get()->disconnectFromParent();
+			}
+			break;
+		default:
+			break;
+	}
+}
+
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
 		this->cursor.get()->forceMoveOriginUp(glm::ivec2(pos) - this->cursor.get()->getOrigin());
@@ -105,9 +120,6 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 				}
 				break;
 			}
-		case USER_ACTION_TYPE::SELECTED:
-			this->type = USER_ACTION_TYPE::NOTHING;
-			break;
 		default:
 			break;
 	}
@@ -115,8 +127,6 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 
 void UIOActivityInterface::spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType) {
 	switch (this->type) {
-		case USER_ACTION_TYPE::SELECTED:
-			break;
 		case USER_ACTION_TYPE::HOVERING:
 			this->cursor.deleteObject();
 			this->type = USER_ACTION_TYPE::NOTHING;

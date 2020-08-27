@@ -191,7 +191,7 @@ UIState::UIState() {
 	{
 		this->UIs.push_back(
 			Constructer::constructActivityInteractor(interfacePtr)
-			.window("Interactor", { {0.5f - 0.04f, -0.8f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+			.window("Interactor", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
 					UIOWindow::TYPE::MINIMISE |
 					UIOWindow::TYPE::MOVE |
 					UIOWindow::TYPE::HIDE)
