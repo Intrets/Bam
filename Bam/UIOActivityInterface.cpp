@@ -78,22 +78,30 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 			break;
 		case USER_ACTION_TYPE::HOVERING:
 			{
-				if (this->cursor.isNull()) {
-					this->type = USER_ACTION_TYPE::NOTHING;
-				}
-				else if (this->cursor.get()->fillTracesUp(gameState)) {
+				this->type = USER_ACTION_TYPE::NOTHING;
+				if (this->cursor.isNotNull() && this->cursor.get()->fillTracesUp(gameState)) {
+					WeakReference<Activity, Activity> linkTarget;
 					if (this->target.isValid()) {
-						if (this->target.get()->getType() == Activity::TYPE::PISTON) {
-							auto message = Linker::linkPiston(gameState, this->target, this->cursor);
+						linkTarget = this->target;
+					}
+					else if (this->base.isValid()) {
+						linkTarget = this->base;
+					}
+
+					if (linkTarget.isNotNull()) {
+						if (linkTarget.get()->getType() == Activity::TYPE::PISTON) {
+							auto message = Linker::linkPiston(gameState, linkTarget, this->cursor);
 							Locator<Log>::ref().putLine(message);
 						}
 						else {
-							auto message = Linker::link(gameState, this->target, this->cursor);
+							auto message = Linker::link(gameState, linkTarget, this->cursor);
 							Locator<Log>::ref().putLine(message);
 						}
 					}
+					if (this->base.isValid()) {
+						this->setBase(this->base);
+					}
 					this->cursor.clear();
-					this->type = USER_ACTION_TYPE::NOTHING;
 				}
 				break;
 			}
@@ -145,7 +153,13 @@ int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderIn
 			this->baseSelectionTick = gameState.tick;
 		}
 		if (periodic(gameState.tick, 80, 40, -this->baseSelectionTick)) {
-			this->base.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+			std::vector<Activity*> members;
+			this->base.get()->getTreeMembers(members);
+			for (auto member : members) {
+				if (member->getType() != Activity::TYPE::ANCHOR) {
+					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+				}
+			}
 		}
 	}
 	if (this->target.isValid()) {
