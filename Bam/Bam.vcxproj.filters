@@ -390,8 +390,12 @@
     <ClCompile Include="StringHelpers.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="UIOHideable.cpp" />
-    <ClCompile Include="ActivityHelpers.cpp" />
+    <ClCompile Include="UIOHideable.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityHelpers.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -687,8 +691,12 @@
     <ClInclude Include="UIOListSelection.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOHideable.h" />
-    <ClInclude Include="ActivityHelpers.h" />
+    <ClInclude Include="UIOHideable.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityHelpers.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

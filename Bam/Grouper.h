@@ -3,19 +3,46 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 
-class Grouper : public Activity
+class GrouperBase : public Activity
 {
 public:
-	WeakReference<Activity, Anchor> child;
+	GrouperBase() = default;
+	GrouperBase(Handle self, glm::ivec2 p) : Activity(self, p) {
+	};
+	virtual ~GrouperBase() = default;
 
-	Grouper() = default;
-	Grouper(Handle self, glm::ivec2 p);
-	virtual ~Grouper() = default;
+	virtual bool addChild(Handle h);
+	virtual bool addChild(WeakReference<Activity, Activity> ref) = 0;
+	virtual bool removeChild(Handle h);
+	virtual bool removeChild(WeakReference<Activity, Activity> ref) = 0;
+	virtual bool hasChild() const = 0;
 
-	virtual bool addChild(WeakReference<Activity, Activity> ref);
+	virtual void save(Saver& saver) override;
+	virtual bool load(Loader& loader) override;
+};
+
+class SingleGrouper : public GrouperBase
+{
+protected:
+	WeakReference<Activity, Activity> child;
+
+public:
+	WeakReference<Activity, Activity> const& getChild();
+
+	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
+	virtual bool removeChild(WeakReference<Activity, Activity> ref) override;
+	virtual bool hasChild() const override;
+
+	SingleGrouper() = default;
+	SingleGrouper(Handle self, glm::ivec2 p) : GrouperBase(self, p) {
+	};
+	virtual ~SingleGrouper() = default;
+
+	// Tree Information
 	virtual void getTreeMembers(std::vector<Activity*>& members) override;
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
+	// Serial
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
 };

@@ -2,7 +2,7 @@
 
 #include "Grouper.h"
 
-class RailCrane : public Grouper
+class RailCrane : public SingleGrouper
 {
 public:
 	enum class DIR

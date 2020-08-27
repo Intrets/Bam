@@ -12,3 +12,7 @@ void ManagedReferenceBase::invalidate() {
 bool ManagedReferenceBase::isValid() const {
 	return this->valid;
 }
+
+Handle ManagedReferenceBase::getHandle() const {
+	return this->handle;
+}

@@ -11,7 +11,7 @@
 #include "Anchor.h"
 
 Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces) :
-	Grouper(self, pos),
+	SingleGrouper(self, pos),
 	length(0),
 	headDir(dir) {
 	state = Piston::DIR::STATIONARY;
@@ -197,7 +197,7 @@ void Piston::leaveMoveableTracesLocal(GameState& gameState) {
 }
 
 void Piston::save(Saver& saver) {
-	Grouper::save(saver);
+	SingleGrouper::save(saver);
 	saver.store<glm::ivec2>(this->direction);
 	saver.store<Activity::DIR>(this->headDir);
 	saver.store<Piston::DIR>(this->state);
@@ -205,7 +205,7 @@ void Piston::save(Saver& saver) {
 }
 
 bool Piston::load(Loader& loader) {
-	Grouper::load(loader);
+	SingleGrouper::load(loader);
 	loader.retrieve<glm::ivec2>(this->direction);
 	loader.retrieve<Activity::DIR>(this->headDir);
 	loader.retrieve<Piston::DIR>(this->state);

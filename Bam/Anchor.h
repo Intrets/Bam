@@ -2,18 +2,25 @@
 
 #include "Activity.h"
 #include "ReferenceManager.h"
+#include "Grouper.h"
 
 class GameState;
 
-class Anchor : public Activity
+class Anchor : public GrouperBase
 {
-public:
+private:
 	std::vector<WeakReference<Activity, Activity>> children;
 
-	void addChild(Handle h);
+public:
+	std::vector<WeakReference<Activity, Activity>>& getChildren();
+
+	// Adds activity to this Anchor and sets the parentRef to this Anchor
+	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
 
 	// returns if this Anchor has no children and has to be cleaned up
-	bool removeChild(Handle h);
+	virtual bool removeChild(WeakReference<Activity, Activity> ref) override;
+
+	virtual bool hasChild() const override;
 
 	Anchor();
 	Anchor(Handle self);

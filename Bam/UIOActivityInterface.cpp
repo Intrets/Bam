@@ -104,14 +104,15 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 					}
 
 					if (linkTarget.isNotNull()) {
-						if (linkTarget.get()->getType() == Activity::TYPE::PISTON) {
-							auto message = Linker::linkPiston(gameState, linkTarget, this->cursor);
-							Locator<Log>::ref().putLine(message);
-						}
-						else {
-							auto message = Linker::link(gameState, linkTarget, this->cursor);
-							Locator<Log>::ref().putLine(message);
-						}
+						Linker::link(gameState, linkTarget, this->cursor);
+						//if (linkTarget.get()->getType() == Activity::TYPE::PISTON) {
+						//	auto message = Linker::linkPiston(gameState, linkTarget, this->cursor);
+						//	Locator<Log>::ref().putLine(message);
+						//}
+						//else {
+						//	auto message = Linker::link(gameState, linkTarget, this->cursor);
+						//	Locator<Log>::ref().putLine(message);
+						//}
 					}
 					if (this->base.isValid()) {
 						this->setBase(this->base);

@@ -2,99 +2,128 @@
 
 #include "Linker.h"
 #include "Anchor.h"
-//#include "Piston.h"
 
-// merge second group into first group
-std::string Linker::linkAnchors(GameState& gameState, WeakReference<Activity, Anchor> r1, WeakReference<Activity, Anchor> r2) {
+bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> r1, WeakReference<Activity, Anchor> r2) {
 	if (r2.handle == r1.handle) {
-		return "Same Groups";
+		return false;
 	}
-	//auto t1 = r1.get();
-	//auto t2 = r2.get();
 	auto toDelete = r2;
-	for (auto& r : r2.get()->children) {
-		r1.get()->children.push_back(r);
-		r.get()->parentRef = r1;
+	for (auto& r : r2.get()->getChildren()) {
+		r1.get()->addChild(r);
 	}
 	Locator<ReferenceManager<Activity>>::get()->deleteReference(&toDelete);
-	return "Successfully linked";
+	return true;
 }
 
+bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, SingleGrouper> r1, WeakReference<Activity, Activity> r2) {
+	auto& refMan = Locator<ReferenceManager<Activity>>::ref();
 
-std::string Linker::linkPiston(GameState & gameState, WeakReference<Activity, Grouper> r1, WeakReference<Activity, Activity> r2) {
 	if (r1.isNull() || r2.isNull()) {
-		return "Invalid references";
-	}
-	auto a11 = r1.get();
-	auto a2 = r2.get();
-	WeakReference<Activity, Anchor> target;
-	if (a2->getType() == Activity::TYPE::ANCHOR || a2->getType() == Activity::TYPE::RAILCRANE) {
-		target = r2;
-	}
-	else if (a2->parentRef.isNotNull()) {
-		target = a2->parentRef;
-	}
-	else {
-		target = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
-		target.get()->addChild(a2->selfHandle);
-		a2->parentRef = target;
+		return false;
 	}
 
-	WeakReference<Activity, Anchor> head;
-	if (a11->child.isNotNull()) {
-		head = a11->child;
+	r2 = r2.get()->getRoot();
+
+	if (r1.get()->hasChild()) {
+		auto child = r1.get()->getChild();
+		if (child.get()->getType() != Activity::TYPE::ANCHOR) {
+
+#ifdef BAM_DEBUG
+			assert(r1.get()->removeChild(child));
+#else
+			r1.get()->removeChild(child);
+#endif // BAM_DEBUG
+
+			auto childAnchor = refMan.makeRef<Anchor>();
+			childAnchor.get()->addChild(child);
+			r1.get()->addChild(childAnchor);
+			r1 = childAnchor;
+		}
+		else {
+			r1 = child;
+		}
+		return linkAnchor(gameState, r1, r2);
 	}
 	else {
-		head = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
-		head.get()->parentRef = r1;
-		a11->addChild(head);
+		r1.get()->addChild(r2);
+		return true;
 	}
-	return link(gameState, head, target);
 }
 
-// from r1 to r2, or grouped together with Anchor
-std::string Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2) {
+bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1, WeakReference<Activity, Activity> r2) {
 	if (r1.isNull() || r2.isNull()) {
-		return "Invalid references";
-	}
-	auto a1 = r1.get();
-	auto a2 = r2.get();
-	// TODO: stop cycles from breaking everything
-	WeakReference<Activity, Anchor> g1;
-	WeakReference<Activity, Anchor> g2;
-	if (a1->getType() == Activity::TYPE::ANCHOR) {
-		g1 = r1;
-	}
-	else if (a1->parentRef.isNull()) {
-		g1 = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
-		g1.get()->addChild(a1->selfHandle);
-		a1->parentRef = g1;
-	}
-	else {
-		g1 = a1->parentRef;
-	}
-	if (a2->getType() == Activity::TYPE::ANCHOR) {
-		g2 = r2;
-	}
-	else if (a2->parentRef.isNull()) {
-		g2 = Locator<ReferenceManager<Activity>>::get()->makeRef<Anchor>();
-		g2.get()->addChild(a2->selfHandle);
-		a2->parentRef = g2;
-	}
-	else {
-		g2 = a2->parentRef;
+		return false;
 	}
 
-	if (g1.get()->parentRef.isNotNull() && g2.get()->parentRef.isNotNull()) {
-		return "two groups already with parents";
-	}
-	if (g1.get()->parentRef.isNotNull()) {
-		return linkAnchors(gameState, g1, g2);
+	r2 = r2.get()->getRoot();
+
+	auto p1 = r1.get();
+	auto p2 = r2.get();
+
+	if (p2->getType() == Activity::TYPE::ANCHOR) {
+		return mergeAnchors(gameState, r1, r2);
 	}
 	else {
-		return linkAnchors(gameState, g2, g1);
+		p1->addChild(r2);
+		return true;
 	}
-
-	//return "Successfully linked";
 }
+
+
+bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2) {
+#ifdef BAM_DEBUG
+	auto type = r1.get()->getType();
+	assert(
+		type != Activity::TYPE::ANCHOR &&
+		type != Activity::TYPE::RAILCRANE &&
+		type != Activity::TYPE::PISTON);
+#endif
+	r2 = r2.get()->getRoot();
+
+	auto parent = r1.get()->parentRef;
+	if (parent.isNotNull()) {
+		if (parent.get()->getType() == Activity::TYPE::ANCHOR) {
+			return linkAnchor(gameState, parent, r2);
+		}
+		else {
+			return linkSingleGrouper(gameState, parent, r2);
+		}
+	}
+	else {
+		auto& refMan = Locator<ReferenceManager<Activity>>::ref();
+
+		auto r1Anchor = refMan.makeRef<Anchor>();
+		r1Anchor.get()->addChild(r1);
+
+		return linkAnchor(gameState, r1Anchor, r2);
+	}
+}
+
+bool Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2) {
+	if (r1.isNull() || r2.isNull()) {
+		return false;
+	}
+	auto p1 = r1.get();
+	auto p2 = r2.get();
+
+	if (p2->parentRef.isNotNull()) {
+		return link(gameState, r1, p2->getRoot());
+	}
+
+	switch (p1->getType()) {
+		case Activity::TYPE::ANCHOR:
+			return linkAnchor(gameState, r1, r2);
+			break;
+		case Activity::TYPE::PISTON:
+		case Activity::TYPE::RAILCRANE:
+			return linkSingleGrouper(gameState, r1, r2);
+			break;
+		default:
+			return linkNonGrouper(gameState, r1, r2);
+			break;
+	}
+
+	return false;
+}
+
 

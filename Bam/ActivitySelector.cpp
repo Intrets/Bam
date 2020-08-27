@@ -53,7 +53,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 		case SELECTION_TYPE::SELECTED:
 			{
 				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
-				if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.handle) {
+				if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.getHandle()) {
 					if (this->target.get()->removeTracesUp(gameState)) {
 						this->target.set(maybeTarget.value());
 						type = SELECTION_TYPE::HOVERING;
@@ -79,7 +79,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 void ActivitySelector::expandTarget() {
 	if (this->target.isValid()) {
 		if (this->target.get()->parentRef.isNotNull()) {
-			this->history.push_back(ManagedReference<Activity, Activity>(this->target.handle));
+			this->history.push_back(ManagedReference<Activity, Activity>(this->target.getHandle()));
 			this->target.set(this->target.get()->parentRef);
 		}
 	}
@@ -90,7 +90,7 @@ void ActivitySelector::shrinkTarget() {
 		this->history.pop_back();
 	}
 	if (!this->history.empty()) {
-		this->target.set(this->history.back().handle);
+		this->target.set(this->history.back().getHandle());
 		this->history.pop_back();
 	}
 }

@@ -9,29 +9,39 @@
 #include "RenderInfo.h"
 #include <algorithm>
 
-void Anchor::addChild(Handle h) {
-	if (h == this->selfHandle) {
-		return;
-	}
-	this->children.push_back(WeakReference<Activity, Activity>(h));
+std::vector<WeakReference<Activity, Activity>>& Anchor::getChildren() {
+	return children;
 }
 
-bool Anchor::removeChild(Handle h) {
+bool Anchor::addChild(WeakReference<Activity, Activity> ref) {
+	// TODO: check if not creating loops?
+	if (ref.handle == this->selfHandle) {
+		return false;
+	}
+	this->children.push_back(ref);
+	ref.get()->parentRef.handle = this->selfHandle;
+	return true;
+}
+
+bool Anchor::removeChild(WeakReference<Activity, Activity> ref) {
 	auto newEnd = std::remove_if(
 		this->children.begin(), this->children.end(),
-		[=](WeakReference<Activity, Activity> t) -> bool
+		[h = ref.handle](WeakReference<Activity, Activity> t) -> bool
 	{
 		return t.handle == h;
-	}
-	);
+	});
 	this->children.erase(newEnd, this->children.end());
 	return this->children.empty();
+}
+
+bool Anchor::hasChild() const {
+	return !this->children.empty();
 }
 
 Anchor::Anchor() {
 }
 
-Anchor::Anchor(Handle self) : Activity(self, glm::ivec2(0, 0)) {
+Anchor::Anchor(Handle self) : GrouperBase(self, glm::ivec2(0, 0)) {
 }
 
 Anchor::Anchor(Handle self, GameState& gameState) : Anchor(self) {
@@ -119,7 +129,7 @@ void Anchor::appendSelectionInfo(GameState const& gameState, RenderInfo& renderI
 }
 
 void Anchor::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
-	members.push_back({ depth,this });
+	members.push_back({ depth, this });
 	for (auto& child : this->children) {
 		child.get()->getTreeMembersDepths(members, depth + 1);
 	}

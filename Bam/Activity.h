@@ -5,6 +5,7 @@
 #include <initializer_list>
 
 class ActivityIgnoringGroup;
+class GrouperBase;
 class Loader;
 class Saver;
 class GameState;
@@ -162,7 +163,7 @@ protected:
 	glm::ivec2 origin;
 
 public:
-	WeakReference<Activity, Anchor> parentRef;
+	WeakReference<Activity, GrouperBase> parentRef;
 	Handle selfHandle;
 
 	glm::ivec2 getOrigin() { return origin; };

@@ -24,10 +24,10 @@ public:
 		handle = 0;
 	};
 
-	bool isNotNull() {
+	bool isNotNull() const {
 		return handle != 0;
 	};
-	bool isNull() {
+	bool isNull() const {
 		return handle == 0;
 	};
 
@@ -81,10 +81,18 @@ public:
 
 class ManagedReferenceBase
 {
-public:
-	Handle handle = 0;
+private:
 	bool valid = false;
+
+private:
+	template<class T, class S>
+	friend class ManagedReference;
+
+	Handle handle = 0;
+
+public:
 	bool isValid() const;
+	Handle getHandle() const;
 
 	void validate();
 	void invalidate();
@@ -181,7 +189,7 @@ inline void WeakReference<B, T>::deleteObject() {
 
 template<class B, class T>
 inline T* ManagedReference<B, T>::get() const {
-	return static_cast<T*>(Locator<ReferenceManager<B>>::get()->data[handle].get());
+	return static_cast<T*>(Locator<ReferenceManager<B>>::get()->data[this->handle].get());
 }
 
 template<class B, class T>
@@ -263,13 +271,13 @@ inline UniqueReference<B, T> ReferenceManager<B>::makeUniqueRef(Args&& ...args) 
 template<class B>
 template<class T>
 inline void ReferenceManager<B>::subscribe(ManagedReference<B, T>& toManage) {
-	managedReferences.insert(std::make_pair(toManage.handle, &toManage));
+	managedReferences.insert(std::make_pair(toManage.getHandle(), &toManage));
 }
 
 template<class B>
 template<class T>
 inline void ReferenceManager<B>::unsubscribe(ManagedReference<B, T>& managedReference) {
-	auto range = managedReferences.equal_range(managedReference.handle);
+	auto range = managedReferences.equal_range(managedReference.getHandle());
 	auto it = range.first;
 	auto end = range.second;
 	for (; it != end; it++) {

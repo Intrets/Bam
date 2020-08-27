@@ -638,7 +638,7 @@ UIState::UIState() {
 					.button()
 					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
-					luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.handle);
+					luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.getHandle());
 					luaTestPtr->lua.state.script(join(luaTextPtr->text.getLines()));
 					return BIND_RESULT::CONTINUE;
 				})

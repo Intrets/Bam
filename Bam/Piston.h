@@ -3,7 +3,7 @@
 #include "Grouper.h"
 #include "Activity.h"
 
-class Piston : public Grouper
+class Piston : public SingleGrouper
 {
 public:
 	enum class DIR

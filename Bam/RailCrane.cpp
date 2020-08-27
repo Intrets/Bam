@@ -11,7 +11,7 @@
 #include "Loader.h"
 
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces) :
-	Grouper(self, pos) {
+	SingleGrouper(self, pos) {
 	this->length = 6;
 	this->orientation = Activity::DIR::RIGHT;
 	this->anchorDirection = RailCrane::DIR::STATIONARY;
@@ -146,7 +146,7 @@ Activity::TYPE RailCrane::getType() {
 }
 
 void RailCrane::save(Saver& saver) {
-	Grouper::save(saver);
+	SingleGrouper::save(saver);
 	saver.store(this->orientation);
 	saver.store(this->anchorDirection);
 	saver.store(this->length);
@@ -154,7 +154,7 @@ void RailCrane::save(Saver& saver) {
 }
 
 bool RailCrane::load(Loader& loader) {
-	Grouper::load(loader);
+	SingleGrouper::load(loader);
 	loader.retrieve(this->orientation);
 	loader.retrieve(this->anchorDirection);
 	loader.retrieve(this->length);
