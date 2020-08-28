@@ -11,8 +11,7 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_D] = CONTROLS::RIGHT;
 	this->keyToControl[GLFW_KEY_W] = CONTROLS::UP;
 	this->keyToControl[GLFW_KEY_S] = CONTROLS::DOWN;
-	this->keyToControl[GLFW_KEY_Q] = CONTROLS::ROTATEL;
-	this->keyToControl[GLFW_KEY_E] = CONTROLS::ROTATER;
+	this->keyToControl[GLFW_KEY_R] = CONTROLS::ROTATER;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1] = CONTROLS::ACTION0;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2] = CONTROLS::ACTION1;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_3] = CONTROLS::ACTION2;
@@ -20,8 +19,6 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_RIGHT] = CONTROLS::TEST_RIGHT;
 	this->keyToControl[GLFW_KEY_DOWN] = CONTROLS::TEST_DOWN;
 	this->keyToControl[GLFW_KEY_UP] = CONTROLS::TEST_UP;
-	this->keyToControl[GLFW_KEY_R] = CONTROLS::ZOOM_IN;
-	this->keyToControl[GLFW_KEY_F] = CONTROLS::ZOOM_OUT;
 	this->keyToControl[GLFW_KEY_F7] = CONTROLS::TEST_SAVE;
 	this->keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 	this->keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
@@ -62,7 +59,6 @@ void ControlState::cycleStates() {
 	this->consumed.fill(false);
 	this->consumedBuffer.fill(false);
 
-	this->modifiers = MODIFIER::NONE;
 	this->blockWorldBinds = false;
 }
 
@@ -132,21 +128,40 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 	switch (key) {
 		case GLFW_KEY_LEFT_SHIFT:
 		case GLFW_KEY_RIGHT_SHIFT:
-			this->modifiers &= ~MODIFIER::NONE;
-			this->modifiers |= MODIFIER::SHIFT;
+			if (action == GLFW_PRESS) {
+				this->modifiers &= ~ControlState::NONE;
+				this->modifiers |= MODIFIER::SHIFT;
+			}
+			else if (action == GLFW_RELEASE) {
+				this->modifiers &= ~MODIFIER::SHIFT;
+			}
 			break;
 		case GLFW_KEY_LEFT_CONTROL:
 		case GLFW_KEY_RIGHT_CONTROL:
-			this->modifiers &= ~MODIFIER::NONE;
-			this->modifiers |= MODIFIER::CONTROL;
+			if (action == GLFW_PRESS) {
+				this->modifiers &= ~ControlState::NONE;
+				this->modifiers |= MODIFIER::CONTROL;
+			}
+			else if (action == GLFW_RELEASE) {
+				this->modifiers &= ~MODIFIER::CONTROL;
+			}
 			break;
 		case GLFW_KEY_LEFT_ALT:
 		case GLFW_KEY_RIGHT_ALT:
-			this->modifiers &= ~MODIFIER::NONE;
-			this->modifiers |= MODIFIER::ALT;
+			if (action == GLFW_PRESS) {
+				this->modifiers &= ~ControlState::NONE;
+				this->modifiers |= MODIFIER::ALT;
+			}
+			else if (action == GLFW_RELEASE) {
+				this->modifiers &= ~MODIFIER::ALT;
+			}
 			break;
 		default:
 			break;
+	}
+
+	if (this->modifiers == 0) {
+		this->modifiers = ControlState::NONE;
 	}
 
 	switch (action) {
@@ -202,7 +217,7 @@ BindControl::BindControl(ControlState::CONTROLS c) :
 }
 
 BindControl::BindControl(ControlState::CONTROLS c, int32_t s) :
-	BindControl(c, s, ControlState::MODIFIER::NONE) {
+	BindControl(c, s, ControlState::MODIFIER::ANY) {
 }
 
 BindControl::BindControl(ControlState::CONTROLS c, int32_t s, int32_t m) :

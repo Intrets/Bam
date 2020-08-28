@@ -20,14 +20,14 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		return BIND_RESULT::CONTINUE | BIND_RESULT::HIDE;
 	});
 
-	this->addFocussedBind({ ControlState::CONTROLS::ROTATER }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ ControlState::CONTROLS::ROTATER, ControlState::CONTROLSTATE_PRESSED, ControlState::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(Activity::ROT::CLOCKWISE);
 		return BIND_RESULT::CONTINUE;
 	});
 
-	this->addFocussedBind({ ControlState::CONTROLS::ROTATEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ ControlState::CONTROLS::ROTATER, ControlState::CONTROLSTATE_PRESSED, ControlState::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(Activity::ROT::COUNTERCLOCKWISE);
@@ -205,23 +205,23 @@ int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& re
 		}
 	}
 	if (this->cursor.isNotNull()) {
-			bool blocked = false;
-			std::vector<Activity*> members;
-			this->cursor.get()->getTreeMembers(members);
-			for (auto member : members) {
-				if (!member->canFillTracesLocal(gameState)) {
-					blocked = true;
-					break;
-				}
+		bool blocked = false;
+		std::vector<Activity*> members;
+		this->cursor.get()->getTreeMembers(members);
+		for (auto member : members) {
+			if (!member->canFillTracesLocal(gameState)) {
+				blocked = true;
+				break;
 			}
+		}
 
-			glm::vec4 color;
-			if (blocked) {
-				color = COLORS::GR::BLOCKED;
-			}
-			else {
-				color = COLORS::GR::HOVER;
-			}
+		glm::vec4 color;
+		if (blocked) {
+			color = COLORS::GR::BLOCKED;
+		}
+		else {
+			color = COLORS::GR::HOVER;
+		}
 
 		this->cursor.get()->appendSelectionInfo(gameState, renderInfo, color);
 	}
