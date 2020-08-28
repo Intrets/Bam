@@ -71,7 +71,7 @@ ScreenRectangle UIOHotbar::updateSize(ScreenRectangle newScreenRectangle) {
 	return this->screenRectangle;
 }
 
-int32_t UIOHotbar::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	renderInfo.uiRenderInfo.addRectangle(
 		this->getScreenRectangle().getTopRight(),

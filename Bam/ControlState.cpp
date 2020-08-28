@@ -132,14 +132,17 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 	switch (key) {
 		case GLFW_KEY_LEFT_SHIFT:
 		case GLFW_KEY_RIGHT_SHIFT:
+			this->modifiers &= ~MODIFIER::NONE;
 			this->modifiers |= MODIFIER::SHIFT;
 			break;
 		case GLFW_KEY_LEFT_CONTROL:
 		case GLFW_KEY_RIGHT_CONTROL:
+			this->modifiers &= ~MODIFIER::NONE;
 			this->modifiers |= MODIFIER::CONTROL;
 			break;
 		case GLFW_KEY_LEFT_ALT:
 		case GLFW_KEY_RIGHT_ALT:
+			this->modifiers &= ~MODIFIER::NONE;
 			this->modifiers |= MODIFIER::ALT;
 			break;
 		default:
@@ -199,7 +202,7 @@ BindControl::BindControl(ControlState::CONTROLS c) :
 }
 
 BindControl::BindControl(ControlState::CONTROLS c, int32_t s) :
-	BindControl(c, s, 0) {
+	BindControl(c, s, ControlState::MODIFIER::NONE) {
 }
 
 BindControl::BindControl(ControlState::CONTROLS c, int32_t s, int32_t m) :

@@ -63,7 +63,8 @@ namespace COLORS
 	{
 		static glm::vec4 SELECTION = rgba(50, 50, 255, 0.5);
 		static glm::vec4 HIGHLIGHT = rgba(50, 255, 50, 0.5);
-		static glm::vec4 HOVER = rgba(50, 50, 50, 0.5);
+		static glm::vec4 HOVER = rgba(255, 255, 255, 0.5);
+		static glm::vec4 BLOCKED = rgba(255, 0, 0, 0.5);
 
 	}
 }

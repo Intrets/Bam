@@ -25,7 +25,7 @@ public:
 	void setList(std::vector<T>& l);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
-	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 };
 
 template<class T>
@@ -79,7 +79,7 @@ ScreenRectangle UIOListSelection<T>::updateSize(ScreenRectangle newScreenRectang
 }
 
 template<class T>
-inline int32_t UIOListSelection<T>::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 
 	auto maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen();

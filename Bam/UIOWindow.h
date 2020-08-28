@@ -29,7 +29,7 @@ public:
 	virtual ~UIOWindow() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
-	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
 	virtual CallBackBindResult runOnHoverBinds(State& state) override;
 	virtual CallBackBindResult runFocussedBinds(State& state) override;

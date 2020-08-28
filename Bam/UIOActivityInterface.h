@@ -20,7 +20,6 @@ private:
 	ManagedReference<Activity, Activity> target;
 	int32_t targetSelectionTick;
 
-	//ManagedReference<Activity, Activity> cursor;
 	UniqueReference<Activity, Activity> cursor;
 
 public:
@@ -28,6 +27,7 @@ public:
 
 	UIOActivityInterface(Handle self);
 
+	void exit();
 	void cancel();
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
@@ -39,7 +39,7 @@ public:
 	void spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);
 	void rotateHover(Activity::ROT rot);
 
-	virtual int32_t addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) override;
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

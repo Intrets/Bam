@@ -23,7 +23,6 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 		.get()
 	);
 
-
 	// Display of the selected activity in the UIOActivityInterface
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
 
@@ -46,12 +45,14 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 		if (maybeTarget.has_value()) {
 			auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
-			auto target = maybeTarget.value().get()->getRoot();
+			auto target = maybeTarget.value();
+			auto base = maybeTarget.value().get()->getRoot();
 
-			interfacePtr->setBase(target);
+			interfacePtr->setBase(base);
+			interfacePtr->setTarget(target);
 
 			std::vector<std::pair<int32_t, Activity*>> members;
-			target.get()->getTreeMembersDepths(members, 0);
+			base.get()->getTreeMembersDepths(members, 0);
 			std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
 
 			for (auto [depth, ptr] : members) {

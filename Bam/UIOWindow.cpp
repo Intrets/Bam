@@ -27,7 +27,7 @@ ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
 	return this->screenRectangle;
 }
 
-int32_t UIOWindow::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec2 px = glm::vec2(1.0f) / glm::vec2(this->screenRectangle.getPixelSize());
 	if (this->minimized) {
 		depth = topBarPtr->addRenderInfo(gameState, renderInfo, depth++);

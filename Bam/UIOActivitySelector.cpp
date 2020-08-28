@@ -49,6 +49,6 @@ ScreenRectangle UIOActivitySelector::updateSize(ScreenRectangle newScreenRectang
 	return newScreenRectangle;
 }
 
-int32_t UIOActivitySelector::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOActivitySelector::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	return depth;
 }

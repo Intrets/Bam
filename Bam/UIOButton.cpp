@@ -88,7 +88,7 @@ ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 	return this->screenRectangle;
 }
 
-int32_t UIOButton::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec4 c = this->color;
 	if (down) {
 		c = COLORS::DARKEN(c);

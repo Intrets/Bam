@@ -122,10 +122,15 @@ void Activity::forceMoveOriginUp(glm::ivec2 d) {
 
 void Activity::disconnectFromParent() {
 	if (this->parentRef.isNotNull()) {
-		auto anchor = this->parentRef.get();
-		if (anchor->removeChild(this->selfHandle)) {
-			anchor->disconnectFromParent();
-			parentRef.deleteObject();
+		if (this->parentRef.get()->getType() == Activity::TYPE::ANCHOR) {
+			auto anchor = this->parentRef.get();
+			if (anchor->removeChild(this->selfHandle)) {
+				anchor->disconnectFromParent();
+				parentRef.deleteObject();
+			}
+		}
+		else {
+			this->parentRef.get()->removeChild(this->getHandle());
 		}
 		parentRef.handle = 0;
 	}

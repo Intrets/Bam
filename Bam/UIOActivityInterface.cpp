@@ -16,7 +16,7 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->addFocussedBind({ ControlState::CONTROLS::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->cancel();
+		self->exit();
 		return BIND_RESULT::CONTINUE | BIND_RESULT::HIDE;
 	});
 
@@ -41,6 +41,14 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		return BIND_RESULT::CONTINUE;
 	});
 
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION1 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->cancel();
+		return BIND_RESULT::CONTINUE;
+	});
+
+
 	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
@@ -49,11 +57,32 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 	});
 }
 
-void UIOActivityInterface::cancel() {
+void UIOActivityInterface::exit() {
 	this->cursor.deleteObject();
 	this->target.unset();
 	this->base.unset();
 	this->type = USER_ACTION_TYPE::NOTHING;
+}
+
+void UIOActivityInterface::cancel() {
+	switch (this->type) {
+		case USER_ACTION_TYPE::HOVERING:
+			if (this->cursor.isNotNull()) {
+				this->cursor.deleteObject();
+			}
+			this->type = USER_ACTION_TYPE::NOTHING;
+			break;
+		case USER_ACTION_TYPE::NOTHING:
+			if (this->target.isValid()) {
+				this->target.unset();
+			}
+			else if (this->base.isValid()) {
+				this->base.unset();
+			}
+			break;
+		default:
+			break;
+	}
 }
 
 void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
@@ -83,7 +112,7 @@ void UIOActivityInterface::splitTarget() {
 
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
-		this->cursor.get()->forceMoveOriginUp(glm::ivec2(pos) - this->cursor.get()->getOrigin());
+		this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - this->cursor.get()->getOrigin());
 	}
 }
 
@@ -105,18 +134,12 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 
 					if (linkTarget.isNotNull()) {
 						Linker::link(gameState, linkTarget, this->cursor);
-						//if (linkTarget.get()->getType() == Activity::TYPE::PISTON) {
-						//	auto message = Linker::linkPiston(gameState, linkTarget, this->cursor);
-						//	Locator<Log>::ref().putLine(message);
-						//}
-						//else {
-						//	auto message = Linker::link(gameState, linkTarget, this->cursor);
-						//	Locator<Log>::ref().putLine(message);
-						//}
 					}
+
 					if (this->base.isValid()) {
 						this->setBase(this->base);
 					}
+
 					this->cursor.clear();
 				}
 				break;
@@ -158,7 +181,7 @@ void UIOActivityInterface::rotateHover(Activity::ROT rot) {
 	}
 }
 
-int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (this->base.isValid()) {
 		if (this->baseSelectionTick == 0) {
 			this->baseSelectionTick = gameState.tick;
@@ -182,7 +205,25 @@ int32_t UIOActivityInterface::addRenderInfo(GameState const& gameState, RenderIn
 		}
 	}
 	if (this->cursor.isNotNull()) {
-		this->cursor.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HOVER);
+			bool blocked = false;
+			std::vector<Activity*> members;
+			this->cursor.get()->getTreeMembers(members);
+			for (auto member : members) {
+				if (!member->canFillTracesLocal(gameState)) {
+					blocked = true;
+					break;
+				}
+			}
+
+			glm::vec4 color;
+			if (blocked) {
+				color = COLORS::GR::BLOCKED;
+			}
+			else {
+				color = COLORS::GR::HOVER;
+			}
+
+		this->cursor.get()->appendSelectionInfo(gameState, renderInfo, color);
 	}
 	return depth;
 }

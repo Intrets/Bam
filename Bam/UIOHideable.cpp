@@ -95,7 +95,7 @@ CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
 	}
 }
 
-int32_t UIOHideable::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOHideable::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (!this->hidden) {
 		return this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
 	}

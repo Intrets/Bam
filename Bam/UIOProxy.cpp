@@ -25,7 +25,7 @@ CallBackBindResult UIOProxy::runFocussedBinds(State& state) {
     return BIND_RESULT::CONTINUE;
 }
 
-int32_t UIOProxy::addRenderInfo(GameState const& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOProxy::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
     if (this->main.isValid()) {
         return this->main.get()->addRenderInfo(gameState, renderInfo, depth);
     };
