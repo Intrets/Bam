@@ -211,14 +211,14 @@ UIState::UIState() {
 			.align(UIOConstrainSize::ALIGNMENT::BOTTOM)
 			.get();
 
-		hotbarPtr->addTool(0, [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		hotbarPtr->setTool(0, "Piston", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PISTON);
 			return BIND_RESULT::CONTINUE;
 		});
 
-		hotbarPtr->addTool(1, [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		hotbarPtr->setTool(1, "Platform", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PLATFORM);

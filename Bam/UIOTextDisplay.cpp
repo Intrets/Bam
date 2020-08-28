@@ -42,6 +42,11 @@ void UIOTextDisplay::moveCursor(glm::ivec2 p) {
 	this->ticksSelected = 0;
 }
 
+void UIOTextDisplay::setCursor(glm::ivec2 p) {
+	this->text.setCursor(p);
+	this->ticksSelected = 0;
+}
+
 void UIOTextDisplay::insertText(std::string text_) {
 	this->text.insertString(text_);
 	this->text.invalidateCache();

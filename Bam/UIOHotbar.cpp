@@ -9,6 +9,9 @@
 #include "ControlState.h"
 #include "UIOCallBackParams.h"
 #include "UIOGrid.h"
+#include "UIOTextDisplay.h"
+#include "UIOTextConstructers.h"
+#include "UIOConstructer.h"
 
 UIOHotbar::UIOHotbar(Handle self) {
 	this->selfHandle = self;
@@ -18,20 +21,19 @@ UIOHotbar::UIOHotbar(Handle self) {
 	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 1));
 
 	for (int32_t i = 0; i < 10; i++) {
-		auto but = refMan->makeUniqueRef<UIOButton>();
-		but.get()->onPress = [this, i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		tile.get()->addElement(
+			TextConstructer::constructSingleLineDisplayText("")
+			.setPtr(this->toolTexts[i])
+			.alignCenter()
+			.button()
+			.onPress([this, i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			this->activateTool(i, params);
 			return BIND_RESULT::CONTINUE;
-		};
-
-		auto e = refMan->makeUniqueRef<UIOPad>(std::move(but));
-		e.get()->bottom = { UIOSizeType::STATIC_PX, 2 };
-		e.get()->top = { UIOSizeType::STATIC_PX, 2 };
-		e.get()->left = { UIOSizeType::STATIC_PX, 2 };
-		e.get()->right = { UIOSizeType::STATIC_PX, 2 };
-
-		tile.get()->addElement(std::move(e));
+		})
+			.pad(UIOSizeType(UIOSizeType::PX, 2))
+			.get()
+			);
 	}
 
 	for (auto [bind, i] : {
@@ -82,8 +84,9 @@ int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	return depth;
 }
 
-void UIOHotbar::addTool(int32_t slot, std::function<void(UIOCallBackParams& params)> f) {
+void UIOHotbar::setTool(int32_t slot, std::string name, std::function<void(UIOCallBackParams& params)> f) {
 	if (indexInArray(slot, this->tools)) {
 		this->tools[slot] = f;
+		this->toolTexts[slot]->text.setString(name);
 	}
 }

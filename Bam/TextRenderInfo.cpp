@@ -286,8 +286,12 @@ void Text::moveCursor(glm::ivec2 p) {
 		else if (topDist < 0.0f) {
 			this->view.y -= topDist;
 		}
-
 	}
+}
+
+void Text::setCursor(glm::ivec2 p) {
+	this->zeroCursor();
+	this->moveCursor(p);
 }
 
 void Text::moveView(glm::ivec2 p) {
@@ -325,6 +329,10 @@ void Text::moveView(glm::ivec2 p) {
 			view.y = botStop - lineHeight;
 		}
 	}
+}
+
+void Text::zeroCursor() {
+	this->cursor = glm::ivec2(0, 0);
 }
 
 glm::ivec2 Text::getCursor() {

@@ -64,11 +64,18 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 						base.get()->getTreeMembersDepths(members, 0);
 						std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
 
+						int32_t i = 0;
+						int32_t index = 0;
 						for (auto [depth, ptr] : members) {
+							if (ptr->selfHandle == target.handle) {
+								index = i;
+							}
 							membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(ptr->selfHandle) });
+							i++;
 						}
 
 						self->setList(membersManaged);
+						self->setSelected(index);
 					}
 					else {
 						interfacePtr->cancel(true);

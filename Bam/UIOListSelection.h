@@ -21,12 +21,19 @@ public:
 	UIOListSelection(Handle self);
 	UIOListSelection(Handle self, std::function<std::string(T const&)> f);
 
+	void setSelected(int32_t index);
 	std::optional<T*> getSelected();
 	void setList(std::vector<T>& l);
+	std::vector<T> const& getList();
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 };
+
+template<class T>
+inline void UIOListSelection<T>::setSelected(int32_t index) {
+	this->textDisplay->setCursor(glm::ivec2(0, index));
+}
 
 template<class T>
 std::optional<T*> UIOListSelection<T>::getSelected() {
@@ -46,6 +53,11 @@ void UIOListSelection<T>::setList(std::vector<T>& l) {
 	for (const auto& e : this->list) {
 		this->textDisplay->text.addLine(this->display(e));
 	}
+}
+
+template<class T>
+inline std::vector<T> const& UIOListSelection<T>::getList() {
+	return this->list;
 }
 
 template<class T>

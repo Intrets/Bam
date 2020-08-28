@@ -109,7 +109,11 @@ public:
 
 	void hideCursor();
 	void moveCursor(glm::ivec2 p);
+	void setCursor(glm::ivec2 p);
 	void moveView(glm::ivec2 p);
+
+	// (!) leaves in invalid state (!) need to move the cursor after using this
+	void zeroCursor();
 
 	glm::ivec2 getCursor();
 

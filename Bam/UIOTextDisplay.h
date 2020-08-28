@@ -28,6 +28,7 @@ public:
 	void setText(std::vector<std::string> text_);
 
 	void moveCursor(glm::ivec2 p);
+	void setCursor(glm::ivec2 p);
 
 	void insertText(std::string text_);
 
