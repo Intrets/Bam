@@ -10,6 +10,7 @@
 #include "Linker.h"
 #include "ActivityHelpers.h"
 #include "UIOCallBackParams.h"
+#include "Anchor.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -132,7 +133,20 @@ UIOActivityInterface::USER_ACTION_TYPE UIOActivityInterface::getType() {
 
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
-		this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - this->cursor.get()->getOrigin());
+		if (this->cursor.get()->getType() == Activity::TYPE::ANCHOR) {
+			WeakReference<Activity, Anchor> c = this->cursor;
+			if (c.get()->hasChild()) {
+				glm::ivec2 refVec2 = glm::ivec2(0, 0);
+				for (auto child : c.get()->getChildren()) {
+					refVec2 += child.get()->getOrigin();
+				}
+				refVec2 /= c.get()->getChildren().size();
+				this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - refVec2);
+			}
+		}
+		else {
+			this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - this->cursor.get()->getOrigin());
+		}
 	}
 }
 
