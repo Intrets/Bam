@@ -39,29 +39,48 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 			return std::string(e.first, ' ') + "invalid";
 		}
 	})
-		.addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		.addGameWorldBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		auto maybeTarget = params.gameState.staticWorld.getActivity(params.uiState.getCursorPositionWorld());
-		if (maybeTarget.has_value()) {
-			auto self = static_cast<UIOListSelection<PairType>*>(self_);
+		// interact?
+		switch (interfacePtr->getType()) {
+			case UIOActivityInterface::USER_ACTION_TYPE::HOVERING:
+				{
+					interfacePtr->interact(params.gameState, params.uiState.getCursorPositionWorld());
+				}
+				break;
+			case UIOActivityInterface::USER_ACTION_TYPE::NOTHING:
+				{
+					auto maybeTarget = params.gameState.staticWorld.getActivity(params.uiState.getCursorPositionWorld());
+					if (maybeTarget.has_value()) {
+						auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
-			auto target = maybeTarget.value();
-			auto base = maybeTarget.value().get()->getRoot();
+						auto target = maybeTarget.value();
+						auto base = maybeTarget.value().get()->getRoot();
 
-			interfacePtr->setBase(base);
-			interfacePtr->setTarget(target);
+						interfacePtr->setBase(base);
+						interfacePtr->setTarget(target);
 
-			std::vector<std::pair<int32_t, Activity*>> members;
-			base.get()->getTreeMembersDepths(members, 0);
-			std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
+						std::vector<std::pair<int32_t, Activity*>> members;
+						base.get()->getTreeMembersDepths(members, 0);
+						std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
 
-			for (auto [depth, ptr] : members) {
-				membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(ptr->selfHandle) });
-			}
+						for (auto [depth, ptr] : members) {
+							membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(ptr->selfHandle) });
+						}
 
-			self->setList(membersManaged);
+						self->setList(membersManaged);
+					}
+					else {
+						interfacePtr->cancel(true);
+					}
+				}
+				break;
+			default:
+				break;
 		}
-		return BIND_RESULT::CONTINUE;
+		//interfacePtr->target.get();
+
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	})
 		.addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{

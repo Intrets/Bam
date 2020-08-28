@@ -54,12 +54,12 @@ std::vector<std::string> Timer::print() {
 
 	for (auto& p : this->timings) {
 		double average = p.second.history.getAvarege(5);
-		int32_t perSecond;
+		std::string perSecond;
 		if (average <= 1e-5) {
-			perSecond = 0;
+			perSecond = "many";
 		}
 		else {
-			perSecond = static_cast<int32_t>(1.0 / average);
+			perSecond = std::to_string(static_cast<int32_t>(1.0 / average));
 		}
 		out << std::setw(pad) << p.first << ": " << std::setw(7) << average * 1000.0 << "ms | " << perSecond << "/s";
 		res.push_back(out.str());

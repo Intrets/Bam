@@ -9,6 +9,7 @@
 #include "UIOCallBackParams.h"
 #include "Linker.h"
 #include "ActivityHelpers.h"
+#include "UIOCallBackParams.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -24,36 +25,43 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(Activity::ROT::CLOCKWISE);
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
 	this->addFocussedBind({ ControlState::CONTROLS::ROTATER, ControlState::CONTROLSTATE_PRESSED, ControlState::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(Activity::ROT::COUNTERCLOCKWISE);
-		return BIND_RESULT::CONTINUE;
-	});
-
-	this->addGameWorldBind({ ControlState::CONTROLS::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-	{
-		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->interact(params.gameState, params.uiState.getCursorPositionWorld());
-		return BIND_RESULT::CONTINUE;
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
 	this->addGameWorldBind({ ControlState::CONTROLS::ACTION1 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->cancel();
-		return BIND_RESULT::CONTINUE;
+		self->cancel(false);
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+	});
+
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_USE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->pickUp(params.gameState, params.uiState.getCursorPositionWorld());
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
 
-	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->updateCursorPos(params.uiState.getCursorPositionWorld());
 		return BIND_RESULT::CONTINUE;
+	});
+
+	this->addFocussedBind({ ControlState::CONTROLS::ACTION_DELETE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->splitTarget();
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 }
 
@@ -64,24 +72,32 @@ void UIOActivityInterface::exit() {
 	this->type = USER_ACTION_TYPE::NOTHING;
 }
 
-void UIOActivityInterface::cancel() {
-	switch (this->type) {
-		case USER_ACTION_TYPE::HOVERING:
-			if (this->cursor.isNotNull()) {
-				this->cursor.deleteObject();
-			}
-			this->type = USER_ACTION_TYPE::NOTHING;
-			break;
-		case USER_ACTION_TYPE::NOTHING:
-			if (this->target.isValid()) {
-				this->target.unset();
-			}
-			else if (this->base.isValid()) {
-				this->base.unset();
-			}
-			break;
-		default:
-			break;
+void UIOActivityInterface::cancel(bool full) {
+	if (full) {
+		this->type = USER_ACTION_TYPE::NOTHING;
+		this->cursor.deleteObject();
+		this->target.unset();
+		this->base.unset();
+	}
+	else {
+		switch (this->type) {
+			case USER_ACTION_TYPE::HOVERING:
+				if (this->cursor.isNotNull()) {
+					this->cursor.deleteObject();
+				}
+				this->type = USER_ACTION_TYPE::NOTHING;
+				break;
+			case USER_ACTION_TYPE::NOTHING:
+				if (this->target.isValid()) {
+					this->target.unset();
+				}
+				else if (this->base.isValid()) {
+					this->base.unset();
+				}
+				break;
+			default:
+				break;
+		}
 	}
 }
 
@@ -110,9 +126,42 @@ void UIOActivityInterface::splitTarget() {
 	}
 }
 
+UIOActivityInterface::USER_ACTION_TYPE UIOActivityInterface::getType() {
+	return this->type;
+}
+
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 	if (this->type == USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
 		this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - this->cursor.get()->getOrigin());
+	}
+}
+
+void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
+	switch (this->type) {
+		case USER_ACTION_TYPE::NOTHING:
+			{
+				auto maybePick = gameState.staticWorld.getActivity(pos);
+				if (maybePick.has_value()) {
+					auto pick = maybePick.value().get()->getRoot();
+					if (this->base.isValid() && sameGroup(pick, this->base)) {
+						return;
+					}
+
+					if (this->cursor.isNotNull()) {
+						this->cursor.deleteObject();
+					}
+
+					if (pick.get()->removeTracesUp(gameState)) {
+						this->cursor.handle = pick.handle;
+					}
+				}
+				this->type = USER_ACTION_TYPE::HOVERING;
+				break;
+			}
+		case USER_ACTION_TYPE::HOVERING:
+			break;
+		default:
+			break;
 	}
 }
 
@@ -122,7 +171,6 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 			break;
 		case USER_ACTION_TYPE::HOVERING:
 			{
-				this->type = USER_ACTION_TYPE::NOTHING;
 				if (this->cursor.isNotNull() && this->cursor.get()->fillTracesUp(gameState)) {
 					WeakReference<Activity, Activity> linkTarget;
 					if (this->target.isValid()) {
@@ -133,6 +181,9 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 					}
 
 					if (linkTarget.isNotNull()) {
+						if (sameGroup(linkTarget, this->cursor)) {
+							return;
+						}
 						Linker::link(gameState, linkTarget, this->cursor);
 					}
 
@@ -141,6 +192,7 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 					}
 
 					this->cursor.clear();
+					this->type = USER_ACTION_TYPE::NOTHING;
 				}
 				break;
 			}

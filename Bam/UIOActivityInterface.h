@@ -3,6 +3,7 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 #include "UIOBase.h"
+#include "UIOConstructActivityInterface.h"
 
 class UIOActivityInterface : public UIOBase
 {
@@ -22,19 +23,22 @@ private:
 
 	UniqueReference<Activity, Activity> cursor;
 
-public:
 	USER_ACTION_TYPE type;
 
+public:
 	UIOActivityInterface(Handle self);
 
 	void exit();
-	void cancel();
+	void cancel(bool full);
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
 	void splitTarget();
 
+	UIOActivityInterface::USER_ACTION_TYPE getType();
+
 	void updateCursorPos(glm::vec2 pos);
 
+	void pickUp(GameState& gameState, glm::vec2 pos);
 	void interact(GameState& gameState, glm::vec2 pos);
 	void spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);
 	void rotateHover(Activity::ROT rot);

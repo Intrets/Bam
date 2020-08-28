@@ -6,6 +6,7 @@
 #include "Option.h"
 #include "Saver.h"
 #include "Loader.h"
+#include "Timer.h"
 
 bool GameState::load(Loader& loader) {
 	loader.retrieve(this->tick);
@@ -24,12 +25,17 @@ bool GameState::save(Saver& saver) {
 }
 
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
+	Locator<Timer>::ref().newTiming("Prepare Static");
 	this->staticWorld.appendStaticRenderInfo(renderInfo);
+	Locator<Timer>::ref().endTiming("Prepare Static");
+
 	// TODO: culling, seperate from static world
+	Locator<Timer>::ref().newTiming("Prep Activities");
 	auto activityManager = Locator<ReferenceManager<Activity>>::get();
 	for (auto& p : activityManager->data) {
 		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
 	}
+	Locator<Timer>::ref().endTiming("Prep Activities");
 }
 
 GameState::GameState() {

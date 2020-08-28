@@ -20,14 +20,16 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	renderInfo.frameSize = { frameSizeX, frameSizeY };
 	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.player.getCameraPosition(), glm::vec3(viewport, 200.0f) };
 
+	Locator<Timer>::ref().newTiming("Prep Selection");
 	state.player.selection.addRenderInfo(gameState, renderInfo, 0);
+	Locator<Timer>::ref().endTiming("Prep Selection");
 
+	Locator<Timer>::ref().newTiming("Prepare Debug");
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::get();
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
+	Locator<Timer>::ref().endTiming("Prepare Debug");
 
-	Locator<Timer>::ref().newTiming("Prepare Static");
 	gameState.appendStaticRenderInfo(renderInfo);
-	Locator<Timer>::ref().endTiming("Prepare Static");
 
 	Locator<Timer>::ref().newTiming("Prepare UI");
 	uiState.appendRenderInfo(gameState, renderInfo);

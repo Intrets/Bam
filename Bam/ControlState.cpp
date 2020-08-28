@@ -11,6 +11,9 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_D] = CONTROLS::RIGHT;
 	this->keyToControl[GLFW_KEY_W] = CONTROLS::UP;
 	this->keyToControl[GLFW_KEY_S] = CONTROLS::DOWN;
+	this->keyToControl[GLFW_KEY_Q] = CONTROLS::ACTION_PICK;
+	this->keyToControl[GLFW_KEY_F] = CONTROLS::ACTION_DELETE;
+	this->keyToControl[GLFW_KEY_E] = CONTROLS::ACTION_USE;
 	this->keyToControl[GLFW_KEY_R] = CONTROLS::ROTATER;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1] = CONTROLS::ACTION0;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2] = CONTROLS::ACTION1;

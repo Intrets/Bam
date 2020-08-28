@@ -225,12 +225,6 @@ UIState::UIState() {
 			return BIND_RESULT::CONTINUE;
 		});
 
-		// selector
-		//hotbarPtr->addTool(0, refMan->makeUniqueRef<UIOActivitySelector>());
-
-		// linker
-		//hotbarPtr->addTool(1, refMan->makeUniqueRef<UIOActivityLinker>());
-
 		this->UIs.push_back(std::move(hotbar));
 	}
 
@@ -265,7 +259,7 @@ UIState::UIState() {
 				});
 			})
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 10.0f))
+				.constrainHeight(UIOSizeType(UIOSizeType::FH, 16.3f))
 				.get();
 
 			listPtr->addElement(std::move(text));

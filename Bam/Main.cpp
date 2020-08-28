@@ -68,14 +68,17 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().newTiming("UI update size");
 			state.uiState.updateSize(window);
 			Locator<Timer>::ref().endTiming("UI update size");
+
 			Locator<Timer>::ref().newTiming("Prepare render");
 			renderer.prepareRender(window, renderInfo, state);
 			Locator<Timer>::ref().endTiming("Prepare render");
 
-			Locator<Timer>::ref().newTiming("UI Logic");
+			Locator<Timer>::ref().newTiming("Polling");
 			state.controlState.cycleStates();
 			glfwPollEvents();
+			Locator<Timer>::ref().endTiming("Polling");
 
+			Locator<Timer>::ref().newTiming("UI Logic");
 			state.uiState.updateCursor(window, state.player.getCameraPosition());
 
 			state.uiState.run(state);

@@ -210,7 +210,7 @@ inline UIOConstructer<T>& UIOConstructer<T>::addOnHoverBind(BindControl bindCont
 
 template<class T>
 inline UIOConstructer<T>& UIOConstructer<T>::addGameWorldBind(BindControl bindControl, CallBack callBack) {
-	this->object.get()->addGameWorldBind(BindControl, callBack);
+	this->object.get()->addGameWorldBind(bindControl, callBack);
 	return *this;
 }
 
