@@ -195,6 +195,10 @@ public:
 	bool applyActivityLocal(GameState& gameState, int32_t type, int32_t pace);
 	void stopActivity(GameState& gameState);
 
+	// Forcefully change the activity state, only use when activity is not in static world.
+	// The type is e.g. retracting or extending a piston
+	virtual void forceChangeActivityState(int32_t type);
+
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) = 0;
 	virtual void applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int32_t pace);

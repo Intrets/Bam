@@ -283,6 +283,21 @@ void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 	}
 }
 
+void Piston::forceChangeActivityState(int32_t type) {
+	switch (static_cast<Piston::DIR>(type)) {
+		case Piston::DIR::STATIONARY:
+			break;
+		case Piston::DIR::RETRACT:
+			this->length = glm::max(0, this->length - 1);
+			break;
+		case Piston::DIR::EXTEND:
+			this->length++;
+			break;
+		default:
+			break;
+	}
+}
+
 bool Piston::canFillTracesLocal(GameState& gameState) {
 	glm::ivec2 pos = this->origin;
 	for (int32_t i = 0; i < this->length + 2; i++) {

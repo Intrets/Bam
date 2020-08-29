@@ -96,6 +96,21 @@ void RailCrane::applyActivityLocalForced(GameState& gameState, int32_t type, int
 	}
 }
 
+void RailCrane::forceChangeActivityState(int32_t s) {
+	switch (static_cast<RailCrane::DIR>(s)) {
+		case RailCrane::DIR::LEFT:
+			this->anchorIndexPos = glm::max(0, this->anchorIndexPos - 1);
+			break;
+		case RailCrane::DIR::RIGHT:
+			this->anchorIndexPos = glm::min(this->anchorIndexPos + 1, this->length - 1);
+			break;
+		case RailCrane::DIR::STATIONARY:
+			break;
+		default:
+			break;
+	}
+}
+
 bool RailCrane::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
 	auto d = Activity::getDirection(this->orientation);
 	auto pos = this->origin + Activity::getDirection(dir);

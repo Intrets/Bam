@@ -251,6 +251,9 @@ void Activity::stopActivity(GameState& gameState) {
 	this->removeActivityTracesLocal(gameState);
 }
 
+void Activity::forceChangeActivityState(int32_t type) {
+}
+
 void Activity::fillTracesUpForced(GameState& gameState) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);

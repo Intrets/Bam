@@ -31,6 +31,7 @@ public:
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
 	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
+	virtual void forceChangeActivityState(int32_t s) override;
 
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;

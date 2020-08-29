@@ -38,6 +38,9 @@ public:
 
 	void updateCursorPos(glm::vec2 pos);
 
+	// Change the state of an actvity on cursor, like changing the length of a piston
+	void changeHoverActivityState(int32_t type);
+
 	void pickUp(GameState& gameState, glm::vec2 pos);
 	void interact(GameState& gameState, glm::vec2 pos);
 	void spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);

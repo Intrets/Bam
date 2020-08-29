@@ -48,9 +48,22 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->pickUp(params.gameState, params.uiState.getCursorPositionWorld());
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME | BIND_RESULT::FOCUS;
+	});
+
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED, ControlState::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->changeHoverActivityState(2);
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED, ControlState::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->changeHoverActivityState(1);
+		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+	});
 
 	this->addFocussedBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
@@ -148,6 +161,12 @@ void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 		else {
 			this->cursor.get()->forceMoveOriginUp(glm::ivec2(glm::floor(pos)) - this->cursor.get()->getOrigin());
 		}
+	}
+}
+
+void UIOActivityInterface::changeHoverActivityState(int32_t t) {
+	if (this->cursor.isNotNull()) {
+		this->cursor.get()->forceChangeActivityState(t);
 	}
 }
 

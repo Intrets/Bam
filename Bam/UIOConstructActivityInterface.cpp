@@ -84,7 +84,6 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 			default:
 				break;
 		}
-		//interfacePtr->target.get();
 
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	})
