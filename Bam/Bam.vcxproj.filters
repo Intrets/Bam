@@ -396,6 +396,7 @@
     <ClCompile Include="ActivityHelpers.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="ActivitySpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -697,6 +698,7 @@
     <ClInclude Include="ActivityHelpers.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="ActivitySpawner.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

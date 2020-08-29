@@ -225,6 +225,13 @@ UIState::UIState() {
 			return BIND_RESULT::CONTINUE;
 		});
 
+		hotbarPtr->setTool(2, "Crane", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::RAILCRANE);
+			return BIND_RESULT::CONTINUE;
+		});
+
 		this->UIs.push_back(std::move(hotbar));
 	}
 
@@ -727,25 +734,25 @@ UIState::UIState() {
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.x -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.x += 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.y -= 1.0f;
 			return BIND_RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::TEST_UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ ControlState::CONTROLS::UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.y += 1.0f;
 			return BIND_RESULT::CONTINUE;

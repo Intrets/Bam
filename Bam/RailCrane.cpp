@@ -173,10 +173,10 @@ void RailCrane::appendSelectionInfo(GameState const& gameState, RenderInfo& rend
 	glm::vec2 pos = getMovingOrigin(gameState);
 	float size = static_cast<float>(1 + this->length);
 	if (this->orientation == Activity::DIR::UP || this->orientation == Activity::DIR::RIGHT) {
-		renderInfo.selectionRenderInfo.addBox(pos, pos + size * d + glm::vec2(1));
+		renderInfo.selectionRenderInfo.addBox(pos, pos + size * d + glm::vec2(1), color);
 	}
 	else {
-		renderInfo.selectionRenderInfo.addBox(pos + glm::vec2(1), pos + size * d);
+		renderInfo.selectionRenderInfo.addBox(pos + glm::vec2(1), pos + size * d, color);
 	}
 }
 

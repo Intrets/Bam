@@ -18,10 +18,10 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1] = CONTROLS::ACTION0;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2] = CONTROLS::ACTION1;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_3] = CONTROLS::ACTION2;
-	this->keyToControl[GLFW_KEY_LEFT] = CONTROLS::TEST_LEFT;
-	this->keyToControl[GLFW_KEY_RIGHT] = CONTROLS::TEST_RIGHT;
-	this->keyToControl[GLFW_KEY_DOWN] = CONTROLS::TEST_DOWN;
-	this->keyToControl[GLFW_KEY_UP] = CONTROLS::TEST_UP;
+	this->keyToControl[GLFW_KEY_A] = CONTROLS::LEFT;
+	this->keyToControl[GLFW_KEY_D] = CONTROLS::RIGHT;
+	this->keyToControl[GLFW_KEY_S] = CONTROLS::DOWN;
+	this->keyToControl[GLFW_KEY_W] = CONTROLS::UP;
 	this->keyToControl[GLFW_KEY_F7] = CONTROLS::TEST_SAVE;
 	this->keyToControl[GLFW_KEY_F8] = CONTROLS::TEST_LOAD;
 	this->keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;

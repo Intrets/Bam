@@ -11,6 +11,7 @@
 #include "ActivityHelpers.h"
 #include "UIOCallBackParams.h"
 #include "Anchor.h"
+#include "ActivitySpawner.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -222,15 +223,8 @@ void UIOActivityInterface::spawnHover(GameState& gameState, glm::ivec2 pos, Acti
 			this->type = USER_ACTION_TYPE::NOTHING;
 		case USER_ACTION_TYPE::NOTHING:
 			this->type = USER_ACTION_TYPE::HOVERING;
-			switch (activityType) {
-				case Activity::TYPE::PLATFORM:
-					this->cursor = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
-					break;
-				case Activity::TYPE::PISTON:
-					this->cursor = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, Activity::DIR::DOWN, false);
-					break;
-				default:
-					break;
+			if (auto activity = ACTIVITYSPAWNER::spawn(gameState, pos, activityType)) {
+				this->cursor = std::move(activity.value());
 			}
 			break;
 		default:
