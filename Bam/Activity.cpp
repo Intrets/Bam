@@ -197,11 +197,11 @@ void Activity::stopMovement(GameState& gameState) {
 	this->moving = false;
 }
 
-WeakReference<Activity, Activity> Activity::getRoot() {
+WeakReference<Activity, Activity> Activity::getRoot() const {
 	return WeakReference<Activity, Activity>(this->getRootHandle());
 }
 
-Handle Activity::getRootHandle() {
+Handle Activity::getRootHandle() const {
 	if (this->parentRef.isNotNull()) {
 		return this->parentRef.get()->getRootHandle();
 	}

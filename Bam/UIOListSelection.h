@@ -94,9 +94,7 @@ template<class T>
 inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 
-	auto maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen();
-
-	if (maybeCursorQuad.has_value()) {
+	if (auto const& maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen()) {
 		auto const& cursorQuad = maybeCursorQuad.value();
 
 		float a = glm::max(this->screenRectangle.getBot(), cursorQuad.getBot());

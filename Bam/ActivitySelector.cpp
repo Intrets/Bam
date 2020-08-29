@@ -28,8 +28,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 	switch (this->type) {
 		case SELECTION_TYPE::NOTHING:
 			{
-				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
-				if (maybeTarget.has_value()) {
+				if (auto const& maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos))) {
 					this->type = SELECTION_TYPE::SELECTED;
 					this->target.set(maybeTarget.value());
 				}
@@ -52,7 +51,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 			}
 		case SELECTION_TYPE::SELECTED:
 			{
-				auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
+				auto const& maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
 				if (maybeTarget.has_value() && maybeTarget.value().handle == this->target.getHandle()) {
 					if (this->target.get()->removeTracesUp(gameState)) {
 						this->target.set(maybeTarget.value());
@@ -69,8 +68,7 @@ void ActivitySelector::selectTarget(GameState& gameState, glm::vec2 pos) {
 			break;
 	}
 	if (this->type == SELECTION_TYPE::NOTHING) {
-		auto maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos));
-		if (maybeTarget.has_value()) {
+		if (auto const& maybeTarget = gameState.staticWorld.getActivity(glm::floor(pos))) {
 			this->target.set(maybeTarget.value());
 		}
 	}

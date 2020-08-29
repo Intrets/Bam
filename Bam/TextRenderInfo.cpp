@@ -110,11 +110,11 @@ std::optional<Rectangle> Text::getCursorQuadScreen() const {
 	if (!this->cachedRenderInfo.has_value()) {
 		return std::nullopt;
 	}
-	auto maybeCursorShape = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
+	auto const& maybeCursorShape = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
 	if (!maybeCursorShape.has_value()) {
 		return std::nullopt;
 	}
-	auto cursorShape = maybeCursorShape.value();
+	auto const& cursorShape = maybeCursorShape.value();
 
 	glm::vec2 a = (glm::vec2(cursorShape[0], cursorShape[1]) - this->view) / 2.0f + 0.5f;
 	glm::vec2 b = glm::vec2(cursorShape[2], cursorShape[3]) / 2.0f;
@@ -157,9 +157,7 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	renderInfo.textRenderInfo.windowTextRenderInfos.push_back(textRenderInfo);
 
 	if (renderCursor && periodic(tick, 30, 30)) {
-		auto const& maybeQuad = this->getCursorQuadScreen();
-
-		if (maybeQuad.has_value()) {
+		if (auto const& maybeQuad = this->getCursorQuadScreen()) {
 			auto const& quad = maybeQuad.value();
 			renderInfo.uiRenderInfo.addRectangle(quad.getBottomLeft(), quad.getTopRight(), COLORS::UI::CURSOR, depth++);
 		}
@@ -256,9 +254,8 @@ void Text::moveCursor(glm::ivec2 p) {
 		this->makeRenderInfo(this->lastScreenRectangle, this->lastFont, this->lastWrap, this->lastClickSupport);
 	}
 
-	auto maybeCursorQuad = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex);
-	if (maybeCursorQuad.has_value()) {
-		glm::vec4& cursorQuad = maybeCursorQuad.value();
+	if (auto const& maybeCursorQuad = this->cachedRenderInfo.value().getCursorPos(this->cursorIndex)) {
+		glm::vec4 const& cursorQuad = maybeCursorQuad.value();
 		Rectangle cursorRect;
 		cursorRect.setBottomLeft(glm::vec2(cursorQuad[0], cursorQuad[1]));
 		cursorRect.setTopRight(cursorRect.getBottomLeft() + glm::vec2(cursorQuad[2], cursorQuad[3]));

@@ -50,12 +50,11 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 				break;
 			case UIOActivityInterface::USER_ACTION_TYPE::NOTHING:
 				{
-					auto maybeTarget = params.gameState.staticWorld.getActivity(params.uiState.getCursorPositionWorld());
-					if (maybeTarget.has_value()) {
+					if (auto const& maybeTarget = params.gameState.staticWorld.getActivity(params.uiState.getCursorPositionWorld())) {
 						auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
-						auto target = maybeTarget.value();
-						auto base = maybeTarget.value().get()->getRoot();
+						auto const& target = maybeTarget.value();
+						auto const& base = maybeTarget.value().get()->getRoot();
 
 						interfacePtr->setBase(base);
 						interfacePtr->setTarget(target);
@@ -93,10 +92,8 @@ UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInte
 	{
 		auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
-		auto maybeSelected = self->getSelected();
-
-		if (maybeSelected.has_value()) {
-			auto [depth, selected] = *maybeSelected.value();
+		if (auto const& maybeSelected = self->getSelected()) {
+			auto const& [depth, selected] = *maybeSelected.value();
 
 			if (selected.isValid()) {
 				interfacePtr->setTarget(selected);

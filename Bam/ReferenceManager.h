@@ -39,7 +39,7 @@ template <class B, class T>
 class WeakReference : public WeakReferenceBase
 {
 public:
-	T* get();
+	T* get() const;
 
 	template<typename N>
 	operator WeakReference<B, N>() const {
@@ -176,7 +176,7 @@ public:
 };
 
 template<class B, class T>
-inline T* WeakReference<B, T>::get() {
+inline T* WeakReference<B, T>::get() const {
 	auto& t = Locator<ReferenceManager<B>>::get()->data;
 	return static_cast<T*>(t[handle].get());
 }

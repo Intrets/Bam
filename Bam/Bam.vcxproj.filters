@@ -396,7 +396,9 @@
     <ClCompile Include="ActivityHelpers.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="ActivitySpawner.cpp" />
+    <ClCompile Include="ActivitySpawner.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -698,7 +700,9 @@
     <ClInclude Include="ActivityHelpers.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="ActivitySpawner.h" />
+    <ClInclude Include="ActivitySpawner.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

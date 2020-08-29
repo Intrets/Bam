@@ -145,7 +145,7 @@ public:
 		_MAX,
 	};
 private:
-	Handle getRootHandle();
+	Handle getRootHandle() const;
 
 protected:
 	glm::vec2 getMovingOrigin(GameState const& gameState) const;
@@ -227,7 +227,7 @@ public:
 	// Tree Informations
 	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
-	WeakReference<Activity, Activity> getRoot();
+	WeakReference<Activity, Activity> getRoot() const;
 
 	// Serial
 	virtual TYPE getType() = 0;

@@ -155,9 +155,8 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 	switch (this->type) {
 		case USER_ACTION_TYPE::NOTHING:
 			{
-				auto maybePick = gameState.staticWorld.getActivity(pos);
-				if (maybePick.has_value()) {
-					auto pick = maybePick.value().get()->getRoot();
+				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
+					auto const& pick = maybePick.value().get()->getRoot();
 					if (this->base.isValid() && sameGroup(pick, this->base)) {
 						return;
 					}
