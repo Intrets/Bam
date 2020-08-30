@@ -295,6 +295,7 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LUAActivity.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
@@ -393,6 +394,7 @@
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="LUAActivity.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="PassThroughRenderer.h" />

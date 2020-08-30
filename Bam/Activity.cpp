@@ -75,7 +75,7 @@ bool Activity::idleUp() {
 }
 
 bool Activity::idleLocal() {
-	return !this->moving && !this->active;
+	return !this->moving && !this->active && this->inWorld;
 }
 
 bool Activity::moveableIdleLocal() {
@@ -228,6 +228,7 @@ void Activity::save(Saver& saver) {
 	saver.store(this->movementDirection);
 	saver.store(this->moving);
 	saver.store(this->origin);
+	saver.store(this->inWorld);
 }
 
 bool Activity::load(Loader& loader) {
@@ -242,6 +243,7 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve(this->movementDirection);
 	loader.retrieve(this->moving);
 	loader.retrieve(this->origin);
+	loader.retrieve(this->inWorld);
 	return true;
 }
 
@@ -259,6 +261,7 @@ void Activity::fillTracesUpForced(GameState& gameState) {
 	this->getTreeMembers(members);
 	for (auto member : members) {
 		member->fillTracesLocalForced(gameState);
+		member->inWorld = true;
 	}
 }
 
@@ -273,11 +276,19 @@ bool Activity::fillTracesUp(GameState& gameState) {
 
 	for (auto member : members) {
 		member->fillTracesLocalForced(gameState);
+		member->inWorld = true;
 	}
 	return true;
 }
 
 void Activity::removeTracesUpForced(GameState& gameState) {
+	std::vector<Activity*> members;
+	this->getTreeMembers(members);
+
+	for (auto member : members) {
+		member->removeTracesLocalForced(gameState);
+		member->inWorld = false;
+	}
 }
 
 bool Activity::removeTracesUp(GameState& gameState) {
@@ -291,6 +302,7 @@ bool Activity::removeTracesUp(GameState& gameState) {
 
 	for (auto member : members) {
 		member->removeTracesLocalForced(gameState);
+		member->inWorld = false;
 	}
 	return true;
 }

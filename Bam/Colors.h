@@ -45,6 +45,8 @@ namespace COLORS
 	glm::vec4 hex(std::string h);
 	glm::vec4 hex(uint32_t h);
 
+	static glm::vec4 NICERED = hex("#ff4747"_hex);
+
 	namespace UI
 	{
 		static glm::vec4 CURSOR = rgb(191, 0, 0);

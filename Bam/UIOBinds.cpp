@@ -123,7 +123,7 @@ namespace UIOBinds
 		}
 
 		void down(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
@@ -133,7 +133,7 @@ namespace UIOBinds
 		}
 
 		void up(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
@@ -143,7 +143,7 @@ namespace UIOBinds
 		}
 
 		void right(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
@@ -153,7 +153,7 @@ namespace UIOBinds
 		}
 
 		void left(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);

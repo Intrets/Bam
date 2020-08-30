@@ -9,20 +9,22 @@ class Saver;
 class Loader;
 struct RenderInfo;
 typedef int32_t Handle;
+class Activity;
 
 class ActivityLuaTest
 {
+private:
+	// The target Activity and its group to act on.
+	Activity* target;
+
 public:
 	sol::state state;
 	GameState* gameStateRef;
 
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
-	std::function<void(sol::variadic_args va)> printFunctionVA = [](sol::variadic_args va)
-	{};
 
-	std::unordered_set<std::string> ignore;
-
+	bool applyMove(Handle h, int32_t type);
 	bool applyActivity(Handle h, int32_t type);
 
 	void runScript(GameState& gameState, Handle h);
@@ -30,6 +32,7 @@ public:
 	void load(Loader& loader);
 
 	ActivityLuaTest();
+	ActivityLuaTest(Activity& ptr);
 	~ActivityLuaTest() = default;
 
 protected:

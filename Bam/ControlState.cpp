@@ -28,6 +28,11 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_F9] = CONTROLS::TOGGLE_DEBUG;
 	this->keyToControl[GLFW_KEY_ESCAPE] = CONTROLS::CANCEL;
 
+	this->keyToControl[GLFW_KEY_UP] = CONTROLS::TEXT_UP;
+	this->keyToControl[GLFW_KEY_DOWN] = CONTROLS::TEXT_DOWN;
+	this->keyToControl[GLFW_KEY_LEFT] = CONTROLS::TEXT_LEFT;
+	this->keyToControl[GLFW_KEY_RIGHT] = CONTROLS::TEXT_RIGHT;
+
 	this->keyToControl[GLFW_KEY_1] = CONTROLS::TOOL_1;
 	this->keyToControl[GLFW_KEY_2] = CONTROLS::TOOL_2;
 	this->keyToControl[GLFW_KEY_3] = CONTROLS::TOOL_3;

@@ -28,7 +28,7 @@
 #include "UIOConstructer.h"
 #include "UIOBinds.h"
 #include "StringHelpers.h"
-
+#include "LUAActivity.h"
 #include "ActivityLuaTest.h"
 #include "UIOActivityLuaTest.h"
 #include <fstream>
@@ -229,6 +229,13 @@ UIState::UIState() {
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::RAILCRANE);
+			return BIND_RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(3, "LUA", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->addLua(params.gameState);
 			return BIND_RESULT::CONTINUE;
 		});
 
@@ -640,7 +647,15 @@ UIState::UIState() {
 					.onRelease([luaTextPtr, luaTestPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					luaTestPtr->lua.runScript(params.gameState, params.player.selection.target.getHandle());
-					luaTestPtr->lua.state.script(join(luaTextPtr->text.getLines()));
+					try {
+						luaTestPtr->lua.state.safe_script(join(luaTextPtr->text.getLines()));
+					}
+					catch (const sol::error& e) {
+						Locator<Log>::ref().putLine(e.what());
+					}
+					catch (...) {
+						Locator<Log>::ref().putLine("non-sol::error when executing script");
+					}
 					return BIND_RESULT::CONTINUE;
 				})
 					.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))

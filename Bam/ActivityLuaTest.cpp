@@ -54,16 +54,20 @@ static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 	}
 }
 
-static std::string getNameString(sol::object& object) {
-	std::string name = object.as<std::string>();
-	if (!object.is<int>()) {
-		name = "\"" + name + "\"";
-	}
-	return name;
-};
+//static std::string getNameString(sol::object& object) {
+//	std::string name = object.as<std::string>();
+//	if (!object.is<int>()) {
+//		name = "\"" + name + "\"";
+//	}
+//	return name;
+//};
+
+bool ActivityLuaTest::applyMove(Handle h, int32_t type) {
+	return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 10);
+}
 
 bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
-	return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 10);
+	return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
 }
 
 void ActivityLuaTest::runScript(GameState& gameState, Handle h) {
@@ -72,41 +76,44 @@ void ActivityLuaTest::runScript(GameState& gameState, Handle h) {
 }
 
 void ActivityLuaTest::save(Saver& saver) {
-	std::unordered_set<size_t> saved;
-	std::vector<std::pair<sol::object, sol::object>> cache;
+	//std::unordered_set<size_t> saved;
+	//std::vector<std::pair<sol::object, sol::object>> cache;
 
-	for (auto& global : state.globals()) {
-		std::unordered_set<size_t> visited;
-		if (ignore.find(getNameString(global.first)) == ignore.end() && isSimpleValue(global.second, visited)) {
-			cache.push_back(global);
-		}
-	}
-	saver.store(static_cast<int32_t>(cache.size()));
+	//for (auto& global : state.globals()) {
+	//	std::unordered_set<size_t> visited;
+	//	if (ignore.find(getNameString(global.first)) == ignore.end() && isSimpleValue(global.second, visited)) {
+	//		cache.push_back(global);
+	//	}
+	//}
+	//saver.store(static_cast<int32_t>(cache.size()));
 
-	for (auto& global : cache) {
-		saver.storeObject(global.first, saved);
-		saver.storeObject(global.second, saved);
-	}
+	//for (auto& global : cache) {
+	//	saver.storeObject(global.first, saved);
+	//	saver.storeObject(global.second, saved);
+	//}
 }
 
 void ActivityLuaTest::load(Loader& loader) {
-	std::unordered_map<size_t, sol::object> cache;
-	int32_t size;
-	loader.retrieve(size);
+	//std::unordered_map<size_t, sol::object> cache;
+	//int32_t size;
+	//loader.retrieve(size);
 
-	for (int i = 0; i < size; i++) {
-		sol::object key = loader.retrieveObject(state, cache);
-		sol::object value = loader.retrieveObject(state, cache);
-		Locator<Log>::ref().putStreamLine(std::stringstream() << "key: " << key.as<std::string>() << " value: " << value.as<std::string>());
-		// TODO: error? no global operator[] found for sol::object
-		//state[key] = value;
-	}
+	//for (int i = 0; i < size; i++) {
+	//	sol::object key = loader.retrieveObject(state, cache);
+	//	sol::object value = loader.retrieveObject(state, cache);
+	//	Locator<Log>::ref().putStreamLine(std::stringstream() << "key: " << key.as<std::string>() << " value: " << value.as<std::string>());
+	//}
 }
 
 ActivityLuaTest::ActivityLuaTest() {
 	state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
 	state.script("");
-	state.set_function("test", [this](Handle h, int32_t type) -> bool
+	state.set_function("move", [this](Handle h, int32_t type) -> bool
+	{
+		return this->applyMove(h, type);
+	});
+
+	state.set_function("activate", [this](Handle h, int32_t type) -> bool
 	{
 		return this->applyActivity(h, type);
 	});
@@ -153,10 +160,11 @@ ActivityLuaTest::ActivityLuaTest() {
 		}
 		this->printFunction(out.str());
 	});
+}
 
-	for (auto& test : state) {
-		ignore.insert(getNameString(test.first));
-	}
+ActivityLuaTest::ActivityLuaTest(Activity& ptr) :
+	ActivityLuaTest() {
+	this->target = &ptr;
 }
 
 void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {

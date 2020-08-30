@@ -399,6 +399,7 @@
     <ClCompile Include="ActivitySpawner.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="LUAActivity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -703,6 +704,7 @@
     <ClInclude Include="ActivitySpawner.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="LUAActivity.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

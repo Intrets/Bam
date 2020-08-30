@@ -51,14 +51,14 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME | BIND_RESULT::FOCUS;
 	});
 
-	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED, ControlState::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT, ControlState::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->changeHoverActivityState(2);
 		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
 	});
 
-	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED, ControlState::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ ControlState::CONTROLS::ACTION_ACTIVATE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT, ControlState::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->changeHoverActivityState(1);
@@ -141,6 +141,12 @@ void UIOActivityInterface::splitTarget() {
 	}
 }
 
+void UIOActivityInterface::addLua(GameState& gameState) {
+	if (this->type == USER_ACTION_TYPE::NOTHING && this->base.isValid()) {
+		ACTIVITYSPAWNER::addLUA(gameState, this->base);
+	}
+}
+
 UIOActivityInterface::USER_ACTION_TYPE UIOActivityInterface::getType() {
 	return this->type;
 }
@@ -177,6 +183,9 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
 					auto const& pick = maybePick.value().get()->getRoot();
 					if (this->base.isValid() && sameGroup(pick, this->base)) {
+						return;
+					}
+					if (this->target.isValid() && sameGroup(pick, this->target)) {
 						return;
 					}
 

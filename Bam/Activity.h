@@ -26,6 +26,7 @@ namespace ACTIVITY
 		"plant",
 		"activator",
 		"railcrane",
+		"lua",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 }
@@ -142,6 +143,7 @@ public:
 		PLANT,
 		ACTIVATOR,
 		RAILCRANE,
+		LUA,
 		_MAX,
 	};
 private:
@@ -159,6 +161,8 @@ protected:
 	int32_t movingTickStart = 0;
 	DIR movementDirection = DIR::STATIONARY;
 	bool moving = false;
+
+	bool inWorld = false;
 
 	glm::ivec2 origin;
 

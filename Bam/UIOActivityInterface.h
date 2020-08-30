@@ -33,6 +33,7 @@ public:
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
 	void splitTarget();
+	void addLua(GameState& gameState);
 
 	UIOActivityInterface::USER_ACTION_TYPE getType();
 
