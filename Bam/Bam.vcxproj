@@ -295,7 +295,7 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="LUAActivity.cpp" />
+    <ClCompile Include="LuaActivity.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelResource.cpp" />
@@ -307,6 +307,7 @@
     <ClCompile Include="Piston.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RenderLimiter.cpp" />
     <ClCompile Include="State.cpp" />
@@ -320,12 +321,14 @@
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOConstructActivityInterface.cpp" />
     <ClCompile Include="UIOConstructer.cpp" />
+    <ClCompile Include="UIOConstructLuaInterface.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOHideable.cpp" />
     <ClCompile Include="UIOList.cpp" />
     <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
+    <ClCompile Include="UIOLua.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
@@ -394,7 +397,7 @@
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="LUAActivity.h" />
+    <ClInclude Include="LuaActivity.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="PassThroughRenderer.h" />
@@ -402,6 +405,7 @@
     <ClInclude Include="Piston.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="RenderLimiter.h" />
     <ClInclude Include="State.h" />
@@ -414,12 +418,14 @@
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOConstructActivityInterface.h" />
     <ClInclude Include="UIOConstructer.h" />
+    <ClInclude Include="UIOConstructLuaInterface.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOHideable.h" />
     <ClInclude Include="UIOList.h" />
     <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOInvisible.h" />
+    <ClInclude Include="UIOLua.h" />
     <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />

@@ -17,17 +17,21 @@ private:
 	// The target Activity and its group to act on.
 	Activity* target;
 
+	std::function<void(std::string line)> printFunction = [](std::string)
+	{};
+
+	friend class LuaActivity;
+
 public:
 	sol::state state;
 	GameState* gameStateRef;
 
-	std::function<void(std::string line)> printFunction = [](std::string)
-	{};
+	std::string script;
 
 	bool applyMove(Handle h, int32_t type);
 	bool applyActivity(Handle h, int32_t type);
 
-	void runScript(GameState& gameState, Handle h);
+	void runScript(GameState& gameState);
 	void save(Saver& saver);
 	void load(Loader& loader);
 

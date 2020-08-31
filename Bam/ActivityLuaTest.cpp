@@ -70,9 +70,8 @@ bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
 	return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
 }
 
-void ActivityLuaTest::runScript(GameState& gameState, Handle h) {
+void ActivityLuaTest::runScript(GameState& gameState) {
 	gameStateRef = &gameState;
-	state["h"] = h;
 }
 
 void ActivityLuaTest::save(Saver& saver) {

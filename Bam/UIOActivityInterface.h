@@ -5,6 +5,8 @@
 #include "UIOBase.h"
 #include "UIOConstructActivityInterface.h"
 
+class UIState;
+
 class UIOActivityInterface : public UIOBase
 {
 public:
@@ -33,7 +35,7 @@ public:
 	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
 	void splitTarget();
-	void addLua(GameState& gameState);
+	void addLua(GameState& gameState, UIState& uiState);
 
 	UIOActivityInterface::USER_ACTION_TYPE getType();
 

@@ -12,6 +12,9 @@
 #include "UIOCallBackParams.h"
 #include "Anchor.h"
 #include "ActivitySpawner.h"
+#include "UIOConstructLuaInterface.h"
+#include "UIOList.h"
+#include "UIOConstructer.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
@@ -141,10 +144,29 @@ void UIOActivityInterface::splitTarget() {
 	}
 }
 
-void UIOActivityInterface::addLua(GameState& gameState) {
+void UIOActivityInterface::addLua(GameState& gameState, UIState& uiState) {
+	static int32_t i = 0;
+	glm::vec2 offset = glm::vec2(0.05f, -0.05f);
 	if (this->type == USER_ACTION_TYPE::NOTHING && this->base.isValid()) {
-		ACTIVITYSPAWNER::addLUA(gameState, this->base);
+		auto root = this->base.get()->getRoot();
+		if (root.get()->getType() != Activity::TYPE::LUA) {
+			ACTIVITYSPAWNER::addLUA(gameState, this->base);
+			root = root.get()->getRoot();
+		}
+		uiState.addUI(
+			CONSTRUCTER::constructLuaInterface(root)
+			.window("LUA", { static_cast<float>(i + 1) * offset + glm::vec2(-1.0f, 0.0f), static_cast<float>(i + 1) * offset + glm::vec2(-0.7f, 1.0f) },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::RESIZEVERTICAL |
+					UIOWindow::TYPE::RESIZEHORIZONTAL |
+					UIOWindow::TYPE::RESIZE |
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::CLOSE)
+			.get()
+		);
 	}
+
+	i = (i + 1) % 10;
 }
 
 UIOActivityInterface::USER_ACTION_TYPE UIOActivityInterface::getType() {

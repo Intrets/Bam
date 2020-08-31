@@ -371,7 +371,6 @@
     <ClCompile Include="UIOBinds.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="RenderLimiter.cpp">
       <Filter>Program Control</Filter>
     </ClCompile>
@@ -399,7 +398,17 @@
     <ClCompile Include="ActivitySpawner.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="LUAActivity.cpp" />
+    <ClCompile Include="UIOConstructLuaInterface.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOActivityLuaTest.cpp" />
+    <ClCompile Include="UIOLua.cpp" />
+    <ClCompile Include="Random.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaActivity.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -679,7 +688,6 @@
     <ClInclude Include="UIOBinds.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOActivityLuaTest.h" />
     <ClInclude Include="RenderLimiter.h">
       <Filter>Program Control</Filter>
     </ClInclude>
@@ -704,7 +712,17 @@
     <ClInclude Include="ActivitySpawner.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="LUAActivity.h" />
+    <ClInclude Include="UIOConstructLuaInterface.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOActivityLuaTest.h" />
+    <ClInclude Include="UIOLua.h" />
+    <ClInclude Include="Random.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaActivity.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

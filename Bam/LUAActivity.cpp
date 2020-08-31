@@ -1,62 +1,101 @@
 #include "common.h"
 
-#include "LUAActivity.h"
+#include "LuaActivity.h"
+#include "GameState.h"
+#include "StringHelpers.h"
 
-LUAActivity::LUAActivity(Handle self) {
+void LuaActivity::start(GameState& gameState) {
+	this->applyActivityLocal(gameState, 0, gameState.smallRandom.randRange(10, 20));
+}
+
+void LuaActivity::stop() {
+	this->interrupt = true;
+}
+
+void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
+	this->lua.printFunction = f;
+}
+
+void LuaActivity::setScript(std::string const& script) {
+	this->lua.script = script;
+}
+
+LuaActivity::LuaActivity(Handle self) {
 	this->selfHandle = self;
+	this->inWorld = true;
 }
 
-void LUAActivity::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
+bool LuaActivity::moveableIdleLocal() {
+	return !this->moving && this->inWorld;
 }
 
-bool LUAActivity::canActivityLocal(GameState& gameState, int32_t type) {
-	return false;
+void LuaActivity::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 }
 
-void LUAActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-}
-
-bool LUAActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
+bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 	return true;
 }
 
-bool LUAActivity::canFillTracesLocal(GameState& gameState) {
+void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
+	Activity::applyActivityLocalForced(gameState, type, pace);
+	this->lua.runScript(gameState);
+	try {
+		this->lua.state.safe_script(this->lua.script);
+	}
+	catch (const sol::error& e) {
+		Locator<Log>::ref().putLine(e.what());
+	}
+	catch (...) {
+		Locator<Log>::ref().putLine("non-sol::error when executing script");
+	}
+}
+
+bool LuaActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
 	return true;
 }
 
-void LUAActivity::fillTracesLocalForced(GameState& gameState) {
+bool LuaActivity::canFillTracesLocal(GameState& gameState) {
+	return true;
 }
 
-void LUAActivity::removeTracesLocalForced(GameState& gameState) {
+void LuaActivity::fillTracesLocalForced(GameState& gameState) {
 }
 
-void LUAActivity::removeActivityTracesLocal(GameState& gameState) {
+void LuaActivity::removeTracesLocalForced(GameState& gameState) {
 }
 
-void LUAActivity::leaveActivityTracesLocal(GameState& gameState) {
+void LuaActivity::removeActivityTracesLocal(GameState& gameState) {
+	if (!this->interrupt) {
+		this->start(gameState);
+	}
+	this->interrupt = false;
 }
 
-void LUAActivity::removeMoveableTracesLocal(GameState& gameState) {
+void LuaActivity::leaveActivityTracesLocal(GameState& gameState) {
+	this->interrupt = false;
 }
 
-void LUAActivity::leaveMoveableTracesLocal(GameState& gameState) {
+void LuaActivity::removeMoveableTracesLocal(GameState& gameState) {
 }
 
-Activity::TYPE LUAActivity::getType() {
+void LuaActivity::leaveMoveableTracesLocal(GameState& gameState) {
+}
+
+Activity::TYPE LuaActivity::getType() {
 	return Activity::TYPE::LUA;
 }
 
-void LUAActivity::save(Saver& saver) {
+void LuaActivity::save(Saver& saver) {
 	SingleGrouper::save(saver);
 }
 
-bool LUAActivity::load(Loader& loader) {
+bool LuaActivity::load(Loader& loader) {
 	SingleGrouper::load(loader);
 	return true;
 }
 
-void LUAActivity::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
+void LuaActivity::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 }
 
-void LUAActivity::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
+void LuaActivity::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 }

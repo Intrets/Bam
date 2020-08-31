@@ -4,7 +4,7 @@
 #include "Platform.h"
 #include "Piston.h"
 #include "RailCrane.h"
-#include "LUAActivity.h"
+#include "LuaActivity.h"
 
 std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType) {
 	switch (activityType) {
@@ -59,8 +59,8 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameSta
 	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
 }
 
-WeakReference<Activity, LUAActivity> ACTIVITYSPAWNER::addLUA(GameState& gameState, WeakReference<Activity, Activity> ref) {
-	auto res = Locator<ReferenceManager<Activity>>::get()->makeRef<LUAActivity>();
+WeakReference<Activity, LuaActivity> ACTIVITYSPAWNER::addLUA(GameState& gameState, WeakReference<Activity, Activity> ref) {
+	auto res = Locator<ReferenceManager<Activity>>::get()->makeRef<LuaActivity>();
 	res.get()->addChild(ref);
 
 	return res;

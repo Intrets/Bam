@@ -3,15 +3,26 @@
 #include "Grouper.h"
 #include "ActivityLuaTest.h"
 
-class LUAActivity : public SingleGrouper
+class LuaActivity : public SingleGrouper
 {
 private:
 	ActivityLuaTest lua{ *this };
 
+	bool interrupt;
+
 public:
-	LUAActivity() = default;
-	LUAActivity(Handle self);
-	virtual ~LUAActivity() = default;
+	void start(GameState& gameState);
+	void stop();
+
+	void setPrintFunction(std::function<void(std::string line)> f);
+	void setScript(std::string const& script);
+	inline sol::object getLuaObject(std::string name);
+
+	LuaActivity() = default;
+	LuaActivity(Handle self);
+	virtual ~LuaActivity() = default;
+
+	virtual bool moveableIdleLocal() override;
 
 	// Placement
 	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
@@ -49,3 +60,6 @@ public:
 	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
 };
 
+inline sol::object LuaActivity::getLuaObject(std::string name) {
+	return this->lua.state[name];
+}

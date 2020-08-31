@@ -9,7 +9,7 @@
 #include "UIOTextConstructers.h"
 #include "UIOListSelection.h"
 
-UIOConstructer<UIOList> Constructer::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
+UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
 	// Resulting outermost container
 	UIOList* outerListPtr;
 

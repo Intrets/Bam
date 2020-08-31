@@ -40,7 +40,7 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 				}
 				else {
 					auto next = this->origin + (this->length + 2) * headDirection;
-					return !gameState.staticWorld.getActivity(next).has_value();
+					return !gameState.staticWorld.isOccupied(next);
 				}
 			}
 			break;

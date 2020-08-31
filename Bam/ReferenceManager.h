@@ -170,7 +170,7 @@ public:
 			freeHandles.insert(i);
 		}
 	};
-	ReferenceManager() : ReferenceManager(1024) {
+	ReferenceManager() : ReferenceManager(10'000) {
 	};
 	~ReferenceManager();
 };

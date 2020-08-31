@@ -5,7 +5,7 @@
 template<class T, class R>
 class UniqueReference;
 
-class LUAActivity;
+class LuaActivity;
 
 class GameState;
 
@@ -17,6 +17,6 @@ namespace ACTIVITYSPAWNER
 	UniqueReference<Activity, Activity> railcrane(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> platform(GameState& gameState, glm::ivec2 pos);
 
-	WeakReference<Activity, LUAActivity> addLUA(GameState& gameState, WeakReference<Activity,Activity> ref);
+	WeakReference<Activity, LuaActivity> addLUA(GameState& gameState, WeakReference<Activity, Activity> ref);
 };
 

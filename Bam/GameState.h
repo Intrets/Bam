@@ -3,6 +3,7 @@
 #include "StaticWorld.h"
 
 #include "ActivityPaceHandler.h"
+#include "Random.h"
 
 class Saver;
 class Loader;
@@ -20,6 +21,8 @@ public:
 	StaticWorld staticWorld;
 	ActivityPaceHandler activityPaceHandler;
 	MovementPaceHandler movementPaceHandler;
+
+	SmallRandom smallRandom;
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);
