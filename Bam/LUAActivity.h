@@ -6,17 +6,15 @@
 class LuaActivity : public SingleGrouper
 {
 private:
-	ActivityLuaTest lua{ *this };
-
 	bool interrupt;
 
 public:
+	ActivityLuaTest lua{ *this };
+
 	void start(GameState& gameState);
 	void stop();
 
-	void setPrintFunction(std::function<void(std::string line)> f);
-	void setScript(std::string const& script);
-	inline sol::object getLuaObject(std::string name);
+	virtual glm::ivec2 getOrigin() override;
 
 	LuaActivity() = default;
 	LuaActivity(Handle self);
@@ -60,6 +58,3 @@ public:
 	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
 };
 
-inline sol::object LuaActivity::getLuaObject(std::string name) {
-	return this->lua.state[name];
-}

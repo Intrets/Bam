@@ -12,6 +12,7 @@
 #include "StringHelpers.h"
 
 #include "ActivitySelector.h"
+#include "LuaActivity.h"
 
 #include <sol/sol.hpp>
 
@@ -62,16 +63,43 @@ static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 //	return name;
 //};
 
+bool ActivityLuaTest::valid(Handle h) {
+	return std::binary_search(this->validTargets.begin(), this->validTargets.end(), h);
+}
+
 bool ActivityLuaTest::applyMove(Handle h, int32_t type) {
-	return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 10);
+	if (!this->valid(h)) {
+		return false;
+	}
+	else {
+		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 9);
+	}
 }
 
 bool ActivityLuaTest::applyActivity(Handle h, int32_t type) {
-	return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
+	if (!this->valid(h)) {
+		return false;
+	}
+	else {
+		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 9);
+	}
 }
 
-void ActivityLuaTest::runScript(GameState& gameState) {
+void ActivityLuaTest::setPrintFunction(std::function<void(std::string line)> f) {
+	this->printFunction = f;
+}
+
+void ActivityLuaTest::prepare(GameState& gameState) {
 	gameStateRef = &gameState;
+	std::vector<Activity*> members;
+	this->target->getTreeMembers(members);
+
+	this->validTargets.clear();
+	for (auto member : members) {
+		this->validTargets.push_back(member->getHandle());
+	}
+
+	std::sort(this->validTargets.begin(), this->validTargets.end());
 }
 
 void ActivityLuaTest::save(Saver& saver) {
@@ -161,11 +189,48 @@ ActivityLuaTest::ActivityLuaTest() {
 	});
 }
 
-ActivityLuaTest::ActivityLuaTest(Activity& ptr) :
+ActivityLuaTest::ActivityLuaTest(LuaActivity& ptr) :
 	ActivityLuaTest() {
 	this->target = &ptr;
 }
 
 void ActivityLuaTest::appendRenderInfoInternal(GameState& gameState, RenderInfo& renderInfo) {
 }
+
+void ActivityLuaTest::execute(std::string s) {
+	try {
+		this->state.safe_script(s);
+	}
+	catch (const sol::error& e) {
+		Locator<Log>::ref().putLine(e.what());
+	}
+	catch (...) {
+		Locator<Log>::ref().putLine("non-sol::error when executing script");
+	}
+}
+
+void ActivityLuaTest::run(GameState& gameState) {
+	this->prepare(gameState);
+
+	this->execute("run()");
+}
+
+void ActivityLuaTest::init(GameState& gameState) {
+	this->prepare(gameState);
+
+	this->execute("init()");
+}
+
+void ActivityLuaTest::setScript(std::string script_, GameState& gameState) {
+	this->prepare(gameState);
+
+	this->script = script_;
+	this->execute(script_);
+	this->init(gameState);
+}
+
+std::string const& ActivityLuaTest::getScript() {
+	return this->script;
+}
+
 

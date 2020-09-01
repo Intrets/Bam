@@ -12,12 +12,11 @@ void LuaActivity::stop() {
 	this->interrupt = true;
 }
 
-void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
-	this->lua.printFunction = f;
-}
-
-void LuaActivity::setScript(std::string const& script) {
-	this->lua.script = script;
+glm::ivec2 LuaActivity::getOrigin() {
+	if (this->hasChild()) {
+		return this->child.get()->getOrigin();
+	}
+	return glm::ivec2(0, 0);
 }
 
 LuaActivity::LuaActivity(Handle self) {
@@ -38,16 +37,8 @@ bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 
 void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	Activity::applyActivityLocalForced(gameState, type, pace);
-	this->lua.runScript(gameState);
-	try {
-		this->lua.state.safe_script(this->lua.script);
-	}
-	catch (const sol::error& e) {
-		Locator<Log>::ref().putLine(e.what());
-	}
-	catch (...) {
-		Locator<Log>::ref().putLine("non-sol::error when executing script");
-	}
+	this->lua.prepare(gameState);
+	this->lua.run(gameState);
 }
 
 bool LuaActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {

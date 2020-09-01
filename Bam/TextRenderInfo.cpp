@@ -103,7 +103,10 @@ std::optional<glm::vec4> WindowTextRenderInfo::getCursorPos(int32_t index) const
 
 std::vector<std::string> const& Text::getLines() const {
 	return this->lines;
-	// TODO: insert return statement here
+}
+
+std::vector<std::string>& Text::getLinesMutable() {
+	return this->lines;
 }
 
 std::optional<Rectangle> Text::getCursorQuadScreen() const {

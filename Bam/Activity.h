@@ -170,7 +170,7 @@ public:
 	WeakReference<Activity, GrouperBase> parentRef;
 	Handle selfHandle;
 
-	glm::ivec2 getOrigin() { return origin; };
+	virtual glm::ivec2 getOrigin() { return origin; };
 	Handle getHandle() { return selfHandle; };
 
 	bool idleUp();

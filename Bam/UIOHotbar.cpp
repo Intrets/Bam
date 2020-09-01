@@ -78,7 +78,7 @@ int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	renderInfo.uiRenderInfo.addRectangle(
 		this->getScreenRectangle().getTopRight(),
 		this->getScreenRectangle().getBottomLeft(),
-		{ 0.5f,0.5f,0.5f,1 },
+		COLORS::UI::WINDOWBACKGROUND,
 		depth++
 	);
 	return depth;

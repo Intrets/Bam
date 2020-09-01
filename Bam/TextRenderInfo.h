@@ -95,6 +95,7 @@ public:
 	glm::vec2 view = { 0.0f, 0.0f };
 
 	std::vector<std::string> const& getLines() const;
+	std::vector<std::string>& getLinesMutable();
 	std::optional<Rectangle> getCursorQuadScreen() const;
 
 	void invalidateCache();

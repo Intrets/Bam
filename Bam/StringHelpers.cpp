@@ -3,7 +3,7 @@
 #include "StringHelpers.h"
 #include <sstream>
 
-void split(size_t n, std::string& in, std::vector<std::string>& out, char c, bool emptySegments) {
+void split(size_t n, std::string const& in, std::vector<std::string>& out, char c, bool emptySegments, bool keepSplitChars) {
 	if (n <= 0) {
 		n = in.size() + 1;
 	}
@@ -25,7 +25,11 @@ void split(size_t n, std::string& in, std::vector<std::string>& out, char c, boo
 			return;
 		}
 		else {
-			out.push_back(in.substr(first, second - first));
+			size_t limit = second;
+			if (keepSplitChars) {
+				limit = limit == in.size() - 1 ? limit : limit + 1;
+			}
+			out.push_back(in.substr(first, limit - first));
 		}
 	}
 }

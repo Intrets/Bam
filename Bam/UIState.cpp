@@ -199,7 +199,6 @@ UIState::UIState() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-
 	UIOActivityInterface* interfacePtr;
 	UIOHideable* interfaceHideablePtr;
 
@@ -216,11 +215,6 @@ UIState::UIState() {
 			.get()
 		);
 	}
-
-	//UIOActivityLuaTest* luaPtr;
-	//UIOHideable* luaHideablePtr;
-
-
 
 	// Hotbar
 	{
@@ -425,12 +419,18 @@ UIState::UIState() {
 				ptr->addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					auto self = static_cast<UIOTextDisplay*>(self_);
+
+					auto& vec = self->text.getLinesMutable();
+					if (vec.size() > 100) {
+						vec.erase(vec.begin(), vec.begin() + 50);
+					}
+
 					auto newLines = Locator<Log>::ref().getLines();
 					for (auto& newLine : newLines) {
 						self->text.addLine(newLine);
 					}
 					if (newLines.size() != 0) {
-						self->text.moveCursor(glm::ivec2(0, newLines.size()));
+						self->text.moveCursor(glm::ivec2(100000, newLines.size()));
 					}
 					return BIND_RESULT::CONTINUE;
 				});
