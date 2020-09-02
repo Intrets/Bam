@@ -10,33 +10,33 @@ namespace UIOBinds
 	namespace Base
 	{
 		void activatable(UIOBase* ptr) {
-			ptr->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				if (!ptr->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 					ptr->deactivate();
-					return BIND_RESULT::CONTINUE;
+					return BIND::RESULT::CONTINUE;
 				}
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			});
 
-			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				ptr->activate();
-				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::FOCUS | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void focusable(UIOBase* ptr) {
-			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME | BIND_RESULT::FOCUS;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME | BIND::RESULT::FOCUS;
 			});
 		}
 		void blockWorldBinds(UIOBase* ptr) {
-			ptr->addOnHoverBind({ ControlState::CONTROLS::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				params.controlState.setBlockWorldBinds(true);
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			});
 		}
 	}
@@ -45,7 +45,7 @@ namespace UIOBinds
 	{
 		void clickSelect(UIOTextDisplay* ptr) {
 			ptr->setClickSupport(true);
-			ptr->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED },
+			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED },
 								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
@@ -63,22 +63,22 @@ namespace UIOBinds
 					}
 				}
 
-				return BIND_RESULT::CONTINUE | BIND_RESULT::FOCUS;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::FOCUS;
 			});
 		}
 
 		void input(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::CHAR_BUFFER_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+			ptr->addActiveBind({ CONTROL::KEY::CHAR_BUFFER_CHANGED, CONTROL::STATE::PRESSED },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->insertText(params.controlState.getCharBuffer());
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void inputNoLineBreaks(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::CHAR_BUFFER_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+			ptr->addActiveBind({ CONTROL::KEY::CHAR_BUFFER_CHANGED, CONTROL::STATE::PRESSED },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
@@ -88,97 +88,97 @@ namespace UIOBinds
 					return c == '\n';
 				}));
 				ptr->insertText(text);
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void backspace(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::BACKSPACE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::BACKSPACE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->backspaceChar();
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void tab(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::TAB, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::TAB, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->insertText("    ");
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void del(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::DELETE, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::DELETE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->deleteChar();
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void down(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::TEXT_DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 0,1 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void up(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::TEXT_UP, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 0,-1 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void right(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::TEXT_RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 1,0 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void left(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ ControlState::CONTROLS::TEXT_LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_REPEAT },
+			ptr->addActiveBind({ CONTROL::KEY::TEXT_LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ -1,0 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void viewUp(UIOTextDisplay* ptr) {
-			ptr->addOnHoverBind({ ControlState::CONTROLS::SCROLL_UP, ControlState::CONTROLSTATE_PRESSED },
+			ptr->addOnHoverBind({ CONTROL::KEY::SCROLL_UP, CONTROL::STATE::PRESSED },
 								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->text.moveView({ 0,-1 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 
 		void viewDown(UIOTextDisplay* ptr) {
-			ptr->addOnHoverBind({ ControlState::CONTROLS::SCROLL_DOWN, ControlState::CONTROLSTATE_PRESSED },
+			ptr->addOnHoverBind({ CONTROL::KEY::SCROLL_DOWN, CONTROL::STATE::PRESSED },
 								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->text.moveView({ 0,1 });
-				return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
 	}

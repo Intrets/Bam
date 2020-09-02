@@ -14,7 +14,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 	// Resulting outermost container
 	UIOList* outerListPtr;
 
-	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::UP);
+	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::UP);
 	outerList.setPtr(outerListPtr);
 
 	// Hidden functionality
@@ -40,16 +40,16 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 			return std::string(e.first, ' ') + "invalid";
 		}
 	})
-		.addGameWorldBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		.addGameWorldBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		// interact?
 		switch (interfacePtr->getType()) {
-			case UIOActivityInterface::USER_ACTION_TYPE::HOVERING:
+			case UIO::USER_ACTION_TYPE::HOVERING:
 				{
 					interfacePtr->interact(params.gameState, params.uiState.getCursorPositionWorld());
 				}
 				break;
-			case UIOActivityInterface::USER_ACTION_TYPE::NOTHING:
+			case UIO::USER_ACTION_TYPE::NOTHING:
 				{
 					if (auto const& maybeTarget = params.gameState.staticWorld.getActivity(params.uiState.getCursorPositionWorld())) {
 						auto self = static_cast<UIOListSelection<PairType>*>(self_);
@@ -77,7 +77,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 						self->setList(membersManaged);
 						self->setSelected(index);
 
-						if (target.get()->getType() == Activity::TYPE::LUA) {
+						if (target.get()->getType() == ACTIVITY::TYPE::LUA) {
 							static int32_t j = 0;
 							glm::vec2 offset = glm::vec2(0.05f, -0.05f);
 							std::string uiName = "LUA " + std::to_string(target.handle);
@@ -109,9 +109,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 				break;
 		}
 
-		return BIND_RESULT::CONTINUE | BIND_RESULT::CONSUME;
+		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	})
-		.addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		.addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
@@ -123,7 +123,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 			}
 		}
 
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	})
 		.get();
 
@@ -134,10 +134,10 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 		.onRelease([interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		interfacePtr->splitTarget();
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	})
-		.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-		.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 		.get();
 
 	outerListPtr->addElement(std::move(disconnectButton));

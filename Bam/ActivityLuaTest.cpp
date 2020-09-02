@@ -71,7 +71,7 @@ bool ActivityLuaTest::applyMove(Handle h, int32_t type) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<Activity::DIR>(type), 9);
+		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 9);
 	}
 }
 

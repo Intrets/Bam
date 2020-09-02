@@ -3,32 +3,35 @@
 #include "Grouper.h"
 #include "Activity.h"
 
-class Piston : public SingleGrouper
+namespace PISTON
 {
-public:
 	enum class DIR
 	{
 		STATIONARY,
 		RETRACT,
 		EXTEND,
-	};
-	
+	}; 
+}
+
+class Piston : public SingleGrouper
+{
+public:
 	int32_t cogTex;
 	int32_t ropeTex;
 	int32_t headTex;
 	int32_t length;
 
 	glm::ivec2 direction;
-	Activity::DIR headDir;
+	ACTIVITY::DIR headDir;
 
-	Piston::DIR state = Piston::DIR::STATIONARY;
+	PISTON::DIR state = PISTON::DIR::STATIONARY;
 
-	Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir);
+	Piston(Handle self, GameState& gameState, glm::ivec2 pos, ACTIVITY::DIR dir);
 	Piston() = default;
 	virtual ~Piston() = default;
 
 	// Placement
-	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
+	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) override;
 
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
@@ -36,7 +39,7 @@ public:
 	virtual void forceChangeActivityState(int32_t type) override;
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;
+	virtual bool canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) override;
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
@@ -52,7 +55,7 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
 	// Serial
-	virtual Activity::TYPE getType() override;
+	virtual ACTIVITY::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
 

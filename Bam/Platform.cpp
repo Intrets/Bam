@@ -18,21 +18,21 @@ void Platform::calculateBlockedDirections() {
 		{
 			int32_t y = 0;
 			if (this->blocks[x][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::DOWN].push_back(glm::ivec2(x, y - 1));
+				this->blockedDirections[ACTIVITY::DIR::DOWN].push_back(glm::ivec2(x, y - 1));
 			}
 		}
 		{
 			int32_t y = size.y - 1;
 			if (this->blocks[x][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::UP].push_back(glm::ivec2(x, y + 1));
+				this->blockedDirections[ACTIVITY::DIR::UP].push_back(glm::ivec2(x, y + 1));
 			}
 		}
 		for (int32_t y = 0; y < size.y - 1; y++) {
 			if (this->blocks[x][y].isOccupied() && !this->blocks[x][y + 1].isOccupied()) {
-				this->blockedDirections[Activity::DIR::UP].push_back(glm::ivec2(x, y + 1));
+				this->blockedDirections[ACTIVITY::DIR::UP].push_back(glm::ivec2(x, y + 1));
 			}
 			else if (!this->blocks[x][y].isOccupied() && this->blocks[x][y + 1].isOccupied()) {
-				this->blockedDirections[Activity::DIR::DOWN].push_back(glm::ivec2(x, y));
+				this->blockedDirections[ACTIVITY::DIR::DOWN].push_back(glm::ivec2(x, y));
 			}
 		}
 	}
@@ -40,21 +40,21 @@ void Platform::calculateBlockedDirections() {
 		{
 			int32_t x = 0;
 			if (this->blocks[x][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::LEFT].push_back(glm::ivec2(x - 1, y));
+				this->blockedDirections[ACTIVITY::DIR::LEFT].push_back(glm::ivec2(x - 1, y));
 			}
 		}
 		{
 			int32_t x = size.x - 1;
 			if (this->blocks[x][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
+				this->blockedDirections[ACTIVITY::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
 		}
 		for (int32_t x = 0; x < size.x - 1; x++) {
 			if (this->blocks[x][y].isOccupied() && !this->blocks[x + 1][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
+				this->blockedDirections[ACTIVITY::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
 			else if (!this->blocks[x][y].isOccupied() && this->blocks[x + 1][y].isOccupied()) {
-				this->blockedDirections[Activity::DIR::LEFT].push_back(glm::ivec2(x, y));
+				this->blockedDirections[ACTIVITY::DIR::LEFT].push_back(glm::ivec2(x, y));
 			}
 		}
 	}
@@ -77,14 +77,14 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	this->calculateBlockedDirections();
 }
 
-void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
+void Platform::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	auto d = origin - center;
 	this->size = glm::ivec2(this->size.y, this->size.x);
 	auto old = this->blocks;
 	this->blocks.clear();
 	this->blocks.resize(size.x, std::vector<Block>(this->size.y));
 	switch (rotation) {
-		case Activity::ROT::CLOCKWISE:
+		case ACTIVITY::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - this->size.y);
 			for (int32_t i = 0; i < this->size.x; i++) {
 				for (int32_t j = 0; j < this->size.y; j++) {
@@ -93,7 +93,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 			}
 			this->calculateBlockedDirections();
 			break;
-		case Activity::ROT::COUNTERCLOCKWISE:
+		case ACTIVITY::ROT::COUNTERCLOCKWISE:
 			d = glm::ivec2(-d.y - this->size.x, d.x);
 			for (int32_t i = 0; i < this->size.x; i++) {
 				for (int32_t j = 0; j < this->size.y; j++) {
@@ -113,7 +113,7 @@ void Platform::appendSelectionInfo(GameState const& gameState, RenderInfo& rende
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-		v += scale * glm::vec2(this->Activity::getDirection(movementDirection));
+		v += scale * glm::vec2(ACTIVITY::GETDIRECTION(movementDirection));
 	}
 	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
 	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(this->size), color);
@@ -126,7 +126,7 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-		v += scale * glm::vec2(this->Activity::getDirection(movementDirection));
+		v += scale * glm::vec2(ACTIVITY::GETDIRECTION(movementDirection));
 	}
 	for (int32_t x = 0; x < this->size.x; x++) {
 		for (int32_t y = 0; y < this->size.y; y++) {
@@ -147,16 +147,16 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 	}
 }
 
-Activity::TYPE Platform::getType() {
-	return Activity::TYPE::PLATFORM;
+ACTIVITY::TYPE Platform::getType() {
+	return ACTIVITY::TYPE::PLATFORM;
 }
 
 void Platform::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
 	members.push_back({ depth, this });
 }
 
-bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
-	glm::ivec2 movedOrigin = origin + this->Activity::getDirection(dir);
+bool Platform::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) {
+	glm::ivec2 movedOrigin = origin + ACTIVITY::GETDIRECTION(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);
 	glm::ivec2 p2 = floordiv(movedOrigin + this->size, CHUNKSIZE);
 
@@ -185,7 +185,7 @@ bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgn
 }
 
 void Platform::removeMoveableTracesLocal(GameState& gameState) {
-	for (auto& dir : this->blockedDirections[Activity::FLIP(movementDirection)]) {
+	for (auto& dir : this->blockedDirections[ACTIVITY::FLIP(movementDirection)]) {
 		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
 	}
 }

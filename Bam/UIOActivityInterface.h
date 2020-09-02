@@ -7,15 +7,18 @@
 
 class UIState;
 
-class UIOActivityInterface : public UIOBase
+namespace UIO
 {
-public:
 	enum class USER_ACTION_TYPE
 	{
 		NOTHING,
 		HOVERING,
 	};
 
+}
+
+class UIOActivityInterface : public UIOBase
+{
 private:
 	ManagedReference<Activity, Activity> base;
 	int32_t baseSelectionTick;
@@ -25,7 +28,7 @@ private:
 
 	UniqueReference<Activity, Activity> cursor;
 
-	USER_ACTION_TYPE type;
+	UIO::USER_ACTION_TYPE type;
 
 public:
 	UIOActivityInterface(Handle self);
@@ -37,7 +40,7 @@ public:
 	void splitTarget();
 	void addLua(GameState& gameState, UIState& uiState);
 
-	UIOActivityInterface::USER_ACTION_TYPE getType();
+	UIO::USER_ACTION_TYPE getType();
 
 	void updateCursorPos(glm::vec2 pos);
 
@@ -46,8 +49,8 @@ public:
 
 	void pickUp(GameState& gameState, glm::vec2 pos);
 	void interact(GameState& gameState, glm::vec2 pos);
-	void spawnHover(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);
-	void rotateHover(Activity::ROT rot);
+	void spawnHover(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);
+	void rotateHover(ACTIVITY::ROT rot);
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 

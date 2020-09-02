@@ -14,15 +14,18 @@ class GameState;
 class UIOBase;
 struct State;
 
-enum BIND_RESULT
+namespace BIND
 {
-	CONTINUE = 1 << 0,
-	CLOSE = 1 << 1,
-	STOP = 1 << 2,
-	FOCUS = 1 << 3,
-	CONSUME = 1 << 4,
-	HIDE = 1 << 5,
-};
+	enum RESULT
+	{
+		CONTINUE = 1 << 0,
+		CLOSE = 1 << 1,
+		STOP = 1 << 2,
+		FOCUS = 1 << 3,
+		CONSUME = 1 << 4,
+		HIDE = 1 << 5,
+	};
+}
 
 typedef int32_t CallBackBindResult;
 

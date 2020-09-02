@@ -21,47 +21,47 @@ void UIOButton::setOnRelease(CallBack f) {
 UIOButton::UIOButton(Handle self) {
 	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	};
 
 	this->onRelease = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	};
 
 	this->selfHandle = self;
 
-	this->addOnHoverBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+	this->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
 						 [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		self_->activate();
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ ControlState::CONTROLS::MOUSE_POS_CHANGED,ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED,CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 			self_->deactivate();
 		}
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addOnHoverBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOButton*>(self_);
 		self->down = true;
 		self->mousePressOffset = params.uiState.getCursorPositionScreen() - self->getScreenRectangle().getTopLeft();
-		return self->onPress(params, self_) | BIND_RESULT::FOCUS | BIND_RESULT::CONSUME;
+		return self->onPress(params, self_) | BIND::RESULT::FOCUS | BIND::RESULT::CONSUME;
 	});
 
-	this->addGlobalBind({ ControlState::CONTROLS::ACTION0, ControlState::CONTROLSTATE_RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{
 		if (this->down) {
 			this->down = false;
-			return this->onRelease(state, self_) | BIND_RESULT::CONTINUE;
+			return this->onRelease(state, self_) | BIND::RESULT::CONTINUE;
 		}
 		else {
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		}
 	});
 }

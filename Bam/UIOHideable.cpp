@@ -22,76 +22,76 @@ void UIOHideable::show() {
 CallBackBindResult UIOHideable::runGlobalBinds(State& state) {
 	int32_t res = 0;
 	if (this->shouldFocus) {
-		res |= BIND_RESULT::FOCUS;
+		res |= BIND::RESULT::FOCUS;
 		this->shouldFocus = false;
 	}
 
 	if (!this->hidden) {
 		res |= this->UIOBase::runGlobalBinds(state);
-		if (res & BIND_RESULT::HIDE) {
-			res &= ~BIND_RESULT::HIDE;
+		if (res & BIND::RESULT::HIDE) {
+			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
 		}
 		return res;
 	}
 	else {
-		return res | BIND_RESULT::CONTINUE;
+		return res | BIND::RESULT::CONTINUE;
 	}
 }
 
 CallBackBindResult UIOHideable::runFocussedBinds(State& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBase::runFocussedBinds(state);
-		if (res & BIND_RESULT::HIDE) {
-			res &= ~BIND_RESULT::HIDE;
+		if (res & BIND::RESULT::HIDE) {
+			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
 		}
 		return res;
 	}
 	else {
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	}
 }
 
 CallBackBindResult UIOHideable::runOnHoverBinds(State& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBase::runOnHoverBinds(state);
-		if (res & BIND_RESULT::HIDE) {
-			res &= ~BIND_RESULT::HIDE;
+		if (res & BIND::RESULT::HIDE) {
+			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
 		}
 		return res;
 	}
 	else {
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	}
 }
 
 CallBackBindResult UIOHideable::runActiveBinds(State& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBase::runActiveBinds(state);
-		if (res & BIND_RESULT::HIDE) {
-			res &= ~BIND_RESULT::HIDE;
+		if (res & BIND::RESULT::HIDE) {
+			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
 		}
 		return res;
 	}
 	else {
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	}
 }
 
 CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBase::runGameWorldBinds(state);
-		if (res & BIND_RESULT::HIDE) {
-			res &= ~BIND_RESULT::HIDE;
+		if (res & BIND::RESULT::HIDE) {
+			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
 		}
 		return res;
 	}
 	else {
-		return BIND_RESULT::CONTINUE;
+		return BIND::RESULT::CONTINUE;
 	}
 }
 

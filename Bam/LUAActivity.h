@@ -44,7 +44,7 @@ public:
 	// Already implemented in SingleBlockActivity
 
 	// Serial
-	virtual Activity::TYPE getType() override;
+	virtual ACTIVITY::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
 };

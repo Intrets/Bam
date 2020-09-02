@@ -2,22 +2,24 @@
 
 #include "Grouper.h"
 
-class RailCrane : public SingleGrouper
-{
-public:
+namespace RAILCRANE{
 	enum class DIR
 	{
 		STATIONARY,
 		LEFT,
 		RIGHT,
 	};
+}
 
+class RailCrane : public SingleGrouper
+{
+public:
 	int32_t supportTex;
 	int32_t shaftTex;
 	int32_t anchorTex;
 
-	Activity::DIR orientation;
-	RailCrane::DIR anchorDirection;
+	ACTIVITY::DIR orientation;
+	RAILCRANE::DIR anchorDirection;
 	int32_t length;
 	int32_t anchorIndexPos;
 
@@ -26,7 +28,7 @@ public:
 	virtual	~RailCrane() = default;
 
 	// Placement
-	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
+	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) override;
 
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
@@ -34,7 +36,7 @@ public:
 	virtual void forceChangeActivityState(int32_t s) override;
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;
+	virtual bool canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) override;
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
@@ -50,7 +52,7 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
 	// Serial
-	virtual Activity::TYPE getType() override;
+	virtual ACTIVITY::TYPE getType() override;
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);
 

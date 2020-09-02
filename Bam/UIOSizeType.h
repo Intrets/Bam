@@ -2,12 +2,29 @@
 
 class ScreenRectangle;
 
+namespace UIO
+{
+	enum SIZETYPE
+	{
+		FH,
+		PX,
+		STATIC_PX,
+		ABSOLUTE_HEIGHT,
+		ABSOLUTE_WIDTH,
+		RELATIVE_HEIGHT,
+		RELATIVE_WIDTH,
+	};
+}
+
 struct UIOSizeType
 {
-	enum TYPE
-	{
-		FH, PX, STATIC_PX, ABSOLUTE_HEIGHT, ABSOLUTE_WIDTH, RELATIVE_HEIGHT, RELATIVE_WIDTH
-	} type;
+	//enum TYPE
+	//{
+	//	FH, PX, STATIC_PX, ABSOLUTE_HEIGHT, ABSOLUTE_WIDTH, RELATIVE_HEIGHT, RELATIVE_WIDTH
+	//} type;
+
+	UIO::SIZETYPE type;
+
 	union
 	{
 		int32_t px;
@@ -18,8 +35,8 @@ struct UIOSizeType
 		float relative_width;
 	};
 
-	UIOSizeType(UIOSizeType::TYPE t, int32_t val);
-	UIOSizeType(UIOSizeType::TYPE t, float val);
+	UIOSizeType(UIO::SIZETYPE t, int32_t val);
+	UIOSizeType(UIO::SIZETYPE t, float val);
 
 	float getWidth(ScreenRectangle screenRectangle);
 	float getHeight(ScreenRectangle screenRectangle);

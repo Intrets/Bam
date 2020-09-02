@@ -2,9 +2,8 @@
 
 #include "UIOBase.h"
 
-class UIOList : public UIOBase
+namespace UIO
 {
-public:
 	enum class DIR
 	{
 		LEFT,
@@ -12,12 +11,15 @@ public:
 		UP,
 		DOWN,
 	};
+}
 
+class UIOList : public UIOBase
+{
 private:
-	DIR direction;
+	UIO::DIR direction;
 
 public:
-	UIOList(Handle self, DIR dir);
+	UIOList(Handle self, UIO::DIR dir);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

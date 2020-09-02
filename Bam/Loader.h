@@ -86,34 +86,34 @@ inline bool Loader::retrieve(bool& t) {
 }
 
 template<>
-inline bool Loader::retrieve(Activity::TYPE& t) {
+inline bool Loader::retrieve(ACTIVITY::TYPE& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<Activity::TYPE>(s);
+	t = static_cast<ACTIVITY::TYPE>(s);
 	return true;
 }
 
 template<>
-inline bool Loader::retrieve(Activity::DIR& t) {
+inline bool Loader::retrieve(ACTIVITY::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<Activity::DIR>(s);
+	t = static_cast<ACTIVITY::DIR>(s);
 	return true;
 }
 
 template<>
-inline bool Loader::retrieve(Piston::DIR& t) {
+inline bool Loader::retrieve(PISTON::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<Piston::DIR>(s);
+	t = static_cast<PISTON::DIR>(s);
 	return true;
 }
 
 template<>
-inline bool Loader::retrieve(RailCrane::DIR& t) {
+inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
-	t = static_cast<RailCrane::DIR>(s);
+	t = static_cast<RAILCRANE::DIR>(s);
 	return true;
 }
 

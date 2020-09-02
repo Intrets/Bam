@@ -26,7 +26,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 
 	if (r1.get()->hasChild()) {
 		auto child = r1.get()->getChild();
-		if (child.get()->getType() != Activity::TYPE::ANCHOR) {
+		if (child.get()->getType() != ACTIVITY::TYPE::ANCHOR) {
 
 #ifdef BAM_DEBUG
 			assert(r1.get()->removeChild(child));
@@ -60,7 +60,7 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 	auto p1 = r1.get();
 	auto p2 = r2.get();
 
-	if (p2->getType() == Activity::TYPE::ANCHOR) {
+	if (p2->getType() == ACTIVITY::TYPE::ANCHOR) {
 		return mergeAnchors(gameState, r1, r2);
 	}
 	else {
@@ -74,15 +74,15 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 #ifdef BAM_DEBUG
 	auto type = r1.get()->getType();
 	assert(
-		type != Activity::TYPE::ANCHOR &&
-		type != Activity::TYPE::RAILCRANE &&
-		type != Activity::TYPE::PISTON);
+		type != ACTIVITY::TYPE::ANCHOR &&
+		type != ACTIVITY::TYPE::RAILCRANE &&
+		type != ACTIVITY::TYPE::PISTON);
 #endif
 	r2 = r2.get()->getRoot();
 
 	auto parent = r1.get()->parentRef;
 	if (parent.isNotNull()) {
-		if (parent.get()->getType() == Activity::TYPE::ANCHOR) {
+		if (parent.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
 			return linkAnchor(gameState, parent, r2);
 		}
 		else {
@@ -111,11 +111,11 @@ bool Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, We
 	}
 
 	switch (p1->getType()) {
-		case Activity::TYPE::ANCHOR:
+		case ACTIVITY::TYPE::ANCHOR:
 			return linkAnchor(gameState, r1, r2);
 			break;
-		case Activity::TYPE::PISTON:
-		case Activity::TYPE::RAILCRANE:
+		case ACTIVITY::TYPE::PISTON:
+		case ACTIVITY::TYPE::RAILCRANE:
 			return linkSingleGrouper(gameState, r1, r2);
 			break;
 		default:

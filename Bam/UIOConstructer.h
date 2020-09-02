@@ -46,7 +46,7 @@ public:
 
 	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
 	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
-	UIOConstructer<UIOConstrainSize> align(UIOConstrainSize::ALIGNMENT align);
+	UIOConstructer<UIOConstrainSize> align(UIO::ALIGNMENT align);
 	UIOConstructer<UIOConstrainSize> alignCenter();
 	UIOConstructer<UIOConstrainSize> alignTop();
 	UIOConstructer<UIOConstrainSize> alignBottom();
@@ -255,13 +255,13 @@ inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::constrainWidth(UIOSiz
 //--------------------------------------------------------------------------------
 
 template<>
-inline UIOConstructer<UIOConstrainSize> UIOConstructer<UIOConstrainSize>::align(UIOConstrainSize::ALIGNMENT align) {
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<UIOConstrainSize>::align(UIO::ALIGNMENT align) {
 	this->object.get()->alignment = align;
 	return UIOConstructer<UIOConstrainSize>(std::move(this->object));
 }
 
 template<class T>
-inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::align(UIOConstrainSize::ALIGNMENT align) {
+inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::align(UIO::ALIGNMENT align) {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 	auto res = refMan->makeUniqueRef<UIOConstrainSize>(std::move(this->object));
 	res.get()->alignment = align;
@@ -270,47 +270,47 @@ inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::align(UIOConstrainSiz
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignCenter() {
-	return this->align(UIOConstrainSize::ALIGNMENT::CENTER);
+	return this->align(UIO::ALIGNMENT::CENTER);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTop() {
-	return this->align(UIOConstrainSize::ALIGNMENT::TOP);
+	return this->align(UIO::ALIGNMENT::TOP);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottom() {
-	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOM);
+	return this->align(UIO::ALIGNMENT::BOTTOM);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignLeft() {
-	return this->align(UIOConstrainSize::ALIGNMENT::LEFT);
+	return this->align(UIO::ALIGNMENT::LEFT);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignRight() {
-	return this->align(UIOConstrainSize::ALIGNMENT::RIGHT);
+	return this->align(UIO::ALIGNMENT::RIGHT);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottomLeft() {
-	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOMLEFT);
+	return this->align(UIO::ALIGNMENT::BOTTOMLEFT);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignBottomRight() {
-	return this->align(UIOConstrainSize::ALIGNMENT::BOTTOMRIGHT);
+	return this->align(UIO::ALIGNMENT::BOTTOMRIGHT);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTopLeft() {
-	return this->align(UIOConstrainSize::ALIGNMENT::TOPLEFT);
+	return this->align(UIO::ALIGNMENT::TOPLEFT);
 }
 
 template<class T>
 inline UIOConstructer<UIOConstrainSize> UIOConstructer<T>::alignTopRight() {
-	return this->align(UIOConstrainSize::ALIGNMENT::TOPRIGHT);
+	return this->align(UIO::ALIGNMENT::TOPRIGHT);
 }
 
 //--------------------------------------------------------------------------------
@@ -332,15 +332,15 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(this->object));
 	auto mainPadPtr = mainPad.get();
-	mainPadPtr->top = { UIOSizeType::FH, 1.2f };
+	mainPadPtr->top = { UIO::SIZETYPE::FH, 1.2f };
 	if (types & UIOWindow::TYPE::RESIZE) {
 		types |= UIOWindow::TYPE::RESIZEHORIZONTAL | UIOWindow::TYPE::RESIZEVERTICAL;
 	}
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
-		mainPadPtr->right = { UIOSizeType::PX, 10 };
+		mainPadPtr->right = { UIO::SIZETYPE::PX, 10 };
 	}
 	if (types & UIOWindow::TYPE::RESIZEVERTICAL) {
-		mainPadPtr->bottom = { UIOSizeType::PX, 10 };
+		mainPadPtr->bottom = { UIO::SIZETYPE::PX, 10 };
 	}
 
 	UIOWindow* windowPtr;
@@ -352,12 +352,12 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	windowPtr->screenRectangle.set(size);
 
 	UIOList* topList;
-	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::LEFT)
+	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::LEFT)
 		.setPtr(topList)
 		.addBind(UIOBinds::Base::focusable)
 		.addBind(UIOBinds::Base::blockWorldBinds)
-		.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
-		.align(UIOConstrainSize::ALIGNMENT::TOP)
+		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+		.align(UIO::ALIGNMENT::TOP)
 		.get();
 
 	windowPtr->topBarPtr = topBar.get();
@@ -365,30 +365,30 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 	if (types & UIOWindow::TYPE::CLOSE) {
 		auto close = TextConstructer::constructSingleLineDisplayText(" x")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			return BIND_RESULT::CLOSE;
+			return BIND::RESULT::CLOSE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
-			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 
 		topList->addElement(std::move(close));
 	}
 	else if (types & UIOWindow::TYPE::HIDE) {
 		auto hide = TextConstructer::constructSingleLineDisplayText(" x")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			return BIND_RESULT::HIDE;
+			return BIND::RESULT::HIDE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
-			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 
 		topList->addElement(std::move(hide));
@@ -397,16 +397,16 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 
 	if (types & UIOWindow::TYPE::MINIMISE) {
 		auto close = TextConstructer::constructSingleLineDisplayText(" _")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			windowPtr->minimized = !windowPtr->minimized;
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
-			.constrainWidth(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 
 		topList->addElement(std::move(close));
@@ -417,24 +417,24 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		auto titleBar = TextConstructer::constructSingleLineDisplayText(title)
 			.button()
 			.addFocussedBind(
-				{ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
 				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->down) {
 				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) - self->mousePressOffset);
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
 			.setPtr(titleBarPtr)
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 		topList->addElement(std::move(titleBar));
 	}
 	else {
 		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
 			.background(COLORS::UI::FOREGROUND)
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 		topList->addElement(std::move(titleBar));
 	}
@@ -442,7 +442,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	if (types & UIOWindow::TYPE::RESIZEVERTICAL) {
 		auto bottomBar = UIOConstructer<UIOButton>::makeConstructer()
 			.addFocussedBind(
-				{ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
 				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
@@ -457,13 +457,13 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.padLeft(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.padTop(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.padRight(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? 10 : 0))
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 10))
-			.align(UIOConstrainSize::ALIGNMENT::BOTTOMLEFT)
+			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.padTop({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.padRight({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? 10 : 0 })
+			.constrainHeight({ UIO::SIZETYPE::PX, 10 })
+			.align(UIO::ALIGNMENT::BOTTOMLEFT)
 			.get();
 
 		windowPtr->addElement(std::move(bottomBar));
@@ -472,7 +472,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
 		auto rightBar = UIOConstructer<UIOButton>::makeConstructer()
 			.addFocussedBind(
-				{ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
 				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
@@ -487,13 +487,13 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.padLeft(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-			.padTop(UIOSizeType(UIOSizeType::FH, 1.2f))
-			.padBottom(UIOSizeType(UIOSizeType::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? 10 : 0))
-			.constrainWidth(UIOSizeType(UIOSizeType::PX, 10))
-			.align(UIOConstrainSize::ALIGNMENT::RIGHT)
+			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.padTop({ UIO::SIZETYPE::FH, 1.2f })
+			.padBottom({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? 10 : 0 })
+			.constrainWidth({ UIO::SIZETYPE::PX, 10 })
+			.align(UIO::ALIGNMENT::RIGHT)
 			.get();
 
 		windowPtr->addElement(std::move(rightBar));
@@ -502,7 +502,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 	if (types & UIOWindow::TYPE::RESIZE) {
 		auto cornerBar = UIOConstructer<UIOButton>::makeConstructer()
 			.addFocussedBind(
-				{ ControlState::CONTROLS::MOUSE_POS_CHANGED, ControlState::CONTROLSTATE_PRESSED },
+				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
 				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
@@ -519,11 +519,11 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 				windowPtr->screenRectangle.setBottomRight(bottomRight);
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.constrainWidth(UIOSizeType(UIOSizeType::PX, 10))
-			.constrainHeight(UIOSizeType(UIOSizeType::PX, 10))
-			.align(UIOConstrainSize::ALIGNMENT::BOTTOMRIGHT)
+			.constrainWidth({ UIO::SIZETYPE::PX, 10 })
+			.constrainHeight({ UIO::SIZETYPE::PX, 10 })
+			.align(UIO::ALIGNMENT::BOTTOMRIGHT)
 			.get();
 
 		windowPtr->addElement(std::move(cornerBar));

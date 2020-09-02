@@ -74,7 +74,7 @@ FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::iv
 	return fontInfoResult;
 }
 
-FontInfo& Fonts::getFont(Font font) {
+FontInfo& Fonts::getFont(FONTS::FONT font) {
 	return this->fontInfos[static_cast<int32_t>(font)];
 }
 
@@ -100,9 +100,9 @@ Fonts::Fonts() {
 
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->fontAtlas.ID, 0);
 
-	this->fontInfos[static_cast<size_t>(Font::ROBOTO_12)] = loadMonospacedFont("roboto_mono_12px_7x17_36x4.dds", { 7,17 }, { 36,4 });
-	this->fontInfos[static_cast<size_t>(Font::ROBOTO_14)] = loadMonospacedFont("roboto_mono_14px_8x19_32x4.dds", { 8,19 }, { 32,4 });
-	this->fontInfos[static_cast<size_t>(Font::ROBOTO_16)] = loadMonospacedFont("roboto_mono_16px_10x22_25x6.dds", { 10,22 }, { 25,6 });
+	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_12)] = loadMonospacedFont("roboto_mono_12px_7x17_36x4.dds", { 7,17 }, { 36,4 });
+	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_14)] = loadMonospacedFont("roboto_mono_14px_8x19_32x4.dds", { 8,19 }, { 32,4 });
+	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_16)] = loadMonospacedFont("roboto_mono_16px_10x22_25x6.dds", { 10,22 }, { 25,6 });
 }
 
 Fonts::~Fonts() {

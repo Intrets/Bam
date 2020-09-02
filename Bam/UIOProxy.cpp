@@ -15,14 +15,14 @@ CallBackBindResult UIOProxy::runGlobalBinds(State& state) {
     if (this->main.isValid()) {
         return this->main.get()->runGlobalBinds(state);
     }
-    return BIND_RESULT::CONTINUE;
+    return BIND::RESULT::CONTINUE;
 }
 
 CallBackBindResult UIOProxy::runFocussedBinds(State& state) {
     if (this->main.isValid()) {
         return this->main.get()->runFocussedBinds(state);
     }
-    return BIND_RESULT::CONTINUE;
+    return BIND::RESULT::CONTINUE;
 }
 
 int32_t UIOProxy::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

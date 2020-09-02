@@ -17,8 +17,8 @@ SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm:
 	this->texName = name;
 }
 
-bool SingleBlockActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
-	return !gameState.staticWorld.isOccupied(this->origin + this->Activity::getDirection(dir), ignore);
+bool SingleBlockActivity::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) {
+	return !gameState.staticWorld.isOccupied(this->origin + ACTIVITY::GETDIRECTION(dir), ignore);
 }
 
 bool SingleBlockActivity::canFillTracesLocal(GameState& gameState) {
@@ -36,11 +36,11 @@ void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
 }
 
 void SingleBlockActivity::removeMoveableTracesLocal(GameState& gameState) {
-	gameState.staticWorld.removeTraceFilter(this->origin - this->getDirection(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.removeTraceFilter(this->origin - ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
 }
 
 void SingleBlockActivity::leaveMoveableTracesLocal(GameState& gameState) {
-	gameState.staticWorld.leaveTrace(this->origin + this->getDirection(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.leaveTrace(this->origin + ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
 }
 
 void SingleBlockActivity::getTreeMembers(std::vector<Activity*>& members) {
@@ -55,7 +55,7 @@ void SingleBlockActivity::appendSelectionInfo(GameState const& gameState, Render
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(this->getDirection(this->movementDirection));
+		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
 	}
 	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1), color);
 }
@@ -64,7 +64,7 @@ void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, Sta
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(this->getDirection(this->movementDirection));
+		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
 	}
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex);
 }

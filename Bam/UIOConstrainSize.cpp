@@ -22,35 +22,35 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 
 	glm::vec2 p;
 	switch (this->alignment) {
-		case UIOConstrainSize::ALIGNMENT::TOP:
+		case UIO::ALIGNMENT::TOP:
 			p.x += this->screenRectangle.getWidth() / 2 - newScreenRectangle.getWidth() / 2;
 			[[fallthrough]];
-		case UIOConstrainSize::ALIGNMENT::TOPLEFT:
+		case UIO::ALIGNMENT::TOPLEFT:
 			p += this->screenRectangle.getTopLeft() - newScreenRectangle.getTopLeft();
 			break;
 
-		case UIOConstrainSize::ALIGNMENT::RIGHT:
+		case UIO::ALIGNMENT::RIGHT:
 			p.y -= this->screenRectangle.getHeight() / 2 - newScreenRectangle.getHeight() / 2;
 			[[fallthrough]];
-		case UIOConstrainSize::ALIGNMENT::TOPRIGHT:
+		case UIO::ALIGNMENT::TOPRIGHT:
 			p += this->screenRectangle.getTopRight() - newScreenRectangle.getTopRight();
 			break;
 
-		case UIOConstrainSize::ALIGNMENT::BOTTOM:
+		case UIO::ALIGNMENT::BOTTOM:
 			p.x -= this->screenRectangle.getWidth() / 2 - newScreenRectangle.getWidth() / 2;
 			[[fallthrough]];
-		case UIOConstrainSize::ALIGNMENT::BOTTOMRIGHT:
+		case UIO::ALIGNMENT::BOTTOMRIGHT:
 			p += this->screenRectangle.getBottomRight() - newScreenRectangle.getBottomRight();
 			break;
 
-		case UIOConstrainSize::ALIGNMENT::LEFT:
+		case UIO::ALIGNMENT::LEFT:
 			p.y += this->screenRectangle.getHeight() / 2 - newScreenRectangle.getHeight() / 2;
 			[[fallthrough]];
-		case UIOConstrainSize::ALIGNMENT::BOTTOMLEFT:
+		case UIO::ALIGNMENT::BOTTOMLEFT:
 			p += this->screenRectangle.getBottomLeft() - newScreenRectangle.getBottomLeft();
 			break;
 
-		case UIOConstrainSize::ALIGNMENT::CENTER:
+		case UIO::ALIGNMENT::CENTER:
 			p.y -= this->screenRectangle.getHeight() / 2 - newScreenRectangle.getHeight() / 2;
 			p.x += this->screenRectangle.getWidth() / 2 - newScreenRectangle.getWidth() / 2;
 			break;

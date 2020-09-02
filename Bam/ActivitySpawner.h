@@ -11,7 +11,7 @@ class GameState;
 
 namespace ACTIVITYSPAWNER
 {
-	std::optional<UniqueReference<Activity, Activity>> spawn(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType);
+	std::optional<UniqueReference<Activity, Activity>> spawn(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType);
 
 	UniqueReference<Activity, Activity> piston(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> railcrane(GameState& gameState, glm::ivec2 pos);

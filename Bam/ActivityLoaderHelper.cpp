@@ -23,30 +23,30 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 	size_t size;
 	loader.retrieve(size);
 	for (size_t i = 0; i < size; i++) {
-		Activity::TYPE type;
+		ACTIVITY::TYPE type;
 		loader.retrieve(type);
 		switch (type) {
-			case Activity::TYPE::ANCHOR:
+			case ACTIVITY::TYPE::ANCHOR:
 				{
 					LOAD(Anchor);
 					break;
 				}
-				//case Activity::TYPE::MOVER:
+				//case ACTIVITY::TYPE::MOVER:
 				//	{
 				//		LOAD(Mover);
 				//		break;
 				//	}
-			case Activity::TYPE::PLATFORM:
+			case ACTIVITY::TYPE::PLATFORM:
 				{
 					LOAD(Platform);
 					break;
 				}
-			case Activity::TYPE::PISTON:
+			case ACTIVITY::TYPE::PISTON:
 				{
 					LOAD(Piston);
 					break;
 				}
-			case Activity::TYPE::RAILCRANE:
+			case ACTIVITY::TYPE::RAILCRANE:
 				{
 					LOAD(RailCrane);
 					break;

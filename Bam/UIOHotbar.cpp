@@ -29,28 +29,28 @@ UIOHotbar::UIOHotbar(Handle self) {
 			.onPress([this, i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			this->activateTool(i, params);
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::PX, 2))
+			.pad({ UIO::SIZETYPE::PX, 2 })
 			.get()
 			);
 	}
 
 	for (auto [bind, i] : {
-		std::make_tuple(ControlState::CONTROLS::TOOL_1, 0),
-		std::make_tuple(ControlState::CONTROLS::TOOL_2, 1),
-		std::make_tuple(ControlState::CONTROLS::TOOL_3, 2),
-		std::make_tuple(ControlState::CONTROLS::TOOL_4, 3),
-		std::make_tuple(ControlState::CONTROLS::TOOL_5, 4),
-		std::make_tuple(ControlState::CONTROLS::TOOL_6, 5),
-		std::make_tuple(ControlState::CONTROLS::TOOL_7, 6),
-		std::make_tuple(ControlState::CONTROLS::TOOL_8, 7),
-		std::make_tuple(ControlState::CONTROLS::TOOL_9, 8),
-		std::make_tuple(ControlState::CONTROLS::TOOL_0, 9) }) {
+		std::make_tuple(CONTROL::KEY::TOOL_1, 0),
+		std::make_tuple(CONTROL::KEY::TOOL_2, 1),
+		std::make_tuple(CONTROL::KEY::TOOL_3, 2),
+		std::make_tuple(CONTROL::KEY::TOOL_4, 3),
+		std::make_tuple(CONTROL::KEY::TOOL_5, 4),
+		std::make_tuple(CONTROL::KEY::TOOL_6, 5),
+		std::make_tuple(CONTROL::KEY::TOOL_7, 6),
+		std::make_tuple(CONTROL::KEY::TOOL_8, 7),
+		std::make_tuple(CONTROL::KEY::TOOL_9, 8),
+		std::make_tuple(CONTROL::KEY::TOOL_0, 9) }) {
 		this->addGlobalBind({ bind }, [this, i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			this->activateTool(i, params);
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 	}
 

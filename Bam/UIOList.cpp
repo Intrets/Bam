@@ -2,7 +2,7 @@
 
 #include "UIOList.h"
 
-UIOList::UIOList(Handle self, DIR dir) {
+UIOList::UIOList(Handle self, UIO::DIR dir) {
 	this->selfHandle = self;
 	this->direction = dir;
 }
@@ -16,7 +16,7 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 		ScreenRectangle newRec = element.get()->updateSize(rec);
 
 		switch (this->direction) {
-			case DIR::LEFT:
+			case UIO::DIR::LEFT:
 				{
 					glm::vec2 p = rec.getTopRight() - newRec.getTopRight();
 					element.get()->translate(p);
@@ -24,7 +24,7 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 					//rec.top.x -= newRec.getWidth();
 				}
 				break;
-			case DIR::RIGHT:
+			case UIO::DIR::RIGHT:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);
@@ -32,7 +32,7 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 					//rec.bot.x += newRec.getWidth();
 				}
 				break;
-			case DIR::UP:
+			case UIO::DIR::UP:
 				{
 					glm::vec2 p = rec.getBottomLeft() - newRec.getBottomLeft();
 					element.get()->translate(p);
@@ -40,7 +40,7 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 					//rec.bot.y += newRec.getHeight();
 				}
 				break;
-			case DIR::DOWN:
+			case UIO::DIR::DOWN:
 				{
 					glm::vec2 p = rec.getTopLeft() - newRec.getTopLeft();
 					element.get()->translate(p);

@@ -10,7 +10,7 @@
 
 UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIOList* listPtr;
-	auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::DOWN);
+	auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN);
 	window.setPtr(listPtr);
 
 	auto uioLua = UIOConstructer<UIOLua>::makeConstructer(ref).get();
@@ -23,7 +23,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		auto luaEditor = TextConstructer::constructTextEdit("-- lua")
 			.setPtr(luaTextPtr)
 			.background(COLORS::UI::BACKGROUND)
-			.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.4f))
+			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.4f })
 			.get();
 
 		listPtr->addElement(std::move(luaEditor));
@@ -40,7 +40,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		UIOGrid* watchGridPtr;
 		auto watchGrid = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(2, 1))
 			.setPtr(watchGridPtr)
-			.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_HEIGHT, 0.8f))
+			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.8f })
 			.get();
 
 		{
@@ -48,7 +48,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				TextConstructer::constructTextEdit("")
 				.setPtr(watchTextPtr)
 				.background(COLORS::UI::BACKGROUND)
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 				.get()
 			);
 
@@ -64,7 +64,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				TextConstructer::constructDisplayText("watch")
 				.setPtr(displayWatchTextPtr)
 				.background(COLORS::UI::BACKGROUND)
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 				.get()
 			);
 
@@ -72,7 +72,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				TextConstructer::constructDisplayText("output")
 				.setPtr(outputTextPtr)
 				.background(COLORS::UI::BACKGROUND)
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 				.get()
 			);
 		}
@@ -86,29 +86,29 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		listPtr->addElement(
 			UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(4, 1))
 			.setPtr(row1Ptr)
-			.padTop(UIOSizeType(UIOSizeType::PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.padTop({ UIO::SIZETYPE::PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get()
 		);
 
 		row1Ptr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Push")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (uioLuaPtr->getWatched().isValid()) {
 				uioLuaPtr->getWatched().get()->lua.setScript(join(luaTextPtr->text.getLines()), params.gameState);
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
 
 		row1Ptr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Pull")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
@@ -117,15 +117,15 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				split(0, uioLuaPtr->getWatched().get()->lua.getScript(), luaTextPtr->text.getLinesMutable(), '\n', true, true);
 				luaTextPtr->text.invalidateCache();
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
 
 		row1Ptr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Run")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
@@ -133,24 +133,24 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				uioLuaPtr->getWatched().get()->start(params.gameState);
 			}
 
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
 
 		row1Ptr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Interrupt")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (uioLuaPtr->getWatched().isValid()) {
 				uioLuaPtr->getWatched().get()->stop();
 			}
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
 	}
@@ -161,8 +161,8 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		listPtr->addElement(
 			UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(3, 1))
 			.setPtr(luaControlPtr)
-			.padTop(UIOSizeType(UIOSizeType::PX, 1))
-			.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+			.padTop({ UIO::SIZETYPE::PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get()
 		);
 
@@ -177,7 +177,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		// Load
 		luaControlPtr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Load")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
@@ -193,15 +193,15 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				luaTextPtr->text.addLine(line);
 			}
 
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get());
 
 		// Save
 		luaControlPtr->addElement(
 			TextConstructer::constructSingleLineDisplayText("Save")
-			.align(UIOConstrainSize::ALIGNMENT::CENTER)
+			.align(UIO::ALIGNMENT::CENTER)
 			.button()
 			.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
@@ -218,9 +218,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 			file.close();
 
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		})
-			.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get());
 
 		uioLuaPtr->getWatched().get()->lua.setPrintFunction(
@@ -234,7 +234,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 			outputTextPtr->text.moveCursor(glm::ivec2(0, lines.size()));
 
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 	}
 

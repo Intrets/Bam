@@ -15,122 +15,6 @@ struct RenderInfo;
 // TODO: better runtime type system??
 namespace ACTIVITY
 {
-	const std::vector<std::string> TYPE_NAMES{
-		"anchor",
-		"mover",
-		"platform",
-		"piston",
-		"single_platform",
-		"breaker",
-		"grabber",
-		"plant",
-		"activator",
-		"railcrane",
-		"lua",
-		"_MAX_SHOULD_NOT_SEE_THIS",
-	};
-}
-
-class Anchor;
-
-class Activity 
-{
-public:
-	enum DIR
-	{
-		UP,
-		RIGHT,
-		DOWN,
-		LEFT,
-		STATIONARY,
-	};
-
-	static Activity::DIR CLOCKWISE(Activity::DIR dir) {
-		return static_cast<Activity::DIR>((static_cast<int32_t>(dir) + 1) % 4);
-	}
-
-	static Activity::DIR COUNTERWISE(Activity::DIR dir) {
-		return static_cast<Activity::DIR>((static_cast<int32_t>(dir) + 3) % 4);
-	}
-	
-	static std::string GET_NAME(DIR dir) {
-		switch (dir) {
-			case Activity::DIR::UP:
-				return "up";
-				break;
-			case Activity::DIR::RIGHT:
-				return "right";
-				break;
-			case Activity::DIR::DOWN:
-				return "down";
-				break;
-			case Activity::DIR::LEFT:
-				return "left";
-				break;
-			case Activity::DIR::STATIONARY:
-				return "stationary";
-				break;
-			default:
-				assert(0);
-				return "";
-				break;
-		}
-	}
-
-	static DIR FLIP(DIR dir) {
-		switch (dir) {
-			case DIR::UP:
-				return Activity::DIR::DOWN;
-				break;
-			case DIR::RIGHT:
-				return Activity::DIR::LEFT;
-				break;
-			case DIR::DOWN:
-				return Activity::DIR::UP;
-				break;
-			case DIR::LEFT:
-				return Activity::DIR::RIGHT;
-				break;
-			case DIR::STATIONARY:
-				return Activity::DIR::STATIONARY;
-				break;
-			default:
-				assert(0);
-				return Activity::DIR::STATIONARY;
-				break;
-		}
-	}
-
-	static glm::ivec2 getDirection(Activity::DIR dir) {
-		switch (dir) {
-			case Activity::DIR::UP:
-				return glm::ivec2(0, 1);
-				break;
-			case Activity::DIR::RIGHT:
-				return glm::ivec2(1, 0);
-				break;
-			case Activity::DIR::DOWN:
-				return glm::ivec2(0, -1);
-				break;
-			case Activity::DIR::LEFT:
-				return glm::ivec2(-1, 0);
-				break;
-			case Activity::DIR::STATIONARY:
-				return glm::ivec2(0, 0);
-				break;
-			default:
-				assert(0);
-				return glm::ivec2(0, 0);
-				break;
-		}
-	}
-
-	enum class ROT
-	{
-		CLOCKWISE,
-		COUNTERCLOCKWISE,
-	};
-
 	enum class TYPE
 	{
 		ANCHOR,
@@ -141,11 +25,125 @@ public:
 		BREAKER,
 		GRABBER,
 		PLANT,
-		ACTIVATOR,
 		RAILCRANE,
 		LUA,
 		_MAX,
 	};
+
+	const std::vector<std::string> TYPE_NAMES{
+		"anchor",
+		"mover",
+		"platform",
+		"piston",
+		"single_platform",
+		"breaker",
+		"grabber",
+		"plant",
+		"railcrane",
+		"lua",
+		"_MAX_SHOULD_NOT_SEE_THIS",
+	};
+
+	enum DIR
+	{
+		UP,
+		RIGHT,
+		DOWN,
+		LEFT,
+		STATIONARY,
+	};
+
+	inline ACTIVITY::DIR CLOCKWISEROT(ACTIVITY::DIR dir) {
+		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 1) % 4);
+	}
+
+	inline ACTIVITY::DIR COUNTERWISEROT(ACTIVITY::DIR dir) {
+		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 3) % 4);
+	}
+
+	inline std::string GET_NAME(ACTIVITY::DIR dir) {
+		switch (dir) {
+			case ACTIVITY::DIR::UP:
+				return "up";
+				break;
+			case ACTIVITY::DIR::RIGHT:
+				return "right";
+				break;
+			case ACTIVITY::DIR::DOWN:
+				return "down";
+				break;
+			case ACTIVITY::DIR::LEFT:
+				return "left";
+				break;
+			case ACTIVITY::DIR::STATIONARY:
+				return "stationary";
+				break;
+			default:
+				assert(0);
+				return "";
+				break;
+		}
+	}
+
+	inline glm::ivec2 GETDIRECTION(ACTIVITY::DIR dir) {
+		switch (dir) {
+			case ACTIVITY::DIR::UP:
+				return glm::ivec2(0, 1);
+				break;
+			case ACTIVITY::DIR::RIGHT:
+				return glm::ivec2(1, 0);
+				break;
+			case ACTIVITY::DIR::DOWN:
+				return glm::ivec2(0, -1);
+				break;
+			case ACTIVITY::DIR::LEFT:
+				return glm::ivec2(-1, 0);
+				break;
+			case ACTIVITY::DIR::STATIONARY:
+				return glm::ivec2(0, 0);
+				break;
+			default:
+				assert(0);
+				return glm::ivec2(0, 0);
+				break;
+		}
+	}
+
+	inline ACTIVITY::DIR FLIP(ACTIVITY::DIR dir) {
+		switch (dir) {
+			case ACTIVITY::DIR::UP:
+				return ACTIVITY::DIR::DOWN;
+				break;
+			case ACTIVITY::DIR::RIGHT:
+				return ACTIVITY::DIR::LEFT;
+				break;
+			case ACTIVITY::DIR::DOWN:
+				return ACTIVITY::DIR::UP;
+				break;
+			case ACTIVITY::DIR::LEFT:
+				return ACTIVITY::DIR::RIGHT;
+				break;
+			case ACTIVITY::DIR::STATIONARY:
+				return ACTIVITY::DIR::STATIONARY;
+				break;
+			default:
+				assert(0);
+				return ACTIVITY::DIR::STATIONARY;
+				break;
+		}
+	}
+
+	enum class ROT
+	{
+		CLOCKWISE,
+		COUNTERCLOCKWISE,
+	};
+}
+
+class Anchor;
+
+class Activity
+{
 private:
 	Handle getRootHandle() const;
 
@@ -159,7 +157,7 @@ protected:
 
 	int32_t movingPace = 20;
 	int32_t movingTickStart = 0;
-	DIR movementDirection = DIR::STATIONARY;
+	ACTIVITY::DIR movementDirection = ACTIVITY::DIR::STATIONARY;
 	bool moving = false;
 
 	bool inWorld = false;
@@ -170,8 +168,12 @@ public:
 	WeakReference<Activity, GrouperBase> parentRef;
 	Handle selfHandle;
 
-	virtual glm::ivec2 getOrigin() { return origin; };
-	Handle getHandle() { return selfHandle; };
+	virtual glm::ivec2 getOrigin() {
+		return origin;
+	};
+	Handle getHandle() {
+		return selfHandle;
+	};
 
 	bool idleUp();
 	virtual bool idleLocal();
@@ -183,14 +185,17 @@ public:
 
 	// Constructors
 	Activity() = default;
-	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {};
+	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {
+	};
 	virtual ~Activity() = default;
 
 	// Placement 
-	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) = 0;
-	void rotateForcedUp(glm::ivec2 center, Activity::ROT rotation);
+	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) = 0;
+	void rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation);
 	void forceMoveOriginUp(glm::ivec2 d);
-	void forceMoveOriginLocal(glm::ivec2 d) { origin += d; };
+	void forceMoveOriginLocal(glm::ivec2 d) {
+		origin += d;
+	};
 	void disconnectFromParent();
 
 	// Activity
@@ -204,13 +209,13 @@ public:
 	virtual void forceChangeActivityState(int32_t type);
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) = 0;
-	virtual void applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int32_t pace);
-	bool canMoveUp(GameState& gameState, Activity::DIR dir);
-	bool canMoveUp(GameState& gameState, Activity::DIR dir, std::vector<Activity*>& extraIgnore);
-	bool applyMoveUp(GameState& gameState, Activity::DIR dir, int32_t pace);
-	void applyMoveUpForced(GameState& gameState, Activity::DIR dir, int32_t pace);
-	bool applyMoveRoot(GameState& gameState, Activity::DIR dir, int32_t pace);
+	virtual bool canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) = 0;
+	virtual void applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
+	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir);
+	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore);
+	bool applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
+	void applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
+	bool applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	void stopMovement(GameState& gameState);
 
 	// Traces Placement
@@ -238,7 +243,7 @@ public:
 	WeakReference<Activity, Activity> getRoot() const;
 
 	// Serial
-	virtual TYPE getType() = 0;
+	virtual ACTIVITY::TYPE getType() = 0;
 	std::string getTypeName();
 	virtual void save(Saver& saver);
 	virtual bool load(Loader& loader);

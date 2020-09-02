@@ -41,8 +41,8 @@ void LuaActivity::leaveActivityTracesLocal(GameState& gameState) {
 	this->interrupt = false;
 }
 
-Activity::TYPE LuaActivity::getType() {
-	return Activity::TYPE::LUA;
+ACTIVITY::TYPE LuaActivity::getType() {
+	return ACTIVITY::TYPE::LUA;
 }
 
 void LuaActivity::save(Saver& saver) {

@@ -6,7 +6,7 @@
 #include "Saver.h"
 #include "Loader.h"
 
-void Activity::applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int32_t pace) {
+void Activity::applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
 	this->movingPace = pace;
 	this->moving = true;
 	this->movementDirection = dir;
@@ -15,7 +15,7 @@ void Activity::applyMoveLocalForced(GameState& gameState, Activity::DIR dir, int
 	this->leaveMoveableTracesLocal(gameState);
 }
 
-bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir) {
+bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -34,7 +34,7 @@ bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir) {
 	return true;
 }
 
-bool Activity::canMoveUp(GameState& gameState, Activity::DIR dir, std::vector<Activity*>& extraIgnore) {
+bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -58,7 +58,7 @@ glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
 	glm::vec2 v = glm::vec2(this->origin);
 	if (this->moving) {
 		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
-		v += scale * glm::vec2(getDirection(this->movementDirection));
+		v += scale * glm::vec2(GETDIRECTION(this->movementDirection));
 	}
 	return v;
 }
@@ -104,7 +104,7 @@ float Activity::getActivityScale(int32_t tick) {
 	}
 }
 
-void Activity::rotateForcedUp(glm::ivec2 center, Activity::ROT rotation) {
+void Activity::rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 	for (auto member : members) {
@@ -122,7 +122,7 @@ void Activity::forceMoveOriginUp(glm::ivec2 d) {
 
 void Activity::disconnectFromParent() {
 	if (this->parentRef.isNotNull()) {
-		if (this->parentRef.get()->getType() == Activity::TYPE::ANCHOR) {
+		if (this->parentRef.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
 			auto anchor = this->parentRef.get();
 			if (anchor->removeChild(this->selfHandle)) {
 				anchor->disconnectFromParent();
@@ -154,7 +154,7 @@ bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t
 	return true;
 }
 
-bool Activity::applyMoveUp(GameState& gameState, Activity::DIR dir, int32_t pace) {
+bool Activity::applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -177,7 +177,7 @@ bool Activity::applyMoveUp(GameState& gameState, Activity::DIR dir, int32_t pace
 	return true;
 }
 
-void Activity::applyMoveUpForced(GameState& gameState, Activity::DIR dir, int32_t pace) {
+void Activity::applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);
 
@@ -186,14 +186,14 @@ void Activity::applyMoveUpForced(GameState& gameState, Activity::DIR dir, int32_
 	}
 }
 
-bool Activity::applyMoveRoot(GameState& gameState, Activity::DIR dir, int32_t pace) {
+bool Activity::applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
 	return this->getRoot().get()->applyMoveUp(gameState, dir, pace);
 }
 
 void Activity::stopMovement(GameState& gameState) {
-	this->origin += this->getDirection(this->movementDirection);
+	this->origin += ACTIVITY::GETDIRECTION(this->movementDirection);
 	this->removeMoveableTracesLocal(gameState);
-	this->movementDirection = Activity::DIR::STATIONARY;
+	this->movementDirection = ACTIVITY::DIR::STATIONARY;
 	this->moving = false;
 }
 
@@ -314,3 +314,4 @@ bool Activity::removeTracesUp(GameState& gameState) {
 	}
 	return true;
 }
+

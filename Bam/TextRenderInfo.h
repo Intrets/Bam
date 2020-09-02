@@ -54,7 +54,7 @@ public:
 
 	WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap = false, bool clickSupport_ = false);
 
-	void addString(Fonts::Font font, std::string text);
+	void addString(FONTS::FONT font, std::string text);
 	void newLine();
 	void setDepth(int32_t layer);
 	void setDepth(float depth_);
@@ -88,7 +88,7 @@ private:
 
 public:
 	std::optional<WindowTextRenderInfo> cachedRenderInfo;
-	Fonts::Font lastFont;
+	FONTS::FONT lastFont;
 	bool lastWrap;
 
 	// TODO: make view behave less weird when resizing window
@@ -99,9 +99,9 @@ public:
 	std::optional<Rectangle> getCursorQuadScreen() const;
 
 	void invalidateCache();
-	void makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap, bool clickSupport);
+	void makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport);
 
-	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport);
+	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport);
 
 	bool deleteChar();
 	bool backspaceChar();

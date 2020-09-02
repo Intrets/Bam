@@ -4,9 +4,8 @@
 
 #include "UIOSizeType.h"
 
-class UIOConstrainSize : public UIOBase
+namespace UIO
 {
-public:
 	enum class ALIGNMENT
 	{
 		TOP,
@@ -19,7 +18,11 @@ public:
 		BOTTOMRIGHT,
 		CENTER,
 	};
+}
 
+
+class UIOConstrainSize : public UIOBase
+{
 private:
 	UIOBase* main;
 
@@ -30,7 +33,7 @@ private:
 	std::optional<UIOSizeType> maybeHeight;
 	std::optional<UIOSizeType> maybeWidth;
 
-	UIOConstrainSize::ALIGNMENT alignment = UIOConstrainSize::ALIGNMENT::CENTER;
+	UIO::ALIGNMENT alignment = UIO::ALIGNMENT::CENTER;
 
 public:
 	UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_);

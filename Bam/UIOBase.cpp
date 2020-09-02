@@ -68,7 +68,7 @@ CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
 		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
+		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
@@ -77,10 +77,10 @@ CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
 			sumResult |= bindResult;
-			if (bindResult & BIND_RESULT::CONSUME) {
+			if (bindResult & BIND::RESULT::CONSUME) {
 				state.controlState.consumeBufferControl(control.control);
 			}
-			if (sumResult & BIND_RESULT::STOP) {
+			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
 			}
 		}
@@ -95,7 +95,7 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
 		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
+		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
@@ -103,11 +103,11 @@ CallBackBindResult UIOBase::runFocussedBinds(State& state) {
 	for (auto [control, bind] : this->focussedBinds) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
-			if (bindResult & BIND_RESULT::CONSUME) {
+			if (bindResult & BIND::RESULT::CONSUME) {
 				state.controlState.consumeBufferControl(control.control);
 			}
 			sumResult |= bindResult;
-			if (sumResult & BIND_RESULT::STOP) {
+			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
 			}
 		}
@@ -125,7 +125,7 @@ CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runOnHoverBinds(state);
 		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
+		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
@@ -134,10 +134,10 @@ CallBackBindResult UIOBase::runOnHoverBinds(State& state) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
 			sumResult |= bindResult;
-			if (bindResult & BIND_RESULT::CONSUME) {
+			if (bindResult & BIND::RESULT::CONSUME) {
 				state.controlState.consumeBufferControl(control.control);
 			}
-			if (sumResult & BIND_RESULT::STOP) {
+			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
 			}
 		}
@@ -152,7 +152,7 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runActiveBinds(state);
 		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
+		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
@@ -162,10 +162,10 @@ CallBackBindResult UIOBase::runActiveBinds(State& state) {
 			if (state.controlState.activated(control)) {
 				CallBackBindResult bindResult = bind(state, this);
 				sumResult |= bindResult;
-				if (bindResult & BIND_RESULT::CONSUME) {
+				if (bindResult & BIND::RESULT::CONSUME) {
 					state.controlState.consumeBufferControl(control.control);
 				}
-				if (sumResult & BIND_RESULT::STOP) {
+				if (sumResult & BIND::RESULT::STOP) {
 					return sumResult;
 				}
 			}
@@ -181,7 +181,7 @@ CallBackBindResult UIOBase::runGameWorldBinds(State& state) {
 	for (auto& element : this->elements) {
 		CallBackBindResult elementResult = element.get()->runGameWorldBinds(state);
 		sumResult |= elementResult;
-		if (sumResult & BIND_RESULT::STOP) {
+		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
@@ -190,10 +190,10 @@ CallBackBindResult UIOBase::runGameWorldBinds(State& state) {
 		if (state.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(state, this);
 			sumResult |= bindResult;
-			if (bindResult & BIND_RESULT::CONSUME) {
+			if (bindResult & BIND::RESULT::CONSUME) {
 				state.controlState.consumeBufferControl(control.control);
 			}
-			if (sumResult & BIND_RESULT::STOP) {
+			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
 			}
 		}

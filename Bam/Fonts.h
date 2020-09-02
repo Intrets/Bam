@@ -12,6 +12,17 @@ struct FontInfo
 	std::array<glm::ivec2, 128> charSize;
 };
 
+namespace FONTS
+{
+	enum class FONT
+	{
+		ROBOTO_12,
+		ROBOTO_14,
+		ROBOTO_16,
+		FONT_MAX,
+	};
+}
+
 class Fonts
 {
 private:
@@ -21,22 +32,15 @@ private:
 	FontInfo loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::ivec2 gridDim);
 
 public:
-	enum class Font
-	{
-		ROBOTO_12,
-		ROBOTO_14,
-		ROBOTO_16,
-		FONT_MAX,
-	};
 
 	bwo::Buffer buffer;
 	bwo::Texture fontAtlas;
 
-	std::array<FontInfo, static_cast<int32_t>(Font::FONT_MAX)> fontInfos;
+	std::array<FontInfo, static_cast<int32_t>(FONTS::FONT::FONT_MAX)> fontInfos;
 
 	int32_t atlasSize;
 
-	FontInfo& getFont(Font font);
+	FontInfo& getFont(FONTS::FONT font);
 
 	Fonts();
 	~Fonts();

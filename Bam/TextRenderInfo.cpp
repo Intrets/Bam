@@ -14,7 +14,7 @@ WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_,
 	clickSelect(clickSupport_) {
 }
 
-void WindowTextRenderInfo::addString(Fonts::Font font, std::string text) {
+void WindowTextRenderInfo::addString(FONTS::FONT font, std::string text) {
 	FontInfo& fontInfo = Locator<Fonts>::ref().getFont(font);
 
 	for (char c : text) {
@@ -135,7 +135,7 @@ void Text::invalidateCache() {
 	this->cachedRenderInfo = std::nullopt;
 }
 
-void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, bool wrap, bool clickSupport) {
+void Text::makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport) {
 	this->lastScreenRectangle = screenRectangle;
 	this->lastFont = font;
 	this->lastWrap = wrap;
@@ -149,7 +149,7 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, Fonts::Font font, boo
 	this->cachedRenderInfo = textInfo;
 }
 
-int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, Fonts::Font font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport) {
+int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport) {
 	if (!cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(screenRectangle, font, wrap, clickSupport);
 	}

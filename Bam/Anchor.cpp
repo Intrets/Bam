@@ -47,13 +47,13 @@ Anchor::Anchor(Handle self) : GrouperBase(self, glm::ivec2(0, 0)) {
 Anchor::~Anchor() {
 }
 
-void Anchor::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
+void Anchor::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 }
 
 void Anchor::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 }
 
-bool Anchor::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
+bool Anchor::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) {
 	return true;
 }
 
@@ -94,8 +94,8 @@ bool Anchor::load(Loader& loader) {
 	return true;
 }
 
-Activity::TYPE Anchor::getType() {
-	return Activity::TYPE::ANCHOR;
+ACTIVITY::TYPE Anchor::getType() {
+	return ACTIVITY::TYPE::ANCHOR;
 }
 
 void Anchor::getTreeMembers(std::vector<Activity*>& members) {

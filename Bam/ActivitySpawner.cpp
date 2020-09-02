@@ -6,42 +6,39 @@
 #include "RailCrane.h"
 #include "LuaActivity.h"
 
-std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameState& gameState, glm::ivec2 pos, Activity::TYPE activityType) {
+std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
 	switch (activityType) {
-		case Activity::TYPE::ANCHOR:
+		case ACTIVITY::TYPE::ANCHOR:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::MOVER:
+		case ACTIVITY::TYPE::MOVER:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::PLATFORM:
+		case ACTIVITY::TYPE::PLATFORM:
 			return ACTIVITYSPAWNER::platform(gameState, pos);
 			break;
-		case Activity::TYPE::PISTON:
+		case ACTIVITY::TYPE::PISTON:
 			return ACTIVITYSPAWNER::piston(gameState, pos);
 			break;
-		case Activity::TYPE::SINGLEPLATFORM:
+		case ACTIVITY::TYPE::SINGLEPLATFORM:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::BREAKER:
+		case ACTIVITY::TYPE::BREAKER:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::GRABBER:
+		case ACTIVITY::TYPE::GRABBER:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::PLANT:
+		case ACTIVITY::TYPE::PLANT:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::ACTIVATOR:
-			return std::nullopt;
-			break;
-		case Activity::TYPE::RAILCRANE:
+		case ACTIVITY::TYPE::RAILCRANE:
 			return ACTIVITYSPAWNER::railcrane(gameState, pos);
 			break;
-		case Activity::TYPE::_MAX:
+		case ACTIVITY::TYPE::_MAX:
 			return std::nullopt;
 			break;
-		case Activity::TYPE::LUA:
+		case ACTIVITY::TYPE::LUA:
 			return ACTIVITYSPAWNER::lua(gameState, pos);
 			break;
 		default:
@@ -51,7 +48,7 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::piston(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, Activity::DIR::DOWN);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, ACTIVITY::DIR::DOWN);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::railcrane(GameState& gameState, glm::ivec2 pos) {

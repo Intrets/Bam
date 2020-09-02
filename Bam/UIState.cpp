@@ -43,12 +43,12 @@ CallBackBindResult UIState::runFrontBinds(State& state) {
 	CallBackBindResult res = 0;
 
 	bool shouldExit = false;
-	if (activeResult & BIND_RESULT::CLOSE) {
+	if (activeResult & BIND::RESULT::CLOSE) {
 		this->UIs.pop_front();
 		shouldExit = true;
 	}
-	if (activeResult & BIND_RESULT::STOP) {
-		res |= BIND_RESULT::STOP;
+	if (activeResult & BIND::RESULT::STOP) {
+		res |= BIND::RESULT::STOP;
 		shouldExit = true;
 	}
 
@@ -56,7 +56,7 @@ CallBackBindResult UIState::runFrontBinds(State& state) {
 		return res;
 	}
 
-	return BIND_RESULT::CONTINUE;
+	return BIND::RESULT::CONTINUE;
 }
 
 glm::vec2 UIState::getCursorPositionWorld() {
@@ -74,7 +74,7 @@ glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
 void UIState::runUIBinds(State& state) {
 	auto front = this->runFrontBinds(state);
 
-	if (front & BIND_RESULT::STOP) {
+	if (front & BIND::RESULT::STOP) {
 		return;
 	}
 
@@ -88,10 +88,10 @@ void UIState::runUIBinds(State& state) {
 		auto& UI = *it;
 		CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
 
-		if (res & BIND_RESULT::CLOSE) {
+		if (res & BIND::RESULT::CLOSE) {
 			it = this->UIs.erase(it);
 		}
-		else if (res & BIND_RESULT::FOCUS) {
+		else if (res & BIND::RESULT::FOCUS) {
 			auto temp = std::move(UI);
 			it = this->UIs.erase(it);
 			this->UIs.push_front(std::move(temp));
@@ -99,7 +99,7 @@ void UIState::runUIBinds(State& state) {
 		else {
 			it++;
 		}
-		if (res & BIND_RESULT::STOP) {
+		if (res & BIND::RESULT::STOP) {
 			return;
 		}
 		state.controlState.writeConsumedBuffer();
@@ -110,10 +110,10 @@ void UIState::runUIBinds(State& state) {
 			auto& UI = *it;
 			CallBackBindResult res = UI.get()->runGameWorldBinds(state);
 
-			if (res & BIND_RESULT::CLOSE) {
+			if (res & BIND::RESULT::CLOSE) {
 				it = this->UIs.erase(it);
 			}
-			else if (res & BIND_RESULT::FOCUS) {
+			else if (res & BIND::RESULT::FOCUS) {
 				auto temp = std::move(UI);
 				it = this->UIs.erase(it);
 				this->UIs.push_front(std::move(temp));
@@ -121,7 +121,7 @@ void UIState::runUIBinds(State& state) {
 			else {
 				it++;
 			}
-			if (res & BIND_RESULT::STOP) {
+			if (res & BIND::RESULT::STOP) {
 				return;
 			}
 			state.controlState.writeConsumedBuffer();
@@ -241,37 +241,37 @@ UIState::UIState() {
 		UIOHotbar* hotbarPtr;
 		auto hotbar = UIOConstructer<UIOHotbar>::makeConstructer()
 			.setPtr(hotbarPtr)
-			.constrainHeight(UIOSizeType(UIOSizeType::RELATIVE_WIDTH, 0.05f))
-			.constrainWidth(UIOSizeType(UIOSizeType::RELATIVE_WIDTH, 0.5f))
-			.align(UIOConstrainSize::ALIGNMENT::BOTTOM)
+			.constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f })
+			.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
+			.align(UIO::ALIGNMENT::BOTTOM)
 			.get();
 
 		hotbarPtr->setTool(0, "Piston", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PISTON);
-			return BIND_RESULT::CONTINUE;
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PISTON);
+			return BIND::RESULT::CONTINUE;
 		});
 
 		hotbarPtr->setTool(1, "Platform", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::PLATFORM);
-			return BIND_RESULT::CONTINUE;
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PLATFORM);
+			return BIND::RESULT::CONTINUE;
 		});
 
 		hotbarPtr->setTool(2, "Crane", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::RAILCRANE);
-			return BIND_RESULT::CONTINUE;
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::RAILCRANE);
+			return BIND::RESULT::CONTINUE;
 		});
 
 		hotbarPtr->setTool(3, "LUA", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::LUA);
-			return BIND_RESULT::CONTINUE;
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::LUA);
+			return BIND::RESULT::CONTINUE;
 		});
 
 		this->UIs.push_back(std::move(hotbar));
@@ -280,7 +280,7 @@ UIState::UIState() {
 	// save/load and other stuff
 	{
 		UIOList* listPtr;
-		auto window = UIOConstructer<UIOList>::makeConstructer(UIOList::DIR::DOWN)
+		auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN)
 			.setPtr(listPtr)
 			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					UIOWindow::TYPE::MINIMISE |
@@ -292,23 +292,23 @@ UIState::UIState() {
 
 		this->UIs.push_back(std::move(window));
 
-		//auto list = refMan->makeUniqueRef<UIOList>(UIOList::DIR::DOWN);
+		//auto list = refMan->makeUniqueRef<UIOList>(UIO::DIR::DOWN);
 		{
 			UIOTextDisplay* ptr;
 			auto text = TextConstructer::constructDisplayText("").setPtr(ptr)
 				.addBind([](UIOTextDisplay* ptr)
 			{
 				ptr->addGlobalBind(
-					{ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) },
+					{ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) },
 					[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					auto self = static_cast<UIOTextDisplay*>(self_);
 					self->setText(Locator<Timer>::ref().print());
-					return BIND_RESULT::CONTINUE;
+					return BIND::RESULT::CONTINUE;
 				});
 			})
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 16.3f))
+				.constrainHeight({ UIO::SIZETYPE::FH, 16.3f })
 				.get();
 
 			listPtr->addElement(std::move(text));
@@ -316,7 +316,7 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
+				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
 				.get()
 			);
 		}
@@ -324,18 +324,18 @@ UIState::UIState() {
 			UIOTextDisplay* textPtr;
 			auto text = TextConstructer::constructSingleLineTextEdit("test.save").setPtr(textPtr)
 				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 				.get();
 
 			listPtr->addElement(std::move(text));
 
 			auto saveButton = TextConstructer::constructSingleLineDisplayText("save")
-				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.align(UIO::ALIGNMENT::CENTER)
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				if (textPtr->text.getLines().size() == 0) {
-					return BIND_RESULT::CONTINUE;
+					return BIND::RESULT::CONTINUE;
 				}
 				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
@@ -343,21 +343,21 @@ UIState::UIState() {
 				Locator<Log>::ref().putLine("saving: " + name);
 
 				Saver(name).saveGame(params.gameState);
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 				.get();
 
 			listPtr->addElement(std::move(saveButton));
 
 			auto loadButton = TextConstructer::constructSingleLineDisplayText("load")
-				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.align(UIO::ALIGNMENT::CENTER)
 				.button()
 				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				if (textPtr->text.getLines().size() == 0) {
-					return BIND_RESULT::CONTINUE;
+					return BIND::RESULT::CONTINUE;
 				}
 				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
@@ -365,10 +365,10 @@ UIState::UIState() {
 				Locator<Log>::ref().putLine("loading: " + name);
 
 				Loader(name).loadGame(params.gameState);
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 				.get();
 
 			listPtr->addElement(std::move(loadButton));
@@ -376,14 +376,14 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
+				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
 				.get()
 			);
 		}
 		{
 			UIOButton* ptr;
 			auto a = TextConstructer::constructSingleLineDisplayText("Debug Render")
-				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.align(UIO::ALIGNMENT::CENTER)
 				.button()
 				.setPtr(ptr)
 				.onRelease(
@@ -392,10 +392,10 @@ UIState::UIState() {
 				Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
 				self->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 				.get();
 
 			ptr->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
@@ -405,7 +405,7 @@ UIState::UIState() {
 		{
 			UIOButton* ptr;
 			auto a = TextConstructer::constructSingleLineDisplayText("Toggle Seperate Render Thread")
-				.align(UIOConstrainSize::ALIGNMENT::CENTER)
+				.align(UIO::ALIGNMENT::CENTER)
 				.button()
 				.setPtr(ptr)
 				.onRelease(
@@ -414,10 +414,10 @@ UIState::UIState() {
 				Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 				auto self = static_cast<UIOButton*>(self_);
 				self->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-				return BIND_RESULT::CONTINUE;
+				return BIND::RESULT::CONTINUE;
 			})
-				.pad(UIOSizeType(UIOSizeType::STATIC_PX, 1))
-				.constrainHeight(UIOSizeType(UIOSizeType::FH, 1.2f))
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 				.get();
 
 			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
@@ -427,7 +427,7 @@ UIState::UIState() {
 		{
 			listPtr->addElement(
 				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight(UIOSizeType(UIOSizeType::STATIC_PX, 4))
+				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
 				.get()
 			);
 		}
@@ -436,7 +436,7 @@ UIState::UIState() {
 				.addBind(UIOBinds::Base::activatable)
 				.addBind([](UIOTextDisplay* ptr)
 			{
-				ptr->addGlobalBind({ ControlState::CONTROLS::EVERY_TICK, static_cast<int32_t>(ControlState::CONTROLSTATE_PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				ptr->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 				{
 					auto self = static_cast<UIOTextDisplay*>(self_);
 
@@ -452,7 +452,7 @@ UIState::UIState() {
 					if (newLines.size() != 0) {
 						self->text.moveCursor(glm::ivec2(100000, newLines.size()));
 					}
-					return BIND_RESULT::CONTINUE;
+					return BIND::RESULT::CONTINUE;
 				});
 
 			})
@@ -467,42 +467,42 @@ UIState::UIState() {
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::LEFT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.x -= 1.0f;
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::RIGHT, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.x += 1.0f;
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::DOWN, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.y -= 1.0f;
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::UP, ControlState::CONTROLSTATE_PRESSED | ControlState::CONTROLSTATE_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::UP, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			state.player.pos.y += 1.0f;
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::SCROLL_UP }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_UP }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() * 0.8f);
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ ControlState::CONTROLS::SCROLL_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() / 0.8f);
-			return BIND_RESULT::CONTINUE;
+			return BIND::RESULT::CONTINUE;
 		});
 
 		this->UIs.push_back(std::move(movement));
