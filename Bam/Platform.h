@@ -14,7 +14,7 @@ private:
 	void calculateBlockedDirections();
 
 public:
-	Platform(Handle self, GameState& gameState, glm::ivec2 size, glm::ivec2 pos, bool leaveTraces = true);
+	Platform(Handle self, GameState& gameState, glm::ivec2 size, glm::ivec2 pos);
 	Platform() = default;
 	~Platform() = default;
 

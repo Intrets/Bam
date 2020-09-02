@@ -51,17 +51,17 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::piston(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, Activity::DIR::DOWN, false);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, Activity::DIR::DOWN);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::railcrane(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<RailCrane>(gameState, pos, false);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<RailCrane>(gameState, pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos, false);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
 }

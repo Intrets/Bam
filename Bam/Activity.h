@@ -215,8 +215,8 @@ public:
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) = 0;
-	virtual void fillTracesLocalForced(GameState& gameState) = 0;
-	virtual void removeTracesLocalForced(GameState& gameState) = 0;
+	virtual void fillTracesLocalForced(GameState& gameState);
+	virtual void removeTracesLocalForced(GameState& gameState);
 
 	void fillTracesUpForced(GameState& gameState);
 	bool fillTracesUp(GameState& gameState);

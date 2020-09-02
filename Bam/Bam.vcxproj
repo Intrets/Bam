@@ -264,7 +264,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Activator.cpp" />
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActivityHelpers.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
@@ -272,7 +271,6 @@
     <ClCompile Include="ActivityLuaTest.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
-    <ClCompile Include="ActivitySelector.cpp" />
     <ClCompile Include="ActivitySpawner.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
@@ -352,8 +350,6 @@
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
-    <ClCompile Include="UIOActivityLinker.cpp" />
-    <ClCompile Include="UIOActivitySelector.cpp" />
     <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
@@ -368,7 +364,6 @@
     <ClCompile Include="vboindexer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Activator.h" />
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActivityHelpers.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
@@ -376,7 +371,6 @@
     <ClInclude Include="ActivityLuaTest.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
-    <ClInclude Include="ActivitySelector.h" />
     <ClInclude Include="ActivitySpawner.h" />
     <ClInclude Include="Anchor.h" />
     <ClInclude Include="BlitRenderer.h" />
@@ -460,8 +454,6 @@
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
-    <ClInclude Include="UIOActivityLinker.h" />
-    <ClInclude Include="UIOActivitySelector.h" />
     <ClInclude Include="UIOBase.h" />
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />

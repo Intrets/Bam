@@ -10,15 +10,11 @@
 #include "RenderInfo.h"
 #include "Anchor.h"
 
-Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces) :
+Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir) :
 	SingleGrouper(self, pos),
 	length(0),
 	headDir(dir) {
 	state = Piston::DIR::STATIONARY;
-
-	if (leaveTraces) {
-		this->fillTracesLocalForced(gameState);
-	}
 
 	auto t = Locator<BlockIDTextures>::get();
 	this->headTex = t->getBlockTextureID("grabber.dds");
@@ -31,7 +27,7 @@ Activity::TYPE Piston::getType() {
 }
 
 bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
-	auto headDirection = Activity::getDirection(this->headDir);
+	auto headDirection = this->Activity::getDirection(this->headDir);
 	switch (static_cast<Piston::DIR>(type)) {
 		case Piston::DIR::EXTEND:
 			{
@@ -63,8 +59,8 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 bool Piston::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
-	glm::ivec2 headDirection = Activity::getDirection(this->headDir);
-	glm::ivec2 moveDirection = Activity::getDirection(dir);
+	glm::ivec2 headDirection = this->Activity::getDirection(this->headDir);
+	glm::ivec2 moveDirection = this->Activity::getDirection(dir);
 
 	int32_t d = idot(moveDirection, headDirection);
 	auto ori = this->origin + moveDirection;
@@ -94,8 +90,8 @@ bool Piston::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnor
 }
 
 void Piston::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-	glm::vec2 headDirection = Activity::getDirection(this->headDir);
-	glm::vec2 moveDirection = Activity::getDirection(this->movementDirection);
+	glm::vec2 headDirection = this->Activity::getDirection(this->headDir);
+	glm::vec2 moveDirection = this->Activity::getDirection(this->movementDirection);
 	int32_t tick = gameState.tick;
 	glm::vec2 ori = glm::vec2(this->origin);
 	if (this->moving) {
@@ -128,8 +124,8 @@ void Piston::appendSelectionInfo(GameState const& gameState, RenderInfo& renderI
 }
 
 void Piston::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	glm::vec2 headDirection = Activity::getDirection(this->headDir);
-	glm::vec2 moveDirection = Activity::getDirection(this->movementDirection);
+	glm::vec2 headDirection = this->Activity::getDirection(this->headDir);
+	glm::vec2 moveDirection = this->Activity::getDirection(this->movementDirection);
 	int32_t tick = gameState.tick;
 	glm::vec2 ori = glm::vec2(this->origin);
 	if (this->moving) {
@@ -157,7 +153,7 @@ void Piston::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Piston::removeMoveableTracesLocal(GameState& gameState) {
-	glm::ivec2 headDirection = Activity::getDirection(this->headDir);
+	glm::ivec2 headDirection = this->Activity::getDirection(this->headDir);
 	int32_t d = idot(getDirection(this->movementDirection), headDirection);
 	auto ori = this->origin - getDirection(this->movementDirection);
 	if (d == 0) {
@@ -177,7 +173,7 @@ void Piston::removeMoveableTracesLocal(GameState& gameState) {
 }
 
 void Piston::leaveMoveableTracesLocal(GameState& gameState) {
-	glm::ivec2 headDirection = Activity::getDirection(this->headDir);
+	glm::ivec2 headDirection = this->Activity::getDirection(this->headDir);
 	int32_t d = idot(getDirection(this->movementDirection), headDirection);
 	auto ori = this->origin + getDirection(this->movementDirection);
 	if (d == 0) {
@@ -197,7 +193,7 @@ void Piston::leaveMoveableTracesLocal(GameState& gameState) {
 }
 
 void Piston::save(Saver& saver) {
-	SingleGrouper::save(saver);
+	this->SingleGrouper::save(saver);
 	saver.store<glm::ivec2>(this->direction);
 	saver.store<Activity::DIR>(this->headDir);
 	saver.store<Piston::DIR>(this->state);
@@ -205,7 +201,7 @@ void Piston::save(Saver& saver) {
 }
 
 bool Piston::load(Loader& loader) {
-	SingleGrouper::load(loader);
+	this->SingleGrouper::load(loader);
 	loader.retrieve<glm::ivec2>(this->direction);
 	loader.retrieve<Activity::DIR>(this->headDir);
 	loader.retrieve<Piston::DIR>(this->state);
@@ -237,24 +233,26 @@ void Piston::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 }
 
 void Piston::fillTracesLocalForced(GameState& gameState) {
+	this->Activity::fillTracesLocalForced(gameState);
 	glm::ivec2 pos = this->origin;
 	for (int32_t i = 0; i < this->length + 2; i++) {
 		gameState.staticWorld.leaveTrace(pos, this->selfHandle);
-		pos += Activity::getDirection(this->headDir);
+		pos += this->Activity::getDirection(this->headDir);
 	}
 }
 
 void Piston::removeTracesLocalForced(GameState& gameState) {
+	this->Activity::removeTracesLocalForced(gameState);
 	glm::ivec2 pos = this->origin;
 	for (int32_t i = 0; i < this->length + 2; i++) {
 		gameState.staticWorld.removeTraceForced(pos);
-		pos += Activity::getDirection(this->headDir);
+		pos += this->Activity::getDirection(this->headDir);
 	}
 }
 
 void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	Activity::applyActivityLocalForced(gameState, type, pace);
-	glm::ivec2 headDirection = Activity::getDirection(this->headDir);
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
+	glm::ivec2 headDirection = this->Activity::getDirection(this->headDir);
 	switch (static_cast<Piston::DIR>(type)) {
 		case Piston::DIR::EXTEND:
 			{
@@ -304,7 +302,7 @@ bool Piston::canFillTracesLocal(GameState& gameState) {
 		if (gameState.staticWorld.isOccupied(pos)) {
 			return false;
 		}
-		pos += Activity::getDirection(this->headDir);
+		pos += this->Activity::getDirection(this->headDir);
 	}
 	return true;
 }

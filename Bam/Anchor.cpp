@@ -41,8 +41,7 @@ bool Anchor::hasChild() const {
 Anchor::Anchor() {
 }
 
-Anchor::Anchor(Handle self, bool leaveTraces) : GrouperBase(self, glm::ivec2(0, 0)) {
-	this->inWorld = leaveTraces;
+Anchor::Anchor(Handle self) : GrouperBase(self, glm::ivec2(0, 0)) {
 }
 
 Anchor::~Anchor() {
@@ -110,16 +109,8 @@ bool Anchor::canFillTracesLocal(GameState& gameState) {
 	return true;
 }
 
-void Anchor::fillTracesLocalForced(GameState& gameState) {
-	this->inWorld = true;
-}
-
-void Anchor::removeTracesLocalForced(GameState& gameState) {
-	this->inWorld = false;
-}
-
 void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	Activity::applyActivityLocalForced(gameState, type, pace);
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }
 
 void Anchor::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {

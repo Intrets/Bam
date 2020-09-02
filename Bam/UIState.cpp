@@ -11,8 +11,6 @@
 #include "GameState.h"
 #include "State.h"
 #include "UIOProxy.h"
-#include "UIOActivityLinker.h"
-#include "UIOActivitySelector.h"
 #include "Option.h"
 #include "UIOTextConstructers.h"
 #include "UIOGrid.h"

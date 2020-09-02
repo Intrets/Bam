@@ -12,10 +12,8 @@ void LuaActivity::stop() {
 	this->interrupt = true;
 }
 
-LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos, bool leaveTraces) :
-	SingleBlockActivity(self, gameState, pos, "debug.dds", leaveTraces)
-{
-	this->inWorld = leaveTraces;
+LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
+	SingleBlockActivity(self, gameState, pos, "debug.dds") {
 }
 
 bool LuaActivity::moveableIdleLocal() {
@@ -27,7 +25,7 @@ bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	Activity::applyActivityLocalForced(gameState, type, pace);
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
 	this->lua.prepare(gameState);
 	this->lua.run(gameState);
 }
@@ -48,11 +46,11 @@ Activity::TYPE LuaActivity::getType() {
 }
 
 void LuaActivity::save(Saver& saver) {
-	SingleBlockActivity::save(saver);
+	this->SingleBlockActivity::save(saver);
 }
 
 bool LuaActivity::load(Loader& loader) {
-	SingleBlockActivity::load(loader);
+	this->SingleBlockActivity::load(loader);
 	return true;
 }
 

@@ -11,17 +11,14 @@
 
 #include "ActivityIgnoringGroup.h"
 
-SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name, bool leaveTrace) : Activity(self, pos) {
+SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name) : Activity(self, pos) {
 	auto t = Locator<BlockIDTextures>::get();
 	this->tex = t->getBlockTextureID(name);
 	this->texName = name;
-	if (leaveTrace) {
-		fillTracesLocalForced(gameState);
-	}
 }
 
 bool SingleBlockActivity::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
-	return !gameState.staticWorld.isOccupied(this->origin + Activity::getDirection(dir), ignore);
+	return !gameState.staticWorld.isOccupied(this->origin + this->Activity::getDirection(dir), ignore);
 }
 
 bool SingleBlockActivity::canFillTracesLocal(GameState& gameState) {
@@ -29,19 +26,21 @@ bool SingleBlockActivity::canFillTracesLocal(GameState& gameState) {
 }
 
 void SingleBlockActivity::fillTracesLocalForced(GameState& gameState) {
+	this->Activity::fillTracesLocalForced(gameState);
 	gameState.staticWorld.leaveTrace(this->origin, this->selfHandle);
 }
 
 void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
+	this->Activity::removeTracesLocalForced(gameState);
 	gameState.staticWorld.removeTraceForced(this->origin);
 }
 
 void SingleBlockActivity::removeMoveableTracesLocal(GameState& gameState) {
-	gameState.staticWorld.removeTraceFilter(this->origin - getDirection(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.removeTraceFilter(this->origin - this->getDirection(this->movementDirection), this->selfHandle);
 }
 
 void SingleBlockActivity::leaveMoveableTracesLocal(GameState& gameState) {
-	gameState.staticWorld.leaveTrace(this->origin + getDirection(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.leaveTrace(this->origin + this->getDirection(this->movementDirection), this->selfHandle);
 }
 
 void SingleBlockActivity::getTreeMembers(std::vector<Activity*>& members) {
@@ -56,7 +55,7 @@ void SingleBlockActivity::appendSelectionInfo(GameState const& gameState, Render
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(getDirection(this->movementDirection));
+		ori += scale * glm::vec2(this->getDirection(this->movementDirection));
 	}
 	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1), color);
 }
@@ -65,18 +64,18 @@ void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, Sta
 	glm::vec2 ori = this->origin;
 	if (this->moving) {
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(getDirection(this->movementDirection));
+		ori += scale * glm::vec2(this->getDirection(this->movementDirection));
 	}
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex);
 }
 
 void SingleBlockActivity::save(Saver& saver) {
-	Activity::save(saver);
+	this->Activity::save(saver);
 	saver.storeString(this->texName);
 }
 
 bool SingleBlockActivity::load(Loader& loader) {
-	Activity::load(loader);
+	this->Activity::load(loader);
 	loader.retrieveString(this->texName);
 
 	// TODO: fix up make consistent with constructor

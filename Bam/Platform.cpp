@@ -60,7 +60,7 @@ void Platform::calculateBlockedDirections() {
 	}
 }
 
-Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ivec2 pos, bool leaveTraces) :
+Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ivec2 pos) :
 	Activity(self, pos),
 	size(_size),
 	blocks(this->size[0], std::vector<Block>(this->size[1], Block(0))) {
@@ -74,11 +74,7 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	this->blocks[0][1].setID(4);
 	this->blocks[1][0].setID(5);
 
-	if (leaveTraces) {
-		fillTracesLocalForced(gameState);
-	}
-
-	calculateBlockedDirections();
+	this->calculateBlockedDirections();
 }
 
 void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
@@ -95,7 +91,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 					this->blocks[i][j] = old[this->size.y - 1 - j][i];
 				}
 			}
-			calculateBlockedDirections();
+			this->calculateBlockedDirections();
 			break;
 		case Activity::ROT::COUNTERCLOCKWISE:
 			d = glm::ivec2(-d.y - this->size.x, d.x);
@@ -104,7 +100,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) {
 					this->blocks[i][j] = old[j][this->size.x - 1 - i];
 				}
 			}
-			calculateBlockedDirections();
+			this->calculateBlockedDirections();
 			break;
 		default:
 			break;
@@ -117,7 +113,7 @@ void Platform::appendSelectionInfo(GameState const& gameState, RenderInfo& rende
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-		v += scale * glm::vec2(getDirection(movementDirection));
+		v += scale * glm::vec2(this->Activity::getDirection(movementDirection));
 	}
 	//renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(size) - glm::vec2(1.0, 1.0));
 	renderInfo.selectionRenderInfo.addBox(v, v + glm::vec2(this->size), color);
@@ -130,7 +126,7 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 	glm::vec2 v = glm::vec2(origin);
 	if (moving) {
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
-		v += scale * glm::vec2(getDirection(movementDirection));
+		v += scale * glm::vec2(this->Activity::getDirection(movementDirection));
 	}
 	for (int32_t x = 0; x < this->size.x; x++) {
 		for (int32_t y = 0; y < this->size.y; y++) {
@@ -160,7 +156,7 @@ void Platform::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& 
 }
 
 bool Platform::canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) {
-	glm::ivec2 movedOrigin = origin + getDirection(dir);
+	glm::ivec2 movedOrigin = origin + this->Activity::getDirection(dir);
 	glm::ivec2 p1 = floordiv(movedOrigin, CHUNKSIZE);
 	glm::ivec2 p2 = floordiv(movedOrigin + this->size, CHUNKSIZE);
 
@@ -211,12 +207,12 @@ void Platform::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Platform::save(Saver& saver) {
-	Activity::save(saver);
+	this->Activity::save(saver);
 	saver.store<glm::ivec2>(this->size);
 }
 
 bool Platform::load(Loader& loader) {
-	Activity::load(loader);
+	this->Activity::load(loader);
 	loader.retrieve<glm::ivec2>(this->size);
 
 	this->blocks = std::vector<std::vector<Block>>(this->size[0], std::vector<Block>(this->size[1], Block(0)));
@@ -228,7 +224,7 @@ bool Platform::load(Loader& loader) {
 		}
 	}
 
-	calculateBlockedDirections();
+	this->calculateBlockedDirections();
 	return true;
 }
 
@@ -249,6 +245,7 @@ bool Platform::canFillTracesLocal(GameState& gameState) {
 }
 
 void Platform::fillTracesLocalForced(GameState& gameState) {
+	Activity::fillTracesLocalForced(gameState);
 	for (int32_t i = 0; i < this->size.x; i++) {
 		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
@@ -258,6 +255,7 @@ void Platform::fillTracesLocalForced(GameState& gameState) {
 }
 
 void Platform::removeTracesLocalForced(GameState& gameState) {
+	Activity::removeTracesLocalForced(gameState);
 	for (int32_t i = 0; i < this->size.x; i++) {
 		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
@@ -267,5 +265,5 @@ void Platform::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Platform::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	Activity::applyActivityLocalForced(gameState, type, pace);
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }

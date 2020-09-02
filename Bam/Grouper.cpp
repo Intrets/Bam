@@ -66,12 +66,12 @@ void SingleGrouper::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity
 }
 
 void SingleGrouper::save(Saver& saver) {
-	GrouperBase::save(saver);
+	this->GrouperBase::save(saver);
 	saver.store(this->child.handle);
 }
 
 bool SingleGrouper::load(Loader& loader) {
-	GrouperBase::load(loader);
+	this->GrouperBase::load(loader);
 	loader.retrieve(this->child.handle);
 	return true;
 }

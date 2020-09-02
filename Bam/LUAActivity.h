@@ -15,7 +15,7 @@ public:
 	void stop();
 
 	LuaActivity() = default;
-	LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos, bool leaveTraces = true);
+	LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos);
 	virtual ~LuaActivity() = default;
 
 	virtual bool moveableIdleLocal() override;

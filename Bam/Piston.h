@@ -23,7 +23,7 @@ public:
 
 	Piston::DIR state = Piston::DIR::STATIONARY;
 
-	Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir, bool leaveTraces = true);
+	Piston(Handle self, GameState& gameState, glm::ivec2 pos, Activity::DIR dir);
 	Piston() = default;
 	virtual ~Piston() = default;
 

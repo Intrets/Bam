@@ -23,7 +23,7 @@ public:
 	virtual bool hasChild() const override;
 
 	Anchor();
-	Anchor(Handle self, bool leaveTraces = true);
+	Anchor(Handle self);
 	~Anchor();
 
 	// Placement
@@ -38,8 +38,6 @@ public:
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
-	virtual void fillTracesLocalForced(GameState& gameState) override;
-	virtual void removeTracesLocalForced(GameState& gameState) override;
 
 	// Traces Activity
 	virtual void removeActivityTracesLocal(GameState& gameState) override;

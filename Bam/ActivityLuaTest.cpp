@@ -11,7 +11,6 @@
 #include "RenderInfo.h"
 #include "StringHelpers.h"
 
-#include "ActivitySelector.h"
 #include "LuaActivity.h"
 
 #include <sol/sol.hpp>

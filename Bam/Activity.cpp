@@ -256,6 +256,14 @@ void Activity::stopActivity(GameState& gameState) {
 void Activity::forceChangeActivityState(int32_t type) {
 }
 
+void Activity::fillTracesLocalForced(GameState& gameState) {
+	this->inWorld = true;
+}
+
+void Activity::removeTracesLocalForced(GameState& gameState) {
+	this->inWorld = false;
+}
+
 void Activity::fillTracesUpForced(GameState& gameState) {
 	std::vector<Activity*> members;
 	this->getTreeMembers(members);

@@ -241,9 +241,6 @@
     <ClCompile Include="TextRenderInfo.cpp">
       <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
-    <ClCompile Include="Activator.cpp">
-      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="SelectionRenderInfo.cpp">
       <Filter>Renderer\RenderInfo</Filter>
     </ClCompile>
@@ -299,17 +296,8 @@
     <ClCompile Include="Rectangle.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="ActivitySelector.cpp">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOActivityLinker.cpp">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOActivitySelector.cpp">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
     </ClCompile>
     <ClCompile Include="UIOBase.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
@@ -555,9 +543,6 @@
     <ClInclude Include="TextRenderInfo.h">
       <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
-    <ClInclude Include="Activator.h">
-      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="SelectionRenderInfo.h">
       <Filter>Renderer\RenderInfo</Filter>
     </ClInclude>
@@ -613,17 +598,8 @@
     <ClInclude Include="Rectangle.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="ActivitySelector.h">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOActivityLinker.h">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOActivitySelector.h">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
     </ClInclude>
     <ClInclude Include="UIOBase.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>

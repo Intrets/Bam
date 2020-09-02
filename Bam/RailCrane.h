@@ -21,7 +21,7 @@ public:
 	int32_t length;
 	int32_t anchorIndexPos;
 
-	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos, bool leavetraces = true);
+	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos);
 	RailCrane() = default;
 	virtual	~RailCrane() = default;
 

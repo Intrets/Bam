@@ -11,7 +11,7 @@ public:
 	std::string texName;
 
 	SingleBlockActivity() = default;
-	SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name, bool leaveTrace = true);
+	SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name);
 
 	virtual ~SingleBlockActivity() = default;
 
