@@ -35,6 +35,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 #endif // BAM_DEBUG
 
 			auto childAnchor = refMan.makeRef<Anchor>();
+			childAnchor.get()->fillTracesLocalForced(gameState);
 			childAnchor.get()->addChild(child);
 			r1.get()->addChild(childAnchor);
 			r1 = childAnchor;
@@ -93,6 +94,7 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 		auto& refMan = Locator<ReferenceManager<Activity>>::ref();
 
 		auto r1Anchor = refMan.makeRef<Anchor>();
+		r1Anchor.get()->fillTracesLocalForced(gameState);
 		r1Anchor.get()->addChild(r1);
 
 		return linkAnchor(gameState, r1Anchor, r2);
