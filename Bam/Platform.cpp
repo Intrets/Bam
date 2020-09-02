@@ -73,9 +73,11 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	}
 	this->blocks[0][1].setID(4);
 	this->blocks[1][0].setID(5);
+
 	if (leaveTraces) {
 		fillTracesLocalForced(gameState);
 	}
+
 	calculateBlockedDirections();
 }
 

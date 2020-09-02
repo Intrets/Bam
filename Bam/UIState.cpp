@@ -193,6 +193,28 @@ void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
 	this->UIsBuffer.push_back(std::move(ref));
 }
 
+bool UIState::addNamedUI(std::string name, UniqueReference<UIOBase, UIOBase> ref) {
+	auto namedUI = this->namedUIs.find(name);
+
+	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
+		auto const& ui = namedUI->second;
+
+		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+			if (it->handle == ui.getHandle()) {
+				this->UIsBuffer.push_back(std::move(*it));
+				this->UIs.erase(it);
+				break;
+			}
+		}
+		return false;
+	}
+	else {
+		this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ref);
+		this->addUI(std::move(ref));
+		return true;
+	}
+}
+
 UIState::UIState() {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
@@ -250,7 +272,7 @@ UIState::UIState() {
 		hotbarPtr->setTool(3, "LUA", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
 		{
 			interfaceHideablePtr->show();
-			interfacePtr->addLua(params.gameState, params.uiState);
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), Activity::TYPE::LUA);
 			return BIND_RESULT::CONTINUE;
 		});
 

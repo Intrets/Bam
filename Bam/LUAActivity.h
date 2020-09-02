@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Grouper.h"
 #include "ActivityLuaTest.h"
+#include "SingleBlockActivity.h"
 
-class LuaActivity : public SingleGrouper
+class LuaActivity : public SingleBlockActivity
 {
 private:
 	bool interrupt;
@@ -14,47 +14,38 @@ public:
 	void start(GameState& gameState);
 	void stop();
 
-	virtual glm::ivec2 getOrigin() override;
-
 	LuaActivity() = default;
-	LuaActivity(Handle self);
+	LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos, bool leaveTraces = true);
 	virtual ~LuaActivity() = default;
 
 	virtual bool moveableIdleLocal() override;
 
 	// Placement
-	virtual void rotateForcedLocal(glm::ivec2 center, Activity::ROT rotation) override;
+	// Already implemented in SingleBlockActivity
 
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) override;
 	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) override;
 
 	// Moveable
-	virtual bool canMoveLocal(GameState& gameState, Activity::DIR dir, ActivityIgnoringGroup& ignore) override;
+	// Already implemented in SingleBlockActivity
 
 	// Traces Placement
-	virtual bool canFillTracesLocal(GameState& gameState) override;
-	virtual void fillTracesLocalForced(GameState& gameState) override;
-	virtual void removeTracesLocalForced(GameState& gameState) override;
+	// Already implemented in SingleBlockActivity
 
 	// Traces Activity
 	virtual void removeActivityTracesLocal(GameState& gameState) override;
 	virtual void leaveActivityTracesLocal(GameState& gameState) override;
 
 	// Traces Moveable
-	virtual void removeMoveableTracesLocal(GameState& gameState) override;
-	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
+	// Already implemented in SingleBlockActivity
 
 	// Tree Information
-	// Already implemented in SingleGrouper
+	// Already implemented in SingleBlockActivity
 
 	// Serial
 	virtual Activity::TYPE getType() override;
 	virtual void save(Saver& saver) override;
 	virtual bool load(Loader& loader) override;
-
-	// Render
-	virtual void appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
-	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
 };
 

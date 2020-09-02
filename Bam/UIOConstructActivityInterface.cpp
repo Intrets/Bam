@@ -8,6 +8,7 @@
 #include "UIOCallBackParams.h"
 #include "UIOTextConstructers.h"
 #include "UIOListSelection.h"
+#include "UIOConstructLuaInterface.h"
 
 UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
 	// Resulting outermost container
@@ -75,6 +76,29 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 
 						self->setList(membersManaged);
 						self->setSelected(index);
+
+						if (target.get()->getType() == Activity::TYPE::LUA) {
+							static int32_t j = 0;
+							glm::vec2 offset = glm::vec2(0.05f, -0.05f);
+							std::string uiName = "LUA " + std::to_string(target.handle);
+
+							bool newObject = params.uiState.addNamedUI(
+								uiName,
+								CONSTRUCTER::constructLuaInterface(target)
+								.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, 0.0f), static_cast<float>(j + 1) * offset + glm::vec2(-0.7f, 1.0f) },
+										UIOWindow::TYPE::MINIMISE |
+										UIOWindow::TYPE::RESIZEVERTICAL |
+										UIOWindow::TYPE::RESIZEHORIZONTAL |
+										UIOWindow::TYPE::RESIZE |
+										UIOWindow::TYPE::MOVE |
+										UIOWindow::TYPE::CLOSE)
+								.get()
+							);
+
+							if (newObject) {
+								j = (j + 1) % 10;
+							}
+						}
 					}
 					else {
 						interfacePtr->cancel(true);

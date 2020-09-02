@@ -150,7 +150,7 @@ void UIOActivityInterface::addLua(GameState& gameState, UIState& uiState) {
 	if (this->type == USER_ACTION_TYPE::NOTHING && this->base.isValid()) {
 		auto root = this->base.get()->getRoot();
 		if (root.get()->getType() != Activity::TYPE::LUA) {
-			ACTIVITYSPAWNER::addLUA(gameState, this->base);
+			//ACTIVITYSPAWNER::addLUA(gameState, this->base);
 			root = root.get()->getRoot();
 		}
 		uiState.addUI(
@@ -217,9 +217,9 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 
 					if (pick.get()->removeTracesUp(gameState)) {
 						this->cursor.handle = pick.handle;
+						this->type = USER_ACTION_TYPE::HOVERING;
 					}
 				}
-				this->type = USER_ACTION_TYPE::HOVERING;
 				break;
 			}
 		case USER_ACTION_TYPE::HOVERING:

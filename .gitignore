@@ -347,3 +347,4 @@ healthchecksdb
 /Bam/cpp.hint
 /Bam/Debug no -Werror/Bam.tlog
 /Bam/Debug no -Werror
+/Bam/.swp

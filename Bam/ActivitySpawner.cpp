@@ -41,6 +41,9 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 		case Activity::TYPE::_MAX:
 			return std::nullopt;
 			break;
+		case Activity::TYPE::LUA:
+			return ACTIVITYSPAWNER::lua(gameState, pos);
+			break;
 		default:
 			return std::nullopt;
 			break;
@@ -59,9 +62,6 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameSta
 	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos, false);
 }
 
-WeakReference<Activity, LuaActivity> ACTIVITYSPAWNER::addLUA(GameState& gameState, WeakReference<Activity, Activity> ref) {
-	auto res = Locator<ReferenceManager<Activity>>::get()->makeRef<LuaActivity>();
-	res.get()->addChild(ref);
-
-	return res;
+UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, glm::ivec2 pos) {
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos, false);
 }

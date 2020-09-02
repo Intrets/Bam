@@ -23,8 +23,7 @@ public:
 	virtual bool hasChild() const override;
 
 	Anchor();
-	Anchor(Handle self);
-	Anchor(Handle self, GameState& gameState);
+	Anchor(Handle self, bool leaveTraces = true);
 	~Anchor();
 
 	// Placement
