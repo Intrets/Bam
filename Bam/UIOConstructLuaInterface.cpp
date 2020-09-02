@@ -63,10 +63,63 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 			outputGridPtr->addElement(
 				TextConstructer::constructDisplayText("watch")
 				.setPtr(displayWatchTextPtr)
+				.addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLuaPtr, watchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto self = static_cast<UIOTextDisplay*>(self_);
+				self->text.empty();
+				for (auto line : watchTextPtr->text.getLines()) {
+					if (line.size() < 2) {
+						continue;
+					}
+					line.resize(line.size() - 1);
+
+					sol::object object = uioLuaPtr->getWatched().get()->lua.getLuaObject(line);
+					auto type = object.get_type();
+					std::string out = "invalid";
+
+					switch (type) {
+						case sol::type::none:
+							break;
+						case sol::type::lua_nil:
+							break;
+						case sol::type::string:
+							out = object.as<std::string>();
+							break;
+						case sol::type::number:
+							if (object.is<int>()) {
+								out = std::to_string(object.as<int32_t>());
+							}
+							else {
+								out = std::to_string(object.as<double>());
+							}
+							break;
+						case sol::type::thread:
+							break;
+						case sol::type::boolean:
+							out = object.as<bool>() ? "true" : "false";
+							break;
+						case sol::type::function:
+							break;
+						case sol::type::userdata:
+							break;
+						case sol::type::lightuserdata:
+							break;
+						case sol::type::table:
+							break;
+						case sol::type::poly:
+							break;
+						default:
+							break;
+					}
+
+					self->text.addLine(line + ": " + out);
+				}
+				return BIND::CONTINUE;
+			})
 				.background(COLORS::UI::BACKGROUND)
 				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 				.get()
-			);
+				);
 
 			outputGridPtr->addElement(
 				TextConstructer::constructDisplayText("output")
