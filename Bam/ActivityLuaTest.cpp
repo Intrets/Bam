@@ -91,7 +91,7 @@ void ActivityLuaTest::setPrintFunction(std::function<void(std::string line)> f) 
 void ActivityLuaTest::prepare(GameState& gameState) {
 	gameStateRef = &gameState;
 	std::vector<Activity*> members;
-	this->target->getTreeMembers(members);
+	this->target->getRoot().get()->getTreeMembers(members);
 
 	this->validTargets.clear();
 	for (auto member : members) {

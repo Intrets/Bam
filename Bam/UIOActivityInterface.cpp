@@ -270,6 +270,7 @@ void UIOActivityInterface::spawnHover(GameState& gameState, glm::ivec2 pos, ACTI
 		case UIO::USER_ACTION_TYPE::HOVERING:
 			this->cursor.deleteObject();
 			this->type = UIO::USER_ACTION_TYPE::NOTHING;
+			[[fallthrough]];
 		case UIO::USER_ACTION_TYPE::NOTHING:
 			this->type = UIO::USER_ACTION_TYPE::HOVERING;
 			if (auto activity = ACTIVITYSPAWNER::spawn(gameState, pos, activityType)) {

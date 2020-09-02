@@ -26,7 +26,6 @@ bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 
 void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
-	this->lua.prepare(gameState);
 	this->lua.run(gameState);
 }
 
