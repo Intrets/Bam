@@ -292,15 +292,17 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 			.get());
 
 		uioLuaPtr->getWatched().get()->lua.setPrintFunction(
-			[outputTextPtr](std::string text)
+			[display = ManagedReference<UIOBase, UIOTextDisplay>(outputTextPtr->getSelfHandle())](std::string text)
 		{
-			std::vector<std::string> lines;
-			split(0, text, lines, '\n', true);
-			for (auto& line : lines) {
-				outputTextPtr->text.addLine(line);
-			}
+			if (display.isValid()) {
+				std::vector<std::string> lines;
+				split(0, text, lines, '\n', true);
+				for (auto& line : lines) {
+					display.get()->text.addLine(line);
+				}
 
-			outputTextPtr->text.moveCursor(glm::ivec2(0, lines.size()));
+				display.get()->text.moveCursor(glm::ivec2(0, lines.size()));
+			}
 
 			return BIND::RESULT::CONTINUE;
 		});

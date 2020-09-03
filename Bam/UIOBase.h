@@ -59,6 +59,8 @@ protected:
 public:
 	ScreenRectangle const& getScreenRectangle() const;
 
+	Handle getSelfHandle();
+
 	void addElement(UniqueReference<UIOBase, UIOBase> element);
 
 	void activate();

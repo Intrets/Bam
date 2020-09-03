@@ -191,7 +191,7 @@ void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
 	this->UIsBuffer.push_back(std::move(ref));
 }
 
-bool UIState::addNamedUI(std::string name, UniqueReference<UIOBase, UIOBase> ref) {
+bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
@@ -207,8 +207,9 @@ bool UIState::addNamedUI(std::string name, UniqueReference<UIOBase, UIOBase> ref
 		return false;
 	}
 	else {
-		this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ref);
-		this->addUI(std::move(ref));
+		auto ui = f();
+		this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ui);
+		this->addUI(std::move(ui));
 		return true;
 	}
 }

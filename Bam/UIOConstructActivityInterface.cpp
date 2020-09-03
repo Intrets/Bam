@@ -82,20 +82,23 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 							glm::vec2 offset = glm::vec2(0.05f, -0.05f);
 							std::string uiName = "LUA " + std::to_string(target.handle);
 
-							bool newObject = params.uiState.addNamedUI(
-								uiName,
-								CONSTRUCTER::constructLuaInterface(target)
-								.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.7f, 1.0f) },
-										UIOWindow::TYPE::MINIMISE |
-										UIOWindow::TYPE::RESIZEVERTICAL |
-										UIOWindow::TYPE::RESIZEHORIZONTAL |
-										UIOWindow::TYPE::RESIZE |
-										UIOWindow::TYPE::MOVE |
-										UIOWindow::TYPE::CLOSE)
-								.get()
-							);
+							bool newUI =
+								params.uiState.addNamedUI(
+									uiName,
+									[target, uiName, offset]()
+							{
+								return CONSTRUCTER::constructLuaInterface(target)
+									.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.7f, 1.0f) },
+											UIOWindow::TYPE::MINIMISE |
+											UIOWindow::TYPE::RESIZEVERTICAL |
+											UIOWindow::TYPE::RESIZEHORIZONTAL |
+											UIOWindow::TYPE::RESIZE |
+											UIOWindow::TYPE::MOVE |
+											UIOWindow::TYPE::CLOSE)
+									.get();
+							});
 
-							if (newObject) {
+							if (newUI) {
 								j = (j + 1) % 10;
 							}
 						}

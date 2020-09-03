@@ -7,6 +7,10 @@ ScreenRectangle const& UIOBase::getScreenRectangle() const {
 	return this->screenRectangle;
 }
 
+Handle UIOBase::getSelfHandle() {
+	return this->selfHandle;
+}
+
 void UIOBase::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	this->elements.push_back(std::move(element));
 }

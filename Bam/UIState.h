@@ -35,7 +35,7 @@ public:
 	// Returns if new UI is created or previous one is brought to the front
 	// true - new object created
 	// false - already exists and brought to the front
-	bool addNamedUI(std::string name, UniqueReference<UIOBase, UIOBase> ref);
+	bool addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
 
 	UIState();
 	~UIState() = default;
