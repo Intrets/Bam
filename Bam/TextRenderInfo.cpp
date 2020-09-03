@@ -194,7 +194,8 @@ bool Text::backspaceChar() {
 		return false;
 	}
 	if (this->cursor.x == 0) {
-		this->cursor.x = static_cast<int32_t>(this->lines[this->cursor.y - 1].size());
+		this->cursor.x = static_cast<int32_t>(this->lines[this->cursor.y - 1].size() - 1);
+		this->cursor.x = glm::max(0, this->cursor.x);
 		this->lines[this->cursor.y - 1].erase(this->lines[this->cursor.y - 1].end() - 1);
 		this->lines[this->cursor.y - 1] += this->lines[this->cursor.y];
 		this->lines.erase(this->lines.begin() + this->cursor.y, this->lines.begin() + this->cursor.y + 1);

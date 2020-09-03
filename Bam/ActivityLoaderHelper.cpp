@@ -11,6 +11,7 @@
 //#include "SinglePlatform.h"
 //#include "Grabber.h"
 #include "RailCrane.h"
+#include "LuaActivity.h"
 
 #include "Saver.h"
 #include "Loader.h"
@@ -49,6 +50,11 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 			case ACTIVITY::TYPE::RAILCRANE:
 				{
 					LOAD(RailCrane);
+					break;
+				}
+			case ACTIVITY::TYPE::LUA:
+				{
+					LOAD(LuaActivity);
 					break;
 				}
 				//case Activity::Type::SINGLEPLATFORM:

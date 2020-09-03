@@ -6,6 +6,45 @@
 #include "Saver.h"
 #include "Loader.h"
 
+static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
+	auto type = t.get_type();
+	switch (type) {
+		case sol::type::table:
+			{
+				size_t hash = hashVoidPtr{}(const_cast<void*>(t.pointer()));
+				if (visited.count(hash) != 0) {
+					return true;
+				}
+				visited.insert(hash);
+				auto table = t.as<sol::table>();
+				std::vector<sol::object> cache;
+				for (auto& kvPair : table) {
+					auto keyName = kvPair.first.as<std::string>();
+					cache.push_back(kvPair.second);
+				}
+				for (auto& value : cache) {
+					if (!isSimpleValue(value, visited)) {
+						return false;
+					}
+				}
+				return true;
+			}
+		case sol::type::string:
+		case sol::type::number:
+		case sol::type::boolean:
+			return true;
+		case sol::type::none:
+		case sol::type::lua_nil:
+		case sol::type::thread:
+		case sol::type::function:
+		case sol::type::userdata:
+		case sol::type::lightuserdata:
+		case sol::type::poly:
+		default:
+			return false;
+	}
+}
+
 void LuaActivity::start(GameState& gameState) {
 	this->applyActivityLocal(gameState, 0, gameState.smallRandom.randRange(10, 20));
 }
@@ -49,64 +88,57 @@ ACTIVITY::TYPE LuaActivity::getType() {
 }
 
 void LuaActivity::save(Saver& saver) {
-	saver.store(this->interrupt);
-	this->save(saver);
 	this->SingleBlockActivity::save(saver);
-}
 
-bool LuaActivity::load(Loader& loader) {
-	loader.retrieve(this->interrupt);
-	this->load(loader);
-	this->SingleBlockActivity::load(loader);
-	return true;
-}
+	saver.store(this->interrupt);
+	saver.store(this->script);
 
-static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
-	auto type = t.get_type();
-	switch (type) {
-		case sol::type::table:
-			{
-				size_t hash = hashVoidPtr{}(const_cast<void*>(t.pointer()));
-				if (visited.count(hash) != 0) {
-					return true;
-				}
-				visited.insert(hash);
-				auto table = t.as<sol::table>();
-				std::vector<sol::object> cache;
-				for (auto& kvPair : table) {
-					auto keyName = kvPair.first.as<std::string>();
-					cache.push_back(kvPair.second);
-				}
-				for (auto& value : cache) {
-					if (!isSimpleValue(value, visited)) {
-						return false;
-					}
-				}
-				return true;
-			}
-		case sol::type::string:
-		case sol::type::number:
-		case sol::type::boolean:
-			return true;
-		case sol::type::none:
-		case sol::type::lua_nil:
-		case sol::type::thread:
-		case sol::type::function:
-		case sol::type::userdata:
-		case sol::type::lightuserdata:
-		case sol::type::poly:
-		default:
-			return false;
+	std::unordered_set<size_t> simpleCache;
+	std::unordered_set<size_t> cache;
+
+	saver.store(this->watchedVars.size());
+	for (auto& s : this->watchedVars) {
+		saver.store(s);
+		auto object = this->getLuaObject(s);
+		if (isSimpleValue(object, simpleCache)) {
+			saver.store(true);
+			saver.storeObject(object, cache);
+		}
+		else {
+			saver.store(false);
+		}
 	}
 }
 
-//static std::string getNameString(sol::object& object) {
-//	std::string name = object.as<std::string>();
-//	if (!object.is<int>()) {
-//		name = "\"" + name + "\"";
-//	}
-//	return name;
-//};
+bool LuaActivity::load(Loader& loader) {
+	this->SingleBlockActivity::load(loader);
+
+	loader.retrieve(this->interrupt);
+	loader.retrieve(this->script);
+	this->execute(this->script);
+
+	this->validTargets.clear();
+	this->watchedVars.clear();
+
+	size_t size;
+	loader.retrieve(size);
+
+	std::unordered_map<size_t, sol::object> cache;
+
+	this->watchedVars.reserve(size);
+	for (size_t i = 0; i < size; i++) {
+		std::string s;
+		loader.retrieve(s);
+		bool hasValue;
+		loader.retrieve(hasValue);
+		if (hasValue) {
+			this->state[s] = loader.retrieveObject(this->state, cache);
+		}
+
+		this->watchedVars.push_back(s);
+	}
+	return true;
+}
 
 bool LuaActivity::valid(Handle h) {
 	return std::binary_search(this->validTargets.begin(), this->validTargets.end(), h);
