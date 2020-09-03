@@ -14,6 +14,8 @@
 #include "Option.h"
 #include "TickLimiter.h"
 #include "RenderLimiter.h"
+#include "Loader.h"
+#include "Saver.h"
 
 ControlState controlState;
 
@@ -56,12 +58,28 @@ void mainLoop(GLFWwindow* window) {
 	while (!glfwWindowShouldClose(window)) {
 		RenderInfo renderInfo;
 
+		if (state.uiState.shouldReset()) {
+			state.uiState.clear();
+			state.uiState.init();
+		}
+		if (state.gameState.loadFile.has_value()) {
+			auto const& name = state.gameState.loadFile.value();
+			Locator<Log>::ref().putLine("loading: " + name);
+
+			Loader(name).loadGame(state.gameState);
+			state.gameState.loadFile = std::nullopt;
+		}
+		else if (state.gameState.saveFile.has_value()) {
+			auto const& name = state.gameState.saveFile.value();
+			Locator<Log>::ref().putLine("saving: " + name);
+
+			Saver(name).saveGame(state.gameState);
+			state.gameState.saveFile = std::nullopt;
+		}
+
+
 		bool rendering = false;
 		if (stateChanged && tickLimiterRender.ready()) {
-			if (state.uiState.shouldReset()) {
-				state.uiState.clear();
-				state.uiState.init();
-			}
 
 			tickLimiterRender.advance();
 			stateChanged = false;

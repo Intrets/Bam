@@ -347,8 +347,7 @@ void UIState::init() {
 				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
 
-				Locator<Log>::ref().putLine("saving: " + name);
-
+				params.gameState.saveFile = name;
 				Saver(name).saveGame(params.gameState);
 				return BIND::RESULT::CONTINUE;
 			})
@@ -369,9 +368,7 @@ void UIState::init() {
 				auto name = textPtr->text.getLines().front();
 				name.erase(name.end() - 1);
 
-				Locator<Log>::ref().putLine("loading: " + name);
-
-				Loader(name).loadGame(params.gameState);
+				params.gameState.loadFile = name;
 				params.uiState.reset();
 				return BIND::RESULT::CONTINUE;
 			})

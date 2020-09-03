@@ -13,6 +13,9 @@ struct RenderInfo;
 class GameState
 {
 public:
+	std::optional<std::string> loadFile = std::nullopt;
+	std::optional<std::string> saveFile = std::nullopt;
+
 	bool exit = false;
 	glm::vec2 playerPos;
 
