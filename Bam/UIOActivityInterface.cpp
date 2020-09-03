@@ -68,7 +68,7 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addFocussedBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->updateCursorPos(params.uiState.getCursorPositionWorld());
@@ -150,7 +150,6 @@ void UIOActivityInterface::addLua(GameState& gameState, UIState& uiState) {
 	if (this->type == UIO::USER_ACTION_TYPE::NOTHING && this->base.isValid()) {
 		auto root = this->base.get()->getRoot();
 		if (root.get()->getType() != ACTIVITY::TYPE::LUA) {
-			//ACTIVITYSPAWNER::addLUA(gameState, this->base);
 			root = root.get()->getRoot();
 		}
 		uiState.addUI(

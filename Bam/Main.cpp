@@ -58,6 +58,11 @@ void mainLoop(GLFWwindow* window) {
 
 		bool rendering = false;
 		if (stateChanged && tickLimiterRender.ready()) {
+			if (state.uiState.shouldReset()) {
+				state.uiState.clear();
+				state.uiState.init();
+			}
+
 			tickLimiterRender.advance();
 			stateChanged = false;
 			rendering = true;

@@ -8,6 +8,8 @@ struct State;
 class UIState
 {
 private:
+	bool shouldReset_ = false;
+
 	glm::vec2 cursorScreen;
 	glm::vec2 cursorWorld;
 
@@ -37,7 +39,15 @@ public:
 	// false - already exists and brought to the front
 	bool addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
 
+	void reset();
+	bool shouldReset();
+
+	void init();
+	void clear();
+
 	UIState();
 	~UIState() = default;
+
+	NOCOPYMOVE(UIState);
 };
 

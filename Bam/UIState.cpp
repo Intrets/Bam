@@ -212,7 +212,15 @@ bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase
 	}
 }
 
-UIState::UIState() {
+void UIState::reset() {
+	this->shouldReset_ = true;
+}
+
+bool UIState::shouldReset() {
+	return this->shouldReset_;
+}
+
+void UIState::init() {
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	ScreenRectangle r;
@@ -364,6 +372,7 @@ UIState::UIState() {
 				Locator<Log>::ref().putLine("loading: " + name);
 
 				Loader(name).loadGame(params.gameState);
+				params.uiState.reset();
 				return BIND::RESULT::CONTINUE;
 			})
 				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
@@ -506,4 +515,15 @@ UIState::UIState() {
 
 		this->UIs.push_back(std::move(movement));
 	}
+}
+
+void UIState::clear() {
+	this->shouldReset_ = false;
+	this->namedUIs.clear();
+	this->UIs.clear();
+	this->UIsBuffer.clear();
+}
+
+UIState::UIState() {
+	this->init();
 }

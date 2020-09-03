@@ -121,7 +121,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 		if (auto const& maybeSelected = self->getSelected()) {
 			auto const& [depth, selected] = *maybeSelected.value();
 
-			if (selected.isValid()) {
+			if (selected.isValid() && interfacePtr->getType() == UIO::USER_ACTION_TYPE::NOTHING) {
 				interfacePtr->setTarget(selected);
 			}
 		}
