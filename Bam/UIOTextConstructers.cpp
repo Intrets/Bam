@@ -38,10 +38,14 @@ namespace TextConstructer
 		return UIOConstructer<UIOTextDisplay>(std::move(res));
 	}
 
-	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text) {
+	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string const text) {
 		std::vector<std::string> lines;
-		split(0, text, lines, '\n', true);
-
+		if (text.size() == 0) {
+			lines = { "" };
+		}
+		else {
+			split(0, text, lines, '\n', true);
+		}
 		return constructTextEdit(lines);
 	}
 

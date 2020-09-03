@@ -19,6 +19,7 @@ private:
 	std::string script;
 
 	std::vector<Handle> validTargets;
+	std::vector<std::string> watchedVars;
 
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
@@ -31,6 +32,9 @@ private:
 public:
 	// The target Activity and its group to act on.
 	LuaActivity* target;
+
+	void setWatchedVars(std::vector<std::string>& vars);
+	std::vector<std::string> const& getWatchedVars();
 
 	void run(GameState& gameState);
 	void init(GameState& gameState);

@@ -213,6 +213,14 @@ void ActivityLuaTest::execute(std::string s) {
 	}
 }
 
+void ActivityLuaTest::setWatchedVars(std::vector<std::string>& vars) {
+	this->watchedVars = vars;
+}
+
+std::vector<std::string> const& ActivityLuaTest::getWatchedVars() {
+	return this->watchedVars;
+}
+
 void ActivityLuaTest::run(GameState& gameState) {
 	this->prepare(gameState);
 

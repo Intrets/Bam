@@ -6,6 +6,29 @@
 #include "RailCrane.h"
 #include "LuaActivity.h"
 
+static std::string initialLuaScript =
+"function init()\n"
+"  state = state or 0\n"
+"end\n"
+"\n"
+"stateTable = {\n"
+"  [0] = function()\n"
+"    print(0)\n"
+"    state = 1\n"
+"  end,\n"
+"  [1] = function()\n"
+"    print(1)\n"
+"    state = 0\n"
+"    stop()\n"
+"  end,\n"
+"}\n"
+"\n"
+"function run()\n"
+"  stateTable[state]()\n"
+"end\n"
+;
+
+
 std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
 	switch (activityType) {
 		case ACTIVITY::TYPE::ANCHOR:
@@ -60,5 +83,7 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameSta
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
+	auto ref = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
+	ref.get()->lua.setScript(initialLuaScript, gameState);
+	return std::move(ref);
 }

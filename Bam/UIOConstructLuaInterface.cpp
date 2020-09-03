@@ -8,31 +8,9 @@
 #include <fstream>
 #include "StringHelpers.h"
 
-static std::vector<std::string> initialLuaScript = {
-	"function init()",
-	"  state = state or 0",
-	"end",
-	"",
-	"stateTable = {",
-	"  [0] = function()",
-	"    print(0)",
-	"    state = 1",
-	"  end,",
-	"  [1] = function()",
-	"    print(1)",
-	"    state = 0",
-	"    stop()",
-	"  end,",
-	"}",
-	"",
-	"function run()",
-	"  stateTable[state]()",
-	"end",
-};
-
 UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIOList* listPtr;
-	auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN);
+	auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE);
 	window.setPtr(listPtr);
 
 	auto uioLua = UIOConstructer<UIOLua>::makeConstructer(ref).get();
@@ -42,10 +20,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 	UIOTextDisplay* luaTextPtr;
 	{
-		auto luaEditor = TextConstructer::constructTextEdit(initialLuaScript)
+		auto luaEditor = TextConstructer::constructTextEdit(ref.get()->lua.getScript())
 			.setPtr(luaTextPtr)
 			.background(COLORS::UI::BACKGROUND)
-			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.4f })
 			.get();
 
 		listPtr->addElement(std::move(luaEditor));
@@ -60,82 +37,36 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 	{
 		UIOGrid* watchGridPtr;
-		auto watchGrid = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(2, 1))
+		auto watchGrid = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(3, 1))
 			.setPtr(watchGridPtr)
-			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.8f })
+			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.2f })
 			.get();
 
 		{
+			std::vector<std::string> w = { "" };
+			if (uioLuaPtr->getWatched().isValid()) {
+				w = uioLuaPtr->getWatched().get()->lua.getWatchedVars();
+				if (w.empty()) {
+					w = { "" };
+				}
+			}
+
 			watchGridPtr->addElement(
-				TextConstructer::constructTextEdit("")
+				TextConstructer::constructTextEdit(w)
 				.setPtr(watchTextPtr)
-				.background(COLORS::UI::BACKGROUND)
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.get()
-			);
-
-			UIOGrid* outputGridPtr;
-
-			watchGridPtr->addElement(
-				UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(1, 2))
-				.setPtr(outputGridPtr)
-				.get()
-			);
-
-			outputGridPtr->addElement(
-				TextConstructer::constructDisplayText("watch")
-				.setPtr(displayWatchTextPtr)
-				.addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLuaPtr, watchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				.addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto self = static_cast<UIOTextDisplay*>(self_);
-				self->text.empty();
-				for (auto line : watchTextPtr->text.getLines()) {
-					if (line.size() < 2) {
-						continue;
-					}
-					line.resize(line.size() - 1);
 
-					sol::object object = uioLuaPtr->getWatched().get()->lua.getLuaObject(line);
-					auto type = object.get_type();
-					std::string out = "invalid";
-
-					switch (type) {
-						case sol::type::none:
-							break;
-						case sol::type::lua_nil:
-							break;
-						case sol::type::string:
-							out = object.as<std::string>();
-							break;
-						case sol::type::number:
-							if (object.is<int>()) {
-								out = std::to_string(object.as<int32_t>());
-							}
-							else {
-								out = std::to_string(object.as<double>());
-							}
-							break;
-						case sol::type::thread:
-							break;
-						case sol::type::boolean:
-							out = object.as<bool>() ? "true" : "false";
-							break;
-						case sol::type::function:
-							break;
-						case sol::type::userdata:
-							break;
-						case sol::type::lightuserdata:
-							break;
-						case sol::type::table:
-							out = "table";
-							break;
-						case sol::type::poly:
-							break;
-						default:
-							break;
+				if (uioLuaPtr->getWatched().isValid()) {
+					std::vector<std::string> result;
+					for (auto const& line : self->text.getLines()) {
+						if (line.size() > 1) {
+							result.push_back(line.substr(0, line.size() - 1));
+						}
 					}
 
-					self->text.addLine(line + ": " + out);
+					uioLuaPtr->getWatched().get()->lua.setWatchedVars(result);
 				}
 				return BIND::CONTINUE;
 			})
@@ -144,7 +75,68 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				.get()
 				);
 
-			outputGridPtr->addElement(
+			watchGridPtr->addElement(
+				TextConstructer::constructDisplayText("watch")
+				.setPtr(displayWatchTextPtr)
+				.addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLuaPtr, watchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto self = static_cast<UIOTextDisplay*>(self_);
+
+				if (uioLuaPtr->getWatched().isValid()) {
+					auto& lua = uioLuaPtr->getWatched().get()->lua;
+					self->text.empty();
+					for (auto& line : lua.getWatchedVars()) {
+						sol::object object = lua.getLuaObject(line);
+						auto type = object.get_type();
+						std::string out = "invalid";
+
+						switch (type) {
+							case sol::type::none:
+								break;
+							case sol::type::lua_nil:
+								break;
+							case sol::type::string:
+								out = object.as<std::string>();
+								break;
+							case sol::type::number:
+								if (object.is<int>()) {
+									out = std::to_string(object.as<int32_t>());
+								}
+								else {
+									out = std::to_string(object.as<double>());
+								}
+								break;
+							case sol::type::thread:
+								break;
+							case sol::type::boolean:
+								out = object.as<bool>() ? "true" : "false";
+								break;
+							case sol::type::function:
+								break;
+							case sol::type::userdata:
+								break;
+							case sol::type::lightuserdata:
+								break;
+							case sol::type::table:
+								out = "table";
+								break;
+							case sol::type::poly:
+								break;
+							default:
+								break;
+						}
+
+						self->text.addLine(line + ": " + out);
+					}
+				}
+				return BIND::CONTINUE;
+			})
+				.background(COLORS::UI::BACKGROUND)
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.get()
+				);
+
+			watchGridPtr->addElement(
 				TextConstructer::constructDisplayText("output")
 				.setPtr(outputTextPtr)
 				.background(COLORS::UI::BACKGROUND)

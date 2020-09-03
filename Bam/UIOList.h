@@ -10,6 +10,10 @@ namespace UIO
 		RIGHT,
 		UP,
 		DOWN,
+		LEFT_REVERSE,
+		RIGHT_REVERSE,
+		UP_REVERSE,
+		DOWN_REVERSE,
 	};
 }
 

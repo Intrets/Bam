@@ -105,6 +105,7 @@ bool ControlState::activated(BindControl bindControl) {
 			case CONTROL::KEY::EVERY_TICK:
 			case CONTROL::KEY::MOUSE_POS_CHANGED:
 			case CONTROL::KEY::ACTION0:
+			case CONTROL::KEY::ANYTHING_TEXT:
 				break;
 			default:
 				return false;
@@ -128,6 +129,10 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 	if (key == GLFW_KEY_ENTER && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		this->charBuffer.push_back('\n');
 		this->controlState[static_cast<size_t>(CONTROL::KEY::CHAR_BUFFER_CHANGED)] = CONTROL::STATE::PRESSED;
+	}
+
+	if ((action == GLFW_PRESS || action == GLFW_REPEAT) && (key == GLFW_KEY_BACKSPACE || key == GLFW_KEY_DELETE || key == GLFW_KEY_ENTER)) {
+		this->controlState[static_cast<size_t>(CONTROL::KEY::ANYTHING_TEXT)] = CONTROL::STATE::PRESSED;
 	}
 
 	switch (key) {
@@ -191,6 +196,7 @@ void ControlState::char_callback(GLFWwindow* window, unsigned int character) {
 		return;
 	}
 	this->controlState[static_cast<size_t>(CONTROL::KEY::CHAR_BUFFER_CHANGED)] = CONTROL::STATE::PRESSED;
+	this->controlState[static_cast<size_t>(CONTROL::KEY::ANYTHING_TEXT)] = CONTROL::STATE::PRESSED;
 	char c = static_cast<char>(character);
 	this->charBuffer.push_back(c);
 }

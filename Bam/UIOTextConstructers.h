@@ -8,7 +8,7 @@ class UIOConstructer;
 
 namespace TextConstructer
 {
-	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text);
+	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string const text);
 	UIOConstructer<UIOTextDisplay> constructTextEdit(std::vector<std::string> text);
 
 	UIOConstructer<UIOTextDisplay> constructSingleLineTextEdit(std::string text);

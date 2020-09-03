@@ -13,7 +13,7 @@ struct RenderInfo;
 class GameState
 {
 public:
-	bool exit;
+	bool exit = false;
 	glm::vec2 playerPos;
 
 	int32_t tick = 0;
