@@ -33,11 +33,12 @@ void LuaActivity::removeActivityTracesLocal(GameState& gameState) {
 	if (!this->interrupt) {
 		this->start(gameState);
 	}
-	this->interrupt = false;
+	else {
+		this->interrupt = false;
+	}
 }
 
 void LuaActivity::leaveActivityTracesLocal(GameState& gameState) {
-	this->interrupt = false;
 }
 
 ACTIVITY::TYPE LuaActivity::getType() {

@@ -18,9 +18,6 @@ private:
 
 	std::string script;
 
-	// The target Activity and its group to act on.
-	LuaActivity* target;
-
 	std::vector<Handle> validTargets;
 
 	std::function<void(std::string line)> printFunction = [](std::string)
@@ -32,6 +29,9 @@ private:
 	friend class LuaActivity;
 
 public:
+	// The target Activity and its group to act on.
+	LuaActivity* target;
+
 	void run(GameState& gameState);
 	void init(GameState& gameState);
 

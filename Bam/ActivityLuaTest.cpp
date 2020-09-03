@@ -144,6 +144,11 @@ ActivityLuaTest::ActivityLuaTest() {
 		return this->applyActivity(h, type);
 	});
 
+	state.set_function("stop", [this]() -> void
+	{
+		this->target->stop();
+	});
+
 	state.set_function("print", [this](sol::variadic_args va)
 	{
 		std::stringstream out;

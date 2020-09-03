@@ -8,6 +8,28 @@
 #include <fstream>
 #include "StringHelpers.h"
 
+static std::vector<std::string> initialLuaScript = {
+	"function init()",
+	"  state = state or 0",
+	"end",
+	"",
+	"stateTable = {",
+	"  [0] = function()",
+	"    print(0)",
+	"    state = 1",
+	"  end,",
+	"  [1] = function()",
+	"    print(1)",
+	"    state = 0",
+	"    stop()",
+	"  end,",
+	"}",
+	"",
+	"function run()",
+	"  stateTable[state]()",
+	"end",
+};
+
 UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIOList* listPtr;
 	auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN);
@@ -20,7 +42,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 	UIOTextDisplay* luaTextPtr;
 	{
-		auto luaEditor = TextConstructer::constructTextEdit("-- lua")
+		auto luaEditor = TextConstructer::constructTextEdit(initialLuaScript)
 			.setPtr(luaTextPtr)
 			.background(COLORS::UI::BACKGROUND)
 			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.4f })
@@ -105,6 +127,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 						case sol::type::lightuserdata:
 							break;
 						case sol::type::table:
+							out = "table";
 							break;
 						case sol::type::poly:
 							break;

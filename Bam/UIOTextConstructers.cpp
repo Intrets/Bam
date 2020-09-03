@@ -5,13 +5,18 @@
 #include "UIOCallBackParams.h"
 #include "UIOConstructer.h"
 #include "UIOBinds.h"
+#include "StringHelpers.h"
 
 namespace TextConstructer
 {
-	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text) {
+	UIOConstructer<UIOTextDisplay> constructTextEdit(std::vector<std::string> text) {
 		auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
 		auto ptr = res.get();
-		ptr->text.addLine(text);
+
+		ptr->text.empty();
+		for (auto& line : text) {
+			ptr->text.addLine(line);
+		}
 
 		UIOBinds::TextEdit::clickSelect(ptr);
 		UIOBinds::Base::activatable(ptr);
@@ -31,6 +36,13 @@ namespace TextConstructer
 		UIOBinds::TextEdit::viewUp(ptr);
 
 		return UIOConstructer<UIOTextDisplay>(std::move(res));
+	}
+
+	UIOConstructer<UIOTextDisplay> constructTextEdit(std::string text) {
+		std::vector<std::string> lines;
+		split(0, text, lines, '\n', true);
+
+		return constructTextEdit(lines);
 	}
 
 	UIOConstructer<UIOTextDisplay> constructSingleLineTextEdit(std::string text) {
