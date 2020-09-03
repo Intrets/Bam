@@ -27,8 +27,6 @@
 #include "UIOBinds.h"
 #include "StringHelpers.h"
 #include "LuaActivity.h"
-#include "ActivityLuaTest.h"
-#include "UIOActivityLuaTest.h"
 #include <fstream>
 
 #include "UIOConstructActivityInterface.h"

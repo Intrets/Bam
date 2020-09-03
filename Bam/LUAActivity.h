@@ -1,20 +1,53 @@
 #pragma once
 
-#include "ActivityLuaTest.h"
 #include "SingleBlockActivity.h"
+#include "sol/sol.hpp"
 
 class LuaActivity : public SingleBlockActivity
 {
 private:
 	bool interrupt;
 
-public:
-	ActivityLuaTest lua{ *this };
+	sol::state state;
+	GameState* gameStateRef;
 
+	std::string script;
+
+	std::vector<Handle> validTargets;
+	std::vector<std::string> watchedVars;
+
+	std::function<void(std::string line)> printFunction = [](std::string)
+	{};
+
+	void prepare(GameState& gameState);
+	void execute(std::string);
+
+	void initializeLuaState();
+
+public:
 	void start(GameState& gameState);
 	void stop();
 
-	LuaActivity() = default;
+	void setWatchedVars(std::vector<std::string>& vars);
+	std::vector<std::string> const& getWatchedVars();
+
+	void run(GameState& gameState);
+	void init(GameState& gameState);
+
+	void setScript(std::string script, GameState& gameState);
+	std::string const& getScript();
+
+	bool valid(Handle h);
+
+	bool applyMove(Handle h, int32_t type);
+	bool applyActivity(Handle h, int32_t type);
+
+	void setPrintFunction(std::function<void(std::string line)> f);
+
+	inline sol::object getLuaObject(std::string name);
+
+	// Activity Functions
+	LuaActivity();
 	LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos);
 	virtual ~LuaActivity() = default;
 
@@ -49,3 +82,6 @@ public:
 	virtual bool load(Loader& loader) override;
 };
 
+sol::object LuaActivity::getLuaObject(std::string name) {
+	return this->state[name];
+}

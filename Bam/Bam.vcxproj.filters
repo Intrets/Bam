@@ -83,9 +83,6 @@
     <Filter Include="Renderer\UI">
       <UniqueIdentifier>{6a5a1940-06dc-40d3-ab11-1d32428ce2ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lua">
-      <UniqueIdentifier>{b833578e-0c6d-46f3-baf9-226db691cfa7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Logic\User IO Controllers">
       <UniqueIdentifier>{d9c04c5c-c591-4522-af49-e80a906e11d5}</UniqueIdentifier>
     </Filter>
@@ -260,9 +257,6 @@
     <ClCompile Include="RailCrane.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityLuaTest.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="UIOSizeType.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClCompile>
@@ -389,7 +383,6 @@
     <ClCompile Include="UIOConstructLuaInterface.cpp">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="UIOLua.cpp" />
     <ClCompile Include="Random.cpp">
       <Filter>Misc</Filter>
@@ -562,9 +555,6 @@
     <ClInclude Include="RailCrane.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityLuaTest.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="UIOSizeType.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
     </ClInclude>
@@ -691,7 +681,6 @@
     <ClInclude Include="UIOConstructLuaInterface.h">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOActivityLuaTest.h" />
     <ClInclude Include="UIOLua.h" />
     <ClInclude Include="Random.h">
       <Filter>Misc</Filter>

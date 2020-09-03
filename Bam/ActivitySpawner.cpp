@@ -84,6 +84,6 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameSta
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, glm::ivec2 pos) {
 	auto ref = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
-	ref.get()->lua.setScript(initialLuaScript, gameState);
+	ref.get()->setScript(initialLuaScript, gameState);
 	return std::move(ref);
 }

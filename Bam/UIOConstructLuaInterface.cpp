@@ -20,7 +20,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 
 	UIOTextDisplay* luaTextPtr;
 	{
-		auto luaEditor = TextConstructer::constructTextEdit(ref.get()->lua.getScript())
+		auto luaEditor = TextConstructer::constructTextEdit(ref.get()->getScript())
 			.setPtr(luaTextPtr)
 			.background(COLORS::UI::BACKGROUND)
 			.get();
@@ -45,7 +45,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		{
 			std::vector<std::string> w = { "" };
 			if (uioLuaPtr->getWatched().isValid()) {
-				w = uioLuaPtr->getWatched().get()->lua.getWatchedVars();
+				w = uioLuaPtr->getWatched().get()->getWatchedVars();
 				if (w.empty()) {
 					w = { "" };
 				}
@@ -66,7 +66,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 						}
 					}
 
-					uioLuaPtr->getWatched().get()->lua.setWatchedVars(result);
+					uioLuaPtr->getWatched().get()->setWatchedVars(result);
 				}
 				return BIND::CONTINUE;
 			})
@@ -83,10 +83,10 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 				auto self = static_cast<UIOTextDisplay*>(self_);
 
 				if (uioLuaPtr->getWatched().isValid()) {
-					auto& lua = uioLuaPtr->getWatched().get()->lua;
+					auto lua = uioLuaPtr->getWatched().get();
 					self->text.empty();
-					for (auto& line : lua.getWatchedVars()) {
-						sol::object object = lua.getLuaObject(line);
+					for (auto& line : lua->getWatchedVars()) {
+						sol::object object = lua->getLuaObject(line);
 						auto type = object.get_type();
 						std::string out = "invalid";
 
@@ -166,7 +166,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (uioLuaPtr->getWatched().isValid()) {
-				uioLuaPtr->getWatched().get()->lua.setScript(join(luaTextPtr->text.getLines()), params.gameState);
+				uioLuaPtr->getWatched().get()->setScript(join(luaTextPtr->text.getLines()), params.gameState);
 			}
 			return BIND::RESULT::CONTINUE;
 		})
@@ -182,7 +182,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 		{
 			if (uioLuaPtr->getWatched().isValid()) {
 				luaTextPtr->text.getLinesMutable().clear();
-				split(0, uioLuaPtr->getWatched().get()->lua.getScript(), luaTextPtr->text.getLinesMutable(), '\n', true, true);
+				split(0, uioLuaPtr->getWatched().get()->getScript(), luaTextPtr->text.getLinesMutable(), '\n', true, true);
 				luaTextPtr->text.invalidateCache();
 			}
 			return BIND::RESULT::CONTINUE;
@@ -291,7 +291,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get());
 
-		uioLuaPtr->getWatched().get()->lua.setPrintFunction(
+		uioLuaPtr->getWatched().get()->setPrintFunction(
 			[display = ManagedReference<UIOBase, UIOTextDisplay>(outputTextPtr->getSelfHandle())](std::string text)
 		{
 			if (display.isValid()) {

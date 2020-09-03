@@ -268,7 +268,6 @@
     <ClCompile Include="ActivityHelpers.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
-    <ClCompile Include="ActivityLuaTest.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
     <ClCompile Include="ActivitySpawner.cpp" />
@@ -313,7 +312,6 @@
     <ClCompile Include="TickLimiter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIOActivityInterface.cpp" />
-    <ClCompile Include="UIOActivityLuaTest.cpp" />
     <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
@@ -368,7 +366,6 @@
     <ClInclude Include="ActivityHelpers.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />
-    <ClInclude Include="ActivityLuaTest.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySpawner.h" />
@@ -406,7 +403,6 @@
     <ClInclude Include="TickLimiter.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIOActivityInterface.h" />
-    <ClInclude Include="UIOActivityLuaTest.h" />
     <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />
