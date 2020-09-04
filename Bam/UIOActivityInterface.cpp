@@ -144,30 +144,6 @@ void UIOActivityInterface::splitTarget() {
 	}
 }
 
-void UIOActivityInterface::addLua(GameState& gameState, UIState& uiState) {
-	static int32_t i = 0;
-	glm::vec2 offset = glm::vec2(0.05f, -0.05f);
-	if (this->type == UIO::USER_ACTION_TYPE::NOTHING && this->base.isValid()) {
-		auto root = this->base.get()->getRoot();
-		if (root.get()->getType() != ACTIVITY::TYPE::LUA) {
-			root = root.get()->getRoot();
-		}
-		uiState.addUI(
-			CONSTRUCTER::constructLuaInterface(root)
-			.window("LUA", { static_cast<float>(i + 1) * offset + glm::vec2(-1.0f, 0.0f), static_cast<float>(i + 1) * offset + glm::vec2(-0.7f, 1.0f) },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::RESIZEVERTICAL |
-					UIOWindow::TYPE::RESIZEHORIZONTAL |
-					UIOWindow::TYPE::RESIZE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::CLOSE)
-			.get()
-		);
-	}
-
-	i = (i + 1) % 10;
-}
-
 UIO::USER_ACTION_TYPE UIOActivityInterface::getType() {
 	return this->type;
 }

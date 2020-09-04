@@ -105,13 +105,22 @@ StaticWorldChunk* StaticWorld::getChunkByCoords(glm::vec2 pos) {
 
 Block* StaticWorld::getBlockRef(glm::ivec2 pos) {
 	auto r = floordivmod(pos, CHUNKSIZE);
-	auto global = r.first;
-	auto local = r.second;
+	auto const& global = r.first;
+	auto const& local = r.second;
 	return &(getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y]);
 }
 
 Block* StaticWorld::getBlockRef(glm::vec2 pos) {
 	return this->getBlockRef(glm::ivec2(glm::floor(pos)));
+}
+
+void StaticWorld::setBlock(Block block, glm::ivec2 pos) {
+	auto [global, local] = floordivmod(pos, CHUNKSIZE);
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y] = block;
+}
+
+void StaticWorld::setBlock(Block block, glm::vec2 pos) {
+	this->setBlock(block, glm::ivec2(glm::floor(pos)));
 }
 
 bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore) {

@@ -16,7 +16,7 @@ public:
 	virtual ~SingleBlockActivity() = default;
 
 	// Placement 
-	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) override {};
+	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) override;
 
 	// Moveable
 	virtual bool canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) override;

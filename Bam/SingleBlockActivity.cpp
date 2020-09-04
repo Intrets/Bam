@@ -17,6 +17,9 @@ SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm:
 	this->texName = name;
 }
 
+void SingleBlockActivity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
+}
+
 bool SingleBlockActivity::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) {
 	return !gameState.staticWorld.isOccupied(this->origin + ACTIVITY::GETDIRECTION(dir), ignore);
 }

@@ -53,12 +53,27 @@ namespace ACTIVITY
 		STATIONARY,
 	};
 
+	enum class ROT
+	{
+		CLOCKWISE,
+		COUNTERCLOCKWISE,
+	};
+
 	inline ACTIVITY::DIR CLOCKWISEROT(ACTIVITY::DIR dir) {
 		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 1) % 4);
 	}
 
 	inline ACTIVITY::DIR COUNTERWISEROT(ACTIVITY::DIR dir) {
 		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 3) % 4);
+	}
+
+	inline ACTIVITY::DIR ROTATE(ACTIVITY::ROT rot, ACTIVITY::DIR dir) {
+		if (rot == ACTIVITY::ROT::CLOCKWISE) {
+			return CLOCKWISEROT(dir);
+		}
+		else {
+			return COUNTERWISEROT(dir);
+		}
 	}
 
 	inline std::string GET_NAME(ACTIVITY::DIR dir) {
@@ -132,12 +147,6 @@ namespace ACTIVITY
 				break;
 		}
 	}
-
-	enum class ROT
-	{
-		CLOCKWISE,
-		COUNTERCLOCKWISE,
-	};
 }
 
 class Anchor;

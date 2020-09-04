@@ -285,6 +285,7 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
+    <ClCompile Include="Grabber.cpp" />
     <ClCompile Include="Grouper.cpp" />
     <ClCompile Include="InitManagers.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
@@ -384,6 +385,7 @@
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
+    <ClInclude Include="Grabber.h" />
     <ClInclude Include="Grouper.h" />
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="Linker.h" />

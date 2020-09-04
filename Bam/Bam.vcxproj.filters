@@ -383,12 +383,17 @@
     <ClCompile Include="UIOConstructLuaInterface.cpp">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
-    <ClCompile Include="UIOLua.cpp" />
     <ClCompile Include="Random.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="LuaActivity.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Grabber.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOLua.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -681,12 +686,17 @@
     <ClInclude Include="UIOConstructLuaInterface.h">
       <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
-    <ClInclude Include="UIOLua.h" />
     <ClInclude Include="Random.h">
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="LuaActivity.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Grabber.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOLua.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

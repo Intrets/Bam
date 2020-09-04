@@ -40,6 +40,9 @@ public:
 	Block* getBlockRef(glm::ivec2 pos);
 	Block* getBlockRef(glm::vec2 pos);
 
+	void setBlock(Block block, glm::ivec2 pos);
+	void setBlock(Block block, glm::vec2 pos);
+
 private:
 	struct hash
 	{

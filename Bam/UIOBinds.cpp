@@ -107,7 +107,7 @@ namespace UIOBinds
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				ptr->insertText("    ");
+				ptr->insertText("  ");
 				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}

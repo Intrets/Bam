@@ -5,6 +5,7 @@
 #include "Piston.h"
 #include "RailCrane.h"
 #include "LuaActivity.h"
+#include "Grabber.h"
 
 static std::string initialLuaScript =
 "function init()\n"
@@ -50,7 +51,7 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 			return std::nullopt;
 			break;
 		case ACTIVITY::TYPE::GRABBER:
-			return std::nullopt;
+			return ACTIVITYSPAWNER::grabber(gameState, pos);
 			break;
 		case ACTIVITY::TYPE::PLANT:
 			return std::nullopt;
@@ -86,4 +87,8 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, g
 	auto ref = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
 	ref.get()->setScript(initialLuaScript, gameState);
 	return std::move(ref);
+}
+
+UniqueReference<Activity, Activity> ACTIVITYSPAWNER::grabber(GameState& gameState, glm::ivec2 pos) {
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Grabber>(pos);
 }

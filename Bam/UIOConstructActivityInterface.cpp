@@ -88,7 +88,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 									[target, uiName, offset]()
 							{
 								return CONSTRUCTER::constructLuaInterface(target)
-									.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.7f, 1.0f) },
+									.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
 											UIOWindow::TYPE::MINIMISE |
 											UIOWindow::TYPE::RESIZEVERTICAL |
 											UIOWindow::TYPE::RESIZEHORIZONTAL |

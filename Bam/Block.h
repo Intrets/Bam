@@ -1,6 +1,6 @@
 #pragma once
 
- #include "Activity.h"
+#include "Activity.h"
 
 class ActivityIgnoringGroup;
 class Loader;
@@ -20,9 +20,6 @@ private:
 
 	WeakReference<Activity, Activity> m;
 
-	bool load(Loader& loader);
-	bool save(Saver& saver);
-
 public:
 	bool isOccupied(ActivityIgnoringGroup const& ignore);
 	bool isOccupied();
@@ -33,13 +30,25 @@ public:
 
 	bool isActivity();
 
-	void setID(int32_t id) { blockID = id; };
-	int32_t getID() { return blockID; };
-	void setM(WeakReference<Activity, Activity> m_) { m = m_; };
+	void setID(int32_t id) {
+		this->blockID = id;
+	};
+	int32_t getID() {
+		return this->blockID;
+	};
+	void setM(WeakReference<Activity, Activity> m_) {
+		this->m = m_;
+	};
+	void setM(Handle m_) {
+		this->m = m_;
+	};
 
 	Block(int32_t id);
 
 	Block() = default;
 	~Block() = default;
+
+	bool load(Loader& loader);
+	bool save(Saver& saver);
 };
 

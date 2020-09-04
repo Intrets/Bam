@@ -281,6 +281,13 @@ void UIState::init() {
 			return BIND::RESULT::CONTINUE;
 		});
 
+		hotbarPtr->setTool(4, "Grabber", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::GRABBER);
+			return BIND::RESULT::CONTINUE;
+		});
+
 		this->UIs.push_back(std::move(hotbar));
 	}
 

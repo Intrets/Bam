@@ -2,14 +2,10 @@
 #include "ActivityLoaderHelper.h"
 #include "Activity.h"
 
-//#include "Breaker.h"
 #include "Piston.h"
-//#include "Loader.h"
 #include "Anchor.h"
-//#include "Mover.h"
 #include "Platform.h"
-//#include "SinglePlatform.h"
-//#include "Grabber.h"
+#include "Grabber.h"
 #include "RailCrane.h"
 #include "LuaActivity.h"
 
@@ -32,11 +28,6 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 					LOAD(Anchor);
 					break;
 				}
-				//case ACTIVITY::TYPE::MOVER:
-				//	{
-				//		LOAD(Mover);
-				//		break;
-				//	}
 			case ACTIVITY::TYPE::PLATFORM:
 				{
 					LOAD(Platform);
@@ -57,21 +48,11 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 					LOAD(LuaActivity);
 					break;
 				}
-				//case Activity::Type::SINGLEPLATFORM:
-				//	{
-				//		LOAD(SinglePlatform);
-				//		break;
-				//	}
-				//case Activity::Type::BREAKER:
-				//	{
-				//		LOAD(Breaker);
-				//		break;
-				//	}
-				//case Activity::Type::GRABBER:
-				//	{
-				//		LOAD(Grabber);
-				//		break;
-				//	}
+			case ACTIVITY::TYPE::GRABBER:
+				{
+					LOAD(Grabber);
+					break;
+				}
 			default:
 				assert(false);
 				break;
