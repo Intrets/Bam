@@ -16,27 +16,12 @@ void Activity::applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int
 }
 
 bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-
-	for (auto member : members) {
-		if (!member->moveableIdleLocal()) {
-			return false;
-		}
-	}
-
-	ActivityIgnoringGroup ignoring(members);
-	for (auto member : members) {
-		if (!member->idleLocal() || !member->canMoveLocal(gameState, dir, ignoring)) {
-			return false;
-		}
-	}
-	return true;
+	ActivityIgnoringGroup ignoring(this->getSortedHandles());
+	return this->canMoveUp(gameState, dir, ignoring);
 }
 
-bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
+bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignoring) {
+	auto const& members = this->getTreeMembers();
 
 	for (auto member : members) {
 		if (!member->moveableIdleLocal()) {
@@ -44,7 +29,6 @@ bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Ac
 		}
 	}
 
-	ActivityIgnoringGroup ignoring(members, extraIgnore);
 	for (auto member : members) {
 		if (!member->idleLocal() || !member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
@@ -64,9 +48,7 @@ glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
 }
 
 bool Activity::idleUp() {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-	for (auto& member : members) {
+	for (auto& member : this->getTreeMembers()) {
 		if (!member->idleLocal()) {
 			return false;
 		}
@@ -105,17 +87,13 @@ float Activity::getActivityScale(int32_t tick) {
 }
 
 void Activity::rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-	for (auto member : members) {
+	for (auto member : this->getTreeMembers()) {
 		member->rotateForcedLocal(center, rotation);
 	}
 }
 
 void Activity::forceMoveOriginUp(glm::ivec2 d) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-	for (auto& member : members) {
+	for (auto& member : this->getTreeMembers()) {
 		member->forceMoveOriginLocal(d);
 	}
 }
@@ -155,8 +133,7 @@ bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t
 }
 
 bool Activity::applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
+	auto const& members = this->getTreeMembers();
 
 	for (auto member : members) {
 		if (!member->moveableIdleLocal()) {
@@ -164,7 +141,7 @@ bool Activity::applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace
 		}
 	}
 
-	ActivityIgnoringGroup ignoring(members);
+	ActivityIgnoringGroup ignoring(this->getSortedHandles());
 	for (auto member : members) {
 		if (!member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
@@ -178,10 +155,7 @@ bool Activity::applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace
 }
 
 void Activity::applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-
-	for (auto member : members) {
+	for (auto member : this->getTreeMembers()) {
 		member->applyMoveLocalForced(gameState, dir, pace);
 	}
 }
@@ -195,6 +169,18 @@ void Activity::stopMovement(GameState& gameState) {
 	this->removeMoveableTracesLocal(gameState);
 	this->movementDirection = ACTIVITY::DIR::STATIONARY;
 	this->moving = false;
+}
+
+std::vector<Handle> const& Activity::getSortedHandles() {
+	return this->memberCache.getSortedHandles();
+}
+
+std::vector<Activity*> const& Activity::getTreeMembers() {
+	return this->memberCache.getMembers();
+}
+
+WeakReference<Activity, Activity> Activity::getRootRef() {
+	return WeakReference<Activity, Activity>(this->memberCache.getRoot()->getHandle());
 }
 
 WeakReference<Activity, Activity> Activity::getRoot() const {
@@ -265,17 +251,14 @@ void Activity::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Activity::fillTracesUpForced(GameState& gameState) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-	for (auto member : members) {
+	for (auto member : this->getTreeMembers()) {
 		member->fillTracesLocalForced(gameState);
 		member->inWorld = true;
 	}
 }
 
 bool Activity::fillTracesUp(GameState& gameState) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
+	auto const& members = this->getTreeMembers();
 	for (auto member : members) {
 		if (!member->canFillTracesLocal(gameState)) {
 			return false;
@@ -290,18 +273,14 @@ bool Activity::fillTracesUp(GameState& gameState) {
 }
 
 void Activity::removeTracesUpForced(GameState& gameState) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
-
-	for (auto member : members) {
+	for (auto member : this->getTreeMembers()) {
 		member->removeTracesLocalForced(gameState);
 		member->inWorld = false;
 	}
 }
 
 bool Activity::removeTracesUp(GameState& gameState) {
-	std::vector<Activity*> members;
-	this->getTreeMembers(members);
+	auto const& members = this->getTreeMembers();
 	for (auto member : members) {
 		if (!member->idleLocal()) {
 			return false;

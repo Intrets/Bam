@@ -3,6 +3,7 @@
 #include "ReferenceManager.h"
 
 #include <initializer_list>
+#include "MemberCache.h"
 
 class ActivityIgnoringGroup;
 class GrouperBase;
@@ -173,6 +174,8 @@ protected:
 
 	glm::ivec2 origin;
 
+	MemberCache memberCache{ *this };
+
 public:
 	WeakReference<Activity, GrouperBase> parentRef;
 	Handle selfHandle;
@@ -221,7 +224,8 @@ public:
 	virtual bool canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) = 0;
 	virtual void applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir);
-	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore);
+	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore);
+	//bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore);
 	bool applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	void applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	bool applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
@@ -250,6 +254,10 @@ public:
 	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
 	WeakReference<Activity, Activity> getRoot() const;
+
+	std::vector<Handle> const& getSortedHandles();
+	std::vector<Activity*> const& getTreeMembers();
+	WeakReference<Activity, Activity> getRootRef();
 
 	// Serial
 	virtual ACTIVITY::TYPE getType() = 0;

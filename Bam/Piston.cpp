@@ -48,8 +48,8 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 				if (this->child.isNull()) {
 					return true;
 				}
-				std::vector<Activity*> extraIgnore{ this };
-				return this->child.get()->canMoveUp(gameState, ACTIVITY::FLIP(this->headDir), extraIgnore);
+				ActivityIgnoringGroup ignoring{ this->getSortedHandles() };
+				return this->child.get()->canMoveUp(gameState, ACTIVITY::FLIP(this->headDir), ignoring);
 			}
 			break;
 		default:
