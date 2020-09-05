@@ -18,6 +18,18 @@ SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm:
 }
 
 void SingleBlockActivity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
+	auto d = this->getOrigin() - center;
+	switch (rotation) {
+		case ACTIVITY::ROT::CLOCKWISE:
+			d = glm::ivec2(d.y, -d.x - 1);
+			break;
+		case ACTIVITY::ROT::COUNTERCLOCKWISE:
+			d = glm::ivec2(-d.y - 1, d.x);
+			break;
+		default:
+			break;
+	}
+	this->origin = center + d;
 }
 
 bool SingleBlockActivity::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore) {
