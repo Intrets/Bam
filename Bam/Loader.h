@@ -16,6 +16,8 @@ private:
 
 	std::ifstream in;
 
+	GameState& gameStateRef;
+
 public:
 	template<class T>
 	bool retrieve(T& t);
@@ -27,11 +29,12 @@ public:
 
 	bool retrieveString(std::string& str);
 
-	bool loadGame(GameState& gameState);
+	bool loadGame();
+	GameState& getGameStateRef();
 
-	Loader(std::string file);
+	Loader(std::string file, GameState& gameState);
 
-	Loader();
+	Loader() = delete;
 	~Loader();
 };
 

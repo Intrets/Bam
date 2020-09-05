@@ -19,8 +19,13 @@ private:
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
 
+	std::optional<sol::function> luaRunFunction;
+
+	void run();
+
 	void prepare(GameState& gameState);
 	void execute(std::string);
+	void refreshRunFunction();
 
 	void initializeLuaState();
 
@@ -31,8 +36,7 @@ public:
 	void setWatchedVars(std::vector<std::string>& vars);
 	std::vector<std::string> const& getWatchedVars();
 
-	void run(GameState& gameState);
-	void init(GameState& gameState);
+	void init();
 
 	void setScript(std::string script, GameState& gameState);
 	std::string const& getScript();

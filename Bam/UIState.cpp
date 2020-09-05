@@ -355,7 +355,6 @@ void UIState::init() {
 				name.erase(name.end() - 1);
 
 				params.gameState.saveFile = name;
-				Saver(name).saveGame(params.gameState);
 				return BIND::RESULT::CONTINUE;
 			})
 				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })

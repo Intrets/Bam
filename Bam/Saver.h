@@ -15,6 +15,8 @@ class Saver
 private:
 	std::ofstream out;
 
+	GameState& gameStateRef;
+
 public:
 	template<class T>
 	bool store(T t);
@@ -26,10 +28,10 @@ public:
 
 	bool storeString(std::string s);
 
-	bool saveGame(GameState& gameState);
+	bool saveGame();
 
-	Saver(std::string file);
-	Saver();
+	Saver(std::string file, GameState& gameState);
+	Saver() = delete;
 	~Saver();
 };
 

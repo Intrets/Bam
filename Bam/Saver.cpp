@@ -12,19 +12,16 @@ bool Saver::storeString(std::string s) {
 	return false;
 }
 
-bool Saver::saveGame(GameState& gameState) {
+bool Saver::saveGame() {
 	auto manager = Locator<ReferenceManager<Activity>>::get();
 	save(*this, *manager);
 
-	gameState.save(*this);
+	this->gameStateRef.save(*this);
 	return true;
 }
 
-Saver::Saver(std::string file) {
+Saver::Saver(std::string file, GameState& gameState) : gameStateRef(gameState) {
 	Locator<PathManager>::get()->openSave(this->out, file);
-}
-
-Saver::Saver() {
 }
 
 Saver::~Saver() {

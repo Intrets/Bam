@@ -395,6 +395,7 @@
     <ClCompile Include="UIOLua.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
+    <ClCompile Include="MemberCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -698,6 +699,7 @@
     <ClInclude Include="UIOLua.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
+    <ClInclude Include="MemberCache.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

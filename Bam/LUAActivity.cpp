@@ -69,7 +69,7 @@ bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 
 void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
-	this->run(gameState);
+	this->run();
 }
 
 void LuaActivity::removeActivityTracesLocal(GameState& gameState) {
@@ -116,7 +116,8 @@ bool LuaActivity::load(Loader& loader) {
 
 	loader.retrieve(this->interrupt);
 	loader.retrieve(this->script);
-	this->execute(this->script);
+
+	this->setScript(this->script, loader.getGameStateRef());
 
 	this->validTargets.clear();
 	this->watchedVars.clear();
@@ -165,6 +166,32 @@ bool LuaActivity::applyActivity(Handle h, int32_t type) {
 
 void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
 	this->printFunction = f;
+}
+
+void LuaActivity::run() {
+	std::vector<Activity*> members;
+	this->getRoot().get()->getTreeMembers(members);
+
+	this->validTargets.clear();
+	for (auto member : members) {
+		this->validTargets.push_back(member->getHandle());
+	}
+
+	std::sort(this->validTargets.begin(), this->validTargets.end());
+	if (this->luaRunFunction.has_value()) {
+		try {
+			this->luaRunFunction.value()();
+		}
+		catch (const sol::error& e) {
+			Locator<Log>::ref().putLine(e.what());
+		}
+		catch (...) {
+			Locator<Log>::ref().putLine("non-sol::error when executing script");
+		}
+	}
+	else {
+		Locator<Log>::ref().putLine("No run() function found in lua script.");
+	}
 }
 
 void LuaActivity::prepare(GameState& gameState) {
@@ -266,24 +293,19 @@ std::vector<std::string> const& LuaActivity::getWatchedVars() {
 	return this->watchedVars;
 }
 
-void LuaActivity::run(GameState& gameState) {
-	this->prepare(gameState);
-
-	this->execute("run()");
-}
-
-void LuaActivity::init(GameState& gameState) {
-	this->prepare(gameState);
-
-	this->execute("init()");
-}
-
 void LuaActivity::setScript(std::string script_, GameState& gameState) {
-	this->prepare(gameState);
-
+	this->gameStateRef = &gameState;
 	this->script = script_;
-	this->execute(script_);
-	this->init(gameState);
+	this->execute(this->script);
+	this->execute("init()");
+	this->refreshRunFunction();
+}
+
+void LuaActivity::refreshRunFunction() {
+	sol::object func = this->state["run"];
+	if (func.get_type() == sol::type::function) {
+		this->luaRunFunction = func.as<sol::function>();
+	}
 }
 
 std::string const& LuaActivity::getScript() {

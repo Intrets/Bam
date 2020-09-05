@@ -84,20 +84,21 @@ bool Loader::retrieveString(std::string& str) {
 	return false;
 }
 
-bool Loader::loadGame(GameState& gameState) {
+bool Loader::loadGame() {
 	auto manager = new ReferenceManager<Activity>(1024);
 	load(*this, *manager);
 	Locator<ReferenceManager<Activity>>::provide(manager);
 
-	gameState.load(*this);
+	this->gameStateRef.load(*this);
 	return true;
 }
 
-Loader::Loader(std::string file) {
-	Locator<PathManager>::get()->openSave(in, file);
+GameState& Loader::getGameStateRef() {
+	return this->gameStateRef;
 }
 
-Loader::Loader() {
+Loader::Loader(std::string file, GameState& gameState) : gameStateRef(gameState) {
+	Locator<PathManager>::get()->openSave(in, file);
 }
 
 Loader::~Loader() {
