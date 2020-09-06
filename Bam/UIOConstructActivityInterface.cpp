@@ -55,7 +55,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 						auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
 						auto const& target = maybeTarget.value();
-						auto const& base = maybeTarget.value().get()->getRoot();
+						auto const& base = maybeTarget.value().get()->getRootRef();
 
 						interfacePtr->setBase(base);
 						interfacePtr->setTarget(target);

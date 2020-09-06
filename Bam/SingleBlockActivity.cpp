@@ -58,7 +58,7 @@ void SingleBlockActivity::leaveMoveableTracesLocal(GameState& gameState) {
 	gameState.staticWorld.leaveTrace(this->origin + ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
 }
 
-void SingleBlockActivity::getTreeMembers(std::vector<Activity*>& members) {
+void SingleBlockActivity::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 

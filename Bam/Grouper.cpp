@@ -51,10 +51,10 @@ bool SingleGrouper::hasChild() const {
 	return this->child.isNotNull();
 }
 
-void SingleGrouper::getTreeMembers(std::vector<Activity*>& members) {
+void SingleGrouper::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 	if (this->child.isNotNull()) {
-		this->child.get()->getTreeMembers(members);
+		this->child.get()->impl_getTreeMembers(members);
 	}
 }
 

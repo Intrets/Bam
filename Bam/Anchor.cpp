@@ -98,10 +98,10 @@ ACTIVITY::TYPE Anchor::getType() {
 	return ACTIVITY::TYPE::ANCHOR;
 }
 
-void Anchor::getTreeMembers(std::vector<Activity*>& members) {
+void Anchor::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 	for (auto& child : this->children) {
-		child.get()->getTreeMembers(members);
+		child.get()->impl_getTreeMembers(members);
 	}
 }
 

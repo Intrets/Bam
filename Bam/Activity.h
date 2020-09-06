@@ -155,7 +155,9 @@ class Anchor;
 class Activity
 {
 private:
-	Handle getRootHandle() const;
+	Handle impl_getRootHandle() const;
+
+	friend class MemberCache;
 
 protected:
 	glm::vec2 getMovingOrigin(GameState const& gameState) const;
@@ -174,9 +176,9 @@ protected:
 
 	glm::ivec2 origin;
 
+public:
 	MemberCache memberCache{ *this };
 
-public:
 	WeakReference<Activity, GrouperBase> parentRef;
 	Handle selfHandle;
 
@@ -251,13 +253,14 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
 
 	// Tree Informations
-	virtual void getTreeMembers(std::vector<Activity*>& members) = 0;
+	virtual void impl_getTreeMembers(std::vector<Activity*>& members) = 0;
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
-	WeakReference<Activity, Activity> getRoot() const;
 
 	std::vector<Handle> const& getSortedHandles();
 	std::vector<Activity*> const& getTreeMembers();
 	WeakReference<Activity, Activity> getRootRef();
+	Handle getRootHandle();
+	Activity* getRootPtr();
 
 	// Serial
 	virtual ACTIVITY::TYPE getType() = 0;

@@ -136,7 +136,18 @@ void UIOActivityInterface::splitTarget() {
 			break;
 		case UIO::USER_ACTION_TYPE::NOTHING:
 			if (this->base.isValid() && this->target.isValid() && sameGroup(this->base, this->target)) {
+				auto r1 = this->base;
+				auto r2 = this->target;
+
 				this->target.get()->disconnectFromParent();
+
+				for (auto& member : r1.get()->getTreeMembers()) {
+					member->memberCache.invalidateMembers();
+				}
+
+				for (auto& member : r2.get()->getTreeMembers()) {
+					member->memberCache.invalidateRoot();
+				}
 			}
 			break;
 		default:
@@ -178,7 +189,7 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 		case UIO::USER_ACTION_TYPE::NOTHING:
 			{
 				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
-					auto const& pick = maybePick.value().get()->getRoot();
+					auto const& pick = maybePick.value().get()->getRootRef();
 					if (this->base.isValid() && sameGroup(pick, this->base)) {
 						return;
 					}
@@ -272,9 +283,7 @@ int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& re
 			this->baseSelectionTick = gameState.tick;
 		}
 		if (periodic(gameState.tick, 80, 40, -this->baseSelectionTick)) {
-			std::vector<Activity*> members;
-			this->base.get()->getTreeMembers(members);
-			for (auto member : members) {
+			for (auto member : this->base.get()->getTreeMembers()) {
 				if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
 					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
 				}
@@ -291,9 +300,7 @@ int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& re
 	}
 	if (this->cursor.isNotNull()) {
 		bool blocked = false;
-		std::vector<Activity*> members;
-		this->cursor.get()->getTreeMembers(members);
-		for (auto member : members) {
+		for (auto member : this->cursor.get()->getTreeMembers()) {
 			if (!member->canFillTracesLocal(gameState)) {
 				blocked = true;
 				break;

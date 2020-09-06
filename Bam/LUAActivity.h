@@ -13,7 +13,6 @@ private:
 
 	std::string script;
 
-	std::vector<Handle> validTargets;
 	std::vector<std::string> watchedVars = { "state" };
 
 	std::function<void(std::string line)> printFunction = [](std::string)

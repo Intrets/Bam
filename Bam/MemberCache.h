@@ -19,7 +19,9 @@ private:
 	Activity* root;
 
 public:
-	void invalidate();
+	void invalidateAll();
+	void invalidateMembers();
+	void invalidateRoot();
 
 	std::vector<Activity*> const& getMembers();
 	std::vector<Handle> const& getSortedHandles();

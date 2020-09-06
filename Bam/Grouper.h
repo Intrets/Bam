@@ -39,7 +39,7 @@ public:
 	virtual ~SingleGrouper() = default;
 
 	// Tree Information
-	virtual void getTreeMembers(std::vector<Activity*>& members) override;
+	virtual void impl_getTreeMembers(std::vector<Activity*>& members) override;
 	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
 	// Serial

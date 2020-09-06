@@ -228,7 +228,7 @@ bool Platform::load(Loader& loader) {
 	return true;
 }
 
-void Platform::getTreeMembers(std::vector<Activity*>& members) {
+void Platform::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 

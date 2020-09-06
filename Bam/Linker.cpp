@@ -7,10 +7,21 @@ bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> 
 	if (r2.handle == r1.handle) {
 		return false;
 	}
+
+	for (auto& member : r1.get()->getRootPtr()->getTreeMembers()) {
+		member->memberCache.invalidateMembers();
+	}
+
 	auto toDelete = r2;
+
+	for (auto& member : r2.get()->getTreeMembers()) {
+		member->memberCache.invalidateRoot();
+	}
+
 	for (auto& r : r2.get()->getChildren()) {
 		r1.get()->addChild(r);
 	}
+
 	Locator<ReferenceManager<Activity>>::get()->deleteReference(&toDelete);
 	return true;
 }
@@ -22,7 +33,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 		return false;
 	}
 
-	r2 = r2.get()->getRoot();
+	r2 = r2.get()->getRootRef();
 
 	if (r1.get()->hasChild()) {
 		auto child = r1.get()->getChild();
@@ -46,7 +57,16 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 		return linkAnchor(gameState, r1, r2);
 	}
 	else {
+		for (auto& member : r1.get()->getRootPtr()->getTreeMembers()) {
+			member->memberCache.invalidateMembers();
+		}
+
 		r1.get()->addChild(r2);
+
+		for (auto& member : r2.get()->getTreeMembers()) {
+			member->memberCache.invalidateRoot();
+		}
+
 		return true;
 	}
 }
@@ -56,7 +76,7 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 		return false;
 	}
 
-	r2 = r2.get()->getRoot();
+	r2 = r2.get()->getRootRef();
 
 	auto p1 = r1.get();
 	auto p2 = r2.get();
@@ -65,7 +85,15 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 		return mergeAnchors(gameState, r1, r2);
 	}
 	else {
+		for (auto& member : r1.get()->getRootPtr()->getTreeMembers()) {
+			member->memberCache.invalidateMembers();
+		}
+
 		p1->addChild(r2);
+
+		for (auto& member : r2.get()->getTreeMembers()) {
+			member->memberCache.invalidateRoot();
+		}
 		return true;
 	}
 }
@@ -79,7 +107,7 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 		type != ACTIVITY::TYPE::RAILCRANE &&
 		type != ACTIVITY::TYPE::PISTON);
 #endif
-	r2 = r2.get()->getRoot();
+	r2 = r2.get()->getRootRef();
 
 	auto parent = r1.get()->parentRef;
 	if (parent.isNotNull()) {
@@ -109,7 +137,7 @@ bool Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, We
 	auto p2 = r2.get();
 
 	if (p2->parentRef.isNotNull()) {
-		return link(gameState, r1, p2->getRoot());
+		return link(gameState, r1, p2->getRootRef());
 	}
 
 	switch (p1->getType()) {

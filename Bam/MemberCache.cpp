@@ -3,16 +3,26 @@
 #include "MemberCache.h"
 #include "Activity.h"
 
-void MemberCache::invalidate() {
+void MemberCache::invalidateAll() {
 	this->validMembers = false;
 	this->validRoot = false;
 	this->validSortedHandles = false;
 }
 
+void MemberCache::invalidateMembers() {
+	this->validMembers = false;
+	this->validSortedHandles = false;
+}
+
+void MemberCache::invalidateRoot() {
+	this->validRoot = false;
+}
+
 std::vector<Activity*> const& MemberCache::getMembers() {
 	if (!this->validMembers) {
 		this->members.clear();
-		this->self.getTreeMembers(this->members);
+		this->self.impl_getTreeMembers(this->members);
+		this->validMembers = true;
 	}
 	return this->members;
 }
@@ -24,13 +34,15 @@ std::vector<Handle> const& MemberCache::getSortedHandles() {
 			this->sortedHandles.push_back(member->getHandle());
 		}
 		std::sort(this->sortedHandles.begin(), this->sortedHandles.end());
+		this->validSortedHandles = true;
 	}
 	return this->sortedHandles;
 }
 
 Activity* MemberCache::getRoot() {
 	if (!this->validRoot) {
-		this->root = this->self.getRoot().get();
+		this->root = WeakReference<Activity, Activity>(this->self.impl_getRootHandle()).get();
+		this->validRoot = true;
 	}
 	return this->root;
 }

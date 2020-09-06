@@ -119,7 +119,6 @@ bool LuaActivity::load(Loader& loader) {
 
 	this->setScript(this->script, loader.getGameStateRef());
 
-	this->validTargets.clear();
 	this->watchedVars.clear();
 
 	size_t size;
@@ -143,7 +142,8 @@ bool LuaActivity::load(Loader& loader) {
 }
 
 bool LuaActivity::valid(Handle h) {
-	return std::binary_search(this->validTargets.begin(), this->validTargets.end(), h);
+	auto const& validTargets = this->getRootRef().get()->getSortedHandles();
+	return std::binary_search(validTargets.begin(), validTargets.end(), h);
 }
 
 bool LuaActivity::applyMove(Handle h, int32_t type) {
@@ -169,15 +169,6 @@ void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
 }
 
 void LuaActivity::run() {
-	std::vector<Activity*> members;
-	this->getRoot().get()->getTreeMembers(members);
-
-	this->validTargets.clear();
-	for (auto member : members) {
-		this->validTargets.push_back(member->getHandle());
-	}
-
-	std::sort(this->validTargets.begin(), this->validTargets.end());
 	if (this->luaRunFunction.has_value()) {
 		try {
 			this->luaRunFunction.value()();
@@ -196,15 +187,6 @@ void LuaActivity::run() {
 
 void LuaActivity::prepare(GameState& gameState) {
 	gameStateRef = &gameState;
-	std::vector<Activity*> members;
-	this->getRoot().get()->getTreeMembers(members);
-
-	this->validTargets.clear();
-	for (auto member : members) {
-		this->validTargets.push_back(member->getHandle());
-	}
-
-	std::sort(this->validTargets.begin(), this->validTargets.end());
 }
 
 LuaActivity::LuaActivity() {

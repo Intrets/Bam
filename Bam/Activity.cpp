@@ -161,7 +161,7 @@ void Activity::applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_
 }
 
 bool Activity::applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pace) {
-	return this->getRoot().get()->applyMoveUp(gameState, dir, pace);
+	return this->getRootPtr()->applyMoveUp(gameState, dir, pace);
 }
 
 void Activity::stopMovement(GameState& gameState) {
@@ -183,13 +183,17 @@ WeakReference<Activity, Activity> Activity::getRootRef() {
 	return WeakReference<Activity, Activity>(this->memberCache.getRoot()->getHandle());
 }
 
-WeakReference<Activity, Activity> Activity::getRoot() const {
-	return WeakReference<Activity, Activity>(this->getRootHandle());
+Handle Activity::getRootHandle() {
+	return this->memberCache.getRoot()->getHandle();
 }
 
-Handle Activity::getRootHandle() const {
+Activity* Activity::getRootPtr() {
+	return this->memberCache.getRoot();
+}
+
+Handle Activity::impl_getRootHandle() const {
 	if (this->parentRef.isNotNull()) {
-		return this->parentRef.get()->getRootHandle();
+		return this->parentRef.get()->impl_getRootHandle();
 	}
 	else {
 		return this->selfHandle;

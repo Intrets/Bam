@@ -283,7 +283,7 @@ void Grabber::leaveMoveableTracesLocal(GameState& gameState) {
 	}
 }
 
-void Grabber::getTreeMembers(std::vector<Activity*>& members) {
+void Grabber::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 
