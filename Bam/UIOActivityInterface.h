@@ -20,11 +20,9 @@ namespace UIO
 class UIOActivityInterface : public UIOBase
 {
 private:
-	ManagedReference<Activity, Activity> base;
-	int32_t baseSelectionTick;
-
 	ManagedReference<Activity, Activity> target;
 	int32_t targetSelectionTick;
+	int32_t baseSelectionTick;
 
 	UniqueReference<Activity, Activity> cursor;
 
@@ -35,7 +33,6 @@ public:
 
 	void exit();
 	void cancel(bool full);
-	void setBase(WeakReference<Activity, Activity> ref);
 	void setTarget(WeakReference<Activity, Activity> ref);
 	void splitTarget();
 

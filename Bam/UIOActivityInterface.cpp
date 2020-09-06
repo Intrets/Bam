@@ -86,7 +86,6 @@ UIOActivityInterface::UIOActivityInterface(Handle self) {
 void UIOActivityInterface::exit() {
 	this->cursor.deleteObject();
 	this->target.unset();
-	this->base.unset();
 	this->type = UIO::USER_ACTION_TYPE::NOTHING;
 }
 
@@ -95,7 +94,6 @@ void UIOActivityInterface::cancel(bool full) {
 		this->type = UIO::USER_ACTION_TYPE::NOTHING;
 		this->cursor.deleteObject();
 		this->target.unset();
-		this->base.unset();
 	}
 	else {
 		switch (this->type) {
@@ -109,20 +107,11 @@ void UIOActivityInterface::cancel(bool full) {
 				if (this->target.isValid()) {
 					this->target.unset();
 				}
-				else if (this->base.isValid()) {
-					this->base.unset();
-				}
 				break;
 			default:
 				break;
 		}
 	}
-}
-
-void UIOActivityInterface::setBase(WeakReference<Activity, Activity> ref) {
-	this->base.set(ref);
-	this->target.unset();
-	this->baseSelectionTick = 0;
 }
 
 void UIOActivityInterface::setTarget(WeakReference<Activity, Activity> ref) {
@@ -135,8 +124,8 @@ void UIOActivityInterface::splitTarget() {
 		case UIO::USER_ACTION_TYPE::HOVERING:
 			break;
 		case UIO::USER_ACTION_TYPE::NOTHING:
-			if (this->base.isValid() && this->target.isValid() && sameGroup(this->base, this->target)) {
-				auto r1 = this->base;
+			if (this->target.isValid() && sameGroup(this->target.get()->getRootRef(), this->target)) {
+				auto r1 = this->target.get()->getRootRef();
 				auto r2 = this->target;
 
 				this->target.get()->disconnectFromParent();
@@ -190,9 +179,6 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 			{
 				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
 					auto const& pick = maybePick.value().get()->getRootRef();
-					if (this->base.isValid() && sameGroup(pick, this->base)) {
-						return;
-					}
 					if (this->target.isValid() && sameGroup(pick, this->target)) {
 						return;
 					}
@@ -226,19 +212,12 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 					if (this->target.isValid()) {
 						linkTarget = this->target;
 					}
-					else if (this->base.isValid()) {
-						linkTarget = this->base;
-					}
 
 					if (linkTarget.isNotNull()) {
 						if (sameGroup(linkTarget, this->cursor)) {
 							return;
 						}
 						Linker::link(gameState, linkTarget, this->cursor);
-					}
-
-					if (this->base.isValid()) {
-						this->setBase(this->base);
 					}
 
 					this->cursor.clear();
@@ -278,19 +257,18 @@ void UIOActivityInterface::rotateHover(ACTIVITY::ROT rot) {
 }
 
 int32_t UIOActivityInterface::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	if (this->base.isValid()) {
+	if (this->target.isValid()) {
 		if (this->baseSelectionTick == 0) {
 			this->baseSelectionTick = gameState.tick;
 		}
 		if (periodic(gameState.tick, 80, 40, -this->baseSelectionTick)) {
-			for (auto member : this->base.get()->getTreeMembers()) {
+			for (auto member : this->target.get()->getRootPtr()->getTreeMembers()) {
 				if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
 					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
 				}
 			}
 		}
-	}
-	if (this->target.isValid()) {
+
 		if (this->targetSelectionTick == 0) {
 			this->targetSelectionTick = gameState.tick;
 		}

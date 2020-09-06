@@ -55,13 +55,10 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 						auto self = static_cast<UIOListSelection<PairType>*>(self_);
 
 						auto const& target = maybeTarget.value();
-						auto const& base = maybeTarget.value().get()->getRootRef();
-
-						interfacePtr->setBase(base);
 						interfacePtr->setTarget(target);
 
 						std::vector<std::pair<int32_t, Activity*>> members;
-						base.get()->getTreeMembersDepths(members, 0);
+						target.get()->getRootPtr()->getTreeMembersDepths(members, 0);
 						std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
 
 						int32_t i = 0;
