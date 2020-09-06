@@ -155,6 +155,7 @@ class Anchor;
 class Activity
 {
 private:
+	// non-cached base implementation
 	Handle impl_getRootHandle() const;
 
 	friend class MemberCache;
@@ -253,13 +254,21 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
 
 	// Tree Informations
-	virtual void impl_getTreeMembers(std::vector<Activity*>& members) = 0;
-	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
 
+	// non-cached base implementation
+	virtual void impl_getTreeMembers(std::vector<Activity*>& members) = 0;
+	// non-cached base implementation
+	virtual void impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
+
+	// cached through MemberCache member object
 	std::vector<Handle> const& getSortedHandles();
+	// cached through MemberCache member object
 	std::vector<Activity*> const& getTreeMembers();
+	// cached through MemberCache member object
 	WeakReference<Activity, Activity> getRootRef();
+	// cached through MemberCache member object
 	Handle getRootHandle();
+	// cached through MemberCache member object
 	Activity* getRootPtr();
 
 	// Serial

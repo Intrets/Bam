@@ -58,10 +58,10 @@ void SingleGrouper::impl_getTreeMembers(std::vector<Activity*>& members) {
 	}
 }
 
-void SingleGrouper::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+void SingleGrouper::impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
 	members.push_back({ depth, this });
 	if (this->child.isNotNull()) {
-		this->child.get()->getTreeMembersDepths(members, depth + 1);
+		this->child.get()->impl_getTreeMembersDepths(members, depth + 1);
 	}
 }
 

@@ -14,7 +14,6 @@ namespace UIO
 		NOTHING,
 		HOVERING,
 	};
-
 }
 
 class UIOActivityInterface : public UIOBase

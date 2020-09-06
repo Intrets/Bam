@@ -58,7 +58,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 						interfacePtr->setTarget(target);
 
 						std::vector<std::pair<int32_t, Activity*>> members;
-						target.get()->getRootPtr()->getTreeMembersDepths(members, 0);
+						target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
 						std::vector<std::pair<int32_t, ManagedReference<Activity, Activity>>> membersManaged;
 
 						int32_t i = 0;

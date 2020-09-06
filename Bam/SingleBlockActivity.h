@@ -31,8 +31,11 @@ public:
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
 
 	// Tree Informations
+
+	// non-cached base implementation
 	virtual void impl_getTreeMembers(std::vector<Activity*>& members) override;
-	virtual void getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
+	// non-cached base implementation
+	virtual void impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) override;
 
 	// Render
 	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;

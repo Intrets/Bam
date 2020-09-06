@@ -62,7 +62,7 @@ void SingleBlockActivity::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 
-void SingleBlockActivity::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+void SingleBlockActivity::impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
 	members.push_back({ depth, this });
 }
 

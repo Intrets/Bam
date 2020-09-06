@@ -287,7 +287,7 @@ void Grabber::impl_getTreeMembers(std::vector<Activity*>& members) {
 	members.push_back(this);
 }
 
-void Grabber::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+void Grabber::impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
 	members.push_back({ depth, this });
 }
 

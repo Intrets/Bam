@@ -151,7 +151,7 @@ ACTIVITY::TYPE Platform::getType() {
 	return ACTIVITY::TYPE::PLATFORM;
 }
 
-void Platform::getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
+void Platform::impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) {
 	members.push_back({ depth, this });
 }
 
