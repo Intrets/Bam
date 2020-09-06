@@ -20,12 +20,12 @@ class UIOActivityInterface : public UIOBase
 {
 private:
 	ManagedReference<Activity, Activity> target;
-	int32_t targetSelectionTick;
-	int32_t baseSelectionTick;
+	int32_t targetSelectionTick = 0;
+	int32_t baseSelectionTick = 0;
 
 	UniqueReference<Activity, Activity> cursor;
 
-	UIO::USER_ACTION_TYPE type;
+	UIO::USER_ACTION_TYPE type = UIO::USER_ACTION_TYPE::NOTHING;
 
 public:
 	UIOActivityInterface(Handle self);

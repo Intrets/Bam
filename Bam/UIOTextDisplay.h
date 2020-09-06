@@ -6,10 +6,10 @@
 class UIOTextDisplay : public UIOBase
 {
 private:
-	bool lineWrap;
-	int32_t ticksSelected;
-	bool clickSupport;
-	bool shrinkToFit;
+	bool lineWrap = false;
+	int32_t ticksSelected = 0;
+	bool clickSupport = false;
+	bool shrinkToFit = false;
 
 public:
 	Text text;

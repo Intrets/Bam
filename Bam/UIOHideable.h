@@ -5,10 +5,10 @@
 class UIOHideable : public UIOBase
 {
 private:
-	bool hidden;
+	bool hidden = false;
 
 	// if the parent container should be brought to focus
-	bool shouldFocus;
+	bool shouldFocus = false;
 
 	// if the UIOHideable should bring the parent back to focus on being shown again
 	bool focusOnShow = true;

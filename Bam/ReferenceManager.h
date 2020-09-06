@@ -119,8 +119,8 @@ public:
 	ManagedReference(Handle h);
 	ManagedReference(WeakReference<B, T> r);
 
-	ManagedReference(ManagedReference&& other);
-	ManagedReference<B, T>& operator= (ManagedReference&& other);
+	ManagedReference(ManagedReference&& other) noexcept;
+	ManagedReference<B, T>& operator= (ManagedReference&& other) noexcept;
 
 	ManagedReference(const ManagedReference&);
 	ManagedReference& operator=(const ManagedReference&);
@@ -379,7 +379,7 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B
 }
 
 template<class B, class T>
-inline ManagedReference<B, T>::ManagedReference(ManagedReference&& other) {
+inline ManagedReference<B, T>::ManagedReference(ManagedReference&& other) noexcept {
 	if (other.isValid()) {
 		this->set(other.handle);
 	}
@@ -387,7 +387,7 @@ inline ManagedReference<B, T>::ManagedReference(ManagedReference&& other) {
 }
 
 template<class B, class T>
-inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(ManagedReference&& other) {
+inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(ManagedReference&& other) noexcept {
 	if (this != &other) {
 		if (other.isValid()) {
 			this->set(other.handle);

@@ -181,7 +181,9 @@ public:
 	MemberCache memberCache{ *this };
 
 	WeakReference<Activity, GrouperBase> parentRef;
-	Handle selfHandle;
+
+	// Get's set by non default constructor, and should be set after default constructor
+	Handle selfHandle = -1;
 
 	virtual glm::ivec2 getOrigin() {
 		return origin;
@@ -198,7 +200,7 @@ public:
 	float getMovementScale(int32_t  tick);
 	float getActivityScale(int32_t  tick);
 
-	// Constructors
+	// Invalid state, needs to set member variables selfHandle, origin and parentRef
 	Activity() = default;
 	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {
 	};

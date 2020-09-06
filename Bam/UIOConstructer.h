@@ -71,7 +71,7 @@ public:
 	template<class ...Args>
 	static UIOConstructer<T> makeConstructer(Args&& ...args);
 
-	UIOConstructer(UIOConstructer&& other);
+	UIOConstructer(UIOConstructer&& other) noexcept;
 	UIOConstructer& operator=(UIOConstructer&& other);
 
 	NOCOPY(UIOConstructer);
@@ -582,7 +582,7 @@ inline UniqueReference<UIOBase, T> UIOConstructer<T>::get() {
 }
 
 template<class T>
-inline UIOConstructer<T>::UIOConstructer(UIOConstructer&& other) {
+inline UIOConstructer<T>::UIOConstructer(UIOConstructer&& other) noexcept {
 	this->object = std::move(other.object);
 }
 

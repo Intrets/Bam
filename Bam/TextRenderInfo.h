@@ -15,7 +15,7 @@ public:
 	ScreenRectangle screenRectangle;
 
 	// layering for UI rendering
-	float depth;
+	float depth = 0.0f;
 
 	// view offset for render info
 	glm::vec2 offset;
@@ -78,7 +78,7 @@ class Text
 private:
 	std::vector<std::string> lines = { "" };
 	glm::ivec2 cursor;
-	int32_t cursorIndex;
+	int32_t cursorIndex = 0;
 
 private:
 	ScreenRectangle lastScreenRectangle;

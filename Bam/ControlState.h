@@ -91,8 +91,8 @@ public:
 	void cycleStates();
 
 	std::string getCharBuffer();
-	int32_t scrollDistance;
-	bool blockUserInput;
+	int32_t scrollDistance = 0;
+	bool blockUserInput = false;
 
 	void setBlockWorldBinds(bool b);
 	bool worldBindsBlocked();
@@ -115,11 +115,11 @@ private:
 	std::array<bool, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> consumed;
 	std::array<bool, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> consumedBuffer;
 
-	int32_t modifiers;
+	int32_t modifiers = 0;
 
 	std::string charBuffer;
 
-	bool blockWorldBinds;
+	bool blockWorldBinds = false;
 };
 
 struct BindControl
