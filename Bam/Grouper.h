@@ -26,6 +26,8 @@ class SingleGrouper : public GrouperBase
 protected:
 	WeakReference<Activity, Activity> child;
 
+	friend void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper*, SingleGrouper*, HandleMap&);
+
 public:
 	WeakReference<Activity, Activity> const& getChild();
 

@@ -374,9 +374,6 @@
     <ClCompile Include="UIOHideable.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityHelpers.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="ActivitySpawner.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
@@ -396,6 +393,12 @@
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
     <ClCompile Include="MemberCache.cpp" />
+    <ClCompile Include="ActivityCopier.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityHelpers.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -678,9 +681,6 @@
     <ClInclude Include="UIOHideable.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityHelpers.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
     <ClInclude Include="ActivitySpawner.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
@@ -700,6 +700,12 @@
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
     <ClInclude Include="MemberCache.h" />
+    <ClInclude Include="ActivityCopier.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityHelpers.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

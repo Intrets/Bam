@@ -9,3 +9,4 @@ class UniqueReference;
 class Activity;
 
 bool sameGroup(WeakReference<Activity, Activity> a1, WeakReference<Activity, Activity> a2);
+

@@ -11,6 +11,8 @@ class Anchor : public GrouperBase
 private:
 	std::vector<WeakReference<Activity, Activity>> children;
 
+	friend Activity* ACTIVITYCOPIER::copyAnchor(Anchor*, HandleMap&);
+
 public:
 	std::vector<WeakReference<Activity, Activity>>& getChildren();
 

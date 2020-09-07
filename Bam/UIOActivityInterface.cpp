@@ -15,9 +15,17 @@
 #include "UIOConstructLuaInterface.h"
 #include "UIOList.h"
 #include "UIOConstructer.h"
+#include "ActivityCopier.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
+
+	this->addFocussedBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOActivityInterface*>(self_);
+		self->copy(params.gameState, params.uiState.getCursorPositionWorld());
+		return BIND::CONTINUE;
+	});
 
 	this->addFocussedBind({ CONTROL::KEY::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
@@ -170,6 +178,23 @@ void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 void UIOActivityInterface::changeHoverActivityState(int32_t t) {
 	if (this->cursor.isNotNull()) {
 		this->cursor.get()->forceChangeActivityState(t);
+	}
+}
+
+void UIOActivityInterface::copy(GameState& gameState, glm::vec2 pos) {
+	switch (this->type) {
+		case UIO::USER_ACTION_TYPE::NOTHING:
+			{
+				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
+					this->cursor = ACTIVITYCOPIER::copy(maybePick.value());
+					this->type = UIO::USER_ACTION_TYPE::HOVERING;
+				}
+				break;
+			}
+		case UIO::USER_ACTION_TYPE::HOVERING:
+			break;
+		default:
+			break;
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include <initializer_list>
 #include "MemberCache.h"
+#include "ActivityCopier.h"
 
 class ActivityIgnoringGroup;
 class GrouperBase;
@@ -176,6 +177,8 @@ protected:
 	bool inWorld = false;
 
 	glm::ivec2 origin;
+
+	friend void ACTIVITYCOPIER::copyActivity(Activity*, Activity*, HandleMap&);
 
 public:
 	MemberCache memberCache{ *this };

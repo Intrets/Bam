@@ -265,6 +265,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Activity.cpp" />
+    <ClCompile Include="ActivityCopier.cpp" />
     <ClCompile Include="ActivityHelpers.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
@@ -365,6 +366,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
+    <ClInclude Include="ActivityCopier.h" />
     <ClInclude Include="ActivityHelpers.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />

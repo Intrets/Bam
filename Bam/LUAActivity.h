@@ -6,7 +6,7 @@
 class LuaActivity : public SingleBlockActivity
 {
 private:
-	bool interrupt;
+	bool interrupt = false;
 
 	sol::state state;
 	GameState* gameStateRef;
@@ -18,7 +18,7 @@ private:
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
 
-	std::optional<sol::function> luaRunFunction;
+	std::optional<sol::function> luaRunFunction = std::nullopt;
 
 	void run();
 
@@ -28,14 +28,14 @@ private:
 
 	void initializeLuaState();
 
+	friend Activity* ACTIVITYCOPIER::copyLuaActivity(LuaActivity*, HandleMap&);
+
 public:
 	void start(GameState& gameState);
 	void stop();
 
 	void setWatchedVars(std::vector<std::string>& vars);
 	std::vector<std::string> const& getWatchedVars();
-
-	void init();
 
 	void setScript(std::string script, GameState& gameState);
 	std::string const& getScript();
