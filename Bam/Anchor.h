@@ -9,18 +9,18 @@ class GameState;
 class Anchor : public GrouperBase
 {
 private:
-	std::vector<WeakReference<Activity, Activity>> children;
+	std::vector<UniqueReference<Activity, Activity>> children;
 
 	friend Activity* ACTIVITYCOPIER::copyAnchor(Anchor*, HandleMap&);
 
 public:
-	std::vector<WeakReference<Activity, Activity>>& getChildren();
+	std::vector<UniqueReference<Activity, Activity>>& getChildren();
 
 	// Adds activity to this Anchor and sets the parentRef to this Anchor
-	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
+	virtual bool addChild(UniqueReference<Activity, Activity> ref) override;
 
-	// returns if this Anchor has no children and has to be cleaned up
-	virtual bool removeChild(WeakReference<Activity, Activity> ref) override;
+	virtual UniqueReference<Activity, Activity> popChild();
+	virtual std::optional<UniqueReference<Activity, Activity>> removeChild(WeakReference<Activity, Activity> ref) override;
 
 	virtual bool hasChild() const override;
 

@@ -11,10 +11,11 @@ public:
 	};
 	virtual ~GrouperBase() = default;
 
-	virtual bool addChild(Handle h);
-	virtual bool addChild(WeakReference<Activity, Activity> ref) = 0;
-	virtual bool removeChild(Handle h);
-	virtual bool removeChild(WeakReference<Activity, Activity> ref) = 0;
+	virtual bool addChild(UniqueReference<Activity, Activity> ref) = 0;
+
+	virtual UniqueReference<Activity, Activity> popChild() = 0;
+	std::optional<UniqueReference<Activity, Activity>> removeChild(Handle h);
+	virtual std::optional<UniqueReference<Activity, Activity>> removeChild(WeakReference<Activity, Activity> ref) = 0;
 	virtual bool hasChild() const = 0;
 
 	virtual void save(Saver& saver) override;
@@ -24,15 +25,16 @@ public:
 class SingleGrouper : public GrouperBase
 {
 protected:
-	WeakReference<Activity, Activity> child;
+	UniqueReference<Activity, Activity> child;
 
 	friend void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper*, SingleGrouper*, HandleMap&);
 
 public:
-	WeakReference<Activity, Activity> const& getChild();
+	UniqueReference<Activity, Activity> const& getChild();
 
-	virtual bool addChild(WeakReference<Activity, Activity> ref) override;
-	virtual bool removeChild(WeakReference<Activity, Activity> ref) override;
+	virtual UniqueReference<Activity, Activity> popChild();
+	virtual bool addChild(UniqueReference<Activity, Activity> ref) override;
+	virtual std::optional<UniqueReference<Activity, Activity>> removeChild(WeakReference<Activity, Activity> ref) override;
 	virtual bool hasChild() const override;
 
 	SingleGrouper() = default;

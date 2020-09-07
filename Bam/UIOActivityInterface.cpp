@@ -132,7 +132,7 @@ void UIOActivityInterface::splitTarget() {
 		case UIO::USER_ACTION_TYPE::HOVERING:
 			break;
 		case UIO::USER_ACTION_TYPE::NOTHING:
-			if (this->target.isValid() && sameGroup(this->target.get()->getRootRef(), this->target)) {
+			if (this->target.isValid()) {
 				auto r1 = this->target.get()->getRootRef();
 				auto r2 = this->target;
 
@@ -162,7 +162,7 @@ void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 			WeakReference<Activity, Anchor> c = this->cursor;
 			if (c.get()->hasChild()) {
 				glm::ivec2 refVec2 = glm::ivec2(0, 0);
-				for (auto child : c.get()->getChildren()) {
+				for (auto& child : c.get()->getChildren()) {
 					refVec2 += child.get()->getOrigin();
 				}
 				refVec2 /= c.get()->getChildren().size();
@@ -242,7 +242,12 @@ void UIOActivityInterface::interact(GameState& gameState, glm::vec2 pos) {
 						if (sameGroup(linkTarget, this->cursor)) {
 							return;
 						}
-						Linker::link(gameState, linkTarget, this->cursor);
+						if (Linker::link(gameState, linkTarget, this->cursor)) {
+							this->cursor.clear();
+						}
+						else {
+							assert(0);
+						}
 					}
 
 					this->cursor.clear();

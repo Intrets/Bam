@@ -102,15 +102,29 @@ void Activity::disconnectFromParent() {
 	if (this->parentRef.isNotNull()) {
 		if (this->parentRef.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
 			auto anchor = this->parentRef.get();
-			if (anchor->removeChild(this->selfHandle)) {
-				anchor->disconnectFromParent();
-				parentRef.deleteObject();
+
+			if (auto removed = anchor->removeChild(this->selfHandle)) {
+				removed.value().handle = 0;
+
+				if (!anchor->hasChild()) {
+					anchor->disconnectFromParent();
+					parentRef.deleteObject();
+				}
+			}
+			else {
+				assert(0);
 			}
 		}
 		else {
-			this->parentRef.get()->removeChild(this->getHandle());
+			if (auto removed = this->parentRef.get()->removeChild(this->getHandle())) {
+				removed.value().handle = 0;
+			}
+			else {
+				assert(0);
+			}
 		}
-		parentRef.handle = 0;
+
+		this->parentRef.handle = 0;
 	}
 }
 

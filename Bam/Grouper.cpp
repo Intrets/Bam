@@ -6,6 +6,10 @@
 #include "Saver.h"
 #include "Loader.h"
 
+std::optional<UniqueReference<Activity, Activity>> GrouperBase::removeChild(Handle h) {
+	return this->removeChild(WeakReference<Activity, Activity>(h));
+}
+
 void GrouperBase::save(Saver& saver) {
 	this->Activity::save(saver);
 }
@@ -14,36 +18,31 @@ bool GrouperBase::load(Loader& loader) {
 	return this->Activity::load(loader);
 }
 
-bool GrouperBase::addChild(Handle h) {
-	return this->addChild(WeakReference<Activity, Activity>(h));
-}
-
-bool GrouperBase::removeChild(Handle h) {
-	return this->removeChild(WeakReference<Activity, Activity>(h));
-}
-
-WeakReference<Activity, Activity> const& SingleGrouper::getChild() {
+UniqueReference<Activity, Activity> const& SingleGrouper::getChild() {
 	return this->child;
 }
 
-bool SingleGrouper::addChild(WeakReference<Activity, Activity> ref) {
+UniqueReference<Activity, Activity> SingleGrouper::popChild() {
+	return std::move(this->child);
+}
+
+bool SingleGrouper::addChild(UniqueReference<Activity, Activity> ref) {
 	if (this->child.isNotNull()) {
 		return false;
 	}
 	else {
-		this->child = ref;
 		ref.get()->parentRef.handle = this->selfHandle;
+		this->child = std::move(ref);
 		return true;
 	}
 }
 
-bool SingleGrouper::removeChild(WeakReference<Activity, Activity> ref) {
+std::optional<UniqueReference<Activity, Activity>> SingleGrouper::removeChild(WeakReference<Activity, Activity> ref) {
 	if (this->child.handle == ref.handle) {
-		this->child.clear();
-		return true;
+		return std::move(this->child);
 	}
 	else {
-		return false;
+		return std::nullopt;
 	}
 }
 

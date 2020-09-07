@@ -9,29 +9,18 @@
 #include "RenderInfo.h"
 #include <algorithm>
 
-std::vector<WeakReference<Activity, Activity>>& Anchor::getChildren() {
+std::vector<UniqueReference<Activity, Activity>>& Anchor::getChildren() {
 	return children;
 }
 
-bool Anchor::addChild(WeakReference<Activity, Activity> ref) {
+bool Anchor::addChild(UniqueReference<Activity, Activity> ref) {
 	// TODO: check if not creating loops?
 	if (ref.handle == this->selfHandle) {
 		return false;
 	}
-	this->children.push_back(ref);
 	ref.get()->parentRef.handle = this->selfHandle;
+	this->children.push_back(std::move(ref));
 	return true;
-}
-
-bool Anchor::removeChild(WeakReference<Activity, Activity> ref) {
-	auto newEnd = std::remove_if(
-		this->children.begin(), this->children.end(),
-		[h = ref.handle](WeakReference<Activity, Activity> t) -> bool
-	{
-		return t.handle == h;
-	});
-	this->children.erase(newEnd, this->children.end());
-	return this->children.empty();
 }
 
 bool Anchor::hasChild() const {
@@ -89,7 +78,7 @@ bool Anchor::load(Loader& loader) {
 	for (int32_t i = 0; i < count; i++) {
 		int32_t handle;
 		loader.retrieve(handle);
-		this->children.push_back(WeakReference<Activity, Activity>(handle));
+		this->children.emplace_back(handle);
 	}
 	return true;
 }
@@ -116,6 +105,27 @@ void Anchor::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 void Anchor::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	for (auto& child : this->children) {
 		child.get()->appendSelectionInfo(gameState, renderInfo, color);
+	}
+}
+
+UniqueReference<Activity, Activity> Anchor::popChild() {
+	auto res = std::move(this->children.back());
+	this->children.resize(this->children.size() - 1);
+	return std::move(res);
+}
+
+std::optional<UniqueReference<Activity, Activity>> Anchor::removeChild(WeakReference<Activity, Activity> ref) {
+	auto newEnd = std::find_if(this->children.begin(), this->children.end(), [h = ref.handle](UniqueReference<Activity, Activity> const& t) -> bool{
+		return t.handle == h;
+	});
+
+	if (newEnd == this->children.end()) {
+		return std::nullopt;
+	}
+	else {
+		auto res = std::move(*newEnd);
+		this->children.erase(newEnd);
+		return std::move(res);
 	}
 }
 

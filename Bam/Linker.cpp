@@ -19,7 +19,7 @@ bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> 
 	}
 
 	for (auto& r : r2.get()->getChildren()) {
-		r1.get()->addChild(r);
+		r1.get()->addChild(std::move(r));
 	}
 
 	Locator<ReferenceManager<Activity>>::get()->deleteReference(&toDelete);
@@ -36,20 +36,16 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 	r2 = r2.get()->getRootRef();
 
 	if (r1.get()->hasChild()) {
-		auto child = r1.get()->getChild();
+		auto& child = r1.get()->getChild();
 		if (child.get()->getType() != ACTIVITY::TYPE::ANCHOR) {
-
-#ifdef BAM_DEBUG
-			assert(r1.get()->removeChild(child));
-#else
-			r1.get()->removeChild(child);
-#endif // BAM_DEBUG
-
-			auto childAnchor = refMan.makeRef<Anchor>();
+			auto childAnchor = refMan.makeUniqueRef<Anchor>();
 			childAnchor.get()->fillTracesLocalForced(gameState);
-			childAnchor.get()->addChild(child);
-			r1.get()->addChild(childAnchor);
-			r1 = childAnchor;
+			childAnchor.get()->addChild(r1.get()->popChild());
+
+			auto childAnchorHandle = childAnchor.handle;
+
+			r1.get()->addChild(std::move(childAnchor));
+			r1.handle = childAnchorHandle;
 		}
 		else {
 			r1 = child;
@@ -61,7 +57,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 			member->memberCache.invalidateMembers();
 		}
 
-		r1.get()->addChild(r2);
+		r1.get()->addChild(UniqueReference<Activity, Activity>(r2.handle));
 
 		for (auto& member : r2.get()->getTreeMembers()) {
 			member->memberCache.invalidateRoot();
@@ -89,7 +85,7 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 			member->memberCache.invalidateMembers();
 		}
 
-		p1->addChild(r2);
+		p1->addChild(UniqueReference<Activity, Activity>(r2.handle));
 
 		for (auto& member : r2.get()->getTreeMembers()) {
 			member->memberCache.invalidateRoot();
@@ -123,7 +119,7 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 
 		auto r1Anchor = refMan.makeRef<Anchor>();
 		r1Anchor.get()->fillTracesLocalForced(gameState);
-		r1Anchor.get()->addChild(r1);
+		r1Anchor.get()->addChild(UniqueReference<Activity, Activity>(r1.handle));
 
 		return linkAnchor(gameState, r1Anchor, r2);
 	}
