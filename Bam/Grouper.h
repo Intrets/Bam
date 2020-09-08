@@ -27,7 +27,7 @@ class SingleGrouper : public GrouperBase
 protected:
 	UniqueReference<Activity, Activity> child;
 
-	friend void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper*, SingleGrouper*, HandleMap&);
+	friend class ACTIVITYCOPIER;
 
 public:
 	UniqueReference<Activity, Activity> const& getChild();

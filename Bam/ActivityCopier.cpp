@@ -25,6 +25,8 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 
 	target->parentRef.handle = handleMap[source->parentRef.handle];
 	target->selfHandle = handleMap[source->selfHandle];
+
+	target->label = source->label;
 }
 
 void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper* source, SingleGrouper* target, HandleMap& handleMap) {

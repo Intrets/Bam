@@ -34,6 +34,7 @@ public:
 	void cancel(bool full);
 	void setTarget(WeakReference<Activity, Activity> ref);
 	void splitTarget();
+	ManagedReference<Activity, Activity> const& getTarget();
 
 	UIO::USER_ACTION_TYPE getType();
 

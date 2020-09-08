@@ -14,11 +14,15 @@ private:
 	std::string script;
 
 	std::vector<std::string> watchedVars = { "state" };
+	std::vector<std::string> labels;
 
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
 
 	std::optional<sol::function> luaRunFunction = std::nullopt;
+
+	int32_t memberLabelCacheTick = -1;
+	int32_t rootLabelCacheTick = -1;
 
 	void run();
 
@@ -28,7 +32,10 @@ private:
 
 	void initializeLuaState();
 
-	friend Activity* ACTIVITYCOPIER::copyLuaActivity(LuaActivity*, HandleMap&);
+	bool applyMove(Handle h, int32_t type);
+	bool applyActivity(Handle h, int32_t type);
+
+	friend class ACTIVITYCOPIER;
 
 public:
 	void start(GameState& gameState);
@@ -41,9 +48,6 @@ public:
 	std::string const& getScript();
 
 	bool valid(Handle h);
-
-	bool applyMove(Handle h, int32_t type);
-	bool applyActivity(Handle h, int32_t type);
 
 	void setPrintFunction(std::function<void(std::string line)> f);
 

@@ -152,6 +152,10 @@ void UIOActivityInterface::splitTarget() {
 	}
 }
 
+ManagedReference<Activity, Activity> const& UIOActivityInterface::getTarget() {
+	return this->target;
+}
+
 UIO::USER_ACTION_TYPE UIOActivityInterface::getType() {
 	return this->type;
 }

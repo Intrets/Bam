@@ -4,18 +4,41 @@
 #include "Activity.h"
 
 void MemberCache::invalidateAll() {
-	this->validMembers = false;
-	this->validRoot = false;
-	this->validSortedHandles = false;
+	this->invalidateMembers();
+	this->invalidateRoot();
 }
 
 void MemberCache::invalidateMembers() {
+	this->membersTick++;
+
 	this->validMembers = false;
 	this->validSortedHandles = false;
 }
 
 void MemberCache::invalidateRoot() {
+	this->rootTick++;
+
 	this->validRoot = false;
+}
+
+bool MemberCache::isValidAll() const {
+	return this->isValidMembers() && this->isValidRoot();
+}
+
+bool MemberCache::isValidMembers() const {
+	return this->validMembers;
+}
+
+bool MemberCache::isValidRoot() const {
+	return this->validRoot;
+}
+
+int32_t MemberCache::getMembersTick() const {
+	return this->membersTick;
+}
+
+int32_t MemberCache::getRootTick() const {
+	return this->rootTick;
 }
 
 std::vector<Activity*> const& MemberCache::getMembers() {

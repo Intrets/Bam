@@ -26,7 +26,7 @@ private:
 	glm::ivec2 getGrabbedOffset() const;
 	glm::ivec2 getGrabbedPos() const;
 
-	friend Activity* ACTIVITYCOPIER::copyGrabber(Grabber*, HandleMap&);
+	friend class ACTIVITYCOPIER;
 
 public:
 	Grabber();

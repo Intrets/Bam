@@ -47,6 +47,17 @@ glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
 	return v;
 }
 
+std::string const& Activity::getLabel() const {
+	return this->label;
+}
+
+void Activity::setLabel(std::string text) {
+	this->label = text;
+	for (auto member : this->getRootPtr()->getTreeMembers()) {
+		member->memberCache.invalidateMembers();
+	}
+}
+
 bool Activity::idleUp() {
 	for (auto& member : this->getTreeMembers()) {
 		if (!member->idleLocal()) {
@@ -233,6 +244,7 @@ void Activity::save(Saver& saver) {
 	saver.store(this->moving);
 	saver.store(this->origin);
 	saver.store(this->inWorld);
+	saver.store(this->label);
 }
 
 bool Activity::load(Loader& loader) {
@@ -248,6 +260,7 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve(this->moving);
 	loader.retrieve(this->origin);
 	loader.retrieve(this->inWorld);
+	loader.retrieve(this->label);
 	return true;
 }
 

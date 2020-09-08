@@ -169,15 +169,47 @@ void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
 }
 
 void LuaActivity::run() {
+	if (this->memberLabelCacheTick != this->getRootPtr()->memberCache.getMembersTick() ||
+		this->rootLabelCacheTick != this->memberCache.getRootTick()) {
+
+		this->memberLabelCacheTick = this->getRootPtr()->memberCache.getMembersTick();
+		this->rootLabelCacheTick = this->memberCache.getRootTick();
+
+		for (auto const& l : this->labels) {
+			state[l] = sol::nil;
+		}
+
+		this->labels.clear();
+
+		for (auto const& member : this->getRootPtr()->getTreeMembers()) {
+			if (member->getLabel().size() > 0) {
+				try {
+					state[member->getLabel()] = member->getHandle();
+					this->labels.push_back(member->getLabel());
+				}
+				catch (const sol::error& e) {
+					Locator<Log>::ref().putLine(e.what());
+					this->stop();
+				}
+				catch (...) {
+					Locator<Log>::ref().putLine("non-sol::error when setting label values");
+					this->stop();
+				}
+			}
+		}
+	}
+
 	if (this->luaRunFunction.has_value()) {
 		try {
 			this->luaRunFunction.value()();
 		}
 		catch (const sol::error& e) {
 			Locator<Log>::ref().putLine(e.what());
+			this->stop();
 		}
 		catch (...) {
 			Locator<Log>::ref().putLine("non-sol::error when executing script");
+			this->stop();
 		}
 	}
 	else {

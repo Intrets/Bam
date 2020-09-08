@@ -11,7 +11,7 @@ class Anchor : public GrouperBase
 private:
 	std::vector<UniqueReference<Activity, Activity>> children;
 
-	friend Activity* ACTIVITYCOPIER::copyAnchor(Anchor*, HandleMap&);
+	friend class ACTIVITYCOPIER;
 
 public:
 	std::vector<UniqueReference<Activity, Activity>>& getChildren();

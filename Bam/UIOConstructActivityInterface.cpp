@@ -9,12 +9,13 @@
 #include "UIOTextConstructers.h"
 #include "UIOListSelection.h"
 #include "UIOConstructLuaInterface.h"
+#include "UIOGrid.h"
 
 UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInterface*& interfacePtr) {
 	// Resulting outermost container
 	UIOList* outerListPtr;
 
-	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::UP);
+	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE);
 	outerList.setPtr(outerListPtr);
 
 	// Hidden functionality
@@ -33,7 +34,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 	{
 		if (e.second.isValid()) {
 			std::stringstream out;
-			out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type " << e.second.get()->getTypeName();
+			out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type: " << e.second.get()->getTypeName() << " label: " << e.second.get()->getLabel();
 			return out.str();
 		}
 		else {
@@ -127,7 +128,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 	})
 		.get();
 
-	auto disconnectButton =
+	outerListPtr->addElement(std::move(treeDisplay));
+
+	outerListPtr->addElement(
 		TextConstructer::constructSingleLineDisplayText(" disconnect")
 		.alignCenter()
 		.button()
@@ -138,10 +141,43 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 	})
 		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-		.get();
+		.get());
 
-	outerListPtr->addElement(std::move(disconnectButton));
-	outerListPtr->addElement(std::move(treeDisplay));
+	{
+		UIOGrid* labelBarPtr;
+		auto labelBar =
+			UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(2, 1))
+			.setPtr(labelBarPtr)
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+			.get();
+
+		UIOTextDisplay* textPtr;
+
+		labelBarPtr->addElement(
+			TextConstructer::constructSingleLineTextEdit("")
+			.setPtr(textPtr)
+			.get()
+		);
+
+		labelBarPtr->addElement(
+			TextConstructer::constructSingleLineDisplayText(" Apply label")
+			.alignCenter()
+			.button()
+			.onRelease([textPtr, interfacePtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			if (interfacePtr->getTarget().isValid() && !textPtr->text.getLines().empty()) {
+				std::string label = textPtr->text.getLines().front();
+				label.resize(label.size() - 1);
+				interfacePtr->getTarget().get()->setLabel(label);
+			}
+
+			return BIND::CONTINUE;
+		})
+			.get());
+
+		outerListPtr->addElement(std::move(labelBar));
+	}
 
 	return std::move(outerList);
 }

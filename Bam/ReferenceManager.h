@@ -331,6 +331,10 @@ inline ReferenceManager<B>::~ReferenceManager() {
 	for (auto [_, managed] : this->managedReferences) {
 		managed->invalidate();
 	}
+
+	while (!this->data.empty()) {
+		this->data.erase(this->data.begin());
+	}
 }
 
 template<class B>

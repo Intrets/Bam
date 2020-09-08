@@ -178,7 +178,9 @@ protected:
 
 	glm::ivec2 origin;
 
-	friend void ACTIVITYCOPIER::copyActivity(Activity*, Activity*, HandleMap&);
+	std::string label;
+
+	friend class ACTIVITYCOPIER;
 
 public:
 	MemberCache memberCache{ *this };
@@ -194,6 +196,9 @@ public:
 	Handle getHandle() {
 		return selfHandle;
 	};
+
+	std::string const& getLabel() const;
+	void setLabel(std::string text);
 
 	bool idleUp();
 	virtual bool idleLocal();
