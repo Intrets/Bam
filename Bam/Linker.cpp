@@ -117,6 +117,8 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 	else {
 		auto& refMan = Locator<ReferenceManager<Activity>>::ref();
 
+		r1.get()->memberCache.invalidateAll();
+
 		auto r1Anchor = refMan.makeRef<Anchor>();
 		r1Anchor.get()->fillTracesLocalForced(gameState);
 		r1Anchor.get()->addChild(UniqueReference<Activity, Activity>(r1.handle));
