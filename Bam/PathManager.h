@@ -16,7 +16,6 @@ private:
 	std::unordered_map<int32_t, std::string> files;
 
 public:
-
 	enum RESOURCE_PATH
 	{
 		CONFIG,
@@ -24,6 +23,7 @@ public:
 		SHADERS,
 		SAVE,
 		FONTS,
+		BLOCKDATA,
 		LUA,
 	};
 
@@ -40,6 +40,8 @@ public:
 
 	bool openLUA(std::ifstream& file, std::string name);
 	bool openLUA(std::ofstream& file, std::string name);
+
+	bool openBlockData(std::ifstream& file);
 
 	PathManager();
 	~PathManager();

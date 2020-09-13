@@ -10,12 +10,7 @@
 
 std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::ivec2 pos) {
 	auto block = this->getBlockRef(pos);
-	if (block->isActivity()) {
-		return block->m;
-	}
-	else {
-		return std::nullopt;
-	}
+	return block->getActivityMaybe();
 }
 
 std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::vec2 pos) {
@@ -42,18 +37,15 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 }
 
 void StaticWorld::leaveTrace(glm::ivec2 pos, Handle m) {
-	getBlockRef(pos)->m.handle = m;
+	getBlockRef(pos)->setTrace(m);
 }
 
 void StaticWorld::removeTraceForced(glm::ivec2 pos) {
-	getBlockRef(pos)->m.handle = 0;
+	getBlockRef(pos)->removeTrace(0);
 }
 
 void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {	
-	auto block = getBlockRef(pos);
-	if (block->m.handle == m) {
-		block->m.handle = 0;
-	}
+	getBlockRef(pos)->removeTrace(m);
 }
 
 bool StaticWorld::load(Loader& loader) {
@@ -116,11 +108,11 @@ Block* StaticWorld::getBlockRef(glm::vec2 pos) {
 
 void StaticWorld::setBlock(Block block, glm::ivec2 pos) {
 	auto [global, local] = floordivmod(pos, CHUNKSIZE);
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y] = block;
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y] = std::move(block);
 }
 
 void StaticWorld::setBlock(Block block, glm::vec2 pos) {
-	this->setBlock(block, glm::ivec2(glm::floor(pos)));
+	this->setBlock(std::move(block), glm::ivec2(glm::floor(pos)));
 }
 
 bool StaticWorld::isOccupied(glm::ivec2 pos, ActivityIgnoringGroup const& ignore) {

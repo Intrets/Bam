@@ -34,6 +34,5 @@ private:
 
 private:
 	void fill(PerlinNoise& noise);
-	void calculateOcclusions();
 };
 

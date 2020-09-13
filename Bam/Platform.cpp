@@ -64,15 +64,16 @@ Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ive
 	Activity(self, pos),
 	size(_size),
 	blocks(this->size[0], std::vector<Block>(this->size[1], Block(0))) {
-	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
+	//int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < this->size[0]; i++) {
 		for (int32_t j = 0; j < this->size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			this->blocks[i][j].setID(textureID);
+			// REIMPLEMENT: platforms
+			//this->blocks[i][j].setID(textureID);
 		}
 	}
-	this->blocks[0][1].setID(4);
-	this->blocks[1][0].setID(5);
+	//this->blocks[0][1].setID(4);
+	//this->blocks[1][0].setID(5);
 
 	this->calculateBlockedDirections();
 }
@@ -136,12 +137,7 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 				p += v;
 				staticWorldRenderInfo.offsets.push_back(p);
 				staticWorldRenderInfo.offsetsShadow.push_back(p);
-				if (this->blocks[x][y].isBlock()) {
-					staticWorldRenderInfo.textureIDs.push_back(this->blocks[x][y].getID());
-				}
-				else {
-					staticWorldRenderInfo.textureIDs.push_back(1);
-				}
+				staticWorldRenderInfo.textureIDs.push_back(this->blocks[x][y].getTexture());
 			}
 		}
 	}
@@ -216,11 +212,12 @@ bool Platform::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(this->size);
 
 	this->blocks = std::vector<std::vector<Block>>(this->size[0], std::vector<Block>(this->size[1], Block(0)));
-	int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
+	//int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < this->size[0]; i++) {
 		for (int32_t j = 0; j < this->size[1]; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			this->blocks[i][j].setID(textureID);
+			// REIMPLEMENT: setting blocks of platform activity 
+			//this->blocks[i][j].setID(textureID);
 		}
 	}
 

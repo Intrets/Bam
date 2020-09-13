@@ -15,6 +15,7 @@
 #include "Fonts.h"
 #include "BlitRenderer.h"
 #include "Timer.h"
+#include "Block.h"
 
 void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
@@ -34,4 +35,6 @@ void initManagers(GLFWwindow* window) {
 	Locator<Timer>::provide(new Timer());
 
 	Locator<Log>::provide(new Log());
+
+	Block::loadBlocks();
 }

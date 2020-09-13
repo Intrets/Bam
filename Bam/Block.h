@@ -6,47 +6,96 @@ class ActivityIgnoringGroup;
 class Loader;
 class Saver;
 
+#define MAXBLOCKS 1000
+
+namespace ELEMENT
+{
+	enum TYPE
+	{
+		AIR,
+		SILICONDIOXIDE,
+		IRON,
+		IRONOXIDE,
+		CARBON,
+		HYDROCARBON,
+	};
+
+	static std::unordered_map<std::string, TYPE> typeMap = {
+		{"air", AIR},
+		{"silicondioxide", SILICONDIOXIDE},
+		{"iron", IRON},
+		{"ironoxide", IRONOXIDE},
+		{"carbon", CARBON},
+		{"hydrocarbon", HYDROCARBON},
+	};
+
+	TYPE getType(std::string s);
+}
+
+struct Element
+{
+	ELEMENT::TYPE type;
+	int32_t quantity;
+};
+
+struct BlockData
+{
+	bool solid = false;
+	int32_t texture = 0;
+	std::string name = "air";
+
+	std::vector<Element> elements;
+};
+
 class Block
 {
 private:
-	friend class StaticWorldChunk;
-	friend class StaticWorld;
+	static std::array<BlockData, MAXBLOCKS> data;
+	BlockData* operator->();
 
-	// 0  = air
-	// 1+ = solid block
+	// 0 = air
 	int32_t blockID = 0;
-
-	bool occluded = false;
-
 	WeakReference<Activity, Activity> m;
 
+	// taken from BlockData
+	bool solid = false;
+
 public:
+	static void loadBlocks();
+
+	// returns if block is occupied by an activity or a solid block
 	bool isOccupied(ActivityIgnoringGroup const& ignore);
+	// returns if block is occupied by an activity or a solid block
 	bool isOccupied();
 
-	bool isOccluded();
-
-	bool isBlock();
-
+	bool isSolid();
 	bool isActivity();
+	bool isNonAirBlock();
 
-	void setID(int32_t id) {
-		this->blockID = id;
-	};
-	int32_t getID() {
-		return this->blockID;
-	};
-	void setM(WeakReference<Activity, Activity> m_) {
-		this->m = m_;
-	};
-	void setM(Handle m_) {
-		this->m = m_;
-	};
+	void setBlockID(int32_t id);
+
+	int32_t getBlockID();
+	int32_t getTexture();
+
+	std::optional<WeakReference<Activity, Activity>> getActivityMaybe() const;
+	WeakReference<Activity, Activity> getActivity() const;
+
+	void setTrace(Handle h);
+	void removeTrace();
+	void removeTrace(Handle h);
 
 	Block(int32_t id);
 
 	Block() = default;
 	~Block() = default;
+
+	// move
+	Block(Block&& other);
+	Block& operator=(Block&& other);
+
+	// copy
+	Block(const Block&) = default;
+	Block& operator=(const Block&) = default;
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);

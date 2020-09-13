@@ -14,30 +14,15 @@ glm::ivec2 StaticWorldChunk::getPosition() {
 }
 
 void StaticWorldChunk::setBlock(glm::ivec2 pos, int32_t blockID, bool occlude) {
-	this->staticWorld[pos.x][pos.y].blockID = blockID;
-	static std::array < glm::ivec2, 4> dirs;
-	if (occlude) {
-		for (auto dir : dirs) {
-			glm::ivec2 t = pos + dir;
-			if (t.x >= 0 && t.y >= 0 && t.x < CHUNKSIZE && t.y < CHUNKSIZE) {
-				if (this->staticWorld[t.x][t.y].isBlock()) {
-					this->staticWorld[t.x][t.y].occluded = true;
-				}
-			}
-		}
-	}
+	this->staticWorld[pos.x][pos.y].setBlockID(blockID);
 }
 
 void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
-			if (this->staticWorld[i][j].isBlock()) {
-				if (!this->staticWorld[i][j].isOccluded()) {
-					renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].blockID);
-				}
-				else {
-					renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].blockID);
-				}
+			if (this->staticWorld[i][j].isNonAirBlock()) {
+				renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].getTexture());
+
 			}
 			if (this->staticWorld[i][j].isActivity()) {
 				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(this->position) + glm::vec2(0.5f));
@@ -89,26 +74,10 @@ void StaticWorldChunk::fill(PerlinNoise& noise) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
 			if (!noise.block[i][j]) {
 				if (noise.values[i][j] < 0.75f) {
-					setBlock(glm::ivec2(i, j), uni(rng), false);
+					setBlock(glm::ivec2(i, j), 1, false);
 				}
 				else {
-					setBlock(glm::ivec2(i, j), 3, false);
-				}
-			}
-		}
-	}
-	calculateOcclusions();
-}
-
-void StaticWorldChunk::calculateOcclusions() {
-	for (int32_t i = 1; i < CHUNKSIZE - 1; i++) {
-		for (int32_t j = 1; j < CHUNKSIZE - 1; j++) {
-			if (this->staticWorld[i][j].isOccupied()) {
-				if (this->staticWorld[i + 1][j].isOccupied() &&
-					this->staticWorld[i][j + 1].isOccupied() &&
-					this->staticWorld[i - 1][j].isOccupied() &&
-					this->staticWorld[i][j - 1].isOccupied()) {
-					this->staticWorld[i][j].occluded = true;
+					setBlock(glm::ivec2(i, j), 2, false);
 				}
 			}
 		}

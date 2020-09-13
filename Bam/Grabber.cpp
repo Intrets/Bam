@@ -79,21 +79,20 @@ bool Grabber::canActivityLocal(GameState& gameState, int32_t type) {
 		return true;
 	}
 	else {
-		return gameState.staticWorld.getBlockRef(this->getGrabbedPos())->isBlock();
+		return gameState.staticWorld.getBlockRef(this->getGrabbedPos())->isSolid();
 	}
 }
 
 void Grabber::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 	if (type == GRABBER::STATE::RELEASED) {
 		this->activityType = GRABBER::STATE::RELEASED;
-		gameState.staticWorld.setBlock(this->block, this->getGrabbedPos());
+		gameState.staticWorld.setBlock(std::move(this->block), this->getGrabbedPos());
 	}
 	else {
 		this->activityType = GRABBER::STATE::GRABBED;
 		auto b = gameState.staticWorld.getBlockRef(this->getGrabbedPos());
-		this->block = *b;
-		b->setM(this->getHandle());
-		b->setID(0);
+		this->block = std::move(*b);
+		b->setTrace(this->getHandle());
 	}
 }
 
@@ -156,7 +155,7 @@ void Grabber::appendStaticRenderInfo(GameState const& gameState, StaticWorldRend
 	}
 	if (this->activityType == GRABBER::STATE::GRABBED) {
 		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textures_a[dir]);
-		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState) + glm::vec2(this->getGrabbedOffset()), this->block.getID());
+		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState) + glm::vec2(this->getGrabbedOffset()), this->block.getTexture());
 	}
 	else {
 		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textures[dir]);
