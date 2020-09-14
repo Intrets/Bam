@@ -15,6 +15,7 @@ private:
 
 public:
 	UIOHotbar(Handle self);
+	virtual ~UIOHotbar() = default;
 
 	void activateTool(int32_t slot, UIOCallBackParams& params);
 

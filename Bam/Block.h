@@ -20,7 +20,7 @@ namespace ELEMENT
 		HYDROCARBON,
 	};
 
-	static std::unordered_map<std::string, TYPE> typeMap = {
+	static std::unordered_map<std::string, ELEMENT::TYPE> typeMap = {
 		{"air", AIR},
 		{"silicondioxide", SILICONDIOXIDE},
 		{"iron", IRON},
@@ -29,7 +29,8 @@ namespace ELEMENT
 		{"hydrocarbon", HYDROCARBON},
 	};
 
-	TYPE getType(std::string s);
+	ELEMENT::TYPE getType(std::string s);
+	std::string getName(ELEMENT::TYPE type);
 }
 
 struct Element
@@ -51,6 +52,8 @@ class Block
 {
 private:
 	static std::array<BlockData, MAXBLOCKS> data;
+	static std::unordered_map<std::string, int32_t> nameMap;
+	static int32_t blockCount;
 	BlockData* operator->();
 
 	// 0 = air
@@ -62,6 +65,8 @@ private:
 
 public:
 	static void loadBlocks();
+	static int32_t getBlockCount();
+	static int32_t getBlockID(std::string name);
 
 	// returns if block is occupied by an activity or a solid block
 	bool isOccupied(ActivityIgnoringGroup const& ignore);
@@ -76,6 +81,8 @@ public:
 
 	int32_t getBlockID();
 	int32_t getTexture();
+
+	std::string const& getBlockName();
 
 	std::optional<WeakReference<Activity, Activity>> getActivityMaybe() const;
 	WeakReference<Activity, Activity> getActivity() const;

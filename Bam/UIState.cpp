@@ -27,6 +27,7 @@
 #include "UIOBinds.h"
 #include "StringHelpers.h"
 #include "LuaActivity.h"
+#include "Block.h"
 #include <fstream>
 
 #include "UIOConstructActivityInterface.h"
@@ -285,6 +286,33 @@ void UIState::init() {
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::GRABBER);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(5, "Marker Block", [](UIOCallBackParams& params)
+		{
+			params.gameState.staticWorld.setBlock(
+				Block(Block::getBlockID("marker")),
+				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+			);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(6, "Stone Block", [](UIOCallBackParams& params)
+		{
+			params.gameState.staticWorld.setBlock(
+				Block(Block::getBlockID("cobblestone")),
+				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+			);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(7, "Delete Block", [](UIOCallBackParams& params)
+		{
+			params.gameState.staticWorld.setBlock(
+				Block(Block::getBlockID("air")),
+				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+			);
 			return BIND::RESULT::CONTINUE;
 		});
 

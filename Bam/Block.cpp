@@ -9,6 +9,8 @@
 
 
 std::array<BlockData, MAXBLOCKS> Block::data{};
+std::unordered_map<std::string, int32_t> Block::nameMap{};
+int32_t Block::blockCount = 0;
 
 BlockData* Block::operator->() {
 	return &Block::data[this->blockID];
@@ -16,7 +18,32 @@ BlockData* Block::operator->() {
 
 ELEMENT::TYPE ELEMENT::getType(std::string s) {
 	return ELEMENT::typeMap[s];
-};
+}
+std::string ELEMENT::getName(ELEMENT::TYPE type) {
+	switch (type) {
+		case ELEMENT::AIR:
+			return "air";
+			break;
+		case ELEMENT::SILICONDIOXIDE:
+			return "silicondioxide";
+			break;
+		case ELEMENT::IRON:
+			return "iron";
+			break;
+		case ELEMENT::IRONOXIDE:
+			return "ironoxide";
+			break;
+		case ELEMENT::CARBON:
+			return "carbon";
+			break;
+		case ELEMENT::HYDROCARBON:
+			return "hydrocarbon";
+			break;
+		default:
+			return "";
+			break;
+	}
+}
 
 void Block::loadBlocks() {
 	std::ifstream file;
@@ -50,8 +77,15 @@ void Block::loadBlocks() {
 			Block::data[i].elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
 		}
 
+		Block::nameMap[pairs["name"]] = i;
+
+		Block::blockCount++;
 		i++;
 	}
+}
+
+int32_t Block::getBlockCount() {
+	return Block::blockCount;
 }
 
 bool Block::isOccupied(ActivityIgnoringGroup const& ignore) {
@@ -88,6 +122,18 @@ int32_t Block::getBlockID() {
 
 int32_t Block::getTexture() {
 	return (*this)->texture;
+}
+
+std::string const& Block::getBlockName() {
+	return (*this)->name;
+}
+
+int32_t Block::getBlockID(std::string name) {
+	auto it = Block::nameMap.find(name);
+	if (it != Block::nameMap.end()) {
+		return Block::nameMap[name];
+	}
+	return 0;
 }
 
 std::optional<WeakReference<Activity, Activity>> Block::getActivityMaybe() const {
