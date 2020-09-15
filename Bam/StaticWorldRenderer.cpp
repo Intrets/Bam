@@ -119,9 +119,6 @@ StaticWorldRenderer::StaticWorldRenderer() :
 	this->VAO.unbind();
 }
 
-StaticWorldRenderer::~StaticWorldRenderer() {
-}
-
 void StaticWorldRenderer::render(StaticWorldRenderInfo const& info, GLuint target, CameraInfo const& cameraInfo) {
 	ModelResource tempp("devtile.obj");
 

@@ -116,6 +116,11 @@ void Block::setBlockID(int32_t id) {
 	this->solid = (*this)->solid;
 }
 
+void Block::setBlockID(int32_t id, ACTIVITY::DIR rotation_) {
+	this->setBlockID(id);
+	this->rotation = rotation_;
+}
+
 int32_t Block::getBlockID() {
 	return this->blockID;
 }
@@ -147,6 +152,10 @@ std::optional<WeakReference<Activity, Activity>> Block::getActivityMaybe() const
 
 WeakReference<Activity, Activity> Block::getActivity() const {
 	return this->m;
+}
+
+ACTIVITY::DIR Block::getRotation() const {
+	return this->rotation;
 }
 
 void Block::setTrace(Handle h) {
@@ -205,5 +214,9 @@ bool Block::save(Saver& saver) {
 
 Block::Block(int32_t id) : blockID(id) {
 	this->solid = (*this)->solid;
+}
+
+Block::Block(int32_t id, ACTIVITY::DIR rotation_) : Block(id) {
+	this->rotation = rotation_;
 }
 

@@ -7,6 +7,8 @@
 #include "Fonts.h"
 #include "Option.h"
 #include "Timer.h"
+#include "BlitRendererArrayTexture.h"
+#include "BlockIDTextures.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;
@@ -38,7 +40,19 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	this->staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);
+	//this->staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);
+
+	Locator<BlitRendererArrayTexture>::get()->render(
+		renderInfo.staticWorldRenderInfo.offsets,
+		renderInfo.staticWorldRenderInfo.rotations,
+		renderInfo.staticWorldRenderInfo.textureIDs,
+		0,
+		{ 0,0, renderInfo.cameraInfo.x, renderInfo.cameraInfo.y },
+		Locator<BlockIDTextures>::ref().getTextureArrayID(),
+		std::nullopt,
+		renderInfo.cameraInfo.VP
+	);
+
 
 	this->selectionRenderer.render(renderInfo, 0);
 

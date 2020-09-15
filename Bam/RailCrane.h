@@ -18,7 +18,7 @@ public:
 	int32_t shaftTex;
 	int32_t anchorTex;
 
-	ACTIVITY::DIR orientation;
+	//ACTIVITY::DIR orientation;
 	RAILCRANE::DIR anchorDirection;
 	int32_t length;
 	int32_t anchorIndexPos;

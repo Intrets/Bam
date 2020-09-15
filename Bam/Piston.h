@@ -22,7 +22,7 @@ public:
 	int32_t length;
 
 	glm::ivec2 direction;
-	ACTIVITY::DIR headDir;
+	//ACTIVITY::DIR headDir = ACTIVITY::;
 
 	PISTON::DIR state = PISTON::DIR::STATIONARY;
 

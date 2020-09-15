@@ -392,14 +392,24 @@
     <ClCompile Include="UIOLua.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
-    <ClCompile Include="MemberCache.cpp" />
     <ClCompile Include="ActivityCopier.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="ActivityHelpers.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Reader.cpp" />
+    <ClCompile Include="BlitRendererArrayTexture.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Reader.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityTextureInitializer.cpp">
+      <Filter>Program Control\Inits</Filter>
+    </ClCompile>
+    <ClCompile Include="MemberCache.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -700,14 +710,24 @@
     <ClInclude Include="UIOLua.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
-    <ClInclude Include="MemberCache.h" />
     <ClInclude Include="ActivityCopier.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="ActivityHelpers.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Reader.h" />
+    <ClInclude Include="BlitRendererArrayTexture.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityTextureInitializer.h">
+      <Filter>Program Control\Inits</Filter>
+    </ClInclude>
+    <ClInclude Include="MemberCache.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
@@ -751,6 +771,12 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="Blit.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="BlitArray.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="BlitArray.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
   </ItemGroup>

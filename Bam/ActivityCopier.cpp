@@ -26,6 +26,7 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 
 	target->parentRef.handle = handleMap[source->parentRef.handle];
 	target->selfHandle = handleMap[source->selfHandle];
+	target->activityRotation = source->activityRotation;
 
 	target->label = source->label;
 }
@@ -56,7 +57,6 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 	target->length = source->length;
 
 	target->direction = source->direction;
-	target->headDir = source->headDir;
 
 	target->state = source->state;
 
@@ -84,7 +84,6 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 	target->shaftTex = source->shaftTex;
 	target->anchorTex = source->anchorTex;
 
-	target->orientation = source->orientation;
 	target->anchorDirection = source->anchorDirection;
 	target->length = source->length;
 	target->anchorIndexPos = source->anchorIndexPos;
@@ -111,11 +110,7 @@ Activity* ACTIVITYCOPIER::copyLuaActivity(LuaActivity* source, HandleMap& handle
 Activity* ACTIVITYCOPIER::copyGrabber(Grabber* source, HandleMap& handleMap) {
 	Grabber* target = new Grabber();
 
-	target->textures = source->textures;
-	target->textures_a = source->textures_a;
-
 	target->block = source->block;
-	target->dir = source->dir;
 
 	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
 

@@ -58,6 +58,7 @@ private:
 
 	// 0 = air
 	int32_t blockID = 0;
+	ACTIVITY::DIR rotation = ACTIVITY::DIR::RIGHT;
 	WeakReference<Activity, Activity> m;
 
 	// taken from BlockData
@@ -78,6 +79,7 @@ public:
 	bool isNonAirBlock();
 
 	void setBlockID(int32_t id);
+	void setBlockID(int32_t id, ACTIVITY::DIR rotation_);
 
 	int32_t getBlockID();
 	int32_t getTexture();
@@ -86,12 +88,14 @@ public:
 
 	std::optional<WeakReference<Activity, Activity>> getActivityMaybe() const;
 	WeakReference<Activity, Activity> getActivity() const;
+	ACTIVITY::DIR getRotation() const;
 
 	void setTrace(Handle h);
 	void removeTrace();
 	void removeTrace(Handle h);
 
 	Block(int32_t id);
+	Block(int32_t id, ACTIVITY::DIR rotation_);
 
 	Block() = default;
 	~Block() = default;

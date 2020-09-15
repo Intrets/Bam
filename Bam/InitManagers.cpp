@@ -16,6 +16,8 @@
 #include "BlitRenderer.h"
 #include "Timer.h"
 #include "Block.h"
+#include "BlitRendererArrayTexture.h"
+#include "ActivityTextureInitializer.h"
 
 void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
@@ -30,11 +32,16 @@ void initManagers(GLFWwindow* window) {
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+
 	Locator<BlitRenderer>::provide(new BlitRenderer());
+	Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
+
 	Locator<Fonts>::provide(new Fonts());
 	Locator<Timer>::provide(new Timer());
 
 	Locator<Log>::provide(new Log());
 
 	Block::loadBlocks();
+
+	ActivityTextureInitializer::run();
 }

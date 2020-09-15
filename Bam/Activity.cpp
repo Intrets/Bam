@@ -97,6 +97,10 @@ float Activity::getActivityScale(int32_t tick) {
 	}
 }
 
+void Activity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
+	this->activityRotation = ACTIVITY::ROTATE(rotation, this->activityRotation);
+}
+
 void Activity::rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	for (auto member : this->getTreeMembers()) {
 		member->rotateForcedLocal(center, rotation);
@@ -245,6 +249,7 @@ void Activity::save(Saver& saver) {
 	saver.store(this->origin);
 	saver.store(this->inWorld);
 	saver.store(this->label);
+	saver.store(this->activityRotation);
 }
 
 bool Activity::load(Loader& loader) {
@@ -261,6 +266,7 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve(this->origin);
 	loader.retrieve(this->inWorld);
 	loader.retrieve(this->label);
+	loader.retrieve(this->activityRotation);
 	return true;
 }
 

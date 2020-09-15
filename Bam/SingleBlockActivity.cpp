@@ -18,6 +18,7 @@ SingleBlockActivity::SingleBlockActivity(Handle self, glm::ivec2 pos, std::strin
 }
 
 void SingleBlockActivity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
+	this->Activity::rotateForcedLocal(center, rotation);
 	auto d = this->getOrigin() - center;
 	switch (rotation) {
 		case ACTIVITY::ROT::CLOCKWISE:
@@ -81,7 +82,7 @@ void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, Sta
 		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
 		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
 	}
-	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex);
+	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex, this->activityRotation);
 }
 
 void SingleBlockActivity::save(Saver& saver) {

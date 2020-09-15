@@ -17,11 +17,13 @@ class GameState;
 class Grabber : public Activity
 {
 private:
-	std::array<int32_t, 4> textures;
-	std::array<int32_t, 4> textures_a;
+	static int32_t textureActive;
+	static int32_t textureInactive;
 
+	friend class ActivityTextureInitializer;
+
+private:
 	Block block;
-	ACTIVITY::DIR dir = ACTIVITY::DIR::RIGHT;
 
 	glm::ivec2 getGrabbedOffset() const;
 	glm::ivec2 getGrabbedPos() const;
@@ -29,7 +31,7 @@ private:
 	friend class ACTIVITYCOPIER;
 
 public:
-	Grabber();
+	Grabber() = default;
 	Grabber(Handle self, glm::ivec2 pos);
 	virtual ~Grabber() = default;
 

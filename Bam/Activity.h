@@ -50,10 +50,10 @@ namespace ACTIVITY
 
 	enum DIR
 	{
-		UP,
 		RIGHT,
 		DOWN,
 		LEFT,
+		UP,
 		STATIONARY,
 	};
 
@@ -67,8 +67,16 @@ namespace ACTIVITY
 		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 1) % 4);
 	}
 
+	inline ACTIVITY::DIR CLOCKWISEROT_WITH_STATIONARY(ACTIVITY::DIR dir) {
+		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 1) % 5);
+	}
+
 	inline ACTIVITY::DIR COUNTERWISEROT(ACTIVITY::DIR dir) {
 		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 3) % 4);
+	}
+
+	inline ACTIVITY::DIR COUNTERWISEROT_WITH_STATIONARY(ACTIVITY::DIR dir) {
+		return static_cast<ACTIVITY::DIR>((static_cast<int32_t>(dir) + 4) % 5);
 	}
 
 	inline ACTIVITY::DIR ROTATE(ACTIVITY::ROT rot, ACTIVITY::DIR dir) {
@@ -77,6 +85,15 @@ namespace ACTIVITY
 		}
 		else {
 			return COUNTERWISEROT(dir);
+		}
+	}
+
+	inline ACTIVITY::DIR ROTATE_WITH_STATIONARY(ACTIVITY::ROT rot, ACTIVITY::DIR dir) {
+		if (rot == ACTIVITY::ROT::CLOCKWISE) {
+			return CLOCKWISEROT_WITH_STATIONARY(dir);
+		}
+		else {
+			return COUNTERWISEROT_WITH_STATIONARY(dir);
 		}
 	}
 
@@ -180,6 +197,8 @@ protected:
 
 	glm::ivec2 origin;
 
+	ACTIVITY::DIR activityRotation = ACTIVITY::DIR::RIGHT;
+
 	std::string label;
 
 	friend class ACTIVITYCOPIER;
@@ -217,7 +236,7 @@ public:
 	virtual ~Activity() = default;
 
 	// Placement 
-	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) = 0;
+	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation);
 	void rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation);
 	void forceMoveOriginUp(glm::ivec2 d);
 	void forceMoveOriginLocal(glm::ivec2 d) {

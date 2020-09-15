@@ -8,8 +8,11 @@
 #include "Saver.h"
 #include "Loader.h"
 
+int32_t Grabber::textureActive = 0;
+int32_t Grabber::textureInactive = 0;
+
 glm::ivec2 Grabber::getGrabbedOffset() const {
-	switch (this->dir) {
+	switch (this->activityRotation) {
 		case ACTIVITY::DIR::UP:
 			return { 0,1 };
 			break;
@@ -32,34 +35,12 @@ glm::ivec2 Grabber::getGrabbedPos() const {
 	return this->origin + this->getGrabbedOffset();
 }
 
-Grabber::Grabber() {
-	auto t = Locator<BlockIDTextures>::get();
-	textures[ACTIVITY::DIR::DOWN] = t->getBlockTextureID("grabber_down.dds");
-	textures[ACTIVITY::DIR::UP] = t->getBlockTextureID("grabber_up.dds");
-	textures[ACTIVITY::DIR::LEFT] = t->getBlockTextureID("grabber_left.dds");
-	textures[ACTIVITY::DIR::RIGHT] = t->getBlockTextureID("grabber_right.dds");
-
-	textures_a[ACTIVITY::DIR::DOWN] = t->getBlockTextureID("grabber_down_a.dds");
-	textures_a[ACTIVITY::DIR::UP] = t->getBlockTextureID("grabber_up_a.dds");
-	textures_a[ACTIVITY::DIR::LEFT] = t->getBlockTextureID("grabber_left_a.dds");
-	textures_a[ACTIVITY::DIR::RIGHT] = t->getBlockTextureID("grabber_right_a.dds");
-}
-
 Grabber::Grabber(Handle self, glm::ivec2 pos) : Activity(self, pos) {
-	auto t = Locator<BlockIDTextures>::get();
-	textures[ACTIVITY::DIR::DOWN] = t->getBlockTextureID("grabber_down.dds");
-	textures[ACTIVITY::DIR::UP] = t->getBlockTextureID("grabber_up.dds");
-	textures[ACTIVITY::DIR::LEFT] = t->getBlockTextureID("grabber_left.dds");
-	textures[ACTIVITY::DIR::RIGHT] = t->getBlockTextureID("grabber_right.dds");
-
-	textures_a[ACTIVITY::DIR::DOWN] = t->getBlockTextureID("grabber_down_a.dds");
-	textures_a[ACTIVITY::DIR::UP] = t->getBlockTextureID("grabber_up_a.dds");
-	textures_a[ACTIVITY::DIR::LEFT] = t->getBlockTextureID("grabber_left_a.dds");
-	textures_a[ACTIVITY::DIR::RIGHT] = t->getBlockTextureID("grabber_right_a.dds");
 }
 
 void Grabber::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
-	this->dir = ACTIVITY::ROTATE(rotation, this->dir);
+	this->Activity::rotateForcedLocal(center, rotation);
+
 	auto d = this->getOrigin() - center;
 	switch (rotation) {
 		case ACTIVITY::ROT::CLOCKWISE:
@@ -137,13 +118,11 @@ ACTIVITY::TYPE Grabber::getType() {
 void Grabber::save(Saver& saver) {
 	this->Activity::save(saver);
 	this->block.save(saver);
-	saver.store(this->dir);
 }
 
 bool Grabber::load(Loader& loader) {
 	this->Activity::load(loader);
 	this->block.load(loader);
-	loader.retrieve(this->dir);
 	return true;
 }
 
@@ -154,11 +133,11 @@ void Grabber::appendStaticRenderInfo(GameState const& gameState, StaticWorldRend
 		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
 	}
 	if (this->activityType == GRABBER::STATE::GRABBED) {
-		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textures_a[dir]);
+		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textureActive, this->activityRotation);
 		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState) + glm::vec2(this->getGrabbedOffset()), this->block.getTexture());
 	}
 	else {
-		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textures[dir]);
+		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textureInactive, this->activityRotation);
 	}
 }
 
@@ -168,7 +147,7 @@ bool Grabber::canMoveLocal(GameState& gameState, ACTIVITY::DIR d, ActivityIgnori
 	switch (this->activityType) {
 		case GRABBER::STATE::GRABBED:
 			{
-				auto grabDir = ACTIVITY::GETDIRECTION(this->dir);
+				auto grabDir = ACTIVITY::GETDIRECTION(this->activityRotation);
 
 				auto s = idot(moveDir, grabDir);
 
@@ -217,7 +196,7 @@ void Grabber::removeMoveableTracesLocal(GameState& gameState) {
 		case GRABBER::STATE::GRABBED:
 			{
 				auto moveDir = ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection));
-				auto grabDir = ACTIVITY::GETDIRECTION(this->dir);
+				auto grabDir = ACTIVITY::GETDIRECTION(this->activityRotation);
 
 				auto d = idot(moveDir, grabDir);
 
@@ -252,7 +231,7 @@ void Grabber::leaveMoveableTracesLocal(GameState& gameState) {
 		case GRABBER::STATE::GRABBED:
 			{
 				auto moveDir = ACTIVITY::GETDIRECTION(this->movementDirection);
-				auto grabDir = ACTIVITY::GETDIRECTION(this->dir);
+				auto grabDir = ACTIVITY::GETDIRECTION(this->activityRotation);
 
 				auto d = idot(moveDir, grabDir);
 
@@ -297,7 +276,7 @@ void Grabber::appendSelectionInfo(GameState const& gameState, RenderInfo& render
 				auto p1 = this->getMovingOrigin(gameState);
 				auto p2 = p1 + glm::vec2(this->getGrabbedOffset());
 
-				switch (this->dir) {
+				switch (this->activityRotation) {
 					case ACTIVITY::DIR::UP:
 					case ACTIVITY::DIR::RIGHT:
 						renderInfo.selectionRenderInfo.addBox(p1, p2 + 1.0f, color);

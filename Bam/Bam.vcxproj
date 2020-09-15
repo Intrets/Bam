@@ -272,8 +272,10 @@
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
     <ClCompile Include="ActivitySpawner.cpp" />
+    <ClCompile Include="ActivityTextureInitializer.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
+    <ClCompile Include="BlitRendererArrayTexture.cpp" />
     <ClCompile Include="BlitRenderer.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
@@ -374,7 +376,9 @@
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySpawner.h" />
+    <ClInclude Include="ActivityTextureInitializer.h" />
     <ClInclude Include="Anchor.h" />
+    <ClInclude Include="BlitRendererArrayTexture.h" />
     <ClInclude Include="BlitRenderer.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
@@ -474,6 +478,8 @@
   <ItemGroup>
     <None Include="Blit.frag" />
     <None Include="Blit.vert" />
+    <None Include="BlitArray.frag" />
+    <None Include="BlitArray.vert" />
     <None Include="cpp.hint" />
     <None Include="DebugLine.frag" />
     <None Include="DebugLine.vert" />

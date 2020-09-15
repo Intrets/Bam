@@ -13,16 +13,15 @@ glm::ivec2 StaticWorldChunk::getPosition() {
 	return this->position;
 }
 
-void StaticWorldChunk::setBlock(glm::ivec2 pos, int32_t blockID, bool occlude) {
-	this->staticWorld[pos.x][pos.y].setBlockID(blockID);
+void StaticWorldChunk::setBlock(glm::ivec2 pos, int32_t blockID, ACTIVITY::DIR rotation) {
+	this->staticWorld[pos.x][pos.y].setBlockID(blockID, rotation);
 }
 
 void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
 			if (this->staticWorld[i][j].isNonAirBlock()) {
-				renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].getTexture());
-
+				renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].getTexture(), this->staticWorld[i][j].getRotation());
 			}
 			if (this->staticWorld[i][j].isActivity()) {
 				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(this->position) + glm::vec2(0.5f));
@@ -73,11 +72,13 @@ void StaticWorldChunk::fill(PerlinNoise& noise) {
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
 			if (!noise.block[i][j]) {
+				ACTIVITY::DIR rotation =
+					static_cast<ACTIVITY::DIR>(glm::max(0, static_cast<int32_t>(noise.values[i][j] * 10005)) % 4);
 				if (noise.values[i][j] < 0.75f) {
-					setBlock(glm::ivec2(i, j), 1, false);
+					this->setBlock(glm::ivec2(i, j), 1, rotation);
 				}
 				else {
-					setBlock(glm::ivec2(i, j), 2, false);
+					this->setBlock(glm::ivec2(i, j), 2, rotation);
 				}
 			}
 		}
