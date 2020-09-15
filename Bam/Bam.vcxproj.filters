@@ -399,6 +399,7 @@
     <ClCompile Include="ActivityHelpers.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Reader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -706,6 +707,7 @@
     <ClInclude Include="ActivityHelpers.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Reader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

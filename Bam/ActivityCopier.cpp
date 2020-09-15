@@ -8,6 +8,7 @@
 #include "LuaActivity.h"
 #include "SingleBlockActivity.h"
 #include "Grabber.h"
+#include "Reader.h"
 
 void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;
@@ -121,6 +122,14 @@ Activity* ACTIVITYCOPIER::copyGrabber(Grabber* source, HandleMap& handleMap) {
 	return target;
 }
 
+Activity* ACTIVITYCOPIER::copyReader(Reader* source, HandleMap& handleMap) {
+	Reader* reader = new Reader();
+
+	ACTIVITYCOPIER::copySingleBlockActivity(source, reader, handleMap);
+
+	return reader;
+}
+
 UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity, Activity> ref) {
 	HandleMap handleMap;
 
@@ -151,6 +160,9 @@ UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity,
 				break;
 			case ACTIVITY::TYPE::LUA:
 				target = ACTIVITYCOPIER::copyLuaActivity(static_cast<LuaActivity*>(member), handleMap);
+				break;
+			case ACTIVITY::TYPE::READER:
+				target = ACTIVITYCOPIER::copyReader(static_cast<Reader*>(member), handleMap);
 				break;
 			default:
 				assert(0);

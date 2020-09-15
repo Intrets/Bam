@@ -15,6 +15,7 @@ class RailCrane;
 class LuaActivity;
 class SingleBlockActivity;
 class Grabber;
+class Reader;
 
 typedef int32_t Handle;
 
@@ -32,6 +33,7 @@ private:
 	static Activity* copyRailCrane(RailCrane* source, HandleMap& handleMap);
 	static Activity* copyLuaActivity(LuaActivity* source, HandleMap& handleMap);
 	static Activity* copyGrabber(Grabber* source, HandleMap& handleMap);
+	static Activity* copyReader(Reader* source, HandleMap& handleMap);
 
 public:
 	static UniqueReference<Activity, Activity> copy(WeakReference<Activity, Activity> ref);

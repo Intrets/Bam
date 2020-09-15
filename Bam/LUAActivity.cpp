@@ -55,7 +55,7 @@ void LuaActivity::stop() {
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
-	SingleBlockActivity(self, gameState, pos, "debug.dds") {
+	SingleBlockActivity(self, pos, "debug.dds") {
 	this->initializeLuaState();
 }
 

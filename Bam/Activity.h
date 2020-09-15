@@ -29,6 +29,7 @@ namespace ACTIVITY
 		PLANT,
 		RAILCRANE,
 		LUA,
+		READER,
 		_MAX,
 	};
 
@@ -43,6 +44,7 @@ namespace ACTIVITY
 		"plant",
 		"railcrane",
 		"lua",
+		"reader",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 
@@ -238,7 +240,6 @@ public:
 	virtual void applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir);
 	bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnoringGroup& ignore);
-	//bool canMoveUp(GameState& gameState, ACTIVITY::DIR dir, std::vector<Activity*>& extraIgnore);
 	bool applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	void applyMoveUpForced(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);
 	bool applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pace);

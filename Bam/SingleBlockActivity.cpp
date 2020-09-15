@@ -11,7 +11,7 @@
 
 #include "ActivityIgnoringGroup.h"
 
-SingleBlockActivity::SingleBlockActivity(Handle self, GameState& gameState, glm::ivec2 pos, std::string name) : Activity(self, pos) {
+SingleBlockActivity::SingleBlockActivity(Handle self, glm::ivec2 pos, std::string name) : Activity(self, pos) {
 	auto t = Locator<BlockIDTextures>::get();
 	this->tex = t->getBlockTextureID(name);
 	this->texName = name;

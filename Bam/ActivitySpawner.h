@@ -17,6 +17,7 @@ namespace ACTIVITYSPAWNER
 	UniqueReference<Activity, Activity> railcrane(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> platform(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> lua(GameState& gameState, glm::ivec2 pos);
-	UniqueReference<Activity, Activity> grabber(GameState& gameState, glm::ivec2 pos); 
+	UniqueReference<Activity, Activity> grabber(GameState& gameState, glm::ivec2 pos);
+	UniqueReference<Activity, Activity> reader(GameState& gameState, glm::ivec2 pos);
 };
 

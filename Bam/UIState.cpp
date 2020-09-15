@@ -293,7 +293,7 @@ void UIState::init() {
 		{
 			params.gameState.staticWorld.setBlock(
 				Block(Block::getBlockID("marker")),
-				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+				params.uiState.getCursorPositionWorld()
 			);
 			return BIND::RESULT::CONTINUE;
 		});
@@ -302,7 +302,7 @@ void UIState::init() {
 		{
 			params.gameState.staticWorld.setBlock(
 				Block(Block::getBlockID("cobblestone")),
-				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+				params.uiState.getCursorPositionWorld()
 			);
 			return BIND::RESULT::CONTINUE;
 		});
@@ -311,8 +311,15 @@ void UIState::init() {
 		{
 			params.gameState.staticWorld.setBlock(
 				Block(Block::getBlockID("air")),
-				glm::ivec2(glm::floor(params.uiState.getCursorPositionWorld()))
+				params.uiState.getCursorPositionWorld()
 			);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(8, "Reader", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::READER);
 			return BIND::RESULT::CONTINUE;
 		});
 

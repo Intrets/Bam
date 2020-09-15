@@ -308,6 +308,7 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Reader.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RenderLimiter.cpp" />
     <ClCompile Include="State.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Reader.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="RenderLimiter.h" />
     <ClInclude Include="State.h" />

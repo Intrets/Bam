@@ -6,6 +6,7 @@
 #include "RailCrane.h"
 #include "LuaActivity.h"
 #include "Grabber.h"
+#include "Reader.h"
 
 static std::string initialLuaScript =
 "function init()\n"
@@ -65,6 +66,9 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 		case ACTIVITY::TYPE::LUA:
 			return ACTIVITYSPAWNER::lua(gameState, pos);
 			break;
+		case ACTIVITY::TYPE::READER:
+			return ACTIVITYSPAWNER::reader(gameState, pos);
+			break;
 		default:
 			return std::nullopt;
 			break;
@@ -91,4 +95,8 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, g
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::grabber(GameState& gameState, glm::ivec2 pos) {
 	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Grabber>(pos);
+}
+
+UniqueReference<Activity, Activity> ACTIVITYSPAWNER::reader(GameState& gameState, glm::ivec2 pos) {
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Reader>(pos);
 }
