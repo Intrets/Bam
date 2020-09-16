@@ -323,6 +323,13 @@ void UIState::init() {
 			return BIND::RESULT::CONTINUE;
 		});
 
+		hotbarPtr->setTool(9, "Detector", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::DETECTOR);
+			return BIND::RESULT::CONTINUE;
+		});
+
 		this->UIs.push_back(std::move(hotbar));
 	}
 

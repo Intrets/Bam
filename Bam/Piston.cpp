@@ -10,15 +10,15 @@
 #include "RenderInfo.h"
 #include "Anchor.h"
 
-Piston::Piston(Handle self, GameState& gameState, glm::ivec2 pos, ACTIVITY::DIR dir) :
+int32_t Piston::cogTex = 0;
+int32_t Piston::ropeTex = 0;
+int32_t Piston::headTex = 0;
+
+Piston::Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir) :
 	SingleGrouper(self, pos),
 	length(0) {
-	state = PISTON::DIR::STATIONARY;
-
-	auto t = Locator<BlockIDTextures>::get();
-	this->headTex = t->getBlockTextureID("grabber.dds");
-	this->ropeTex = t->getBlockTextureID("rope.dds");
-	this->cogTex = t->getBlockTextureID("cog.dds");
+	this->state = PISTON::DIR::STATIONARY;
+	this->activityRotation = dir;
 }
 
 ACTIVITY::TYPE Piston::getType() {
@@ -204,12 +204,6 @@ bool Piston::load(Loader& loader) {
 	loader.retrieve<glm::ivec2>(this->direction);
 	loader.retrieve<PISTON::DIR>(this->state);
 	loader.retrieve(this->length);
-
-	auto s = Locator<BlockIDTextures>::get();
-	this->headTex = s->getBlockTextureID("grabber.dds");
-	this->ropeTex = s->getBlockTextureID("rope.dds");
-	this->cogTex = s->getBlockTextureID("cog.dds");
-
 	return true;
 }
 

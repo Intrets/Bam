@@ -47,7 +47,7 @@ std::string ELEMENT::getName(ELEMENT::TYPE type) {
 
 void Block::loadBlocks() {
 	std::ifstream file;
-	assert(Locator<PathManager>::ref().openBlockData(file));
+	Locator<PathManager>::ref().openBlockData(file);
 
 	std::string line;
 	int32_t i = 0;
@@ -202,6 +202,7 @@ bool Block::load(Loader& loader) {
 	loader.retrieve(this->blockID);
 	loader.retrieve(this->m);
 	loader.retrieve(this->solid);
+	loader.retrieve(this->rotation);
 	return true;
 }
 
@@ -209,6 +210,7 @@ bool Block::save(Saver& saver) {
 	saver.store(this->blockID);
 	saver.store(this->m);
 	saver.store(this->solid);
+	saver.store(this->rotation);
 	return true;
 }
 

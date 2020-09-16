@@ -151,7 +151,7 @@ bool LuaActivity::applyMove(Handle h, int32_t type) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 2);
+		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 10);
 	}
 }
 
@@ -160,7 +160,7 @@ bool LuaActivity::applyActivity(Handle h, int32_t type) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 2);
+		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 10);
 	}
 }
 

@@ -3,9 +3,14 @@
 #include "ActivityTextureInitializer.h"
 #include "Grabber.h"
 #include "BlockIDTextures.h"
+#include "Piston.h"
 
 void ActivityTextureInitializer::run() {
 	auto man = Locator<BlockIDTextures>::get();
 	Grabber::textureActive = man->getBlockTextureID("grabber_right_a.dds");
 	Grabber::textureInactive = man->getBlockTextureID("grabber_right.dds");
+
+	Piston::cogTex = man->getBlockTextureID("cog.dds");
+	Piston::ropeTex = man->getBlockTextureID("rope.dds");
+	Piston::headTex = man->getBlockTextureID("grabber_right.dds");
 }

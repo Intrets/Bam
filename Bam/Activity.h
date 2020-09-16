@@ -30,6 +30,7 @@ namespace ACTIVITY
 		RAILCRANE,
 		LUA,
 		READER,
+		DETECTOR,
 		_MAX,
 	};
 
@@ -45,6 +46,7 @@ namespace ACTIVITY
 		"railcrane",
 		"lua",
 		"reader",
+		"detector",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 

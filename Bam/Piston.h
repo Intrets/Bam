@@ -15,18 +15,25 @@ namespace PISTON
 
 class Piston : public SingleGrouper
 {
-public:
-	int32_t cogTex;
-	int32_t ropeTex;
-	int32_t headTex;
+private:
+	static int32_t cogTex;
+	static int32_t ropeTex;
+	static int32_t headTex;
+
+	friend class ActivityTextureInitializer;
+
+private:
 	int32_t length;
 
+	// Movement direction of the head
 	glm::ivec2 direction;
-	//ACTIVITY::DIR headDir = ACTIVITY::;
 
+	friend class ACTIVITYCOPIER;
+
+public:
 	PISTON::DIR state = PISTON::DIR::STATIONARY;
 
-	Piston(Handle self, GameState& gameState, glm::ivec2 pos, ACTIVITY::DIR dir);
+	Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir);
 	Piston() = default;
 	virtual ~Piston() = default;
 

@@ -16,6 +16,7 @@ class LuaActivity;
 class SingleBlockActivity;
 class Grabber;
 class Reader;
+class Detector;
 
 typedef int32_t Handle;
 
@@ -34,6 +35,7 @@ private:
 	static Activity* copyLuaActivity(LuaActivity* source, HandleMap& handleMap);
 	static Activity* copyGrabber(Grabber* source, HandleMap& handleMap);
 	static Activity* copyReader(Reader* source, HandleMap& handleMap);
+	static Activity* copyDetector(Detector* source, HandleMap& handleMap);
 
 public:
 	static UniqueReference<Activity, Activity> copy(WeakReference<Activity, Activity> ref);

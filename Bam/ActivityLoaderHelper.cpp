@@ -9,6 +9,7 @@
 #include "RailCrane.h"
 #include "LuaActivity.h"
 #include "Reader.h"
+#include "Detector.h"
 
 #include "Saver.h"
 #include "Loader.h"
@@ -57,6 +58,11 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 			case ACTIVITY::TYPE::READER:
 				{
 					LOAD(Reader);
+					break;
+				}
+			case ACTIVITY::TYPE::DETECTOR:
+				{
+					LOAD(Detector);
 					break;
 				}
 			default:

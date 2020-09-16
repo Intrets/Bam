@@ -9,6 +9,7 @@
 #include "SingleBlockActivity.h"
 #include "Grabber.h"
 #include "Reader.h"
+#include "Detector.h"
 
 void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;
@@ -51,9 +52,6 @@ void ACTIVITYCOPIER::copySingleBlockActivity(SingleBlockActivity* source, Single
 Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 	Piston* target = new Piston();
 
-	target->cogTex = source->cogTex;
-	target->ropeTex = source->ropeTex;
-	target->headTex = source->headTex;
 	target->length = source->length;
 
 	target->direction = source->direction;
@@ -125,6 +123,14 @@ Activity* ACTIVITYCOPIER::copyReader(Reader* source, HandleMap& handleMap) {
 	return reader;
 }
 
+Activity* ACTIVITYCOPIER::copyDetector(Detector* source, HandleMap& handleMap) {
+	Detector* detector = new Detector();
+
+	ACTIVITYCOPIER::copySingleBlockActivity(source, detector, handleMap);
+
+	return detector;
+}
+
 UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity, Activity> ref) {
 	HandleMap handleMap;
 
@@ -159,6 +165,8 @@ UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity,
 			case ACTIVITY::TYPE::READER:
 				target = ACTIVITYCOPIER::copyReader(static_cast<Reader*>(member), handleMap);
 				break;
+			case ACTIVITY::TYPE::DETECTOR:
+				target = ACTIVITYCOPIER::copyDetector(static_cast<Detector*>(member), handleMap);
 			default:
 				assert(0);
 				break;

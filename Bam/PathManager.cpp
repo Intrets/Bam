@@ -1,4 +1,5 @@
 #include "common.h"
+
 #include "PathManager.h"
 #include "ShaderLoader.h"
 #include "TextureLoader.h"

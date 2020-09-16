@@ -19,5 +19,6 @@ namespace ACTIVITYSPAWNER
 	UniqueReference<Activity, Activity> lua(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> grabber(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> reader(GameState& gameState, glm::ivec2 pos);
+	UniqueReference<Activity, Activity> detector(GameState& gameState, glm::ivec2 pos);
 };
 

@@ -7,6 +7,7 @@
 #include "LuaActivity.h"
 #include "Grabber.h"
 #include "Reader.h"
+#include "Detector.h"
 
 static std::string initialLuaScript =
 "function init()\n"
@@ -69,6 +70,9 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 		case ACTIVITY::TYPE::READER:
 			return ACTIVITYSPAWNER::reader(gameState, pos);
 			break;
+		case ACTIVITY::TYPE::DETECTOR:
+			return ACTIVITYSPAWNER::detector(gameState, pos);
+			break;
 		default:
 			return std::nullopt;
 			break;
@@ -76,7 +80,7 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::piston(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(gameState, pos, ACTIVITY::DIR::DOWN);
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(pos, ACTIVITY::DIR::DOWN);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::railcrane(GameState& gameState, glm::ivec2 pos) {
@@ -99,4 +103,8 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::grabber(GameState& gameStat
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::reader(GameState& gameState, glm::ivec2 pos) {
 	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Reader>(pos);
+}
+
+UniqueReference<Activity, Activity> ACTIVITYSPAWNER::detector(GameState& gameState, glm::ivec2 pos) {
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Detector>(pos);
 }
