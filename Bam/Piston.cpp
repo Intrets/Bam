@@ -137,7 +137,7 @@ void Piston::appendStaticRenderInfo(GameState const& gameState, StaticWorldRende
 		grabberPos += (scale - 1) * glm::vec2(this->direction);
 	}
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->cogTex, this->activityRotation);
-	for (int32_t i = 0; i <= this->length; i++) {
+	for (int32_t i = 1; i <= this->length; i++) {
 		auto p = ori + static_cast<float>(i) * headDirection;
 		staticWorldRenderInfo.addBlockWithoutShadow(p, this->ropeTex, this->activityRotation);
 	}
