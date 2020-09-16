@@ -41,7 +41,7 @@ void StaticWorld::leaveTrace(glm::ivec2 pos, Handle m) {
 }
 
 void StaticWorld::removeTraceForced(glm::ivec2 pos) {
-	getBlockRef(pos)->removeTrace(0);
+	getBlockRef(pos)->removeTrace();
 }
 
 void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {	
