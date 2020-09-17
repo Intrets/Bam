@@ -17,9 +17,6 @@ void Incinerator::applyActivityLocalForced(GameState& gameState, int32_t type, i
 	gameState.staticWorld.setBlock(Block(0), p);
 }
 
-void Incinerator::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void Incinerator::leaveActivityTracesLocal(GameState& gameState) {
 }
 

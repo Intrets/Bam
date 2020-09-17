@@ -196,9 +196,6 @@ bool Platform::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
 }
 
-void Platform::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void Platform::leaveActivityTracesLocal(GameState& gameState) {
 }
 

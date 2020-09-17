@@ -55,10 +55,6 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 
 	target->length = source->length;
 
-	target->direction = source->direction;
-
-	target->state = source->state;
-
 	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
 
 	return target;

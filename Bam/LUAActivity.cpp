@@ -47,7 +47,7 @@ static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 
 void LuaActivity::start(GameState& gameState) {
 	//this->applyActivityLocal(gameState, 0, gameState.smallRandom.randRange(10, 20));
-	this->applyActivityLocal(gameState, 0, 3);
+	this->applyActivityLocal(gameState, 0, 5);
 }
 
 void LuaActivity::stop() {
@@ -72,7 +72,7 @@ void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, i
 	this->run();
 }
 
-void LuaActivity::removeActivityTracesLocal(GameState& gameState) {
+void LuaActivity::afterActivityStopLocal(GameState& gameState) {
 	if (!this->interrupt) {
 		this->start(gameState);
 	}
@@ -151,7 +151,7 @@ bool LuaActivity::applyMove(Handle h, int32_t type) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 2);
+		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
 	}
 }
 
@@ -160,7 +160,7 @@ bool LuaActivity::applyActivity(Handle h, int32_t type) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 2);
+		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
 	}
 }
 

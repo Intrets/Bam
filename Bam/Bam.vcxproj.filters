@@ -413,7 +413,9 @@
     <ClCompile Include="Detector.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Incinerator.cpp" />
+    <ClCompile Include="Incinerator.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -735,7 +737,9 @@
     <ClInclude Include="Detector.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Incinerator.h" />
+    <ClInclude Include="Incinerator.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

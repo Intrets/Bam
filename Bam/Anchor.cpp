@@ -56,9 +56,6 @@ bool Anchor::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
 }
 
-void Anchor::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void Anchor::leaveActivityTracesLocal(GameState& gameState) {
 }
 

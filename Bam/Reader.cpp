@@ -14,9 +14,6 @@ bool Reader::canActivityLocal(GameState& gameState, int32_t type) {
 void Reader::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 }
 
-void Reader::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void Reader::leaveActivityTracesLocal(GameState& gameState) {
 }
 

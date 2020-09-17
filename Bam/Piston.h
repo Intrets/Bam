@@ -26,12 +26,12 @@ private:
 	int32_t length;
 
 	// Movement direction of the head
-	glm::ivec2 direction;
+	//glm::ivec2 direction;
 
 	friend class ACTIVITYCOPIER;
 
 public:
-	PISTON::DIR state = PISTON::DIR::STATIONARY;
+	//PISTON::DIR state = PISTON::DIR::STATIONARY;
 
 	Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir);
 	Piston() = default;
@@ -54,9 +54,10 @@ public:
 	virtual void removeTracesLocalForced(GameState& gameState) override;
 
 	// Traces Activity
-	virtual void removeActivityTracesLocal(GameState& gameState) override;
+	virtual void beforeActivityStopLocal(GameState& gameState) override;
+
 	virtual void leaveActivityTracesLocal(GameState& gameState) override;
-	
+
 	// Traces Moveable
 	virtual void removeMoveableTracesLocal(GameState& gameState) override;
 	virtual void leaveMoveableTracesLocal(GameState& gameState) override;

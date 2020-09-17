@@ -230,8 +230,15 @@ public:
 	virtual bool moveableIdleLocal();
 	virtual bool activityIdleLocal();
 
-	float getMovementScale(int32_t  tick);
-	float getActivityScale(int32_t  tick);
+	// With check if activity is moving
+	float getMovementScale(int32_t tick) const;
+	// With check if activity is active
+	float getActivityScale(int32_t tick) const;
+
+	// Without check if activity is moving
+	float getMovementScaleForced(int32_t tick) const;
+	// Without check if activity is active
+	float getActivityScaleForced(int32_t tick) const;
 
 	// Invalid state, needs to set member variables selfHandle, origin and parentRef
 	Activity() = default;
@@ -280,7 +287,8 @@ public:
 	bool removeTracesUp(GameState& gameState);
 
 	// Traces Activity
-	virtual void removeActivityTracesLocal(GameState& gameState) = 0;
+	virtual void afterActivityStopLocal(GameState& gameState);
+	virtual void beforeActivityStopLocal(GameState& gameState);
 	virtual void leaveActivityTracesLocal(GameState& gameState) = 0;
 
 	// Traces Moveable

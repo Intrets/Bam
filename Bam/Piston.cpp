@@ -17,7 +17,6 @@ int32_t Piston::headTex = 0;
 Piston::Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir) :
 	SingleGrouper(self, pos),
 	length(0) {
-	this->state = PISTON::DIR::STATIONARY;
 	this->activityRotation = dir;
 }
 
@@ -91,20 +90,23 @@ bool Piston::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnor
 void Piston::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
 	glm::vec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);
 	glm::vec2 moveDirection = ACTIVITY::GETDIRECTION(this->movementDirection);
-	int32_t tick = gameState.tick;
-	glm::vec2 ori = glm::vec2(this->origin);
-	if (this->moving) {
-		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
-		ori += scale * moveDirection;
-	}
-	glm::vec2 grabberPos = ori;
-	if (this->active) {
-		float scale = static_cast<float>(tick - this->activityTickStart) / this->activityPace;
-		grabberPos += (scale - 1) * glm::vec2(this->direction);
+	glm::vec2 ori = this->getMovingOrigin(gameState);
+
+	float size = static_cast<float>(this->length + 1);
+
+	switch (static_cast<PISTON::DIR>(this->activityType)) {
+		case PISTON::DIR::EXTEND:
+			size += this->getActivityScaleForced(gameState.tick);
+			break;
+		case PISTON::DIR::RETRACT:
+			size -= this->getActivityScaleForced(gameState.tick);
+			break;
+		default:
+			break;
 	}
 
 	glm::vec2 base = ori;
-	glm::vec2 head = grabberPos + headDirection * (1.0f + this->length) + glm::vec2(1.0f);
+	glm::vec2 head = ori + headDirection * size + glm::vec2(1.0f);
 
 	switch (this->activityRotation) {
 		case ACTIVITY::DIR::DOWN:
@@ -125,28 +127,44 @@ void Piston::appendSelectionInfo(GameState const& gameState, RenderInfo& renderI
 void Piston::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	glm::vec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);
 	glm::vec2 moveDirection = ACTIVITY::GETDIRECTION(this->movementDirection);
-	int32_t tick = gameState.tick;
-	glm::vec2 ori = glm::vec2(this->origin);
-	if (this->moving) {
-		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
-		ori += scale * moveDirection;
-	}
-	glm::vec2 grabberPos = ori;
-	if (this->active) {
-		float scale = static_cast<float>(tick - this->activityTickStart) / this->activityPace;
-		grabberPos += (scale - 1) * glm::vec2(this->direction);
-	}
+
+	glm::vec2 ori = this->getMovingOrigin(gameState);
+
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->cogTex, this->activityRotation);
+
 	for (int32_t i = 1; i <= this->length; i++) {
 		auto p = ori + static_cast<float>(i) * headDirection;
 		staticWorldRenderInfo.addBlockWithoutShadow(p, this->ropeTex, this->activityRotation);
 	}
 
-	auto p = grabberPos + static_cast<float>(this->length + 1) * headDirection;
+	float size = static_cast<float>(this->length + 1);
+
+	switch (static_cast<PISTON::DIR>(this->activityType)) {
+		case PISTON::DIR::EXTEND:
+			size += this->getActivityScaleForced(gameState.tick);
+			break;
+		case PISTON::DIR::RETRACT:
+			size -= this->getActivityScaleForced(gameState.tick);
+			break;
+		default:
+			break;
+	}
+
+	auto p = ori + size * headDirection;
 	staticWorldRenderInfo.addBlockWithShadow(p, this->headTex, this->activityRotation);
 }
 
-void Piston::removeActivityTracesLocal(GameState& gameState) {
+void Piston::beforeActivityStopLocal(GameState& gameState) {
+	switch (static_cast<PISTON::DIR>(this->activityType)) {
+		case PISTON::DIR::EXTEND:
+			this->length++;
+			break;
+		case PISTON::DIR::RETRACT:
+			this->length--;
+			break;
+		default:
+			break;
+	}
 }
 
 void Piston::leaveActivityTracesLocal(GameState& gameState) {
@@ -194,15 +212,11 @@ void Piston::leaveMoveableTracesLocal(GameState& gameState) {
 
 void Piston::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
-	saver.store<glm::ivec2>(this->direction);
-	saver.store<PISTON::DIR>(this->state);
 	saver.store(this->length);
 }
 
 bool Piston::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
-	loader.retrieve<glm::ivec2>(this->direction);
-	loader.retrieve<PISTON::DIR>(this->state);
 	loader.retrieve(this->length);
 	return true;
 }
@@ -252,8 +266,6 @@ void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 				if (this->child.isNotNull()) {
 					this->child.get()->applyMoveUpForced(gameState, this->activityRotation, pace);
 				}
-				this->direction = headDirection;
-				this->length++;
 			}
 			break;
 		case PISTON::DIR::RETRACT:
@@ -263,8 +275,6 @@ void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_
 				if (this->child.isNotNull()) {
 					this->child.get()->applyMoveUpForced(gameState, ACTIVITY::FLIP(this->activityRotation), pace);
 				}
-				this->direction = -headDirection;
-				this->length--;
 			}
 			break;
 		default:

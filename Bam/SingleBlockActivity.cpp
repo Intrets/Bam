@@ -68,20 +68,12 @@ void SingleBlockActivity::impl_getTreeMembersDepths(std::vector<std::pair<int32_
 }
 
 void SingleBlockActivity::appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) {
-	glm::vec2 ori = this->origin;
-	if (this->moving) {
-		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
-	}
+	glm::vec2 ori = this->getMovingOrigin(gameState);
 	renderInfo.selectionRenderInfo.addBox(ori, ori + glm::vec2(1), color);
 }
 
 void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	glm::vec2 ori = this->origin;
-	if (this->moving) {
-		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
-	}
+	glm::vec2 ori = this->getMovingOrigin(gameState);
 	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex, this->activityRotation);
 }
 

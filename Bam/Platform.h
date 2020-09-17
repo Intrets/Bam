@@ -34,7 +34,6 @@ public:
 	virtual void removeTracesLocalForced(GameState& gameState) override;
 
 	// Traces Activity
-	virtual void removeActivityTracesLocal(GameState & gameState) override;
 	virtual void leaveActivityTracesLocal(GameState & gameState) override;
 
 	// Traces Moveable

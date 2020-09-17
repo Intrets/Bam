@@ -74,7 +74,7 @@ public:
 	// Already implemented in SingleBlockActivity
 
 	// Traces Activity
-	virtual void removeActivityTracesLocal(GameState& gameState) override;
+	virtual void afterActivityStopLocal(GameState& gameState) override;
 	virtual void leaveActivityTracesLocal(GameState& gameState) override;
 
 	// Traces Moveable

@@ -105,9 +105,6 @@ void Grabber::fillTracesLocalForced(GameState& gameState) {
 	}
 }
 
-void Grabber::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void Grabber::leaveActivityTracesLocal(GameState& gameState) {
 }
 
@@ -127,11 +124,8 @@ bool Grabber::load(Loader& loader) {
 }
 
 void Grabber::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
-	glm::vec2 ori = this->origin;
-	if (this->moving) {
-		float scale = static_cast<float>(gameState.tick - this->movingTickStart) / this->movingPace;
-		ori += scale * glm::vec2(ACTIVITY::GETDIRECTION(this->movementDirection));
-	}
+	glm::vec2 ori = this->getMovingOrigin(gameState);
+
 	if (this->activityType == GRABBER::STATE::GRABBED) {
 		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState), this->textureActive, this->activityRotation);
 		staticWorldRenderInfo.addBlockWithShadow(this->getMovingOrigin(gameState) + glm::vec2(this->getGrabbedOffset()), this->block.getTexture());

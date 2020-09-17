@@ -38,11 +38,9 @@ bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnori
 }
 
 glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
-	int32_t tick = gameState.tick;
 	glm::vec2 v = glm::vec2(this->origin);
 	if (this->moving) {
-		float scale = static_cast<float>(tick - this->movingTickStart) / this->movingPace;
-		v += scale * glm::vec2(GETDIRECTION(this->movementDirection));
+		v += this->getMovementScaleForced(gameState.tick) * glm::vec2(GETDIRECTION(this->movementDirection));
 	}
 	return v;
 }
@@ -79,22 +77,30 @@ bool Activity::activityIdleLocal() {
 	return this->idleLocal();
 }
 
-float Activity::getMovementScale(int32_t tick) {
+float Activity::getMovementScale(int32_t tick) const {
 	if (this->moving) {
-		return static_cast<float>(tick - this->movingTickStart) / this->movingPace;
+		return this->getMovementScaleForced(tick);
 	}
 	else {
 		return 0.0f;
 	}
 }
 
-float Activity::getActivityScale(int32_t tick) {
+float Activity::getActivityScale(int32_t tick) const {
 	if (this->active) {
-		return static_cast<float>(tick - this->activityTickStart) / this->activityPace;
+		return this->getActivityScaleForced(tick);
 	}
 	else {
 		return 0.0f;
 	}
+}
+
+float Activity::getMovementScaleForced(int32_t tick) const {
+	return static_cast<float>(1 + tick - this->movingTickStart) / (this->movingPace + 1);
+}
+
+float Activity::getActivityScaleForced(int32_t tick) const {
+	return static_cast<float>(1 + tick - this->activityTickStart) / (this->activityPace + 1);
 }
 
 void Activity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
@@ -147,6 +153,7 @@ void Activity::applyActivityLocalForced(GameState& gameState, int32_t type, int3
 	this->activityPace = pace;
 	this->active = true;
 	this->activityTickStart = gameState.tick;
+	this->activityType = type;
 	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
 }
 
@@ -271,9 +278,10 @@ bool Activity::load(Loader& loader) {
 }
 
 void Activity::stopActivity(GameState& gameState) {
+	this->beforeActivityStopLocal(gameState);
 	this->activityType = 0;
 	this->active = false;
-	this->removeActivityTracesLocal(gameState);
+	this->afterActivityStopLocal(gameState);
 }
 
 void Activity::forceChangeActivityState(int32_t type) {
@@ -329,5 +337,11 @@ bool Activity::removeTracesUp(GameState& gameState) {
 		member->inWorld = false;
 	}
 	return true;
+}
+
+void Activity::afterActivityStopLocal(GameState& gameState) {
+}
+
+void Activity::beforeActivityStopLocal(GameState& gameState) {
 }
 

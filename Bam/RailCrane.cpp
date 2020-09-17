@@ -135,9 +135,6 @@ void RailCrane::removeTracesLocalForced(GameState& gameState) {
 	gameState.staticWorld.removeTraceForced(pos + dir * (this->length - 1));
 }
 
-void RailCrane::removeActivityTracesLocal(GameState& gameState) {
-}
-
 void RailCrane::leaveActivityTracesLocal(GameState& gameState) {
 }
 
@@ -222,7 +219,7 @@ void RailCrane::appendStaticRenderInfo(GameState const& gameState, StaticWorldRe
 
 	staticWorldRenderInfo.addBlockWithShadow(pos + d2, this->supportTex, this->activityRotation);
 
-	float activityScale = getActivityScale(gameState.tick);
+	float activityScale = this->getActivityScale(gameState.tick);
 
 	glm::vec2 activityDir;
 	pos = moveableOrigin + static_cast<float>(this->anchorIndexPos) * orientationDir;
