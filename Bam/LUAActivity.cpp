@@ -6,6 +6,8 @@
 #include "Saver.h"
 #include "Loader.h"
 
+#include <initializer_list>
+
 static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 	auto type = t.get_type();
 	switch (type) {
@@ -138,26 +140,29 @@ bool LuaActivity::load(Loader& loader) {
 	return true;
 }
 
-bool LuaActivity::valid(Handle h) {
-	auto const& validTargets = this->getRootRef().get()->getSortedHandles();
-	return std::binary_search(validTargets.begin(), validTargets.end(), h);
-}
-
-bool LuaActivity::applyMove(Handle h, int32_t type) {
-	if (!this->valid(h)) {
+bool LuaActivity::applyMove(int32_t index, int32_t type) {
+	if (index < 0 || index >= this->labelLists.size()) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
+		bool res = true;
+		for (auto h : this->labelLists[index]) {
+			res &= WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
+		}
+		return res;
 	}
 }
 
-bool LuaActivity::applyActivity(Handle h, int32_t type) {
-	if (!this->valid(h)) {
+bool LuaActivity::applyActivity(int32_t index, int32_t type) {
+	if (index < 0 || index >= this->labelLists.size()) {
 		return false;
 	}
 	else {
-		return WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
+		bool res = true;
+		for (auto h : this->labelLists[index]) {
+			res &= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
+		}
+		return res;
 	}
 }
 
@@ -177,21 +182,33 @@ void LuaActivity::run() {
 		}
 
 		this->labels.clear();
+		this->labelLists.clear();
 
 		for (auto const& member : this->getRootPtr()->getTreeMembers()) {
-			if (member->getLabel().size() > 0) {
-				try {
-					state[member->getLabel()] = member->getHandle();
-					this->labels.push_back(member->getLabel());
+			auto& memberLabel = member->getLabel();
+			if (memberLabel.size() > 0) {
+				auto it = this->labels.find(memberLabel);
+				if (it == this->labels.end()) {
+					int32_t index = static_cast<int32_t>(this->labels.size());
+					this->labels[memberLabel] = index;
+					this->labelLists.emplace_back(std::initializer_list<int32_t>{member->getHandle()});
+
+					try {
+						state[member->getLabel()] = index;
+					}
+					catch (const sol::error& e) {
+						Locator<Log>::ref().putLine(e.what());
+						this->stop();
+					}
+					catch (...) {
+						Locator<Log>::ref().putLine("non-sol::error when setting label values");
+						this->stop();
+					}
 				}
-				catch (const sol::error& e) {
-					Locator<Log>::ref().putLine(e.what());
-					this->stop();
+				else {
+					this->labelLists[it->second].push_back(member->getHandle());
 				}
-				catch (...) {
-					Locator<Log>::ref().putLine("non-sol::error when setting label values");
-					this->stop();
-				}
+
 			}
 		}
 	}

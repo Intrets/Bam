@@ -14,7 +14,8 @@ private:
 	std::string script;
 
 	std::vector<std::string> watchedVars = { "state" };
-	std::vector<std::string> labels;
+	std::unordered_map<std::string, int32_t> labels;
+	std::vector<std::vector<int32_t>> labelLists;
 
 	std::function<void(std::string line)> printFunction = [](std::string)
 	{};
@@ -32,8 +33,8 @@ private:
 
 	void initializeLuaState();
 
-	bool applyMove(Handle h, int32_t type);
-	bool applyActivity(Handle h, int32_t type);
+	bool applyMove(int32_t h, int32_t type);
+	bool applyActivity(int32_t h, int32_t type);
 
 	friend class ACTIVITYCOPIER;
 
@@ -46,8 +47,6 @@ public:
 
 	void setScript(std::string script, GameState& gameState);
 	std::string const& getScript();
-
-	bool valid(Handle h);
 
 	void setPrintFunction(std::function<void(std::string line)> f);
 
