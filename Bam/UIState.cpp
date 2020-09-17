@@ -28,6 +28,7 @@
 #include "StringHelpers.h"
 #include "LuaActivity.h"
 #include "Block.h"
+#include "Incinerator.h"
 #include <fstream>
 
 #include "UIOConstructActivityInterface.h"
@@ -327,6 +328,13 @@ void UIState::init() {
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::DETECTOR);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(10, "Incinerator", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
+		{
+			interfaceHideablePtr->show();
+			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::INCINERATOR);
 			return BIND::RESULT::CONTINUE;
 		});
 

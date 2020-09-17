@@ -8,6 +8,7 @@
 #include "Grabber.h"
 #include "Reader.h"
 #include "Detector.h"
+#include "Incinerator.h"
 
 static std::string initialLuaScript =
 "function init()\n"
@@ -73,6 +74,9 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 		case ACTIVITY::TYPE::DETECTOR:
 			return ACTIVITYSPAWNER::detector(gameState, pos);
 			break;
+		case ACTIVITY::TYPE::INCINERATOR:
+			return ACTIVITYSPAWNER::incinerator(gameState, pos);
+			break;
 		default:
 			return std::nullopt;
 			break;
@@ -107,4 +111,8 @@ UniqueReference<Activity, Activity> ACTIVITYSPAWNER::reader(GameState& gameState
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::detector(GameState& gameState, glm::ivec2 pos) {
 	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Detector>(pos);
+}
+
+UniqueReference<Activity, Activity> ACTIVITYSPAWNER::incinerator(GameState& gameState, glm::ivec2 pos) {
+	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Incinerator>(pos);
 }

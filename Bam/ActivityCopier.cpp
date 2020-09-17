@@ -10,6 +10,7 @@
 #include "Grabber.h"
 #include "Reader.h"
 #include "Detector.h"
+#include "Incinerator.h"
 
 void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;
@@ -78,10 +79,6 @@ Activity* ACTIVITYCOPIER::copyAnchor(Anchor* source, HandleMap& handleMap) {
 Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap) {
 	RailCrane* target = new RailCrane();
 
-	target->supportTex = source->supportTex;
-	target->shaftTex = source->shaftTex;
-	target->anchorTex = source->anchorTex;
-
 	target->anchorDirection = source->anchorDirection;
 	target->length = source->length;
 	target->anchorIndexPos = source->anchorIndexPos;
@@ -131,6 +128,14 @@ Activity* ACTIVITYCOPIER::copyDetector(Detector* source, HandleMap& handleMap) {
 	return detector;
 }
 
+Activity* ACTIVITYCOPIER::copyIncinerator(Incinerator* source, HandleMap& handleMap) {
+	Incinerator* incinerator = new Incinerator();
+
+	ACTIVITYCOPIER::copySingleBlockActivity(source, incinerator, handleMap);
+
+	return incinerator;
+}
+
 UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity, Activity> ref) {
 	HandleMap handleMap;
 
@@ -167,6 +172,10 @@ UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity,
 				break;
 			case ACTIVITY::TYPE::DETECTOR:
 				target = ACTIVITYCOPIER::copyDetector(static_cast<Detector*>(member), handleMap);
+				break;
+			case ACTIVITY::TYPE::INCINERATOR:
+				target = ACTIVITYCOPIER::copyIncinerator(static_cast<Incinerator*>(member), handleMap);
+				break;
 			default:
 				assert(0);
 				break;

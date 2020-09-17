@@ -9,9 +9,9 @@ class UIOTextDisplay;
 class UIOHotbar : public UIOBase
 {
 private:
-	std::array<std::optional<std::function<void(UIOCallBackParams&)>>, 10> tools;
+	std::array<std::optional<std::function<void(UIOCallBackParams&)>>, 20> tools;
 
-	std::array<UIOTextDisplay*, 10> toolTexts;
+	std::array<UIOTextDisplay*, 20> toolTexts;
 
 public:
 	UIOHotbar(Handle self);

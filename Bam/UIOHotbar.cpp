@@ -18,9 +18,9 @@ UIOHotbar::UIOHotbar(Handle self) {
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
-	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 1));
+	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 2));
 
-	for (int32_t i = 0; i < 10; i++) {
+	for (int32_t i = 0; i < 20; i++) {
 		tile.get()->addElement(
 			TextConstructer::constructSingleLineDisplayText("")
 			.setPtr(this->toolTexts[i])

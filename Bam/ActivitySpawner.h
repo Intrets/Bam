@@ -20,5 +20,6 @@ namespace ACTIVITYSPAWNER
 	UniqueReference<Activity, Activity> grabber(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> reader(GameState& gameState, glm::ivec2 pos);
 	UniqueReference<Activity, Activity> detector(GameState& gameState, glm::ivec2 pos);
+	UniqueReference<Activity, Activity> incinerator(GameState& gameState, glm::ivec2 pos);
 };
 

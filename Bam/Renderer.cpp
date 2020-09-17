@@ -38,6 +38,7 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	Locator<Timer>::ref().newTiming("Render");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//this->staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);

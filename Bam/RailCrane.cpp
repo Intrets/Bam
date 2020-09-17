@@ -10,16 +10,15 @@
 #include "Saver.h"
 #include "Loader.h"
 
+int32_t RailCrane::supportTex = 0;
+int32_t RailCrane::shaftTex = 0;
+int32_t RailCrane::anchorTex = 0;
+
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos) :
 	SingleGrouper(self, pos) {
 	this->length = 10;
 	this->anchorDirection = RAILCRANE::DIR::STATIONARY;
 	this->anchorIndexPos = 0;
-
-	auto t = Locator<BlockIDTextures>::get();
-	this->anchorTex = t->getBlockTextureID("crane_anchor.dds");
-	this->shaftTex = t->getBlockTextureID("crane_shaft.dds");
-	this->supportTex = t->getBlockTextureID("crane_support.dds");
 }
 
 void RailCrane::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {

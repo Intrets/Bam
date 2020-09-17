@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "BlockIDTextures.h"
 #include "Piston.h"
+#include "RailCrane.h"
 
 void ActivityTextureInitializer::run() {
 	auto man = Locator<BlockIDTextures>::get();
@@ -13,4 +14,8 @@ void ActivityTextureInitializer::run() {
 	Piston::cogTex = man->getBlockTextureID("cog.dds");
 	Piston::ropeTex = man->getBlockTextureID("rope.dds");
 	Piston::headTex = man->getBlockTextureID("grabber_right.dds");
+
+	RailCrane::anchorTex = man->getBlockTextureID("crane_anchor.dds");
+	RailCrane::shaftTex = man->getBlockTextureID("crane_shaft.dds");
+	RailCrane::supportTex = man->getBlockTextureID("crane_support.dds");
 }

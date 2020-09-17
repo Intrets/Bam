@@ -31,6 +31,7 @@ namespace ACTIVITY
 		LUA,
 		READER,
 		DETECTOR,
+		INCINERATOR,
 		_MAX,
 	};
 
@@ -47,6 +48,7 @@ namespace ACTIVITY
 		"lua",
 		"reader",
 		"detector",
+		"incinerator",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 

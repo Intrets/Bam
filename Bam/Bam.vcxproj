@@ -291,6 +291,7 @@
     <ClCompile Include="GLEnableWrapper.cpp" />
     <ClCompile Include="Grabber.cpp" />
     <ClCompile Include="Grouper.cpp" />
+    <ClCompile Include="Incinerator.cpp" />
     <ClCompile Include="InitManagers.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Linker.cpp" />
@@ -397,6 +398,7 @@
     <ClInclude Include="GLEnableWrapper.h" />
     <ClInclude Include="Grabber.h" />
     <ClInclude Include="Grouper.h" />
+    <ClInclude Include="Incinerator.h" />
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />

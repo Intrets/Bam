@@ -17,6 +17,7 @@ class SingleBlockActivity;
 class Grabber;
 class Reader;
 class Detector;
+class Incinerator;
 
 typedef int32_t Handle;
 
@@ -36,6 +37,7 @@ private:
 	static Activity* copyGrabber(Grabber* source, HandleMap& handleMap);
 	static Activity* copyReader(Reader* source, HandleMap& handleMap);
 	static Activity* copyDetector(Detector* source, HandleMap& handleMap);
+	static Activity* copyIncinerator(Incinerator* source, HandleMap& handleMap);
 
 public:
 	static UniqueReference<Activity, Activity> copy(WeakReference<Activity, Activity> ref);

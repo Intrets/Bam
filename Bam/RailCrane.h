@@ -13,12 +13,14 @@ namespace RAILCRANE{
 
 class RailCrane : public SingleGrouper
 {
-public:
-	int32_t supportTex;
-	int32_t shaftTex;
-	int32_t anchorTex;
+private:
+	static int32_t supportTex;
+	static int32_t shaftTex;
+	static int32_t anchorTex;
 
-	//ACTIVITY::DIR orientation;
+	friend class ActivityTextureInitializer;
+
+public:
 	RAILCRANE::DIR anchorDirection;
 	int32_t length;
 	int32_t anchorIndexPos;
