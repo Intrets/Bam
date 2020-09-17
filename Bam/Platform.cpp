@@ -180,13 +180,13 @@ bool Platform::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgn
 	return !blocked;
 }
 
-void Platform::removeMoveableTracesLocal(GameState& gameState) {
+void Platform::preMoveableStopLocal(GameState& gameState) {
 	for (auto& dir : this->blockedDirections[ACTIVITY::FLIP(movementDirection)]) {
 		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
 	}
 }
 
-void Platform::leaveMoveableTracesLocal(GameState& gameState) {
+void Platform::postMoveableStartLocal(GameState& gameState) {
 	for (auto& dir : this->blockedDirections[movementDirection]) {
 		gameState.staticWorld.leaveTrace(origin + dir, selfHandle);
 	}
@@ -194,9 +194,6 @@ void Platform::leaveMoveableTracesLocal(GameState& gameState) {
 
 bool Platform::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
-}
-
-void Platform::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Platform::save(Saver& saver) {

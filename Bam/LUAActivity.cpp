@@ -72,16 +72,13 @@ void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, i
 	this->run();
 }
 
-void LuaActivity::afterActivityStopLocal(GameState& gameState) {
+void LuaActivity::postActivityStopLocal(GameState& gameState) {
 	if (!this->interrupt) {
 		this->start(gameState);
 	}
 	else {
 		this->interrupt = false;
 	}
-}
-
-void LuaActivity::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 ACTIVITY::TYPE LuaActivity::getType() {

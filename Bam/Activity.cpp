@@ -12,7 +12,7 @@ void Activity::applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int
 	this->movementDirection = dir;
 	this->movingTickStart = gameState.tick;
 	gameState.movementPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
-	this->leaveMoveableTracesLocal(gameState);
+	this->postMoveableStartLocal(gameState);
 }
 
 bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir) {
@@ -202,7 +202,7 @@ bool Activity::applyMoveRoot(GameState& gameState, ACTIVITY::DIR dir, int32_t pa
 
 void Activity::stopMovement(GameState& gameState) {
 	this->origin += ACTIVITY::GETDIRECTION(this->movementDirection);
-	this->removeMoveableTracesLocal(gameState);
+	this->preMoveableStopLocal(gameState);
 	this->movementDirection = ACTIVITY::DIR::STATIONARY;
 	this->moving = false;
 }
@@ -278,10 +278,10 @@ bool Activity::load(Loader& loader) {
 }
 
 void Activity::stopActivity(GameState& gameState) {
-	this->beforeActivityStopLocal(gameState);
+	this->preActivityStopLocal(gameState);
 	this->activityType = 0;
 	this->active = false;
-	this->afterActivityStopLocal(gameState);
+	this->postActivityStopLocal(gameState);
 }
 
 void Activity::forceChangeActivityState(int32_t type) {
@@ -339,9 +339,9 @@ bool Activity::removeTracesUp(GameState& gameState) {
 	return true;
 }
 
-void Activity::afterActivityStopLocal(GameState& gameState) {
+void Activity::postActivityStopLocal(GameState& gameState) {
 }
 
-void Activity::beforeActivityStopLocal(GameState& gameState) {
+void Activity::preActivityStopLocal(GameState& gameState) {
 }
 

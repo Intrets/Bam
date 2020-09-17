@@ -135,17 +135,14 @@ void RailCrane::removeTracesLocalForced(GameState& gameState) {
 	gameState.staticWorld.removeTraceForced(pos + dir * (this->length - 1));
 }
 
-void RailCrane::leaveActivityTracesLocal(GameState& gameState) {
-}
-
-void RailCrane::removeMoveableTracesLocal(GameState& gameState) {
+void RailCrane::preMoveableStopLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection)) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.removeTraceFilter(pos, this->selfHandle);
 	gameState.staticWorld.removeTraceFilter(pos + d * (this->length - 1), this->selfHandle);
 }
 
-void RailCrane::leaveMoveableTracesLocal(GameState& gameState) {
+void RailCrane::postMoveableStartLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(this->movementDirection) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.leaveTrace(pos, this->selfHandle);

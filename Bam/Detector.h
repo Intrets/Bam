@@ -22,9 +22,6 @@ public:
 	// Traces Placement
 	// Already Implemented in SingleBlockActivity
 
-	// Traces Activity
-	virtual void leaveActivityTracesLocal(GameState& gameState) override;
-
 	// Traces Moveable
 	// Already Implemented in SingleBlockActivity
 

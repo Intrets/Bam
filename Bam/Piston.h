@@ -54,13 +54,11 @@ public:
 	virtual void removeTracesLocalForced(GameState& gameState) override;
 
 	// Traces Activity
-	virtual void beforeActivityStopLocal(GameState& gameState) override;
-
-	virtual void leaveActivityTracesLocal(GameState& gameState) override;
+	virtual void preActivityStopLocal(GameState& gameState) override;
 
 	// Traces Moveable
-	virtual void removeMoveableTracesLocal(GameState& gameState) override;
-	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
+	virtual void preMoveableStopLocal(GameState& gameState) override;
+	virtual void postMoveableStartLocal(GameState& gameState) override;
 
 	// Serial
 	virtual ACTIVITY::TYPE getType() override;

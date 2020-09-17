@@ -154,7 +154,7 @@ void Piston::appendStaticRenderInfo(GameState const& gameState, StaticWorldRende
 	staticWorldRenderInfo.addBlockWithShadow(p, this->headTex, this->activityRotation);
 }
 
-void Piston::beforeActivityStopLocal(GameState& gameState) {
+void Piston::preActivityStopLocal(GameState& gameState) {
 	switch (static_cast<PISTON::DIR>(this->activityType)) {
 		case PISTON::DIR::EXTEND:
 			this->length++;
@@ -167,10 +167,7 @@ void Piston::beforeActivityStopLocal(GameState& gameState) {
 	}
 }
 
-void Piston::leaveActivityTracesLocal(GameState& gameState) {
-}
-
-void Piston::removeMoveableTracesLocal(GameState& gameState) {
+void Piston::preMoveableStopLocal(GameState& gameState) {
 	glm::ivec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);
 	int32_t d = idot(GETDIRECTION(this->movementDirection), headDirection);
 	auto ori = this->origin - GETDIRECTION(this->movementDirection);
@@ -190,7 +187,7 @@ void Piston::removeMoveableTracesLocal(GameState& gameState) {
 	}
 }
 
-void Piston::leaveMoveableTracesLocal(GameState& gameState) {
+void Piston::postMoveableStartLocal(GameState& gameState) {
 	glm::ivec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);
 	int32_t d = idot(GETDIRECTION(this->movementDirection), headDirection);
 	auto ori = this->origin + GETDIRECTION(this->movementDirection);

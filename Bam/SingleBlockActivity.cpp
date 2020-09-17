@@ -51,11 +51,11 @@ void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
 	gameState.staticWorld.removeTraceForced(this->origin);
 }
 
-void SingleBlockActivity::removeMoveableTracesLocal(GameState& gameState) {
+void SingleBlockActivity::preMoveableStopLocal(GameState& gameState) {
 	gameState.staticWorld.removeTraceFilter(this->origin - ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
 }
 
-void SingleBlockActivity::leaveMoveableTracesLocal(GameState& gameState) {
+void SingleBlockActivity::postMoveableStartLocal(GameState& gameState) {
 	gameState.staticWorld.leaveTrace(this->origin + ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
 }
 

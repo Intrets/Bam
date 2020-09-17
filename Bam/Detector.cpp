@@ -15,9 +15,6 @@ bool Detector::canActivityLocal(GameState& gameState, int32_t type) {
 void Detector::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
 }
 
-void Detector::leaveActivityTracesLocal(GameState& gameState) {
-}
-
 ACTIVITY::TYPE Detector::getType() {
 	return ACTIVITY::TYPE::DETECTOR;
 }

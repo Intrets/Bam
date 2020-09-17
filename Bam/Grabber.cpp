@@ -105,9 +105,6 @@ void Grabber::fillTracesLocalForced(GameState& gameState) {
 	}
 }
 
-void Grabber::leaveActivityTracesLocal(GameState& gameState) {
-}
-
 ACTIVITY::TYPE Grabber::getType() {
 	return ACTIVITY::TYPE::GRABBER;
 }
@@ -185,7 +182,7 @@ bool Grabber::canFillTracesLocal(GameState& gameState) {
 	}
 }
 
-void Grabber::removeMoveableTracesLocal(GameState& gameState) {
+void Grabber::preMoveableStopLocal(GameState& gameState) {
 	switch (this->activityType) {
 		case GRABBER::STATE::GRABBED:
 			{
@@ -220,7 +217,7 @@ void Grabber::removeMoveableTracesLocal(GameState& gameState) {
 	}
 }
 
-void Grabber::leaveMoveableTracesLocal(GameState& gameState) {
+void Grabber::postMoveableStartLocal(GameState& gameState) {
 	switch (this->activityType) {
 		case GRABBER::STATE::GRABBED:
 			{

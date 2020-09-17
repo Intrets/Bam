@@ -287,13 +287,12 @@ public:
 	bool removeTracesUp(GameState& gameState);
 
 	// Traces Activity
-	virtual void afterActivityStopLocal(GameState& gameState);
-	virtual void beforeActivityStopLocal(GameState& gameState);
-	virtual void leaveActivityTracesLocal(GameState& gameState) = 0;
+	virtual void postActivityStopLocal(GameState& gameState);
+	virtual void preActivityStopLocal(GameState& gameState);
 
 	// Traces Moveable
-	virtual void removeMoveableTracesLocal(GameState& gameState) = 0;
-	virtual void leaveMoveableTracesLocal(GameState& gameState) = 0;
+	virtual void preMoveableStopLocal(GameState& gameState) = 0;
+	virtual void postMoveableStartLocal(GameState& gameState) = 0;
 
 	// Tree Informations
 

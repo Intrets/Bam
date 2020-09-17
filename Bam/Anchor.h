@@ -41,12 +41,9 @@ public:
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) override;
 
-	// Traces Activity
-	virtual void leaveActivityTracesLocal(GameState& gameState) override;
-
 	// Traces Moveable
-	virtual void removeMoveableTracesLocal(GameState& gameState) override;
-	virtual void leaveMoveableTracesLocal(GameState& gameState) override;
+	virtual void preMoveableStopLocal(GameState& gameState) override;
+	virtual void postMoveableStartLocal(GameState& gameState) override;
 
 	// Tree Information
 

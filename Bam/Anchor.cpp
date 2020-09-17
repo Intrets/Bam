@@ -46,17 +46,14 @@ bool Anchor::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnor
 	return true;
 }
 
-void Anchor::removeMoveableTracesLocal(GameState& gameState) {
+void Anchor::preMoveableStopLocal(GameState& gameState) {
 }
 
-void Anchor::leaveMoveableTracesLocal(GameState& gameState) {
+void Anchor::postMoveableStartLocal(GameState& gameState) {
 }
 
 bool Anchor::canActivityLocal(GameState& gameState, int32_t useType) {
 	return false;
-}
-
-void Anchor::leaveActivityTracesLocal(GameState& gameState) {
 }
 
 void Anchor::save(Saver& saver) {
