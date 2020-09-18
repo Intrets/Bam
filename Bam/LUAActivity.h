@@ -21,11 +21,14 @@ private:
 	{};
 
 	std::optional<sol::function> luaRunFunction = std::nullopt;
+	std::optional<sol::function> luaMessageFunction = std::nullopt;
 
 	int32_t memberLabelCacheTick = -1;
 	int32_t rootLabelCacheTick = -1;
 
+	void updateLabels();
 	void run();
+	void message(sol::variadic_args& va);
 
 	void prepare(GameState& gameState);
 	void execute(std::string);
@@ -33,8 +36,11 @@ private:
 
 	void initializeLuaState();
 
-	bool applyMove(int32_t h, int32_t type);
-	bool applyActivity(int32_t h, int32_t type);
+	bool validIndex(int32_t index);
+
+	bool applyMove(int32_t index, int32_t type);
+	bool applyActivity(int32_t index, int32_t type);
+	bool sendLuaMessage(int32_t index, sol::variadic_args& va);
 
 	friend class ACTIVITYCOPIER;
 

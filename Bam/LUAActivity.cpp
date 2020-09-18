@@ -141,28 +141,45 @@ bool LuaActivity::load(Loader& loader) {
 }
 
 bool LuaActivity::applyMove(int32_t index, int32_t type) {
-	if (index < 0 || index >= this->labelLists.size()) {
+	if (!this->validIndex(index)) {
 		return false;
 	}
 	else {
 		bool res = true;
 		for (auto h : this->labelLists[index]) {
-			res &= WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
+			res |= WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
 		}
 		return res;
 	}
 }
 
 bool LuaActivity::applyActivity(int32_t index, int32_t type) {
-	if (index < 0 || index >= this->labelLists.size()) {
+	if (!this->validIndex(index)) {
 		return false;
 	}
 	else {
 		bool res = true;
 		for (auto h : this->labelLists[index]) {
-			res &= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
+			res |= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
 		}
 		return res;
+	}
+}
+
+bool LuaActivity::sendLuaMessage(int32_t index, sol::variadic_args& va) {
+	if (!this->validIndex(index)) {
+		return false;
+	}
+	else {
+		for (auto h : this->labelLists[index]) {
+			Activity* activity = WeakReference<Activity, Activity>(h).get();
+			if (activity->getType() != ACTIVITY::TYPE::LUA) {
+				continue;
+			}
+			LuaActivity* luaActivity = static_cast<LuaActivity*>(activity);
+			luaActivity->message(va);
+		}
+		return true;
 	}
 }
 
@@ -170,7 +187,7 @@ void LuaActivity::setPrintFunction(std::function<void(std::string line)> f) {
 	this->printFunction = f;
 }
 
-void LuaActivity::run() {
+void LuaActivity::updateLabels() {
 	if (this->memberLabelCacheTick != this->getRootPtr()->memberCache.getMembersTick() ||
 		this->rootLabelCacheTick != this->memberCache.getRootTick()) {
 
@@ -178,7 +195,7 @@ void LuaActivity::run() {
 		this->rootLabelCacheTick = this->memberCache.getRootTick();
 
 		for (auto const& l : this->labels) {
-			state[l] = sol::nil;
+			state[l.first] = sol::nil;
 		}
 
 		this->labels.clear();
@@ -208,14 +225,38 @@ void LuaActivity::run() {
 				else {
 					this->labelLists[it->second].push_back(member->getHandle());
 				}
-
 			}
 		}
 	}
+}
+
+void LuaActivity::run() {
+	this->updateLabels();
 
 	if (this->luaRunFunction.has_value()) {
 		try {
 			this->luaRunFunction.value()();
+		}
+		catch (const sol::error& e) {
+			Locator<Log>::ref().putLine(e.what());
+			this->stop();
+		}
+		catch (...) {
+			Locator<Log>::ref().putLine("non-sol::error when executing script");
+			this->stop();
+		}
+	}
+	else {
+		Locator<Log>::ref().putLine("No run() function found in lua script.");
+	}
+}
+
+void LuaActivity::message(sol::variadic_args& va) {
+	this->updateLabels();
+
+	if (this->luaMessageFunction.has_value()) {
+		try {
+			this->luaMessageFunction.value()(va);
 		}
 		catch (const sol::error& e) {
 			Locator<Log>::ref().putLine(e.what());
@@ -254,20 +295,26 @@ void LuaActivity::execute(std::string s) {
 void LuaActivity::initializeLuaState() {
 	state.open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
 	state.script("");
-	state.set_function("move", [this](Handle h, int32_t type) -> bool
+	state.set_function("move", [this](Handle index, int32_t type) -> bool
 	{
-		return this->applyMove(h, type);
+		return this->applyMove(index, type);
 	});
 
-	state.set_function("activate", [this](Handle h, int32_t type) -> bool
+	state.set_function("activate", [this](Handle index, int32_t type) -> bool
 	{
-		return this->applyActivity(h, type);
+		return this->applyActivity(index, type);
 	});
 
 	state.set_function("stop", [this]() -> void
 	{
 		this->stop();
 	});
+
+	state.set_function("send", [this](int32_t index, sol::variadic_args va) -> void
+	{
+		this->sendLuaMessage(index, va);
+	});
+
 
 	state.set_function("print", [this](sol::variadic_args va)
 	{
@@ -313,6 +360,10 @@ void LuaActivity::initializeLuaState() {
 	});
 }
 
+bool LuaActivity::validIndex(int32_t index) {
+	return (index >= 0 && index < this->labelLists.size());
+}
+
 void LuaActivity::setWatchedVars(std::vector<std::string>& vars) {
 	this->watchedVars = vars;
 }
@@ -330,9 +381,24 @@ void LuaActivity::setScript(std::string script_, GameState& gameState) {
 }
 
 void LuaActivity::refreshRunFunction() {
-	sol::object func = this->state["run"];
-	if (func.get_type() == sol::type::function) {
-		this->luaRunFunction = func.as<sol::function>();
+	{
+		sol::object func = this->state["run"];
+		if (func.get_type() == sol::type::function) {
+			this->luaRunFunction = func.as<sol::function>();
+		}
+		else {
+			this->luaRunFunction = std::nullopt;
+		}
+	}
+
+	{
+		sol::object func = this->state["message"];
+		if (func.get_type() == sol::type::function) {
+			this->luaMessageFunction = func.as<sol::function>();
+		}
+		else {
+			this->luaMessageFunction = std::nullopt;
+		}
 	}
 }
 
