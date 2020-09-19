@@ -300,6 +300,7 @@
     <ClCompile Include="Locator.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LuaActivity.cpp" />
+    <ClCompile Include="LuaStore.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MemberCache.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
@@ -404,6 +405,7 @@
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LuaActivity.h" />
+    <ClInclude Include="LuaStore.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="MemberCache.h" />

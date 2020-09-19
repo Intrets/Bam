@@ -3,6 +3,11 @@
 #include "SingleBlockActivity.h"
 #include "sol/sol.hpp"
 
+namespace LUASTORE
+{
+	class Args;
+}
+
 class LuaActivity : public SingleBlockActivity
 {
 private:
@@ -21,14 +26,13 @@ private:
 	{};
 
 	std::optional<sol::function> luaRunFunction = std::nullopt;
-	std::optional<sol::function> luaMessageFunction = std::nullopt;
+	std::optional<sol::function> luaReceiveMessageFunction = std::nullopt;
 
 	int32_t memberLabelCacheTick = -1;
 	int32_t rootLabelCacheTick = -1;
 
 	void updateLabels();
 	void run();
-	void message(sol::variadic_args& va);
 
 	void prepare(GameState& gameState);
 	void execute(std::string);
@@ -40,7 +44,10 @@ private:
 
 	bool applyMove(int32_t index, int32_t type);
 	bool applyActivity(int32_t index, int32_t type);
-	bool sendLuaMessage(int32_t index, sol::variadic_args& va);
+	bool sendMessage(int32_t index, sol::variadic_args& va);
+
+	void receiveMessage(sol::variadic_args& va);
+	void receiveMessage(LUASTORE::Args& args);
 
 	friend class ACTIVITYCOPIER;
 

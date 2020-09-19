@@ -10,28 +10,35 @@
 #include "Detector.h"
 #include "Incinerator.h"
 
-static std::string initialLuaScript =
-"function init()\n"
-"  state = state or 0\n"
-"end\n"
-"\n"
-"stateTable = {\n"
-"  [0] = function()\n"
-"    print(0)\n"
-"    state = 1\n"
-"  end,\n"
-"  [1] = function()\n"
-"    print(1)\n"
-"    state = 0\n"
-"    stop()\n"
-"  end,\n"
-"}\n"
-"\n"
-"function run()\n"
-"  stateTable[state]()\n"
-"end\n"
-;
+const char* initialLuaScript =
+R"rawstring(
+-- send(index, ...) 
+-- move(index, int32_t)
+-- activate(index, int32_t)
 
+function init()
+  state = state or 0
+end
+
+stateTable = {
+  [0] = function()
+    print(0)
+    state = 1
+  end,
+  [1] = function()
+    print(1)
+    state = 0
+    stop()
+  end,
+}
+
+function run()
+end
+
+function message(...)
+  print("message received");
+end
+)rawstring";
 
 std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameState& gameState, glm::ivec2 pos, ACTIVITY::TYPE activityType) {
 	switch (activityType) {

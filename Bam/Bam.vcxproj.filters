@@ -416,6 +416,7 @@
     <ClCompile Include="Incinerator.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="LuaStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -740,6 +741,7 @@
     <ClInclude Include="Incinerator.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
+    <ClInclude Include="LuaStore.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
