@@ -32,6 +32,7 @@ namespace ACTIVITY
 		READER,
 		DETECTOR,
 		INCINERATOR,
+		FORWARDER,
 		_MAX,
 	};
 
@@ -49,6 +50,7 @@ namespace ACTIVITY
 		"reader",
 		"detector",
 		"incinerator",
+		"forwarder",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 

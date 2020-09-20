@@ -198,7 +198,7 @@ UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activit
 			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (uioLuaPtr->getWatched().isValid()) {
-				uioLuaPtr->getWatched().get()->start(params.gameState);
+				uioLuaPtr->getWatched().get()->start();
 			}
 
 			return BIND::RESULT::CONTINUE;

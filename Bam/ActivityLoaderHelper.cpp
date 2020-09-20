@@ -11,6 +11,7 @@
 #include "Reader.h"
 #include "Detector.h"
 #include "Incinerator.h"
+#include "Forwarder.h"
 
 #include "Saver.h"
 #include "Loader.h"
@@ -69,6 +70,11 @@ bool load(Loader& loader, ReferenceManager<Activity>& manager) {
 			case ACTIVITY::TYPE::INCINERATOR:
 				{
 					LOAD(Incinerator);
+					break;
+				}
+			case ACTIVITY::TYPE::FORWARDER:
+				{
+					LOAD(Forwarder);
 					break;
 				}
 			default:

@@ -287,6 +287,7 @@
     <ClCompile Include="DebugRenderInfo.cpp" />
     <ClCompile Include="Detector.cpp" />
     <ClCompile Include="Fonts.cpp" />
+    <ClCompile Include="Forwarder.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="DebugRenderInfo.h" />
     <ClInclude Include="Detector.h" />
     <ClInclude Include="Fonts.h" />
+    <ClInclude Include="Forwarder.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />

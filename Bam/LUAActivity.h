@@ -2,16 +2,15 @@
 
 #include "SingleBlockActivity.h"
 #include "sol/sol.hpp"
-
-namespace LUASTORE
-{
-	class Args;
-}
+#include "LuaStore.h"
 
 class LuaActivity : public SingleBlockActivity
 {
 private:
 	bool interrupt = false;
+	bool running = false;
+
+	std::optional<LUASTORE::Args> args;
 
 	sol::state state;
 	GameState* gameStateRef;
@@ -33,6 +32,8 @@ private:
 
 	void updateLabels();
 	void run();
+	bool processMessage();
+	bool runLoop();
 
 	void prepare(GameState& gameState);
 	void execute(std::string);
@@ -40,20 +41,21 @@ private:
 
 	void initializeLuaState();
 
-	bool validIndex(int32_t index);
+	bool validIndex(int32_t index) const;
 
 	bool applyMove(int32_t index, int32_t type);
 	bool applyActivity(int32_t index, int32_t type);
 	bool sendMessage(int32_t index, sol::variadic_args& va);
 
-	void receiveMessage(sol::variadic_args& va);
-	void receiveMessage(LUASTORE::Args& args);
+	bool canReceiveMessage() const;
+	bool receiveMessage(LUASTORE::Args& args_);
 
 	friend class ACTIVITYCOPIER;
+	friend class Forwarder;
 
 public:
-	void start(GameState& gameState);
 	void stop();
+	void start();
 
 	void setWatchedVars(std::vector<std::string>& vars);
 	std::vector<std::string> const& getWatchedVars();

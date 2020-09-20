@@ -18,6 +18,7 @@ class Grabber;
 class Reader;
 class Detector;
 class Incinerator;
+class Forwarder;
 
 typedef int32_t Handle;
 
@@ -38,6 +39,7 @@ private:
 	static Activity* copyReader(Reader* source, HandleMap& handleMap);
 	static Activity* copyDetector(Detector* source, HandleMap& handleMap);
 	static Activity* copyIncinerator(Incinerator* source, HandleMap& handleMap);
+	static Activity* copyForwarder(Forwarder* source, HandleMap& handleMap);
 
 public:
 	static UniqueReference<Activity, Activity> copy(WeakReference<Activity, Activity> ref);

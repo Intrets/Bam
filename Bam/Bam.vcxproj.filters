@@ -416,7 +416,12 @@
     <ClCompile Include="Incinerator.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="LuaStore.cpp" />
+    <ClCompile Include="LuaStore.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Forwarder.cpp">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -741,7 +746,10 @@
     <ClInclude Include="Incinerator.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="LuaStore.h" />
+    <ClInclude Include="Forwarder.h" />
+    <ClInclude Include="LuaStore.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

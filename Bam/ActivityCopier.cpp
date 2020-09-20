@@ -11,6 +11,7 @@
 #include "Reader.h"
 #include "Detector.h"
 #include "Incinerator.h"
+#include "forwarder.h"
 
 void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;
@@ -132,6 +133,14 @@ Activity* ACTIVITYCOPIER::copyIncinerator(Incinerator* source, HandleMap& handle
 	return incinerator;
 }
 
+Activity* ACTIVITYCOPIER::copyForwarder(Forwarder* source, HandleMap& handleMap) {
+	Forwarder* forwarder = new Forwarder();
+
+	ACTIVITYCOPIER::copySingleBlockActivity(source, forwarder, handleMap);
+
+	return forwarder;
+}
+
 UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity, Activity> ref) {
 	HandleMap handleMap;
 
@@ -171,6 +180,9 @@ UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity,
 				break;
 			case ACTIVITY::TYPE::INCINERATOR:
 				target = ACTIVITYCOPIER::copyIncinerator(static_cast<Incinerator*>(member), handleMap);
+				break;
+			case ACTIVITY::TYPE::FORWARDER:
+				target = ACTIVITYCOPIER::copyForwarder(static_cast<Forwarder*>(member), handleMap);
 				break;
 			default:
 				assert(0);

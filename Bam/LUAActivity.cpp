@@ -5,7 +5,7 @@
 #include "StringHelpers.h"
 #include "Saver.h"
 #include "Loader.h"
-#include "LuaStore.h"
+#include "Forwarder.h"
 
 #include <initializer_list>
 
@@ -48,13 +48,15 @@ static bool isSimpleValue(sol::object t, std::unordered_set<size_t>& visited) {
 	}
 }
 
-void LuaActivity::start(GameState& gameState) {
-	//this->applyActivityLocal(gameState, 0, gameState.smallRandom.randRange(10, 20));
-	this->applyActivityLocal(gameState, 0, 5);
+void LuaActivity::stop() {
+	if (this->running) {
+		this->interrupt = true;
+	}
 }
 
-void LuaActivity::stop() {
-	this->interrupt = true;
+void LuaActivity::start() {
+	this->running = true;
+	this->applyActivityLocalForced(*this->gameStateRef, 0, 10);
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
@@ -76,11 +78,8 @@ void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, i
 }
 
 void LuaActivity::postActivityStopLocal(GameState& gameState) {
-	if (!this->interrupt) {
-		this->start(gameState);
-	}
-	else {
-		this->interrupt = false;
+	if (this->running || this->args.has_value()) {
+		this->applyActivityLocalForced(gameState, 0, 10);
 	}
 }
 
@@ -176,8 +175,33 @@ bool LuaActivity::sendMessage(int32_t index, sol::variadic_args& va) {
 			Activity* activity = WeakReference<Activity, Activity>(h).get();
 			switch (activity->getType()) {
 				case ACTIVITY::TYPE::LUA:
-					static_cast<LuaActivity*>(activity)->receiveMessage(va);
+					if (!static_cast<LuaActivity*>(activity)->canReceiveMessage()) {
+						return false;
+					}
 					break;
+				case ACTIVITY::TYPE::FORWARDER:
+					if (!static_cast<Forwarder*>(activity)->canReceiveMessage(*this->gameStateRef)) {
+						return false;
+					}
+				default:
+					break;
+			}
+		}
+		for (auto h : this->labelLists[index]) {
+			Activity* activity = WeakReference<Activity, Activity>(h).get();
+			switch (activity->getType()) {
+				case ACTIVITY::TYPE::LUA:
+					{
+						LUASTORE::Args a{ va };
+						static_cast<LuaActivity*>(activity)->receiveMessage(a);
+						break;
+					}
+				case ACTIVITY::TYPE::FORWARDER:
+					{
+						LUASTORE::Args a{ va };
+						static_cast<Forwarder*>(activity)->receiveMessage(*this->gameStateRef, a);
+						break;
+					}
 				default:
 					break;
 			}
@@ -186,43 +210,20 @@ bool LuaActivity::sendMessage(int32_t index, sol::variadic_args& va) {
 	}
 }
 
-void LuaActivity::receiveMessage(sol::variadic_args& va) {
-	this->updateLabels();
-
-	if (this->luaReceiveMessageFunction.has_value()) {
-		try {
-			//this->luaReceiveMessageFunction.value()(va);
-			LUASTORE::Args a;
-			this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (a);
-		}
-		catch (const sol::error& e) {
-			Locator<Log>::ref().putLine(e.what());
-		}
-		catch (...) {
-			Locator<Log>::ref().putLine("non-sol::error when executing script");
-		}
-	}
-	else {
-		Locator<Log>::ref().putLine("No message(...) function found in lua script.");
-	}
+bool LuaActivity::canReceiveMessage() const {
+	return !this->args.has_value();
 }
 
-void LuaActivity::receiveMessage(LUASTORE::Args& args) {
-	this->updateLabels();
-
-	if (this->luaReceiveMessageFunction.has_value()) {
-		try {
-			this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (args);
-		}
-		catch (const sol::error& e) {
-			Locator<Log>::ref().putLine(e.what());
-		}
-		catch (...) {
-			Locator<Log>::ref().putLine("non-sol::error when executing script");
-		}
+bool LuaActivity::receiveMessage(LUASTORE::Args& args_) {
+	if (!this->canReceiveMessage()) {
+		return false;
 	}
 	else {
-		Locator<Log>::ref().putLine("No message(...) function found in lua script.");
+		this->args = std::move(args_);
+		if (this->activityIdleLocal()) {
+			this->Activity::applyActivityLocalForced(*this->gameStateRef, 0, 10);
+		}
+		return true;
 	}
 }
 
@@ -274,6 +275,49 @@ void LuaActivity::updateLabels() {
 }
 
 void LuaActivity::run() {
+	if (this->args.has_value() && this->processMessage()) {
+		// functionality in the if statement above
+	}
+	else if (this->running) {
+		if (!this->interrupt) {
+			this->runLoop();
+		}
+		else {
+			this->interrupt = false;
+			this->running = false;
+		}
+	}
+}
+
+bool LuaActivity::processMessage() {
+	this->updateLabels();
+
+	if (this->args.has_value()) {
+		if (this->luaReceiveMessageFunction.has_value()) {
+			try {
+				this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (this->args.value());
+			}
+			catch (const sol::error& e) {
+				Locator<Log>::ref().putLine(e.what());
+			}
+			catch (...) {
+				Locator<Log>::ref().putLine("non-sol::error when executing script");
+			}
+			this->args = std::nullopt;
+			return true;
+		}
+		else {
+			Locator<Log>::ref().putLine("No message(...) function found in lua script.");
+			this->args = std::nullopt;
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
+bool LuaActivity::runLoop() {
 	this->updateLabels();
 
 	if (this->luaRunFunction.has_value()) {
@@ -282,15 +326,17 @@ void LuaActivity::run() {
 		}
 		catch (const sol::error& e) {
 			Locator<Log>::ref().putLine(e.what());
-			this->stop();
+			return false;
 		}
 		catch (...) {
 			Locator<Log>::ref().putLine("non-sol::error when executing script");
-			this->stop();
+			return false;
 		}
+		return true;
 	}
 	else {
 		Locator<Log>::ref().putLine("No run() function found in lua script.");
+		return false;
 	}
 }
 
@@ -332,9 +378,9 @@ void LuaActivity::initializeLuaState() {
 		this->stop();
 	});
 
-	state.set_function("send", [this](int32_t index, sol::variadic_args va) -> void
+	state.set_function("send", [this](int32_t index, sol::variadic_args va) -> bool
 	{
-		this->sendMessage(index, va);
+		return this->sendMessage(index, va);
 	});
 
 
@@ -346,8 +392,10 @@ void LuaActivity::initializeLuaState() {
 			switch (type) {
 				case sol::type::string:
 				case sol::type::number:
-				case sol::type::boolean:
 					out << a.as<std::string>();
+					break;
+				case sol::type::boolean:
+					out << (a.as<bool>() ? "True" : "False");
 					break;
 				case sol::type::none:
 					out << "~[none type]~";
@@ -382,7 +430,7 @@ void LuaActivity::initializeLuaState() {
 	});
 }
 
-bool LuaActivity::validIndex(int32_t index) {
+bool LuaActivity::validIndex(int32_t index) const {
 	return (index >= 0 && index < this->labelLists.size());
 }
 
