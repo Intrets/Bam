@@ -14,7 +14,6 @@ class GameState;
 struct StaticWorldRenderInfo;
 struct RenderInfo;
 
-// TODO: better runtime type system??
 namespace ACTIVITY
 {
 	enum class TYPE

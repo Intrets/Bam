@@ -21,7 +21,6 @@ private:
 	template<class T>
 	friend class UIOConstructer;
 
-	// TODO: refactor UIOHotbar
 	friend class UIOHotbar;
 
 	CallBack onPress;

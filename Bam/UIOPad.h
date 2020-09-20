@@ -12,7 +12,6 @@ private:
 	template<class T>
 	friend class UIOConstructer;
 
-	// TODO: refactor hotbar class
 	friend class UIOHotbar;
 
 	std::optional<UIOSizeType> top;
