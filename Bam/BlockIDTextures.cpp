@@ -22,6 +22,8 @@ int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 
 void BlockIDTextures::loadBlockTexture(std::string name) {
 	GLuint newTex = Locator<PathManager>::get()->LoadTextureP(name);
+	glBindTexture(GL_TEXTURE_2D, newTex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Failed to load texture
 	if (newTex == 0) {
@@ -31,7 +33,7 @@ void BlockIDTextures::loadBlockTexture(std::string name) {
 	GLEnabler glEnabler;
 	glEnabler.disable(GL_BLEND);
 
-	Locator<PassThroughRenderer>::ref().render2DArray(this->textureArray.ID, this->arrayLayers, 0, 0, 0, 32, 32, newTex);
+	Locator<PassThroughRenderer>::ref().render2DArray(this->textureArray.ID, this->arrayLayers, 0, 0, 0, 128, 128, newTex);
 }
 
 GLuint BlockIDTextures::getTextureArrayID() {
@@ -48,7 +50,7 @@ BlockIDTextures::BlockIDTextures() {
 	glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &this->maxArrayLayers);
 	this->maxArrayLayers = glm::max(1024, this->maxArrayLayers);
 	// TODO: remove hardcoding of texture size
-	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 32, 32, this->maxArrayLayers);
+	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 128, 128, this->maxArrayLayers);
 
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

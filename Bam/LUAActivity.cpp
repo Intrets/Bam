@@ -62,7 +62,7 @@ void LuaActivity::start() {
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
-	SingleBlockActivity(self, pos, "lua.dds") {
+	SingleBlockActivity(self, pos, "lua128.dds") {
 	this->initializeLuaState();
 }
 
