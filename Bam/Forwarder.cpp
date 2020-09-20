@@ -7,6 +7,7 @@
 
 bool Forwarder::receiveMessage(GameState& gameState, LUASTORE::Args& args_) {
 	if (!this-activityIdleLocal()){
+		this->applyActivityLocalForced(gameState, 0, 10);
 		this->args = std::move(args_);
 		return true;
 	}
