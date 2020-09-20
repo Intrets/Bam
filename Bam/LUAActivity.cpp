@@ -55,8 +55,10 @@ void LuaActivity::stop() {
 }
 
 void LuaActivity::start() {
-	this->running = true;
-	this->applyActivityLocalForced(*this->gameStateRef, 0, 10);
+	if (!this->running) {
+		this->running = true;
+		this->applyActivityLocalForced(*this->gameStateRef, 0, 10);
+	}
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
