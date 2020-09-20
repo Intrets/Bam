@@ -60,7 +60,7 @@ void LuaActivity::start() {
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
-	SingleBlockActivity(self, pos, "debug.dds") {
+	SingleBlockActivity(self, pos, "lua.dds") {
 	this->initializeLuaState();
 }
 
@@ -295,7 +295,8 @@ bool LuaActivity::processMessage() {
 	if (this->args.has_value()) {
 		if (this->luaReceiveMessageFunction.has_value()) {
 			try {
-				this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (this->args.value());
+				//this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (this->args.value());
+				this->luaReceiveMessageFunction.value()(this->args.value());
 			}
 			catch (const sol::error& e) {
 				Locator<Log>::ref().putLine(e.what());

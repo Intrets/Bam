@@ -187,8 +187,6 @@ private:
 	friend class MemberCache;
 
 protected:
-	glm::vec2 getMovingOrigin(GameState const& gameState) const;
-
 	int32_t activityPace = 10;
 	int32_t activityTickStart = 0;
 	int32_t activityType = 0;
@@ -216,6 +214,8 @@ public:
 
 	// Get's set by non default constructor, and should be set after default constructor
 	Handle selfHandle = -1;
+
+	glm::vec2 getMovingOrigin(GameState const& gameState) const;
 
 	virtual glm::ivec2 getOrigin() {
 		return origin;

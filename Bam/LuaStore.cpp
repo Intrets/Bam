@@ -4,7 +4,7 @@
 
 #include <initializer_list>
 
-int sol_lua_push(sol::types<LUASTORE::Args>, lua_State* L, LUASTORE::Args const& things) {
+int sol_lua_push(lua_State* L, LUASTORE::Args const& things) {
 	int amount = 0;
 	for (auto const& arg : things.getArgs()) {
 		amount += arg->push(L);

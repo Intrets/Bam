@@ -85,4 +85,4 @@ namespace LUASTORE
 	};
 }
 
-int sol_lua_push(sol::types<LUASTORE::Args>, lua_State* L, LUASTORE::Args const& things);
+int sol_lua_push(lua_State* L, LUASTORE::Args const& things);

@@ -7,6 +7,7 @@
 #include "Saver.h"
 #include "Loader.h"
 #include "Timer.h"
+#include "BlockIDTextures.h"
 
 bool GameState::load(Loader& loader) {
 	loader.retrieve(this->tick);
@@ -32,8 +33,12 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	// TODO: culling, seperate from static world
 	Locator<Timer>::ref().newTiming("Prep Activities");
 	auto activityManager = Locator<ReferenceManager<Activity>>::get();
+	int32_t highlightBlockID = Locator<BlockIDTextures>::ref().getBlockTextureID("highlight.dds");
 	for (auto& p : activityManager->data) {
 		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
+		if (!p.second.get()->idleLocal()) {
+			renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(p.second.get()->getMovingOrigin(*this), highlightBlockID);
+		}
 	}
 	Locator<Timer>::ref().endTiming("Prep Activities");
 }
