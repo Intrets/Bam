@@ -4,10 +4,15 @@
 
 namespace LUASTORE
 {
+	using SeenTablesType = std::vector<void const*>;
+
+	bool contains(SeenTablesType& seenTables, void const* tablePointer);
+
 	class Val
 	{
 	public:
 		virtual int push(lua_State* L) = 0;
+		virtual sol::object getObject(lua_State* L) const = 0;
 
 		Val() = default;
 		virtual ~Val() = default;
@@ -25,6 +30,9 @@ namespace LUASTORE
 		Integer() = default;
 		Integer(int64_t i);
 		virtual	~Integer() override = default;
+
+		virtual sol::object getObject(lua_State* L) const override;
+
 	};
 
 	class Bool : public Val
@@ -38,6 +46,8 @@ namespace LUASTORE
 		Bool() = default;
 		Bool(bool b);
 		virtual	~Bool() override = default;
+
+		virtual sol::object getObject(lua_State* L) const override;
 	};
 
 	class Float : public Val
@@ -51,6 +61,8 @@ namespace LUASTORE
 		Float() = default;
 		Float(double f);
 		virtual	~Float() override = default;
+
+		virtual sol::object getObject(lua_State* L) const override;
 	};
 
 	class String : public Val
@@ -64,7 +76,35 @@ namespace LUASTORE
 		String() = default;
 		String(std::string s);
 		virtual	~String() override = default;
+
+		virtual sol::object getObject(lua_State* L) const override;
 	};
+
+	class Nil : public Val
+	{
+	public:
+		virtual int push(lua_State* L) override;
+
+		virtual sol::object getObject(lua_State* L) const override;
+	};
+
+
+	class Table : public Val
+	{
+	private:
+		std::vector<std::pair<std::unique_ptr<Val>, std::unique_ptr<Val>>> val;
+
+	public:
+		virtual int push(lua_State* L) override;
+
+		Table() = default;
+		Table(sol::table table, SeenTablesType& seenTables);
+		virtual	~Table() override = default;
+
+		virtual sol::object getObject(lua_State* L) const override;
+	};
+
+	std::unique_ptr<Val> makeVal(sol::object a, SeenTablesType& seenTables);
 
 	class Args
 	{

@@ -295,7 +295,6 @@ bool LuaActivity::processMessage() {
 	if (this->args.has_value()) {
 		if (this->luaReceiveMessageFunction.has_value()) {
 			try {
-				//this->luaReceiveMessageFunction.value().operator() < LUASTORE::Args const& > (this->args.value());
 				this->luaReceiveMessageFunction.value()(this->args.value());
 			}
 			catch (const sol::error& e) {
