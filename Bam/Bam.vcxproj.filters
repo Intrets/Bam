@@ -746,9 +746,11 @@
     <ClInclude Include="Incinerator.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Forwarder.h" />
     <ClInclude Include="LuaStore.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Forwarder.h">
+      <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 #include "LUAActivity.h"
 
 bool Forwarder::receiveMessage(GameState& gameState, LUASTORE::Args& args_) {
-	if (this->applyActivityLocal(gameState, 0, 10)) {
+	if (!this-activityIdleLocal()){
 		this->args = std::move(args_);
 		return true;
 	}
@@ -23,7 +23,7 @@ Forwarder::Forwarder(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, po
 }
 
 bool Forwarder::canActivityLocal(GameState& gameState, int32_t type) {
-	return true;
+	return false;
 }
 
 void Forwarder::postActivityStopLocal(GameState& gameState) {
@@ -51,12 +51,24 @@ void Forwarder::postActivityStopLocal(GameState& gameState) {
 			}
 			break;
 		default:
+			this->applyActivityLocalForced(gameState, 0, 10);
 			break;
 	}
 }
 
 ACTIVITY::TYPE Forwarder::getType() {
 	return ACTIVITY::TYPE::FORWARDER;
+}
+
+void Forwarder::save(Saver& saver) {
+	this->SingleBlockActivity::save(saver);
+	this->args.save(saver);
+}
+
+bool Forwarder::load(Loader& loader) {
+	this->SingleBlockActivity::load(loader);
+	this->args.load(loader);
+	return true;
 }
 
 void Forwarder::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {

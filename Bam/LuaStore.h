@@ -2,8 +2,24 @@
 
 #include "sol/sol.hpp"
 
+class Saver;
+class Loader;
+
 namespace LUASTORE
 {
+	namespace VAL
+	{
+		enum class TYPE
+		{
+			INTEGER,
+			FLOAT,
+			BOOL,
+			NIL,
+			STRING,
+			TABLE,
+		};
+	}
+
 	using SeenTablesType = std::vector<void const*>;
 
 	bool contains(SeenTablesType& seenTables, void const* tablePointer);
@@ -17,6 +33,7 @@ namespace LUASTORE
 		Val() = default;
 		virtual ~Val() = default;
 
+		virtual bool save(Saver& saver) = 0;
 	};
 
 	class Integer : public Val
@@ -33,6 +50,7 @@ namespace LUASTORE
 
 		virtual sol::object getObject(lua_State* L) const override;
 
+		virtual bool save(Saver& saver) override;
 	};
 
 	class Bool : public Val
@@ -48,6 +66,8 @@ namespace LUASTORE
 		virtual	~Bool() override = default;
 
 		virtual sol::object getObject(lua_State* L) const override;
+
+		virtual bool save(Saver& saver) override;
 	};
 
 	class Float : public Val
@@ -63,6 +83,8 @@ namespace LUASTORE
 		virtual	~Float() override = default;
 
 		virtual sol::object getObject(lua_State* L) const override;
+
+		virtual bool save(Saver& saver) override;
 	};
 
 	class String : public Val
@@ -78,6 +100,8 @@ namespace LUASTORE
 		virtual	~String() override = default;
 
 		virtual sol::object getObject(lua_State* L) const override;
+
+		virtual bool save(Saver& saver) override;
 	};
 
 	class Nil : public Val
@@ -86,15 +110,16 @@ namespace LUASTORE
 		virtual int push(lua_State* L) override;
 
 		virtual sol::object getObject(lua_State* L) const override;
+
+		virtual bool save(Saver& saver) override;
 	};
 
 
 	class Table : public Val
 	{
-	private:
+	public:
 		std::vector<std::pair<std::unique_ptr<Val>, std::unique_ptr<Val>>> val;
 
-	public:
 		virtual int push(lua_State* L) override;
 
 		Table() = default;
@@ -102,9 +127,12 @@ namespace LUASTORE
 		virtual	~Table() override = default;
 
 		virtual sol::object getObject(lua_State* L) const override;
+
+		virtual bool save(Saver& saver) override;
 	};
 
 	std::unique_ptr<Val> makeVal(sol::object a, SeenTablesType& seenTables);
+	std::unique_ptr<Val> loadVal(Loader& loader);
 
 	class Args
 	{
@@ -120,6 +148,9 @@ namespace LUASTORE
 
 		Args(Args&& other);
 		Args& operator=(Args&& other);
+
+		bool save(Saver& saver);
+		void load(Loader& loader);
 
 		NOCOPY(Args);
 	};

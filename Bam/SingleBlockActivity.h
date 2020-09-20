@@ -41,7 +41,7 @@ public:
 	virtual void appendSelectionInfo(GameState const& gameState, RenderInfo& renderInfo, glm::vec4 color) override;
 	virtual void appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) override;
 
-	virtual void save(Saver& saver);
-	virtual bool load(Loader& loader);
+	virtual void save(Saver& saver) override;
+	virtual bool load(Loader& loader) override;
 };
 

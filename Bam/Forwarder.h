@@ -42,5 +42,8 @@ public:
 
 	// Render
 	// Already Implemented in SingleBlockActivity
+
+	virtual void save(Saver& saver) override;
+	virtual bool load(Loader& loader) override;
 };
 

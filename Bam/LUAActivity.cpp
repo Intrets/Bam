@@ -90,6 +90,7 @@ ACTIVITY::TYPE LuaActivity::getType() {
 void LuaActivity::save(Saver& saver) {
 	this->SingleBlockActivity::save(saver);
 
+	saver.store(this->running);
 	saver.store(this->interrupt);
 	saver.store(this->script);
 
@@ -113,6 +114,7 @@ void LuaActivity::save(Saver& saver) {
 bool LuaActivity::load(Loader& loader) {
 	this->SingleBlockActivity::load(loader);
 
+	loader.retrieve(this->running);
 	loader.retrieve(this->interrupt);
 	loader.retrieve(this->script);
 
