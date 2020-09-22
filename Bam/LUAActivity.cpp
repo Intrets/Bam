@@ -164,7 +164,7 @@ bool LuaActivity::applyActivity(int32_t index, int32_t type) {
 	else {
 		bool res = true;
 		for (auto h : this->labelLists[index]) {
-			res |= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type, 4);
+			res |= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type);
 		}
 		return res;
 	}
@@ -330,16 +330,19 @@ bool LuaActivity::runLoop() {
 		}
 		catch (const sol::error& e) {
 			Locator<Log>::ref().putLine(e.what());
+			this->stop();
 			return false;
 		}
 		catch (...) {
 			Locator<Log>::ref().putLine("non-sol::error when executing script");
+			this->stop();
 			return false;
 		}
 		return true;
 	}
 	else {
 		Locator<Log>::ref().putLine("No run() function found in lua script.");
+		this->stop();
 		return false;
 	}
 }

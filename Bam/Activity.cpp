@@ -157,14 +157,14 @@ void Activity::applyActivityLocalForced(GameState& gameState, int32_t type, int3
 	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
 }
 
-bool Activity::applyActivityLocal(GameState& gameState, int32_t useType, int32_t pace) {
+bool Activity::applyActivityLocal(GameState& gameState, int32_t useType) {
 	if (!this->activityIdleLocal()) {
 		return false;
 	}
 	if (!this->canActivityLocal(gameState, useType)) {
 		return false;
 	}
-	this->applyActivityLocalForced(gameState, useType, pace);
+	this->applyActivityLocalForced(gameState, useType, 10);
 	return true;
 }
 

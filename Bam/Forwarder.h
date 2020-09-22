@@ -2,6 +2,7 @@
 
 #include "SingleBlockActivity.h"
 #include "LuaStore.h"
+#include "ActivityMaterial.h"
 
 class Forwarder : public SingleBlockActivity
 {
@@ -10,6 +11,8 @@ private:
 
 	bool receiveMessage(GameState& gameState, LUASTORE::Args& args_);
 	bool canReceiveMessage(GameState& gameState);
+
+	ActivityMaterial material;
 
 	friend class LuaActivity;
 public:

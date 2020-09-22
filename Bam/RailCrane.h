@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Grouper.h"
+#include "ActivityMaterial.h"
 
 namespace RAILCRANE{
 	enum class DIR
@@ -20,9 +21,15 @@ private:
 
 	friend class ActivityTextureInitializer;
 
+private:
+	ActivityMaterial supportMaterial;
+	ActivityMaterial shaftMaterial;
+	ActivityMaterial anchorMaterial;
+
+	friend class ACTIVITYCOPIER;
+	
 public:
 	RAILCRANE::DIR anchorDirection;
-	int32_t length;
 	int32_t anchorIndexPos;
 
 	RailCrane(Handle self, GameState& gameState, glm::ivec2 pos);

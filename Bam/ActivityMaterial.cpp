@@ -14,7 +14,7 @@ int32_t ActivityMaterial::getVal() const {
 ActivityMaterial::ActivityMaterial() {
 	this->min = 10;
 	this->max = 15;
-	this->average = (10 + 15) / 2;
+	this->average = 3;
 }
 
 ActivityMaterial::ActivityMaterial(Material material_) : material(material_) {

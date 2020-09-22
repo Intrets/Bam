@@ -77,7 +77,9 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 	RailCrane* target = new RailCrane();
 
 	target->anchorDirection = source->anchorDirection;
-	target->length = source->length;
+	target->supportMaterial = source->supportMaterial;
+	target->shaftMaterial = source->shaftMaterial;
+	target->anchorMaterial = source->anchorMaterial;
 	target->anchorIndexPos = source->anchorIndexPos;
 
 	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);

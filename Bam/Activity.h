@@ -259,7 +259,7 @@ public:
 	// Activity
 	virtual bool canActivityLocal(GameState& gameState, int32_t type) = 0;
 	virtual void applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) = 0;
-	bool applyActivityLocal(GameState& gameState, int32_t type, int32_t pace);
+	bool applyActivityLocal(GameState& gameState, int32_t type);
 	void stopActivity(GameState& gameState);
 
 	// Forcefully change the activity state, only use when activity is not in static world.

@@ -29,6 +29,9 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 	switch (static_cast<PISTON::DIR>(type)) {
 		case PISTON::DIR::EXTEND:
 			{
+				if (this->length >= this->shaftMaterial.getVal()) {
+					return false;
+				}
 				if (this->child.isNotNull()) {
 					return this->child.get()->canMoveUp(gameState, this->activityRotation);
 				}
@@ -253,6 +256,9 @@ void Piston::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
+
+	pace = this->shaftMaterial.getSmallRand(gameState);
+
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 	glm::ivec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);
 	switch (static_cast<PISTON::DIR>(type)) {
