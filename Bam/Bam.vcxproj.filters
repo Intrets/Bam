@@ -422,6 +422,7 @@
     <ClCompile Include="Forwarder.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="ActivityMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -752,6 +753,7 @@
     <ClInclude Include="Forwarder.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
+    <ClInclude Include="ActivityMaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

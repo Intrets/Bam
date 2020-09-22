@@ -74,7 +74,7 @@ void Block::loadBlocks() {
 		for (auto& elementPair : elementPairs) {
 			std::vector<std::string> e;
 			split(0, elementPair, e, ':');
-			Block::data[i].elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
+			Block::data[i].material.elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
 		}
 
 		Block::nameMap[pairs["name"]] = i;

@@ -15,6 +15,10 @@ int sol_lua_push(lua_State* L, LUASTORE::Args const& things) {
 	return amount;
 }
 
+int sol_lua_push(lua_State* L, LUASTORE::Val const& thing) {
+	return thing.push(L);
+}
+
 std::vector<std::unique_ptr<LUASTORE::Val>> const& LUASTORE::Args::getArgs() const {
 	return this->args;
 }
@@ -56,7 +60,7 @@ void LUASTORE::Args::load(Loader& loader) {
  }
 }
 
-int LUASTORE::Integer::push(lua_State* L) {
+int LUASTORE::Integer::push(lua_State* L) const {
 	return sol::stack::push(L, this->val);
 }
 
@@ -73,7 +77,7 @@ bool LUASTORE::Integer::save(Saver& saver) {
 	return true;
 }
 
-int LUASTORE::String::push(lua_State* L) {
+int LUASTORE::String::push(lua_State* L) const {
 	return sol::stack::push(L, this->val);
 }
 
@@ -90,7 +94,7 @@ bool LUASTORE::String::save(Saver& saver) {
 	return true;
 }
 
-int LUASTORE::Float::push(lua_State* L) {
+int LUASTORE::Float::push(lua_State* L) const {
 	return sol::stack::push(L, this->val);
 }
 
@@ -107,7 +111,7 @@ bool LUASTORE::Float::save(Saver& saver) {
 	return true;
 }
 
-int LUASTORE::Bool::push(lua_State* L) {
+int LUASTORE::Bool::push(lua_State* L) const {
 	return sol::stack::push(L, this->val);
 }
 
@@ -124,7 +128,7 @@ bool LUASTORE::Bool::save(Saver& saver) {
 	return true;
 }
 
-int LUASTORE::Table::push(lua_State* L) {
+int LUASTORE::Table::push(lua_State* L) const {
 	return this->getObject(L).push();
 }
 
@@ -247,7 +251,7 @@ std::unique_ptr<LUASTORE::Val> LUASTORE::loadVal(Loader& loader) {
 	}
 }
 
-int LUASTORE::Nil::push(lua_State* L) {
+int LUASTORE::Nil::push(lua_State* L) const {
 	return 0;
 }
 

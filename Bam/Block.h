@@ -39,13 +39,18 @@ struct Element
 	int32_t quantity;
 };
 
+struct Material
+{
+	std::vector<Element> elements;
+};
+
 struct BlockData
 {
 	bool solid = false;
 	int32_t texture = 0;
 	std::string name = "air";
 
-	std::vector<Element> elements;
+	Material material;
 };
 
 class Block

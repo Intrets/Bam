@@ -2,6 +2,7 @@
 
 #include "Grouper.h"
 #include "Activity.h"
+#include "ActivityMaterial.h"
 
 namespace PISTON
 {
@@ -25,14 +26,14 @@ private:
 private:
 	int32_t length;
 
-	// Movement direction of the head
-	//glm::ivec2 direction;
-
 	friend class ACTIVITYCOPIER;
 
-public:
-	//PISTON::DIR state = PISTON::DIR::STATIONARY;
+private:
+	ActivityMaterial headMaterial;
+	ActivityMaterial shaftMaterial;
+	ActivityMaterial baseMaterial;
 
+public:
 	Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir);
 	Piston() = default;
 	virtual ~Piston() = default;
