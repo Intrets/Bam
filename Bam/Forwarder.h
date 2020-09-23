@@ -12,8 +12,6 @@ private:
 	bool receiveMessage(GameState& gameState, LUASTORE::Args& args_);
 	bool canReceiveMessage(GameState& gameState);
 
-	ActivityMaterial material;
-
 	friend class LuaActivity;
 public:
 	Forwarder() = default;

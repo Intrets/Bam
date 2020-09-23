@@ -13,6 +13,10 @@ bool Incinerator::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Incinerator::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
+	pace = this->material.getSmallRand(gameState);
+
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
+
 	auto p = this->getOrigin() + ACTIVITY::GETDIRECTION(this->activityRotation);
 	gameState.staticWorld.setBlock(Block(0), p);
 }

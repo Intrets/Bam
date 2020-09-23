@@ -213,11 +213,19 @@ void Piston::postMoveableStartLocal(GameState& gameState) {
 void Piston::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
 	saver.store(this->length);
+
+	this->baseMaterial.save(saver);
+	this->headMaterial.save(saver);
+	this->shaftMaterial.save(saver);
 }
 
 bool Piston::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
 	loader.retrieve(this->length);
+
+	this->baseMaterial.load(loader);
+	this->headMaterial.load(loader);
+	this->shaftMaterial.load(loader);
 	return true;
 }
 

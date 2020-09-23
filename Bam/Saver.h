@@ -5,6 +5,7 @@
 #include "Piston.h"
 #include "RailCrane.h"
 #include <functional>
+#include "Block.h"
 
 #include <sol/sol.hpp>
 
@@ -96,6 +97,13 @@ inline bool Saver::store(PISTON::DIR t) {
 
 template<>
 inline bool Saver::store(RAILCRANE::DIR t) {
+	int32_t s = static_cast<int32_t>(t);
+	store(s);
+	return true;
+}
+
+template<>
+inline bool Saver::store(ELEMENT::TYPE t) {
 	int32_t s = static_cast<int32_t>(t);
 	store(s);
 	return true;

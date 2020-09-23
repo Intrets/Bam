@@ -2,6 +2,7 @@
 
 #include "SingleBlockActivity.h"
 #include "Block.h"
+#include "ActivityMaterial.h"
 
 namespace GRABBER
 {
@@ -24,6 +25,8 @@ private:
 
 private:
 	Block block;
+
+	ActivityMaterial material;
 
 	glm::ivec2 getGrabbedOffset() const;
 	glm::ivec2 getGrabbedPos() const;

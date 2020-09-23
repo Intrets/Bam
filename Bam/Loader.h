@@ -4,6 +4,7 @@
 #include "Activity.h"
 #include "Piston.h"
 #include "RailCrane.h"
+#include "Block.h"
 
 #include <sol/sol.hpp>
 
@@ -117,6 +118,14 @@ inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<RAILCRANE::DIR>(s);
+	return true;
+}
+
+template<>
+inline bool Loader::retrieve(ELEMENT::TYPE& t) {
+	int32_t s;
+	this->retrieve(s);
+	t = static_cast<ELEMENT::TYPE>(s);
 	return true;
 }
 

@@ -48,6 +48,8 @@ void ACTIVITYCOPIER::copySingleBlockActivity(SingleBlockActivity* source, Single
 	target->tex = source->tex;
 	target->texName = source->texName;
 
+	target->material = source->material;
+
 	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
 }
 
@@ -55,6 +57,9 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 	Piston* target = new Piston();
 
 	target->length = source->length;
+	target->baseMaterial = source->baseMaterial;
+	target->shaftMaterial = source->shaftMaterial;
+	target->headMaterial = source->headMaterial;
 
 	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
 
@@ -77,9 +82,11 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 	RailCrane* target = new RailCrane();
 
 	target->anchorDirection = source->anchorDirection;
+
 	target->supportMaterial = source->supportMaterial;
 	target->shaftMaterial = source->shaftMaterial;
 	target->anchorMaterial = source->anchorMaterial;
+
 	target->anchorIndexPos = source->anchorIndexPos;
 
 	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
@@ -105,6 +112,7 @@ Activity* ACTIVITYCOPIER::copyGrabber(Grabber* source, HandleMap& handleMap) {
 	Grabber* target = new Grabber();
 
 	target->block = source->block;
+	target->material = source->material;
 
 	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
 

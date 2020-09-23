@@ -189,4 +189,6 @@ int main() {
 	initGLFW();
 	initManagers(window);
 	mainLoop(window);
+
+	return 0;
 }

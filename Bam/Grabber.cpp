@@ -65,6 +65,10 @@ bool Grabber::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Grabber::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
+	pace = this->material.getSmallRand(gameState);
+
+	this->Activity::applyActivityLocalForced(gameState, type, pace);
+
 	if (type == GRABBER::STATE::RELEASED) {
 		this->activityType = GRABBER::STATE::RELEASED;
 		gameState.staticWorld.setBlock(std::move(this->block), this->getGrabbedPos());
@@ -112,11 +116,13 @@ ACTIVITY::TYPE Grabber::getType() {
 void Grabber::save(Saver& saver) {
 	this->Activity::save(saver);
 	this->block.save(saver);
+	this->material.save(saver);
 }
 
 bool Grabber::load(Loader& loader) {
 	this->Activity::load(loader);
 	this->block.load(loader);
+	this->material.load(loader);
 	return true;
 }
 

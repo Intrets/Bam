@@ -159,12 +159,20 @@ void RailCrane::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
 	saver.store(this->anchorDirection);
 	saver.store(this->anchorIndexPos);
+
+	this->anchorMaterial.save(saver);
+	this->shaftMaterial.save(saver);
+	this->supportMaterial.save(saver);
 }
 
 bool RailCrane::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
 	loader.retrieve(this->anchorDirection);
 	loader.retrieve(this->anchorIndexPos);
+
+	this->anchorMaterial.load(loader);
+	this->shaftMaterial.load(loader);
+	this->supportMaterial.load(loader);
 	return true;
 }
 

@@ -80,11 +80,13 @@ void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, Sta
 void SingleBlockActivity::save(Saver& saver) {
 	this->Activity::save(saver);
 	saver.storeString(this->texName);
+	this->material.save(saver);
 }
 
 bool SingleBlockActivity::load(Loader& loader) {
 	this->Activity::load(loader);
 	loader.retrieveString(this->texName);
+	this->material.load(loader);
 
 	// TODO: fix up make consistent with constructor
 	auto t = Locator<BlockIDTextures>::get();

@@ -1,11 +1,17 @@
 #pragma once
 
 #include "Activity.h"
+#include "ActivityMaterial.h"
 
 class GameState;
 
 class SingleBlockActivity : public Activity
 {
+protected:
+	ActivityMaterial material;
+
+	friend class ACTIVITYCOPIER;
+
 public:
 	int32_t tex;
 	std::string texName;

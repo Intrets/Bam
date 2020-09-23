@@ -37,11 +37,24 @@ struct Element
 {
 	ELEMENT::TYPE type;
 	int32_t quantity;
+
+	Element() = default;
+	Element(ELEMENT::TYPE t, int32_t q);
+	Element(Loader& loader);
+
+	void save(Saver& saver);
+	void load(Loader& loader);
 };
 
 struct Material
 {
 	std::vector<Element> elements;
+
+	Material() = default;
+	Material(Loader& loader);
+
+	void save(Saver& saver);
+	void load(Loader& loader);
 };
 
 struct BlockData

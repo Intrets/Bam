@@ -222,3 +222,37 @@ Block::Block(int32_t id, ACTIVITY::DIR rotation_) : Block(id) {
 	this->rotation = rotation_;
 }
 
+Material::Material(Loader& loader) {
+	this->load(loader);
+}
+
+void Material::save(Saver& saver) {
+	saver.store(this->elements.size());
+	for (auto& e : elements) {
+		e.save(saver);
+	}
+}
+
+void Material::load(Loader& loader) {
+	size_t size;
+	loader.retrieve(size);
+	for (size_t i = 0; i < size; i++) {
+		this->elements.emplace_back(loader);
+	}
+}
+
+Element::Element(ELEMENT::TYPE t, int32_t q) : type(t), quantity(q) {
+}
+
+Element::Element(Loader& loader) {
+	this->load(loader);
+}
+
+void Element::save(Saver& saver) {
+	saver.store(this->type);
+	saver.store(quantity);
+}
+
+void Element::load(Loader& loader) {
+	loader.retrieve(this->type);
+}
