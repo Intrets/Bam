@@ -1,18 +1,11 @@
 #pragma once
 
-#include "SingleBlockActivity.h"
+#include "Activity.h"
 #include "Block.h"
 #include "ActivityMaterial.h"
 
-namespace GRABBER
-{
-	enum STATE
-	{
-		RELEASED,
-		GRABBED,
-	};
-}
- 
+#include "Enums.h"
+
 class GameState;
 
 class Grabber : public Activity
@@ -24,7 +17,7 @@ private:
 	friend class ActivityTextureInitializer;
 
 private:
-	Block block;
+	ShapedBlock block;
 
 	ActivityMaterial material;
 

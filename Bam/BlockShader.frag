@@ -8,6 +8,9 @@ in vec3 textureUVW;
 in vec3 stencilUVW;
 
 void main(){
-	color = texture(textureSampler, textureUVW) * texture(textureSampler, stencilUVW);
-	
+	vec4 stencil = texture(textureSampler, stencilUVW);
+	color = texture(textureSampler, textureUVW) * vec4(stencil.g, stencil.g, stencil.g, stencil.r);
+	if (color.a < 0.5){
+		discard;
+	}
 }

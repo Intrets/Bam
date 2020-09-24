@@ -3,7 +3,6 @@
 #include "common.h"
 
 #include "UIrenderInfo.h"
-#include "StaticWorldRenderer.h"
 #include "CameraInfo.h"
 #include "DebugRenderInfo.h"
 #include "SelectionRenderInfo.h"

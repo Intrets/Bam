@@ -4,15 +4,7 @@
 #include "Activity.h"
 #include "ActivityMaterial.h"
 
-namespace PISTON
-{
-	enum class DIR
-	{
-		STATIONARY,
-		RETRACT,
-		EXTEND,
-	}; 
-}
+#include "Enums.h"
 
 class Piston : public SingleGrouper
 {

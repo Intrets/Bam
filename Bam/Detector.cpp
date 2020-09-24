@@ -2,7 +2,7 @@
 
 #include "Detector.h"
 #include "GameState.h"
-#include "Block.h"
+#include "WorldBlock.h"
 
 Detector::Detector(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "detector.dds") {
 }

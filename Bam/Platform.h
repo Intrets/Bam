@@ -8,7 +8,7 @@ class Platform : public Activity
 private:
 	glm::ivec2 size;
 
-	std::vector<std::vector<Block>> blocks;
+	std::vector<std::vector<ShapedBlock>> blocks;
 	std::array<std::vector<glm::ivec2>, 4> blockedDirections;
 
 	void calculateBlockedDirections();

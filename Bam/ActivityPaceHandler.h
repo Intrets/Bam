@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Activity.h"
-
 class GameState;
 class Activity;
 class Loader;
 class Saver;
+
+template<class, class>
+class WeakReference;
 
 class ActivityPaceHandler
 {

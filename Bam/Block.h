@@ -2,37 +2,15 @@
 
 #include "Activity.h"
 #include "Shape.h"
+#include "DataFront.h"
+
+#include "Enums.h"
 
 class ActivityIgnoringGroup;
 class Loader;
 class Saver;
 
 #define MAXBLOCKS 1000
-
-namespace ELEMENT
-{
-	enum TYPE
-	{
-		AIR,
-		SILICONDIOXIDE,
-		IRON,
-		IRONOXIDE,
-		CARBON,
-		HYDROCARBON,
-	};
-
-	static std::unordered_map<std::string, ELEMENT::TYPE> typeMap = {
-		{"air", AIR},
-		{"silicondioxide", SILICONDIOXIDE},
-		{"iron", IRON},
-		{"ironoxide", IRONOXIDE},
-		{"carbon", CARBON},
-		{"hydrocarbon", HYDROCARBON},
-	};
-
-	ELEMENT::TYPE getType(std::string s);
-	std::string getName(ELEMENT::TYPE type);
-}
 
 struct Element
 {
@@ -60,77 +38,36 @@ struct Material
 
 struct BlockData
 {
+	std::string name = "air";
 	bool solid = false;
 	int32_t texture = 0;
-	std::string name = "air";
 
 	Material material;
 };
 
-class Block
+class ShapedBlock
 {
 private:
-	static std::array<BlockData, MAXBLOCKS> data;
-	static std::unordered_map<std::string, int32_t> nameMap;
-	static int32_t blockCount;
-	BlockData* operator->();
+	DataFront<BlockData> block;
+	DataFront<ShapeData> shape;
 
-	Shape shape;
-
-	// 0 = air
-	int32_t blockID = 0;
 	ACTIVITY::DIR rotation = ACTIVITY::DIR::RIGHT;
-	WeakReference<Activity, Activity> m;
 
-	// taken from BlockData
-	bool solid = false;
-
+	friend class WorldBlock;
 public:
-	static void loadBlocks();
-	static int32_t getBlockCount();
-	static int32_t getBlockID(std::string name);
+	int32_t getTexture() const;
 
-	// returns if block is occupied by an activity or a solid block
-	bool isOccupied(ActivityIgnoringGroup const& ignore);
-	// returns if block is occupied by an activity or a solid block
-	bool isOccupied();
+	bool isSolid() const;
+	bool isNonAir() const;
 
-	bool isSolid();
-	bool isActivity();
-	bool isNonAirBlock();
-
-	void setBlockID(int32_t id);
-	void setBlockID(int32_t id, ACTIVITY::DIR rotation_);
-
-	int32_t getBlockID();
-	int32_t getTexture();
-
-	std::string const& getBlockName();
-
-	std::optional<WeakReference<Activity, Activity>> getActivityMaybe() const;
-	WeakReference<Activity, Activity> getActivity() const;
-	ACTIVITY::DIR getRotation() const;
-
-	void setTrace(Handle h);
-	void removeTrace();
-	void removeTrace(Handle h);
-
-	Block(std::string name);
-	Block(int32_t id);
-	Block(int32_t id, ACTIVITY::DIR rotation_);
-
-	Block() = default;
-	~Block() = default;
-
-	// move
-	Block(Block&& other);
-	Block& operator=(Block&& other);
-
-	// copy
-	Block(const Block&) = default;
-	Block& operator=(const Block&) = default;
+	ShapedBlock(std::string name);
+	ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rot);
+	ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR rot);
+	ShapedBlock() = default;
+	~ShapedBlock() = default;
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);
 };
 
+void loadBlocks();

@@ -2,7 +2,7 @@
 
 #include "Reader.h"
 #include "GameState.h"
-#include "Block.h"
+#include "WorldBlock.h"
 
 Reader::Reader(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "reader.dds") {
 }

@@ -288,8 +288,10 @@
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
     <ClCompile Include="Detector.cpp" />
+    <ClCompile Include="Enums.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="Forwarder.cpp" />
+    <ClCompile Include="DataFront.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GLEnableWrapper.cpp" />
@@ -354,7 +356,6 @@
     <ClCompile Include="SingleBlockActivity.cpp" />
     <ClCompile Include="StaticWorld.cpp" />
     <ClCompile Include="StaticWorldChunk.cpp" />
-    <ClCompile Include="StaticWorldRenderer.cpp" />
     <ClCompile Include="StaticWorldRenderInfo.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="TextRenderInfo.cpp" />
@@ -374,6 +375,7 @@
     <ClCompile Include="UIOPad.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="vboindexer.cpp" />
+    <ClCompile Include="WorldBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
@@ -400,8 +402,10 @@
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
     <ClInclude Include="Detector.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Forwarder.h" />
+    <ClInclude Include="DataFront.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GLEnableWrapper.h" />
@@ -469,7 +473,6 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="StaticWorld.h" />
     <ClInclude Include="StaticWorldChunk.h" />
-    <ClInclude Include="StaticWorldRenderer.h" />
     <ClInclude Include="StaticWorldRenderInfo.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="TextRenderInfo.h" />
@@ -489,6 +492,7 @@
     <ClInclude Include="UIOPad.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="vboindexer.h" />
+    <ClInclude Include="WorldBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Blit.frag" />
@@ -506,8 +510,6 @@
     <None Include="Passthrough.vert" />
     <None Include="PassthroughArray.frag" />
     <None Include="PassthroughArray.vert" />
-    <None Include="StaticWorldShader.frag" />
-    <None Include="StaticWorldShader.vert" />
     <None Include="UIbg.frag" />
     <None Include="UIbg.vert" />
   </ItemGroup>

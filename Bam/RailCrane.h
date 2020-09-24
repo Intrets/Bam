@@ -3,14 +3,7 @@
 #include "Grouper.h"
 #include "ActivityMaterial.h"
 
-namespace RAILCRANE{
-	enum class DIR
-	{
-		STATIONARY,
-		LEFT,
-		RIGHT,
-	};
-}
+#include "Enums.h"
 
 class RailCrane : public SingleGrouper
 {

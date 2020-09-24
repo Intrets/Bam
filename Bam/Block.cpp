@@ -1,51 +1,15 @@
 #include "common.h"
 #include "Block.h"
 #include "ActivityIgnoringGroup.h"
+
 #include "Loader.h"
 #include "Saver.h"
+
 #include <fstream>
 #include "StringHelpers.h"
 #include "BlockIDTextures.h"
 
-
-std::array<BlockData, MAXBLOCKS> Block::data{};
-std::unordered_map<std::string, int32_t> Block::nameMap{};
-int32_t Block::blockCount = 0;
-
-BlockData* Block::operator->() {
-	return &Block::data[this->blockID];
-}
-
-ELEMENT::TYPE ELEMENT::getType(std::string s) {
-	return ELEMENT::typeMap[s];
-}
-std::string ELEMENT::getName(ELEMENT::TYPE type) {
-	switch (type) {
-		case ELEMENT::AIR:
-			return "air";
-			break;
-		case ELEMENT::SILICONDIOXIDE:
-			return "silicondioxide";
-			break;
-		case ELEMENT::IRON:
-			return "iron";
-			break;
-		case ELEMENT::IRONOXIDE:
-			return "ironoxide";
-			break;
-		case ELEMENT::CARBON:
-			return "carbon";
-			break;
-		case ELEMENT::HYDROCARBON:
-			return "hydrocarbon";
-			break;
-		default:
-			return "";
-			break;
-	}
-}
-
-void Block::loadBlocks() {
+void loadBlocks() {
 	std::ifstream file;
 	Locator<PathManager>::ref().openBlockData(file);
 
@@ -63,9 +27,9 @@ void Block::loadBlocks() {
 			pairs[buffer[0]] = buffer[1];
 		}
 
-		Block::data[i].name = pairs["name"];
-		Block::data[i].solid = pairs["solid"] == "true" ? true : false;
-		Block::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
+		DataFront<BlockData>::data[i].name = pairs["name"];
+		DataFront<BlockData>::data[i].solid = pairs["solid"] == "true";
+		DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
 
 		std::vector<std::string> elementPairs;
 
@@ -74,156 +38,13 @@ void Block::loadBlocks() {
 		for (auto& elementPair : elementPairs) {
 			std::vector<std::string> e;
 			split(0, elementPair, e, ':');
-			Block::data[i].material.elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
+			DataFront<BlockData>::data[i].material.elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
 		}
 
-		Block::nameMap[pairs["name"]] = i;
+		DataFront<BlockData>::nameMap[pairs["name"]] = i;
 
-		Block::blockCount++;
 		i++;
 	}
-}
-
-int32_t Block::getBlockCount() {
-	return Block::blockCount;
-}
-
-bool Block::isOccupied(ActivityIgnoringGroup const& ignore) {
-	if (this->m.isNotNull()) {
-		return !ignore.contains(this->m.handle);
-	}
-	return this->isSolid();
-}
-
-bool Block::isOccupied() {
-	return this->isActivity() || this->isSolid();
-}
-
-bool Block::isSolid() {
-	return this->solid;
-}
-
-bool Block::isActivity() {
-	return this->m.isNotNull();
-}
-
-bool Block::isNonAirBlock() {
-	return this->blockID != 0;
-}
-
-void Block::setBlockID(int32_t id) {
-	this->blockID = id;
-	this->solid = (*this)->solid;
-}
-
-void Block::setBlockID(int32_t id, ACTIVITY::DIR rotation_) {
-	this->setBlockID(id);
-	this->rotation = rotation_;
-}
-
-int32_t Block::getBlockID() {
-	return this->blockID;
-}
-
-int32_t Block::getTexture() {
-	return (*this)->texture;
-}
-
-std::string const& Block::getBlockName() {
-	return (*this)->name;
-}
-
-int32_t Block::getBlockID(std::string name) {
-	auto it = Block::nameMap.find(name);
-	if (it != Block::nameMap.end()) {
-		return Block::nameMap[name];
-	}
-	return 0;
-}
-
-std::optional<WeakReference<Activity, Activity>> Block::getActivityMaybe() const {
-	if (this->m.isNotNull()) {
-		return this->m;
-	}
-	else {
-		return std::nullopt;
-	}
-}
-
-WeakReference<Activity, Activity> Block::getActivity() const {
-	return this->m;
-}
-
-ACTIVITY::DIR Block::getRotation() const {
-	return this->rotation;
-}
-
-void Block::setTrace(Handle h) {
-	this->m.handle = h;
-}
-
-void Block::removeTrace() {
-	this->m.handle = 0;
-}
-
-void Block::removeTrace(Handle h) {
-	if (this->m.handle == h) {
-		this->m.handle = 0;
-	}
-}
-
-Block::Block(Block&& other) {
-	this->blockID = other.blockID;
-	this->solid = other.solid;
-	this->m = other.m;
-
-	other.blockID = 0;
-	other.solid = false;
-	other.m.handle = 0;
-}
-
-Block& Block::operator=(Block&& other) {
-	if (this == &other) {
-		return *this;
-	}
-	else {
-		this->blockID = other.blockID;
-		this->solid = other.solid;
-		this->m = other.m;
-
-		other.blockID = 0;
-		other.solid = false;
-		other.m.handle = 0;
-		return *this;
-	}
-}
-
-bool Block::load(Loader& loader) {
-	loader.retrieve(this->blockID);
-	loader.retrieve(this->m);
-	loader.retrieve(this->solid);
-	loader.retrieve(this->rotation);
-	return true;
-}
-
-bool Block::save(Saver& saver) {
-	saver.store(this->blockID);
-	saver.store(this->m);
-	saver.store(this->solid);
-	saver.store(this->rotation);
-	return true;
-}
-
-Block::Block(std::string name) {
-	this->blockID = Block::getBlockID(name);
-}
-
-Block::Block(int32_t id) : blockID(id) {
-	this->solid = (*this)->solid;
-}
-
-Block::Block(int32_t id, ACTIVITY::DIR rotation_) : Block(id) {
-	this->rotation = rotation_;
 }
 
 Material::Material(Loader& loader) {
@@ -260,3 +81,39 @@ void Element::save(Saver& saver) {
 void Element::load(Loader& loader) {
 	loader.retrieve(this->type);
 }
+
+int32_t ShapedBlock::getTexture() const {
+	return this->block.getData().texture;
+}
+
+bool ShapedBlock::isSolid() const {
+	return this->block.getData().solid;
+}
+
+bool ShapedBlock::isNonAir() const {
+	return this->block.getID() != 0;
+}
+
+ShapedBlock::ShapedBlock(std::string name) : block(name) {
+}
+
+ShapedBlock::ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR dir) : block(blockID), shape(shapeID), rotation(dir) {
+}
+
+ShapedBlock::ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR dir) : block(block), shape(shape), rotation(dir) {
+}
+
+bool ShapedBlock::load(Loader& loader) {
+	this->block.load(loader);
+	this->shape.load(loader);
+	loader.retrieve(this->rotation);
+	return true;
+}
+
+bool ShapedBlock::save(Saver& saver) {
+	this->block.save(saver);
+	this->shape.save(saver);
+	saver.store(this->rotation);
+	return true;
+}
+

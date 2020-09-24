@@ -3,12 +3,12 @@
 #include "Platform.h"
 #include "BlockIDTextures.h"
 #include "GameState.h"
-#include "StaticWorldRenderer.h"
 #include "Anchor.h"
 #include "StaticWorldChunk.h"	
 #include "Saver.h"
 #include "Loader.h"
 #include "RenderInfo.h"
+#include "WorldBlock.h"
 
 void Platform::calculateBlockedDirections() {
 	for (int32_t i = 0; i < 4; i++) {
@@ -17,21 +17,21 @@ void Platform::calculateBlockedDirections() {
 	for (int32_t x = 0; x < this->size.x; x++) {
 		{
 			int32_t y = 0;
-			if (this->blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::DOWN].push_back(glm::ivec2(x, y - 1));
 			}
 		}
 		{
 			int32_t y = size.y - 1;
-			if (this->blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::UP].push_back(glm::ivec2(x, y + 1));
 			}
 		}
 		for (int32_t y = 0; y < size.y - 1; y++) {
-			if (this->blocks[x][y].isOccupied() && !this->blocks[x][y + 1].isOccupied()) {
+			if (this->blocks[x][y].isSolid() && !this->blocks[x][y + 1].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::UP].push_back(glm::ivec2(x, y + 1));
 			}
-			else if (!this->blocks[x][y].isOccupied() && this->blocks[x][y + 1].isOccupied()) {
+			else if (!this->blocks[x][y].isSolid() && this->blocks[x][y + 1].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::DOWN].push_back(glm::ivec2(x, y));
 			}
 		}
@@ -39,21 +39,21 @@ void Platform::calculateBlockedDirections() {
 	for (int32_t y = 0; y < size.y; y++) {
 		{
 			int32_t x = 0;
-			if (this->blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::LEFT].push_back(glm::ivec2(x - 1, y));
 			}
 		}
 		{
 			int32_t x = size.x - 1;
-			if (this->blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
 		}
 		for (int32_t x = 0; x < size.x - 1; x++) {
-			if (this->blocks[x][y].isOccupied() && !this->blocks[x + 1][y].isOccupied()) {
+			if (this->blocks[x][y].isSolid() && !this->blocks[x + 1][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::RIGHT].push_back(glm::ivec2(x + 1, y));
 			}
-			else if (!this->blocks[x][y].isOccupied() && this->blocks[x + 1][y].isOccupied()) {
+			else if (!this->blocks[x][y].isSolid() && this->blocks[x + 1][y].isSolid()) {
 				this->blockedDirections[ACTIVITY::DIR::LEFT].push_back(glm::ivec2(x, y));
 			}
 		}
@@ -63,7 +63,7 @@ void Platform::calculateBlockedDirections() {
 Platform::Platform(Handle self, GameState& gameState, glm::ivec2 _size, glm::ivec2 pos) :
 	Activity(self, pos),
 	size(_size),
-	blocks(this->size[0], std::vector<Block>(this->size[1], Block(0))) {
+	blocks(this->size[0], std::vector<ShapedBlock>(this->size[1], ShapedBlock())) {
 	//int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < this->size[0]; i++) {
 		for (int32_t j = 0; j < this->size[1]; j++) {
@@ -83,7 +83,7 @@ void Platform::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->size = glm::ivec2(this->size.y, this->size.x);
 	auto old = this->blocks;
 	this->blocks.clear();
-	this->blocks.resize(size.x, std::vector<Block>(this->size.y));
+	this->blocks.resize(size.x, std::vector<ShapedBlock>(this->size.y));
 	switch (rotation) {
 		case ACTIVITY::ROT::CLOCKWISE:
 			d = glm::ivec2(d.y, -d.x - this->size.y);
@@ -132,7 +132,7 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 	for (int32_t x = 0; x < this->size.x; x++) {
 		for (int32_t y = 0; y < this->size.y; y++) {
 			// TODO: remove debugging textures 
-			if (this->blocks[x][y].isOccupied()) {
+			if (this->blocks[x][y].isNonAir()) {
 				glm::vec2 p(x, y);
 				p += v;
 				staticWorldRenderInfo.offsets.push_back(p);
@@ -205,7 +205,7 @@ bool Platform::load(Loader& loader) {
 	this->Activity::load(loader);
 	loader.retrieve<glm::ivec2>(this->size);
 
-	this->blocks = std::vector<std::vector<Block>>(this->size[0], std::vector<Block>(this->size[1], Block(0)));
+	this->blocks = std::vector<std::vector<ShapedBlock>>(this->size[0], std::vector<ShapedBlock>(this->size[1], ShapedBlock()));
 	//int32_t textureID = Locator<BlockIDTextures>::get()->getBlockTextureID("mossy_cobblestone.dds");
 	for (int32_t i = 0; i < this->size[0]; i++) {
 		for (int32_t j = 0; j < this->size[1]; j++) {

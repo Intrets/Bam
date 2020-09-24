@@ -1,10 +1,10 @@
 #pragma once
 
-#include "StaticWorldRenderer.h"
 #include "TextRenderer.h"
 #include "UIbackgroundRenderer.h"
 #include "DebugRenderer.h"
 #include "SelectionHighlightRenderer.h"
+#include "BlockRenderer.h"
 
 struct State;
 struct RenderInfo;
@@ -16,7 +16,7 @@ class Renderer
 private:
 	DebugRenderer debugRenderer;
 
-	StaticWorldRenderer staticWorldRenderer;
+	BlockRenderer blockRenderer;
 	TextRenderer textRenderer;
 	UIbackgroundRenderer uiBackgroundRenderer;
 	SelectionHighlightRenderer selectionRenderer;

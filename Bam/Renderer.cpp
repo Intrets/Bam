@@ -32,6 +32,35 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	Locator<Timer>::ref().newTiming("Prepare UI");
 	uiState.appendRenderInfo(gameState, renderInfo);
 	Locator<Timer>::ref().endTiming("Prepare UI");
+
+	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
+		{
+			glm::vec2(1,0),
+			0,
+			Locator<BlockIDTextures>::ref().getBlockTextureID("mossy_cobblestone.dds"),
+			Locator<BlockIDTextures>::ref().getBlockTextureID("piston_body_stencil.dds"),
+		}
+	);
+
+	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
+		{
+			glm::vec2(1,0),
+			0,
+			Locator<BlockIDTextures>::ref().getBlockTextureID("dirt.dds"),
+			Locator<BlockIDTextures>::ref().getBlockTextureID("shaft.dds"),
+		}
+	);
+
+
+	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
+		{
+			glm::vec2(2,0),
+			0,
+			Locator<BlockIDTextures>::ref().getBlockTextureID("dirt.dds"),
+			Locator<BlockIDTextures>::ref().getBlockTextureID("piston_stencil.dds"),
+		}
+	);
+
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
@@ -40,8 +69,6 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//this->staticWorldRenderer.render(renderInfo.staticWorldRenderInfo, 0, renderInfo.cameraInfo);
 
 	Locator<BlitRendererArrayTexture>::get()->render(
 		renderInfo.staticWorldRenderInfo.offsets,
@@ -54,6 +81,12 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 		renderInfo.cameraInfo.VP
 	);
 
+	this->blockRenderer.render(
+		renderInfo.staticWorldRenderInfo,
+		0,
+		0.0f,
+		renderInfo.cameraInfo
+	);
 
 	this->selectionRenderer.render(renderInfo, 0);
 

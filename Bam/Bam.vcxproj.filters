@@ -139,9 +139,6 @@
     <ClCompile Include="vboindexer.cpp">
       <Filter>Memory\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="StaticWorldRenderer.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Option.cpp">
       <Filter>Memory\Options</Filter>
     </ClCompile>
@@ -422,9 +419,24 @@
     <ClCompile Include="Forwarder.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityMaterial.cpp" />
-    <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="BlockRenderer.cpp" />
+    <ClCompile Include="Enums.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldBlock.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivityMaterial.cpp">
+      <Filter>Game\StaticWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="DataFront.cpp">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -459,9 +471,6 @@
     </ClInclude>
     <ClInclude Include="vboindexer.h">
       <Filter>Memory\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="StaticWorldRenderer.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
       <Filter>Memory\Options</Filter>
@@ -755,9 +764,24 @@
     <ClInclude Include="Forwarder.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityMaterial.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="BlockRenderer.h" />
+    <ClInclude Include="Enums.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldBlock.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivityMaterial.h">
+      <Filter>Game\StaticWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="DataFront.h">
+      <Filter>Memory\Data\Stores</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
@@ -770,12 +794,6 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="PassthroughArray.vert">
-      <Filter>Renderer\Shaders</Filter>
-    </None>
-    <None Include="StaticWorldShader.frag">
-      <Filter>Renderer\Shaders</Filter>
-    </None>
-    <None Include="StaticWorldShader.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="HighlightShader.frag">

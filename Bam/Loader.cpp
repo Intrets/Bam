@@ -1,6 +1,8 @@
 #include "common.h"
-#include "GameState.h"
+
 #include "Loader.h"
+
+#include "GameState.h"
 #include "Anchor.h"
 #include "Platform.h"
 #include "ReferenceManager.h"

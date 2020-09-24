@@ -1,12 +1,15 @@
-#include "StaticWorld.h"
-
 #include "common.h"
+
+#include "StaticWorld.h"
 
 #include "RenderInfo.h"
 #include "StaticWorldChunk.h"
 #include "Saver.h"
 #include "Loader.h"
+#include "Activity.h"
+#include "ReferenceManager.h"
 #include "Block.h"
+#include "WorldBlock.h"
 
 std::optional<WeakReference<Activity, Activity>> StaticWorld::getActivity(glm::ivec2 pos) {
 	auto block = this->getBlockRef(pos);
@@ -95,23 +98,23 @@ StaticWorldChunk* StaticWorld::getChunkByCoords(glm::vec2 pos) {
 	return getChunkByIndex(t.x, t.y);
 }
 
-Block* StaticWorld::getBlockRef(glm::ivec2 pos) {
+WorldBlock* StaticWorld::getBlockRef(glm::ivec2 pos) {
 	auto r = floordivmod(pos, CHUNKSIZE);
 	auto const& global = r.first;
 	auto const& local = r.second;
 	return &(getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y]);
 }
 
-Block* StaticWorld::getBlockRef(glm::vec2 pos) {
+WorldBlock* StaticWorld::getBlockRef(glm::vec2 pos) {
 	return this->getBlockRef(glm::ivec2(glm::floor(pos)));
 }
 
-void StaticWorld::setBlock(Block block, glm::ivec2 pos) {
+void StaticWorld::setBlock(ShapedBlock block, glm::ivec2 pos) {
 	auto [global, local] = floordivmod(pos, CHUNKSIZE);
-	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y] = std::move(block);
+	getChunkByIndex(global.x, global.y)->staticWorld[local.x][local.y].setBlock(block);
 }
 
-void StaticWorld::setBlock(Block block, glm::vec2 pos) {
+void StaticWorld::setBlock(ShapedBlock block, glm::vec2 pos) {
 	this->setBlock(std::move(block), glm::ivec2(glm::floor(pos)));
 }
 

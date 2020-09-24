@@ -1,7 +1,6 @@
 #include "common.h"
 #include "SingleBlockActivity.h"
 
-#include "StaticWorldRenderer.h"
 #include "GameState.h"
 #include "BlockIDTextures.h"
 

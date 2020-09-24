@@ -5,6 +5,8 @@
 #include "Grouper.h"
 
 class GameState;
+class Saver;
+class Loader;
 
 class Anchor : public GrouperBase
 {

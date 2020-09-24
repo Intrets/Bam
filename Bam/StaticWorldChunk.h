@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Block.h"
 #include "common.h"
+
+#include "WorldBlock.h"
+#include "Enums.h"
 
 class PerlinNoise;
 struct RenderInfo;
 class Saver;
 class Loader;
+class ActivityIgnoringGroup;
 
 class StaticWorldChunk
 {
@@ -30,7 +33,7 @@ public:
 private:
 	friend class StaticWorld;
 	glm::ivec2 position;
-	std::array<std::array<Block, CHUNKSIZE>, CHUNKSIZE> staticWorld;
+	std::array<std::array<WorldBlock, CHUNKSIZE>, CHUNKSIZE> staticWorld;
 
 private:
 	void fill(PerlinNoise& noise);

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "common.h"
-
 #include <unordered_map>
-
-#include "ReferenceManager.h"
-#include "Activity.h"
 #include <map>
+#include <optional>
+
+#include "Activity.h"
+#include "ReferenceManager.h"
 
 typedef int32_t Handle;
 
@@ -14,7 +13,9 @@ class StaticWorldChunk;
 struct RenderInfo;
 class Saver;
 class Loader;
-class Block;
+class ShapedBlock;
+class WorldBlock;
+class ActivityIgnoringGroup;
 
 class StaticWorld
 {
@@ -37,11 +38,11 @@ public:
 	//TODO: !
 	StaticWorldChunk* getChunkByIndex(int32_t i, int32_t j);
 	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
-	Block* getBlockRef(glm::ivec2 pos);
-	Block* getBlockRef(glm::vec2 pos);
+	WorldBlock* getBlockRef(glm::ivec2 pos);
+	WorldBlock* getBlockRef(glm::vec2 pos);
 
-	void setBlock(Block block, glm::ivec2 pos);
-	void setBlock(Block block, glm::vec2 pos);
+	void setBlock(ShapedBlock block, glm::ivec2 pos);
+	void setBlock(ShapedBlock block, glm::vec2 pos);
 
 private:
 	struct hash

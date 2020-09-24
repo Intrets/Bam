@@ -1,8 +1,9 @@
 #pragma once
 
 #include "BufferWrappers.h"
+#include <optional>
 
-class StaticWorldRenderInfo;
+struct StaticWorldRenderInfo;
 struct CameraInfo;
 
 class BlockRenderer
@@ -12,10 +13,7 @@ private:
 	bwo::Program program;
 
 	bwo::Buffer quad;
-	bwo::Buffer rotation;
-	bwo::Buffer position;
-	bwo::Buffer textureID;
-	bwo::Buffer stencilID;
+	bwo::Buffer blockInfos;
 
 	bwo::Uniform1f depth;
 	bwo::UniformMatrix4fv VP;
@@ -27,6 +25,6 @@ public:
 	BlockRenderer();
 	~BlockRenderer() = default;
 
-	void render(StaticWorldRenderInfo const& info, GLuint terget, CameraInfo const& cameraInfo);
+	void render(StaticWorldRenderInfo const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo);
 };
 

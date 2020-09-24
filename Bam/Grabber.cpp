@@ -2,11 +2,11 @@
 
 #include "Grabber.h"
 #include "GameState.h"
-#include "BlockIDTextures.h"
 #include "StaticWorldRenderInfo.h"
 #include "RenderInfo.h"
 #include "Saver.h"
 #include "Loader.h"
+#include "WorldBlock.h"
 
 int32_t Grabber::textureActive = 0;
 int32_t Grabber::textureInactive = 0;
@@ -71,12 +71,12 @@ void Grabber::applyActivityLocalForced(GameState& gameState, int32_t type, int32
 
 	if (type == GRABBER::STATE::RELEASED) {
 		this->activityType = GRABBER::STATE::RELEASED;
-		gameState.staticWorld.setBlock(std::move(this->block), this->getGrabbedPos());
+		gameState.staticWorld.setBlock(this->block, this->getGrabbedPos());
 	}
 	else {
 		this->activityType = GRABBER::STATE::GRABBED;
 		auto b = gameState.staticWorld.getBlockRef(this->getGrabbedPos());
-		this->block = std::move(*b);
+		this->block = b->getShapedBlock();
 		b->setTrace(this->getHandle());
 	}
 }

@@ -2,7 +2,7 @@
 
 #include "Forwarder.h"
 #include "GameState.h"
-#include "Block.h"
+#include "WorldBlock.h"
 #include "LUAActivity.h"
 
 bool Forwarder::receiveMessage(GameState& gameState, LUASTORE::Args& args_) {

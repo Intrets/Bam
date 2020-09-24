@@ -1,5 +1,7 @@
 #include "common.h"
+
 #include "Saver.h"
+
 #include "ReferenceManager.h"
 #include "StaticWorldChunk.h"
 #include "GameState.h"
