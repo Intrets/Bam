@@ -1,11 +1,8 @@
 #pragma once
 
-#include <array>
-
 #include "BufferWrappers.h"
 
 struct CameraInfo;
-class StaticWorldChunk;
 struct StaticWorldRenderInfo;
 
 class StaticWorldRenderer

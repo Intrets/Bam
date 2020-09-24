@@ -281,6 +281,7 @@
     <ClCompile Include="BlitRenderer.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
+    <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="ControlState.cpp" />
@@ -319,6 +320,7 @@
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="RenderLimiter.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StringHelpers.cpp" />
     <ClCompile Include="TickLimiter.cpp" />
@@ -389,6 +391,7 @@
     <ClInclude Include="BlitRenderer.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
+    <ClInclude Include="BlockRenderer.h" />
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
@@ -422,6 +425,7 @@
     <ClInclude Include="Reader.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="RenderLimiter.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="TickLimiter.h" />
     <ClInclude Include="Timer.h" />
@@ -491,6 +495,8 @@
     <None Include="Blit.vert" />
     <None Include="BlitArray.frag" />
     <None Include="BlitArray.vert" />
+    <None Include="BlockShader.frag" />
+    <None Include="BlockShader.vert" />
     <None Include="cpp.hint" />
     <None Include="DebugLine.frag" />
     <None Include="DebugLine.vert" />

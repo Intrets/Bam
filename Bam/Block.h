@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Activity.h"
+#include "Shape.h"
 
 class ActivityIgnoringGroup;
 class Loader;
@@ -74,6 +75,8 @@ private:
 	static int32_t blockCount;
 	BlockData* operator->();
 
+	Shape shape;
+
 	// 0 = air
 	int32_t blockID = 0;
 	ACTIVITY::DIR rotation = ACTIVITY::DIR::RIGHT;
@@ -112,6 +115,7 @@ public:
 	void removeTrace();
 	void removeTrace(Handle h);
 
+	Block(std::string name);
 	Block(int32_t id);
 	Block(int32_t id, ACTIVITY::DIR rotation_);
 

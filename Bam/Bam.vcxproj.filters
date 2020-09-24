@@ -423,6 +423,8 @@
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="ActivityMaterial.cpp" />
+    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="BlockRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -754,6 +756,8 @@
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="ActivityMaterial.h" />
+    <ClInclude Include="Shape.h" />
+    <ClInclude Include="BlockRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
@@ -803,6 +807,12 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="BlitArray.vert">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="BlockShader.frag">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="BlockShader.vert">
       <Filter>Renderer\Shaders</Filter>
     </None>
   </ItemGroup>

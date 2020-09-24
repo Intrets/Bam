@@ -2,6 +2,7 @@
 #include "StaticWorldRenderer.h"
 
 #include <vector>
+#include <array>
 
 #include "ShaderLoader.h"
 #include "CameraInfo.h"

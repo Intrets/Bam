@@ -214,6 +214,10 @@ bool Block::save(Saver& saver) {
 	return true;
 }
 
+Block::Block(std::string name) {
+	this->blockID = Block::getBlockID(name);
+}
+
 Block::Block(int32_t id) : blockID(id) {
 	this->solid = (*this)->solid;
 }
