@@ -17,5 +17,7 @@ void loadShapes() {
 	set(SHAPE::TYPE::PISTON_BODY, "piston_body_stencil");
 	set(SHAPE::TYPE::PISTON_HEAD, "piston_stencil");
 	set(SHAPE::TYPE::SHAFT, "shaft_stencil");
+	set(SHAPE::TYPE::CRANE_BASE_BLOCK, "crane_base_block_stencil");
+	set(SHAPE::TYPE::CRANE_HEAD_BLOCK, "crane_head_block_stencil");
 }
 

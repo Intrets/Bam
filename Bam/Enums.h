@@ -8,6 +8,8 @@ namespace SHAPE
 		PISTON_HEAD,
 		PISTON_BODY,
 		SHAFT,
+		CRANE_BASE_BLOCK,
+		CRANE_HEAD_BLOCK,
 		_MAX,
 	};
 }

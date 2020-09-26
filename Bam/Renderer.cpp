@@ -82,9 +82,23 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	);
 
 	this->blockRenderer.render(
-		renderInfo.staticWorldRenderInfo,
+		renderInfo.staticWorldRenderInfo.blockRenderInfosBack,
 		0,
 		0.0f,
+		renderInfo.cameraInfo
+	);
+
+	this->blockRenderer.render(
+		renderInfo.staticWorldRenderInfo.blockRenderInfos,
+		0,
+		1.0f,
+		renderInfo.cameraInfo
+	);
+
+	this->blockRenderer.render(
+		renderInfo.staticWorldRenderInfo.blockRenderInfosFront,
+		0,
+		2.0f,
 		renderInfo.cameraInfo
 	);
 

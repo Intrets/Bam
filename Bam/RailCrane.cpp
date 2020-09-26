@@ -10,18 +10,30 @@
 #include "Saver.h"
 #include "Loader.h"
 
-int32_t RailCrane::supportTex = 0;
-int32_t RailCrane::shaftTex = 0;
-int32_t RailCrane::anchorTex = 0;
+int32_t RailCrane::generateActivityPace(GameState& gameState) const {
+	return this->headBlock.getBlock().material.getSmallRand(gameState);
+}
+
+int32_t RailCrane::getMaxLength() const {
+	return this->shaftBlock.getBlock().material.getVal();
+}
 
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos) :
 	SingleGrouper(self, pos) {
 	this->anchorDirection = RAILCRANE::DIR::STATIONARY;
 	this->anchorIndexPos = 0;
+
+	this->shaftBlock = ShapedBlock("diorite", "shaft_stencil", ACTIVITY::DIR::RIGHT);
+	this->baseBlock = ShapedBlock("diorite", "crane_base_block_stencil", ACTIVITY::DIR::RIGHT);
+	this->headBlock = ShapedBlock("diorite", "crane_head_block_stencil", ACTIVITY::DIR::RIGHT);
 }
 
 void RailCrane::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->Activity::rotateForcedLocal(center, rotation);
+
+	this->baseBlock.rotate(rotation);
+	this->shaftBlock.rotate(rotation);
+	this->headBlock.rotate(rotation);
 
 	auto d = this->origin - center;
 	switch (rotation) {
@@ -52,7 +64,7 @@ bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
 			}
 		case RAILCRANE::DIR::RIGHT:
 			{
-				if (this->anchorIndexPos == this->shaftMaterial.getVal() - 1) {
+				if (this->anchorIndexPos == this->getMaxLength() - 1) {
 					return false;
 				}
 				if (this->child.isNotNull()) {
@@ -68,7 +80,7 @@ bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void RailCrane::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->anchorMaterial.getSmallRand(gameState);
+	pace = this->headBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 
@@ -98,7 +110,7 @@ void RailCrane::forceChangeActivityState(int32_t s) {
 			this->anchorIndexPos = glm::max(0, this->anchorIndexPos - 1);
 			break;
 		case RAILCRANE::DIR::RIGHT:
-			this->anchorIndexPos = glm::min(this->anchorIndexPos + 1, this->shaftMaterial.getVal() - 1);
+			this->anchorIndexPos = glm::min(this->anchorIndexPos + 1, this->getMaxLength() - 1);
 			break;
 		case RAILCRANE::DIR::STATIONARY:
 			break;
@@ -111,14 +123,14 @@ bool RailCrane::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIg
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(dir) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	return !gameState.staticWorld.isOccupied(pos, ignore)
-		&& !gameState.staticWorld.isOccupied(pos + d * (this->shaftMaterial.getVal() - 1), ignore);
+		&& !gameState.staticWorld.isOccupied(pos + d * (this->getMaxLength() - 1), ignore);
 }
 
 bool RailCrane::canFillTracesLocal(GameState& gameState) {
 	auto dir = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	return !gameState.staticWorld.isOccupied(pos)
-		&& !gameState.staticWorld.isOccupied(pos + dir * (this->shaftMaterial.getVal() - 1));
+		&& !gameState.staticWorld.isOccupied(pos + dir * (this->getMaxLength() - 1));
 }
 
 void RailCrane::fillTracesLocalForced(GameState& gameState) {
@@ -126,7 +138,7 @@ void RailCrane::fillTracesLocalForced(GameState& gameState) {
 	auto dir = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.leaveTrace(pos, this->selfHandle);
-	gameState.staticWorld.leaveTrace(pos + dir * (this->shaftMaterial.getVal() - 1), this->selfHandle);
+	gameState.staticWorld.leaveTrace(pos + dir * (this->getMaxLength() - 1), this->selfHandle);
 }
 
 void RailCrane::removeTracesLocalForced(GameState& gameState) {
@@ -134,21 +146,21 @@ void RailCrane::removeTracesLocalForced(GameState& gameState) {
 	auto dir = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.removeTraceForced(pos);
-	gameState.staticWorld.removeTraceForced(pos + dir * (this->shaftMaterial.getVal() - 1));
+	gameState.staticWorld.removeTraceForced(pos + dir * (this->getMaxLength() - 1));
 }
 
 void RailCrane::preMoveableStopLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection)) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.removeTraceFilter(pos, this->selfHandle);
-	gameState.staticWorld.removeTraceFilter(pos + d * (this->shaftMaterial.getVal() - 1), this->selfHandle);
+	gameState.staticWorld.removeTraceFilter(pos + d * (this->getMaxLength() - 1), this->selfHandle);
 }
 
 void RailCrane::postMoveableStartLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(this->movementDirection) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
 	gameState.staticWorld.leaveTrace(pos, this->selfHandle);
-	gameState.staticWorld.leaveTrace(pos + d * (this->shaftMaterial.getVal() - 1), this->selfHandle);
+	gameState.staticWorld.leaveTrace(pos + d * (this->getMaxLength() - 1), this->selfHandle);
 }
 
 ACTIVITY::TYPE RailCrane::getType() {
@@ -157,22 +169,23 @@ ACTIVITY::TYPE RailCrane::getType() {
 
 void RailCrane::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
+	this->baseBlock.save(saver);
+	this->headBlock.save(saver);
+	this->shaftBlock.save(saver);
+
 	saver.store(this->anchorDirection);
 	saver.store(this->anchorIndexPos);
-
-	this->anchorMaterial.save(saver);
-	this->shaftMaterial.save(saver);
-	this->supportMaterial.save(saver);
 }
 
 bool RailCrane::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
+	this->baseBlock.load(loader);
+	this->headBlock.load(loader);
+	this->shaftBlock.load(loader);
+
 	loader.retrieve(this->anchorDirection);
 	loader.retrieve(this->anchorIndexPos);
 
-	this->anchorMaterial.load(loader);
-	this->shaftMaterial.load(loader);
-	this->supportMaterial.load(loader);
 	return true;
 }
 
@@ -180,7 +193,7 @@ void RailCrane::appendSelectionInfo(GameState const& gameState, RenderInfo& rend
 	glm::vec2 d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	glm::vec2 pos = this->getMovingOrigin(gameState);
 	glm::vec2 d2 = ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
-	float size = static_cast<float>(this->shaftMaterial.getVal() - 1);
+	float size = static_cast<float>(this->getMaxLength() - 1);
 	switch (this->activityRotation) {
 		case ACTIVITY::DIR::DOWN:
 			renderInfo.selectionRenderInfo.addBox(pos + glm::vec2(0.0f, 1.0f), pos + size * d + glm::vec2(1.0f, 0.0f) + d2, color);
@@ -207,16 +220,16 @@ void RailCrane::appendStaticRenderInfo(GameState const& gameState, StaticWorldRe
 
 	auto pos = moveableOrigin;
 
-	staticWorldRenderInfo.addBlockWithShadow(pos + d2, this->supportTex, this->activityRotation);
+	staticWorldRenderInfo.addBlock(pos + d2, this->baseBlock);
 
-	for (int32_t i = 0; i < this->shaftMaterial.getVal(); i++) {
-		staticWorldRenderInfo.addBlockWithoutShadow(pos, this->shaftTex, this->activityRotation);
+	for (int32_t i = 0; i < this->getMaxLength(); i++) {
+		staticWorldRenderInfo.addBlockBack(pos, this->shaftBlock);
 		pos += orientationDir;
 	}
 
 	pos -= orientationDir;
 
-	staticWorldRenderInfo.addBlockWithShadow(pos + d2, this->supportTex, this->activityRotation);
+	staticWorldRenderInfo.addBlock(pos + d2, this->baseBlock);
 
 	float activityScale = this->getActivityScale(gameState.tick);
 
@@ -238,5 +251,5 @@ void RailCrane::appendStaticRenderInfo(GameState const& gameState, StaticWorldRe
 				break;
 		}
 	}
-	staticWorldRenderInfo.addBlockWithShadow(pos, this->anchorTex, this->activityRotation);
+	staticWorldRenderInfo.addBlockFront(pos, this->headBlock);
 }

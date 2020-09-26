@@ -83,9 +83,9 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 
 	target->anchorDirection = source->anchorDirection;
 
-	target->supportMaterial = source->supportMaterial;
-	target->shaftMaterial = source->shaftMaterial;
-	target->anchorMaterial = source->anchorMaterial;
+	target->baseBlock = source->baseBlock;
+	target->headBlock = source->headBlock;
+	target->shaftBlock = source->shaftBlock;
 
 	target->anchorIndexPos = source->anchorIndexPos;
 

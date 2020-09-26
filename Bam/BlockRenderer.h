@@ -5,6 +5,7 @@
 
 struct StaticWorldRenderInfo;
 struct CameraInfo;
+struct BlockRenderInfo;
 
 class BlockRenderer
 {
@@ -25,6 +26,6 @@ public:
 	BlockRenderer();
 	~BlockRenderer() = default;
 
-	void render(StaticWorldRenderInfo const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo);
+	void render(std::vector<BlockRenderInfo> const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo);
 };
 

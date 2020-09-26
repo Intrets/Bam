@@ -90,7 +90,7 @@ BlockRenderer::BlockRenderer() :
 	this->VAO.unbind();
 }
 
-void BlockRenderer::render(StaticWorldRenderInfo const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
+void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
 	this->VAO.bind();
 	this->program.use();
 
@@ -117,7 +117,7 @@ void BlockRenderer::render(StaticWorldRenderInfo const& info, GLuint target, std
 	glm::ivec4 viewport{ 0, 0, cameraInfo.x, cameraInfo.y };
 	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 
-	int32_t remaining = static_cast<int32_t>(info.blockRenderInfos.size());
+	int32_t remaining = static_cast<int32_t>(info.size());
 	int32_t start = 0;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->blockInfos.ID);
@@ -127,7 +127,7 @@ void BlockRenderer::render(StaticWorldRenderInfo const& info, GLuint target, std
 
 		constexpr int32_t byteSize = sizeof(BlockRenderInfo);
 
-		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize * size, &info.blockRenderInfos[start]);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize * size, &info[start]);
 
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, size);
 
@@ -138,5 +138,3 @@ void BlockRenderer::render(StaticWorldRenderInfo const& info, GLuint target, std
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	this->VAO.unbind();
 }
-
-

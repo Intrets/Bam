@@ -2,25 +2,22 @@
 
 #include "Grouper.h"
 #include "ActivityMaterial.h"
-
+#include "Block.h"
 #include "Enums.h"
 
 class RailCrane : public SingleGrouper
 {
 private:
-	static int32_t supportTex;
-	static int32_t shaftTex;
-	static int32_t anchorTex;
-
-	friend class ActivityTextureInitializer;
-
-private:
-	ActivityMaterial supportMaterial;
-	ActivityMaterial shaftMaterial;
-	ActivityMaterial anchorMaterial;
+	ShapedBlock headBlock;
+	ShapedBlock shaftBlock;
+	ShapedBlock baseBlock;
 
 	friend class ACTIVITYCOPIER;
-	
+
+private:
+	int32_t generateActivityPace(GameState& gameState) const;
+	int32_t getMaxLength() const;
+
 public:
 	RAILCRANE::DIR anchorDirection;
 	int32_t anchorIndexPos;
