@@ -17,6 +17,7 @@ private:
 	int32_t index;
 
 	friend void loadBlocks();
+	friend void loadShapes();
 
 public:
 	static int32_t getDataID(std::string name);

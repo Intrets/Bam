@@ -10,14 +10,13 @@
 #include "RenderInfo.h"
 #include "Anchor.h"
 
-int32_t Piston::cogTex = 0;
-int32_t Piston::ropeTex = 0;
-int32_t Piston::headTex = 0;
-
 Piston::Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir) :
 	SingleGrouper(self, pos),
 	length(0) {
-	this->activityRotation = dir;
+	this->activityRotation = ACTIVITY::DIR::RIGHT;
+	this->shaftBlock = ShapedBlock("iron_ore", "shaft_stencil", ACTIVITY::DIR::RIGHT);
+	this->baseBlock = ShapedBlock("iron_ore", "piston_body_stencil", ACTIVITY::DIR::RIGHT);
+	this->headBlock = ShapedBlock("iron_ore", "piston_stencil", ACTIVITY::DIR::RIGHT);
 }
 
 ACTIVITY::TYPE Piston::getType() {
@@ -29,7 +28,8 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 	switch (static_cast<PISTON::DIR>(type)) {
 		case PISTON::DIR::EXTEND:
 			{
-				if (this->length >= this->shaftMaterial.getVal()) {
+				if (this->length >= this->shaftBlock.getBlock().material.getVal()) {
+
 					return false;
 				}
 				if (this->child.isNotNull()) {
@@ -133,28 +133,33 @@ void Piston::appendStaticRenderInfo(GameState const& gameState, StaticWorldRende
 
 	glm::vec2 ori = this->getMovingOrigin(gameState);
 
-	staticWorldRenderInfo.addBlockWithShadow(ori, this->cogTex, this->activityRotation);
+	staticWorldRenderInfo.addBlock(ori, this->baseBlock);
 
-	for (int32_t i = 1; i <= this->length; i++) {
-		auto p = ori + static_cast<float>(i) * headDirection;
-		staticWorldRenderInfo.addBlockWithoutShadow(p, this->ropeTex, this->activityRotation);
-	}
-
-	float size = static_cast<float>(this->length + 1);
-
+	float s = 0;
+	int32_t i;
 	switch (static_cast<PISTON::DIR>(this->activityType)) {
 		case PISTON::DIR::EXTEND:
-			size += this->getActivityScaleForced(gameState.tick);
+			s = this->getActivityScaleForced(gameState.tick);
+			i = 0;
 			break;
 		case PISTON::DIR::RETRACT:
-			size -= this->getActivityScaleForced(gameState.tick);
+			s = -this->getActivityScaleForced(gameState.tick);
+			i = 1;
 			break;
 		default:
+			i = 0;
 			break;
 	}
 
+	for (; i <= this->length; i++) {
+		auto p = ori + (s + static_cast<float>(i)) * headDirection;
+		staticWorldRenderInfo.addBlock(p, this->shaftBlock);
+	}
+
+	float size = s + static_cast<float>(this->length + 1); 
+
 	auto p = ori + size * headDirection;
-	staticWorldRenderInfo.addBlockWithShadow(p, this->headTex, this->activityRotation);
+	staticWorldRenderInfo.addBlock(p, this->headBlock);
 }
 
 void Piston::preActivityStopLocal(GameState& gameState) {
@@ -212,25 +217,29 @@ void Piston::postMoveableStartLocal(GameState& gameState) {
 
 void Piston::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
+	this->baseBlock.save(saver);
+	this->headBlock.save(saver);
+	this->shaftBlock.save(saver);
 	saver.store(this->length);
-
-	this->baseMaterial.save(saver);
-	this->headMaterial.save(saver);
-	this->shaftMaterial.save(saver);
 }
 
 bool Piston::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
+	this->baseBlock.load(loader);
+	this->headBlock.load(loader);
+	this->shaftBlock.load(loader);
 	loader.retrieve(this->length);
 
-	this->baseMaterial.load(loader);
-	this->headMaterial.load(loader);
-	this->shaftMaterial.load(loader);
 	return true;
 }
 
 void Piston::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->Activity::rotateForcedLocal(center, rotation);
+
+	this->baseBlock.rotate(rotation);
+	this->shaftBlock.rotate(rotation);
+	this->headBlock.rotate(rotation);
+
 	auto d = this->origin - center;
 	switch (rotation) {
 		case ACTIVITY::ROT::CLOCKWISE:
@@ -264,8 +273,7 @@ void Piston::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Piston::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-
-	pace = this->shaftMaterial.getSmallRand(gameState);
+	pace = this->shaftBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 	glm::ivec2 headDirection = ACTIVITY::GETDIRECTION(this->activityRotation);

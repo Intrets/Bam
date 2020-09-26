@@ -11,10 +11,6 @@ void ActivityTextureInitializer::run() {
 	Grabber::textureActive = man->getBlockTextureID("grabber_right_a.dds");
 	Grabber::textureInactive = man->getBlockTextureID("grabber_right.dds");
 
-	Piston::cogTex = man->getBlockTextureID("cog.dds");
-	Piston::ropeTex = man->getBlockTextureID("rope.dds");
-	Piston::headTex = man->getBlockTextureID("grabber_right.dds");
-
 	RailCrane::anchorTex = man->getBlockTextureID("crane_anchor.dds");
 	RailCrane::shaftTex = man->getBlockTextureID("crane_shaft.dds");
 	RailCrane::supportTex = man->getBlockTextureID("crane_support.dds");

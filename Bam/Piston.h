@@ -3,27 +3,21 @@
 #include "Grouper.h"
 #include "Activity.h"
 #include "ActivityMaterial.h"
+#include "Block.h"
 
 #include "Enums.h"
 
 class Piston : public SingleGrouper
 {
 private:
-	static int32_t cogTex;
-	static int32_t ropeTex;
-	static int32_t headTex;
-
-	friend class ActivityTextureInitializer;
-
-private:
 	int32_t length;
 
 	friend class ACTIVITYCOPIER;
 
 private:
-	ActivityMaterial headMaterial;
-	ActivityMaterial shaftMaterial;
-	ActivityMaterial baseMaterial;
+	ShapedBlock headBlock;
+	ShapedBlock shaftBlock;
+	ShapedBlock baseBlock;
 
 public:
 	Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir);

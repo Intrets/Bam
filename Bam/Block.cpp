@@ -8,6 +8,7 @@
 #include <fstream>
 #include "StringHelpers.h"
 #include "BlockIDTextures.h"
+#include "GameState.h"
 
 void loadBlocks() {
 	std::ifstream file;
@@ -47,6 +48,14 @@ void loadBlocks() {
 	}
 }
 
+int32_t Material::getSmallRand(GameState& gameState) const {
+	return gameState.smallRandom.randRange(this->min, this->max);
+}
+
+int32_t Material::getVal() const {
+	return this->average;
+}
+
 Material::Material(Loader& loader) {
 	this->load(loader);
 }
@@ -82,8 +91,24 @@ void Element::load(Loader& loader) {
 	loader.retrieve(this->type);
 }
 
+BlockData const& ShapedBlock::getBlock() const {
+	return this->block.getData();
+}
+
 int32_t ShapedBlock::getTexture() const {
 	return this->block.getData().texture;
+}
+
+int32_t ShapedBlock::getStencil() const {
+	return this->shape.getData().texture;
+}
+
+ACTIVITY::DIR ShapedBlock::getRotation() const {
+	return this->rotation;
+}
+
+void ShapedBlock::rotate(ACTIVITY::ROT rot) {
+	this->rotation = ACTIVITY::ROTATE(rot, this->rotation);
 }
 
 bool ShapedBlock::isSolid() const {

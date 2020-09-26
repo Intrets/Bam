@@ -1,5 +1,17 @@
 #pragma once
 
+namespace SHAPE
+{
+	enum TYPE
+	{
+		BLOCK,
+		PISTON_HEAD,
+		PISTON_BODY,
+		SHAFT,
+		_MAX,
+	};
+}
+
 namespace PISTON
 {
 	enum class DIR
@@ -7,7 +19,7 @@ namespace PISTON
 		STATIONARY,
 		RETRACT,
 		EXTEND,
-	}; 
+	};
 }
 
 namespace ACTIVITY
@@ -171,7 +183,8 @@ namespace ACTIVITY
 	}
 }
 
-namespace RAILCRANE{
+namespace RAILCRANE
+{
 	enum class DIR
 	{
 		STATIONARY,
@@ -213,4 +226,4 @@ namespace GRABBER
 		GRABBED,
 	};
 }
- 
+

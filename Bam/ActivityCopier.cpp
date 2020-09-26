@@ -57,9 +57,9 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 	Piston* target = new Piston();
 
 	target->length = source->length;
-	target->baseMaterial = source->baseMaterial;
-	target->shaftMaterial = source->shaftMaterial;
-	target->headMaterial = source->headMaterial;
+	target->baseBlock = source->baseBlock;
+	target->headBlock = source->headBlock;
+	target->shaftBlock = source->shaftBlock;
 
 	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
 

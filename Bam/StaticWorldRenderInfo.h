@@ -2,6 +2,8 @@
 
 #include "common.h"
 
+class ShapedBlock;
+
 struct BlockRenderInfo
 {
 	glm::vec2 pos;
@@ -24,4 +26,6 @@ struct StaticWorldRenderInfo
 	void addBlockWithShadow(glm::vec2 pos, int32_t texture, int32_t rotation);
 	void addBlockWithoutShadow(glm::vec2 pos, int32_t texture);
 	void addBlockWithoutShadow(glm::vec2 pos, int32_t texture, int32_t rotation);
+
+	void addBlock(glm::vec2 pos, ShapedBlock const& shapedBlock);
 };

@@ -29,6 +29,14 @@ struct Material
 {
 	std::vector<Element> elements;
 
+	int32_t min = 10;
+	int32_t max = 15;
+
+	int32_t average = 12;
+
+	int32_t getSmallRand(GameState& gameState) const;
+	int32_t getVal() const;
+
 	Material() = default;
 	Material(Loader& loader);
 
@@ -55,7 +63,13 @@ private:
 
 	friend class WorldBlock;
 public:
+	BlockData const& getBlock() const;
+
 	int32_t getTexture() const;
+	int32_t getStencil() const;
+	ACTIVITY::DIR getRotation() const;
+
+	void rotate(ACTIVITY::ROT rot);
 
 	bool isSolid() const;
 	bool isNonAir() const;

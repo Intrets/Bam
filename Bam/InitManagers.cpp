@@ -42,6 +42,7 @@ void initManagers(GLFWwindow* window) {
 	Locator<Log>::provide(new Log());
 
 	loadBlocks();
+	loadShapes();
 
 	ActivityTextureInitializer::run();
 }
