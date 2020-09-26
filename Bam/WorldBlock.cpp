@@ -1,6 +1,8 @@
 #include "common.h"
 
 #include "WorldBlock.h"
+
+#include "Activity.h"
 #include "Saver.h"
 #include "Loader.h"
 #include "ActivityIgnoringGroup.h"

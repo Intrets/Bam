@@ -32,6 +32,8 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 	target->activityRotation = source->activityRotation;
 
 	target->label = source->label;
+
+	target->baseBlock = source->baseBlock;
 }
 
 void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper* source, SingleGrouper* target, HandleMap& handleMap) {
@@ -57,7 +59,6 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 	Piston* target = new Piston();
 
 	target->length = source->length;
-	target->baseBlock = source->baseBlock;
 	target->headBlock = source->headBlock;
 	target->shaftBlock = source->shaftBlock;
 
@@ -83,7 +84,6 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 
 	target->anchorDirection = source->anchorDirection;
 
-	target->baseBlock = source->baseBlock;
 	target->headBlock = source->headBlock;
 	target->shaftBlock = source->shaftBlock;
 

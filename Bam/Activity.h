@@ -5,8 +5,8 @@
 #include <initializer_list>
 #include "MemberCache.h"
 #include "ActivityCopier.h"
-
 #include "Enums.h"
+#include "Block.h"
 
 class ActivityIgnoringGroup;
 class GrouperBase;
@@ -44,6 +44,8 @@ protected:
 	ACTIVITY::DIR activityRotation = ACTIVITY::DIR::RIGHT;
 
 	std::string label;
+
+	ShapedBlock baseBlock;
 
 	friend class ACTIVITYCOPIER;
 

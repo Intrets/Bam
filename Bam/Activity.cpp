@@ -1,5 +1,7 @@
 #include "common.h"
+
 #include "Activity.h"
+
 #include "GameState.h"
 #include "Grouper.h"
 #include "ActivityIgnoringGroup.h"
@@ -105,6 +107,7 @@ float Activity::getActivityScaleForced(int32_t tick) const {
 
 void Activity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->activityRotation = ACTIVITY::ROTATE(rotation, this->activityRotation);
+	this->baseBlock.rotate(rotation);
 }
 
 void Activity::rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation) {
@@ -257,6 +260,7 @@ void Activity::save(Saver& saver) {
 	saver.store(this->inWorld);
 	saver.store(this->label);
 	saver.store(this->activityRotation);
+	this->baseBlock.save(saver);
 }
 
 bool Activity::load(Loader& loader) {
@@ -274,6 +278,7 @@ bool Activity::load(Loader& loader) {
 	loader.retrieve(this->inWorld);
 	loader.retrieve(this->label);
 	loader.retrieve(this->activityRotation);
+	this->baseBlock.load(loader);
 	return true;
 }
 

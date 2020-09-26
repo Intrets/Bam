@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Grouper.h"
-#include "ActivityMaterial.h"
 #include "Block.h"
 #include "Enums.h"
 
@@ -10,13 +9,11 @@ class RailCrane : public SingleGrouper
 private:
 	ShapedBlock headBlock;
 	ShapedBlock shaftBlock;
-	ShapedBlock baseBlock;
 
-	friend class ACTIVITYCOPIER;
-
-private:
 	int32_t generateActivityPace(GameState& gameState) const;
 	int32_t getMaxLength() const;
+
+	friend class ACTIVITYCOPIER;
 
 public:
 	RAILCRANE::DIR anchorDirection;

@@ -12,12 +12,10 @@ class Piston : public SingleGrouper
 private:
 	int32_t length;
 
-	friend class ACTIVITYCOPIER;
-
-private:
 	ShapedBlock headBlock;
 	ShapedBlock shaftBlock;
-	ShapedBlock baseBlock;
+
+	friend class ACTIVITYCOPIER;
 
 public:
 	Piston(Handle self, glm::ivec2 pos, ACTIVITY::DIR dir);

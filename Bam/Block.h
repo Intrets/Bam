@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Activity.h"
 #include "Shape.h"
 #include "DataFront.h"
 
@@ -62,6 +61,7 @@ private:
 	ACTIVITY::DIR rotation = ACTIVITY::DIR::RIGHT;
 
 	friend class WorldBlock;
+
 public:
 	BlockData const& getBlock() const;
 

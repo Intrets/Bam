@@ -3,6 +3,7 @@
 #include "Block.h"
 #include "Enums.h"
 #include <optional>
+#include "Activity.h"
 
 class Saver;
 class Loader;
@@ -12,6 +13,8 @@ class WeakReference;
 
 class Activity;
 class ActivityIgnoringGroup;
+
+typedef int32_t Handle;
 
 class WorldBlock
 {

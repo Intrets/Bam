@@ -217,7 +217,6 @@ void Piston::postMoveableStartLocal(GameState& gameState) {
 
 void Piston::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
-	this->baseBlock.save(saver);
 	this->headBlock.save(saver);
 	this->shaftBlock.save(saver);
 	saver.store(this->length);
@@ -225,7 +224,6 @@ void Piston::save(Saver& saver) {
 
 bool Piston::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
-	this->baseBlock.load(loader);
 	this->headBlock.load(loader);
 	this->shaftBlock.load(loader);
 	loader.retrieve(this->length);
@@ -236,7 +234,6 @@ bool Piston::load(Loader& loader) {
 void Piston::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->Activity::rotateForcedLocal(center, rotation);
 
-	this->baseBlock.rotate(rotation);
 	this->shaftBlock.rotate(rotation);
 	this->headBlock.rotate(rotation);
 

@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "RailCrane.h"
+
 #include "BlockIDTextures.h"
 #include "GameState.h"
 #include "StaticWorldRenderInfo.h"
@@ -31,7 +32,6 @@ RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos) :
 void RailCrane::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->Activity::rotateForcedLocal(center, rotation);
 
-	this->baseBlock.rotate(rotation);
 	this->shaftBlock.rotate(rotation);
 	this->headBlock.rotate(rotation);
 
@@ -169,7 +169,6 @@ ACTIVITY::TYPE RailCrane::getType() {
 
 void RailCrane::save(Saver& saver) {
 	this->SingleGrouper::save(saver);
-	this->baseBlock.save(saver);
 	this->headBlock.save(saver);
 	this->shaftBlock.save(saver);
 
@@ -179,7 +178,6 @@ void RailCrane::save(Saver& saver) {
 
 bool RailCrane::load(Loader& loader) {
 	this->SingleGrouper::load(loader);
-	this->baseBlock.load(loader);
 	this->headBlock.load(loader);
 	this->shaftBlock.load(loader);
 
