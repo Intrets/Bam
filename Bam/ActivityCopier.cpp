@@ -11,7 +11,7 @@
 #include "Reader.h"
 #include "Detector.h"
 #include "Incinerator.h"
-#include "forwarder.h"
+#include "Forwarder.h"
 
 void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;

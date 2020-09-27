@@ -3,10 +3,10 @@
 #include "Forwarder.h"
 #include "GameState.h"
 #include "WorldBlock.h"
-#include "LUAActivity.h"
+#include "LuaActivity.h"
 
 bool Forwarder::receiveMessage(GameState& gameState, LUASTORE::Args& args_) {
-	if (!this-activityIdleLocal()){
+	if (!this->activityIdleLocal()){
 		this->applyActivityLocalForced(gameState, 0, 10);
 		this->args = std::move(args_);
 		return true;
