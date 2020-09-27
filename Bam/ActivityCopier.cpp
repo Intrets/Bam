@@ -47,11 +47,6 @@ void ACTIVITYCOPIER::copyGrouperBase(GrouperBase* source, GrouperBase* target, H
 }
 
 void ACTIVITYCOPIER::copySingleBlockActivity(SingleBlockActivity* source, SingleBlockActivity* target, HandleMap& handleMap) {
-	target->tex = source->tex;
-	target->texName = source->texName;
-
-	target->material = source->material;
-
 	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
 }
 
@@ -112,7 +107,6 @@ Activity* ACTIVITYCOPIER::copyGrabber(Grabber* source, HandleMap& handleMap) {
 	Grabber* target = new Grabber();
 
 	target->block = source->block;
-	target->material = source->material;
 
 	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
 

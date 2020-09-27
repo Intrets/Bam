@@ -7,21 +7,13 @@ class GameState;
 
 class SingleBlockActivity : public Activity
 {
-protected:
-	ActivityMaterial material;
-
-	friend class ACTIVITYCOPIER;
-
 public:
-	int32_t tex;
-	std::string texName;
-
 	SingleBlockActivity() = default;
-	SingleBlockActivity(Handle self, glm::ivec2 pos, std::string name);
+	SingleBlockActivity(Handle self, glm::ivec2 pos);
 
 	virtual ~SingleBlockActivity() = default;
 
-	// Placement 
+	// Placement
 	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) override;
 
 	// Moveable

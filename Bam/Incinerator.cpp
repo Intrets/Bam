@@ -5,7 +5,8 @@
 #include "WorldBlock.h"
 #include "Block.h"
 
-Incinerator::Incinerator(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "incinerator.dds") {
+Incinerator::Incinerator(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos) {
+	this->baseBlock = ShapedBlock("diorite", SHAPE::TYPE::INCINERATOR, ACTIVITY::DIR::RIGHT);
 }
 
 bool Incinerator::canActivityLocal(GameState& gameState, int32_t type) {
@@ -14,7 +15,7 @@ bool Incinerator::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Incinerator::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 

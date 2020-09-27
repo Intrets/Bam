@@ -19,5 +19,11 @@ void loadShapes() {
 	set(SHAPE::TYPE::SHAFT, "shaft_stencil");
 	set(SHAPE::TYPE::CRANE_BASE_BLOCK, "crane_base_block_stencil");
 	set(SHAPE::TYPE::CRANE_HEAD_BLOCK, "crane_head_block_stencil");
-}
+	set(SHAPE::TYPE::LUA, "lua_stencil");
+	set(SHAPE::TYPE::GRABBER, "grabber_stencil");
+	set(SHAPE::TYPE::READER, "reader_stencil");
+	set(SHAPE::TYPE::DETECTOR, "detector_stencil");
+	set(SHAPE::TYPE::INCINERATOR, "incinerator_stencil");
+	set(SHAPE::TYPE::FORWARDER, "forwarder_stencil");
+ }
 

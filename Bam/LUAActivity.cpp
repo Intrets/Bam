@@ -62,7 +62,9 @@ void LuaActivity::start() {
 }
 
 LuaActivity::LuaActivity(Handle self, GameState& gameState, glm::ivec2 pos) :
-	SingleBlockActivity(self, pos, "lua128.dds") {
+	SingleBlockActivity(self, pos) {
+	this->baseBlock = ShapedBlock("diorite", SHAPE::TYPE::LUA, ACTIVITY::DIR::RIGHT);
+
 	this->initializeLuaState();
 }
 
@@ -75,7 +77,7 @@ bool LuaActivity::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void LuaActivity::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 

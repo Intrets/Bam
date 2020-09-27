@@ -11,15 +11,7 @@ class GameState;
 class Grabber : public Activity
 {
 private:
-	static int32_t textureActive;
-	static int32_t textureInactive;
-
-	friend class ActivityTextureInitializer;
-
-private:
-	ShapedBlock block;
-
-	ActivityMaterial material;
+	std::optional<ShapedBlock> block;
 
 	glm::ivec2 getGrabbedOffset() const;
 	glm::ivec2 getGrabbedPos() const;

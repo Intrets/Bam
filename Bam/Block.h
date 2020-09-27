@@ -77,6 +77,7 @@ public:
 	ShapedBlock(std::string name);
 	ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rot);
 	ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR rot);
+	ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot);
 	ShapedBlock() = default;
 	~ShapedBlock() = default;
 

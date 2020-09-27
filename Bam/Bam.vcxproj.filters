@@ -401,9 +401,6 @@
     <ClCompile Include="Reader.cpp">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityTextureInitializer.cpp">
-      <Filter>Program Control\Inits</Filter>
-    </ClCompile>
     <ClCompile Include="MemberCache.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
@@ -745,9 +742,6 @@
     </ClInclude>
     <ClInclude Include="Reader.h">
       <Filter>Game\StaticWorld\Activities\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityTextureInitializer.h">
-      <Filter>Program Control\Inits</Filter>
     </ClInclude>
     <ClInclude Include="MemberCache.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>

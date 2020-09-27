@@ -77,7 +77,7 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 		0,
 		{ 0,0, renderInfo.cameraInfo.x, renderInfo.cameraInfo.y },
 		Locator<BlockIDTextures>::ref().getTextureArrayID(),
-		std::nullopt,
+		10.0f,
 		renderInfo.cameraInfo.VP
 	);
 

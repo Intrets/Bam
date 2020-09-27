@@ -10,6 +10,12 @@ namespace SHAPE
 		SHAFT,
 		CRANE_BASE_BLOCK,
 		CRANE_HEAD_BLOCK,
+		LUA,
+		GRABBER,
+		READER,
+		DETECTOR,
+		INCINERATOR,
+		FORWARDER,
 		_MAX,
 	};
 }
@@ -224,8 +230,8 @@ namespace GRABBER
 {
 	enum STATE
 	{
-		RELEASED,
-		GRABBED,
+		RELEASE,
+		GRAB,
 	};
 }
 

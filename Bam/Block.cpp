@@ -128,6 +128,9 @@ ShapedBlock::ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR dir) : 
 ShapedBlock::ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR dir) : block(block), shape(shape), rotation(dir) {
 }
 
+ShapedBlock::ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
+}
+
 bool ShapedBlock::load(Loader& loader) {
 	this->block.load(loader);
 	this->shape.load(loader);

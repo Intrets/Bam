@@ -4,7 +4,8 @@
 #include "GameState.h"
 #include "WorldBlock.h"
 
-Detector::Detector(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "detector.dds") {
+Detector::Detector(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos) {
+	this->baseBlock = ShapedBlock("diorite", "detector_stencil", ACTIVITY::DIR::RIGHT);
 }
 
 bool Detector::canActivityLocal(GameState& gameState, int32_t type) {
@@ -13,7 +14,7 @@ bool Detector::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Detector::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }

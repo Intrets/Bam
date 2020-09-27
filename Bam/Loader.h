@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sol/sol.hpp>
+#include <optional>
 
 #include "Enums.h"
 
@@ -22,6 +23,9 @@ private:
 public:
 	template<class T>
 	bool retrieve(T& t);
+
+	template<class T>
+	bool retrieve(std::optional<T>& m);
 
 	template<class A, class B>
 	bool retrieve(WeakReference<A, B>& m);
@@ -147,4 +151,15 @@ inline bool Loader::retrieve(T& t) {
 	assert(false);
 	//in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return false;
+}
+
+template<class T>
+inline bool Loader::retrieve(std::optional<T>& m) {
+	bool hasValue;
+	retrieve(hasValue);
+	if (hasValue) {
+		m = {};
+		m.value().load(*this);
+	}
+	return true;
 }

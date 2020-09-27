@@ -4,9 +4,10 @@
 #include "GameState.h"
 #include "WorldBlock.h"
 #include "LuaActivity.h"
+#include "Block.h"
 
 bool Forwarder::receiveMessage(GameState& gameState, LUASTORE::Args& args_) {
-	if (!this->activityIdleLocal()){
+	if (this->activityIdleLocal()){
 		this->applyActivityLocalForced(gameState, 0, 10);
 		this->args = std::move(args_);
 		return true;
@@ -20,7 +21,8 @@ bool Forwarder::canReceiveMessage(GameState& gameState) {
 	return this->activityIdleLocal();
 }
 
-Forwarder::Forwarder(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "forwarder.dds") {
+Forwarder::Forwarder(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos) {
+	this->baseBlock = ShapedBlock("diorite", SHAPE::TYPE::FORWARDER, ACTIVITY::DIR::RIGHT);
 }
 
 bool Forwarder::canActivityLocal(GameState& gameState, int32_t type) {
@@ -73,7 +75,7 @@ bool Forwarder::load(Loader& loader) {
 }
 
 void Forwarder::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }

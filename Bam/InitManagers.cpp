@@ -17,7 +17,6 @@
 #include "Timer.h"
 #include "Block.h"
 #include "BlitRendererArrayTexture.h"
-#include "ActivityTextureInitializer.h"
 
 void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
@@ -43,6 +42,4 @@ void initManagers(GLFWwindow* window) {
 
 	loadBlocks();
 	loadShapes();
-
-	ActivityTextureInitializer::run();
 }

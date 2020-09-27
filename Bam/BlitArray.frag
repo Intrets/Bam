@@ -8,4 +8,7 @@ in vec3 UVW;
 
 void main(){
 	color = texture(texture_t, UVW);
+	if (color.a < 0.5){
+		discard;
+	}
 }

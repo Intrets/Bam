@@ -4,7 +4,8 @@
 #include "GameState.h"
 #include "WorldBlock.h"
 
-Reader::Reader(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos, "reader.dds") {
+Reader::Reader(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos) {
+	this->baseBlock = ShapedBlock("diorite", "reader_stencil", ACTIVITY::DIR::RIGHT);
 }
 
 bool Reader::canActivityLocal(GameState& gameState, int32_t type) {
@@ -12,7 +13,7 @@ bool Reader::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Reader::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }

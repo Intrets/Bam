@@ -3,6 +3,7 @@
 #include <fstream>
 #include <functional>
 #include <unordered_set>
+#include <optional>
 
 #include <sol/sol.hpp>
 
@@ -26,6 +27,9 @@ public:
 
 	template<class A, class B>
 	bool store(WeakReference<A, B> t);
+
+	template<class T>
+	bool store(std::optional<T>& maybe);
 
 	bool storeObject(sol::object object, std::unordered_set<size_t>& saved);
 
@@ -181,5 +185,18 @@ inline bool Saver::store(T t) {
 template<class A, class B>
 inline bool Saver::store(WeakReference<A, B> t) {
 	store(t.handle);
+	return true;
+}
+
+template<class T>
+inline bool Saver::store(std::optional<T>& maybe) {
+	if (maybe.has_value()) {
+		store(true);
+		maybe.value().save(*this);
+	}
+	else {
+		store(false);
+	}
+
 	return true;
 }

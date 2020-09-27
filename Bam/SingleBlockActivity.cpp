@@ -10,14 +10,12 @@
 
 #include "ActivityIgnoringGroup.h"
 
-SingleBlockActivity::SingleBlockActivity(Handle self, glm::ivec2 pos, std::string name) : Activity(self, pos) {
-	auto t = Locator<BlockIDTextures>::get();
-	this->tex = t->getBlockTextureID(name);
-	this->texName = name;
+SingleBlockActivity::SingleBlockActivity(Handle self, glm::ivec2 pos) : Activity(self, pos) {
 }
 
 void SingleBlockActivity::rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation) {
 	this->Activity::rotateForcedLocal(center, rotation);
+
 	auto d = this->getOrigin() - center;
 	switch (rotation) {
 		case ACTIVITY::ROT::CLOCKWISE:
@@ -73,23 +71,15 @@ void SingleBlockActivity::appendSelectionInfo(GameState const& gameState, Render
 
 void SingleBlockActivity::appendStaticRenderInfo(GameState const& gameState, StaticWorldRenderInfo& staticWorldRenderInfo) {
 	glm::vec2 ori = this->getMovingOrigin(gameState);
-	staticWorldRenderInfo.addBlockWithShadow(ori, this->tex, this->activityRotation);
+	staticWorldRenderInfo.addBlock(ori, this->baseBlock);
 }
 
 void SingleBlockActivity::save(Saver& saver) {
 	this->Activity::save(saver);
-	saver.storeString(this->texName);
-	this->material.save(saver);
 }
 
 bool SingleBlockActivity::load(Loader& loader) {
 	this->Activity::load(loader);
-	loader.retrieveString(this->texName);
-	this->material.load(loader);
-
-	// TODO: fix up make consistent with constructor
-	auto t = Locator<BlockIDTextures>::get();
-	this->tex = t->getBlockTextureID(this->texName);
 	return true;
 }
 

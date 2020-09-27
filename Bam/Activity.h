@@ -90,7 +90,7 @@ public:
 	};
 	virtual ~Activity() = default;
 
-	// Placement 
+	// Placement
 	virtual void rotateForcedLocal(glm::ivec2 center, ACTIVITY::ROT rotation);
 	void rotateForcedUp(glm::ivec2 center, ACTIVITY::ROT rotation);
 	void forceMoveOriginUp(glm::ivec2 d);

@@ -274,7 +274,6 @@
     <ClCompile Include="ActivityPaceHandler.cpp" />
     <ClCompile Include="ActivitySaverHelper.cpp" />
     <ClCompile Include="ActivitySpawner.cpp" />
-    <ClCompile Include="ActivityTextureInitializer.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
     <ClCompile Include="BlitRendererArrayTexture.cpp" />
@@ -387,7 +386,6 @@
     <ClInclude Include="ActivityPaceHandler.h" />
     <ClInclude Include="ActivitySaverHelper.h" />
     <ClInclude Include="ActivitySpawner.h" />
-    <ClInclude Include="ActivityTextureInitializer.h" />
     <ClInclude Include="Anchor.h" />
     <ClInclude Include="BlitRendererArrayTexture.h" />
     <ClInclude Include="BlitRenderer.h" />
