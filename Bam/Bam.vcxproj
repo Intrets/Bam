@@ -308,8 +308,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MemberCache.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
-    <ClCompile Include="ModelResource.cpp" />
-    <ClCompile Include="ModelStore.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="PassThroughRenderer.cpp" />
     <ClCompile Include="PathManager.cpp" />
@@ -346,8 +344,6 @@
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="ResourceManagerModel.cpp" />
-    <ClCompile Include="ResourceManagerTexture.cpp" />
     <ClCompile Include="Saver.cpp" />
     <ClCompile Include="SelectionHighlightRenderer.cpp" />
     <ClCompile Include="SelectionRenderInfo.cpp" />
@@ -359,8 +355,6 @@
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="TextRenderInfo.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
-    <ClCompile Include="TextureResource.cpp" />
-    <ClCompile Include="TextureStore.cpp" />
     <ClCompile Include="UIbackgroundRenderer.cpp" />
     <ClCompile Include="UIOBase.cpp" />
     <ClCompile Include="UIOButton.cpp" />
@@ -458,15 +452,11 @@
     <ClInclude Include="IOwrapped.h" />
     <ClInclude Include="Locator.h" />
     <ClInclude Include="ModelLoader.h" />
-    <ClInclude Include="ModelResource.h" />
-    <ClInclude Include="ModelStore.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderInfo.h" />
-    <ClInclude Include="ResourceManagerModel.h" />
-    <ClInclude Include="ResourceManagerTexture.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="StaticWorld.h" />
@@ -475,8 +465,6 @@
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="TextRenderInfo.h" />
     <ClInclude Include="TextureLoader.h" />
-    <ClInclude Include="TextureResource.h" />
-    <ClInclude Include="TextureStore.h" />
     <ClInclude Include="UIbackgroundRenderer.h" />
     <ClInclude Include="UIOBase.h" />
     <ClInclude Include="UIOButton.h" />

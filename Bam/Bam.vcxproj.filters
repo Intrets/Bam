@@ -20,9 +20,6 @@
     <Filter Include="Memory\Data\Stores">
       <UniqueIdentifier>{73d2bd7b-1d97-4229-b6fa-3e50105d9062}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Memory\Data\Resources">
-      <UniqueIdentifier>{3408cc33-b516-40b1-8f1c-6b1eaab71e5c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Memory\Util">
       <UniqueIdentifier>{4e83184f-bfef-4859-9ae2-8f829ea632ff}</UniqueIdentifier>
     </Filter>
@@ -58,12 +55,6 @@
     </Filter>
     <Filter Include="Memory\Data\Managers">
       <UniqueIdentifier>{933b8fc8-b481-43a3-921a-70454ad798e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory\Data\Managers\Models">
-      <UniqueIdentifier>{c24f90fe-9c3f-4bf8-a5a2-2b1a3677db18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory\Data\Managers\Textures">
-      <UniqueIdentifier>{e2e373f1-8e36-4f0d-9c49-bda34964f980}</UniqueIdentifier>
     </Filter>
     <Filter Include="Memory\Data\Managers\Game object references">
       <UniqueIdentifier>{9de46dd8-9529-456c-b833-15e5d0e10e5f}</UniqueIdentifier>
@@ -120,18 +111,6 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Memory\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelStore.cpp">
-      <Filter>Memory\Data\Stores</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureStore.cpp">
-      <Filter>Memory\Data\Stores</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureResource.cpp">
-      <Filter>Memory\Data\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelResource.cpp">
-      <Filter>Memory\Data\Resources</Filter>
     </ClCompile>
     <ClCompile Include="PathManager.cpp">
       <Filter>Memory</Filter>
@@ -198,12 +177,6 @@
     </ClCompile>
     <ClCompile Include="Loader.cpp">
       <Filter>Game\Serial</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManagerModel.cpp">
-      <Filter>Memory\Data\Managers\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManagerTexture.cpp">
-      <Filter>Memory\Data\Managers\Textures</Filter>
     </ClCompile>
     <ClCompile Include="ReferenceManager.cpp">
       <Filter>Memory\Data\Managers\Game object references</Filter>
@@ -454,18 +427,6 @@
     <ClInclude Include="ShaderLoader.h">
       <Filter>Memory\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="ModelStore.h">
-      <Filter>Memory\Data\Stores</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureStore.h">
-      <Filter>Memory\Data\Stores</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureResource.h">
-      <Filter>Memory\Data\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelResource.h">
-      <Filter>Memory\Data\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="vboindexer.h">
       <Filter>Memory\Loaders</Filter>
     </ClInclude>
@@ -540,12 +501,6 @@
     </ClInclude>
     <ClInclude Include="Loader.h">
       <Filter>Game\Serial</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManagerModel.h">
-      <Filter>Memory\Data\Managers\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManagerTexture.h">
-      <Filter>Memory\Data\Managers\Textures</Filter>
     </ClInclude>
     <ClInclude Include="ReferenceManager.h">
       <Filter>Memory\Data\Managers\Game object references</Filter>

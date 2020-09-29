@@ -1,8 +1,6 @@
 #include "common.h"
 
 #include "SelectionHighlightRenderer.h"
-#include "ModelResource.h"
-#include "ModelStore.h"
 #include "GLEnableWrapper.h"
 #include "RenderInfo.h"
 
@@ -12,18 +10,27 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	VP("VP", this->program) {
 	this->VAO.gen(4);
 
-	ModelResource tempp("devtile.obj");
+	static const GLfloat g_quad_vertex_buffer_data[] = {
+		0.0f,  0.0f,
+		1.0f,  0.0f,
+		0.0f,  1.0f,
+		0.0f,  1.0f,
+		1.0f,  0.0f,
+		1.0f,  1.0f,
+	};
 
-	// 1rst attribute buffer : vertices
-	glBindBuffer(GL_ARRAY_BUFFER, tempp.get()->vertexbufferHandle);
+	glGenBuffers(1, &this->quad.ID);
+	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
 	glVertexAttribPointer(
 		0,                  // attribute
-		3,                  // size
+		2,                  // size
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		0,                  // stride
 		(void*) 0            // array buffer offset
 	);
+	glVertexAttribDivisor(0, 0);
 
 	glGenBuffers(1, &this->offset.ID);
 	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
@@ -64,19 +71,13 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(3, 1);
 
-	// Index buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempp.get()->indexbufferHandle);
-
 	this->VAO.unbind();
 }
-
 
 SelectionHighlightRenderer::~SelectionHighlightRenderer() {
 }
 
 void SelectionHighlightRenderer::render(RenderInfo const& info, GLuint target) {
-	ModelResource tempp("devtile.obj");
-
 	this->VAO.bind();
 	this->program.use();
 
@@ -105,12 +106,11 @@ void SelectionHighlightRenderer::render(RenderInfo const& info, GLuint target) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->color.ID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * drawCount, &info.selectionRenderInfo.colors[0]);
 
-	glDrawElementsInstanced(
-		GL_TRIANGLES,      // mode
-		tempp.get()->indexbufferSize,    // count
-		GL_UNSIGNED_SHORT, // type
-		(void*) 0,           // element array buffer offset
-		drawCount
+	glDrawArraysInstanced(
+		GL_TRIANGLES,
+		0,
+		6,
+		static_cast<int32_t>(info.selectionRenderInfo.offsets.size())
 	);
 
 	this->VAO.unbind();

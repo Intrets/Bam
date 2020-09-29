@@ -9,6 +9,7 @@ class SelectionHighlightRenderer
 private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
+	bwo::Buffer quad;
 	bwo::Buffer offset;
 	bwo::Buffer scale;
 	bwo::Buffer color;
@@ -18,7 +19,7 @@ private:
 public:
 	SelectionHighlightRenderer();
 	~SelectionHighlightRenderer();
-	
+
 	void render(RenderInfo const& info, GLuint target);
 };
 
