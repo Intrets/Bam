@@ -15,7 +15,6 @@ uniform mat4 VP;
 void main(){
 	c = color;
 
-//	gl_Position = VP * vec4((scales*vertexPosition_modelspace.xy) + position_offset, vertexPosition_modelspace.z, 1);
 	gl_Position = VP * vec4(vertexPosition_modelspace.xy*scales + position_offset, 0, 1);
 
 }

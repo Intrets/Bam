@@ -42,7 +42,6 @@ void BlitRenderer::render(std::vector<glm::vec4> const& uv, std::vector<glm::vec
 	this->texture_t.set(texture);
 
 	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-	//glViewport(0, 0, 1024/2, 1024/2);
 
 	int32_t remaining = static_cast<int32_t>(uv.size());
 	int32_t start = 0;
@@ -99,7 +98,7 @@ BlitRenderer::BlitRenderer() :
 		GL_FLOAT,           // type
 		GL_FALSE,           // normalized?
 		0,                  // stride
-		(void*) 0            // array buffer offset
+		(void*) 0           // array buffer offset
 	);
 	glVertexAttribDivisor(0, 0);
 
