@@ -36,13 +36,20 @@ public:
 	bool save(Saver& saver);
 
 	//TODO: !
-	StaticWorldChunk* getChunkByIndex(int32_t i, int32_t j);
-	StaticWorldChunk* getChunkByCoords(glm::vec2 pos);
-	WorldBlock* getBlockRef(glm::ivec2 pos);
-	WorldBlock* getBlockRef(glm::vec2 pos);
+	StaticWorldChunk& getChunkByIndex(int32_t i, int32_t j);
+	StaticWorldChunk& getChunkByCoords(glm::vec2 pos);
 
-	void setBlock(ShapedBlock block, glm::ivec2 pos);
-	void setBlock(ShapedBlock block, glm::vec2 pos);
+	WorldBlock& getBlockRef(glm::ivec2 pos);
+	WorldBlock& getBlockRef(glm::vec2 pos);
+
+	WorldBlock const& getBlockConstRef(glm::ivec2 pos);
+	WorldBlock const& getBlockConstRef(glm::vec2 pos);
+
+	void setBlockForce(ShapedBlock block, glm::ivec2 pos);
+	void setBlockForce(ShapedBlock block, glm::vec2 pos);
+
+	bool setBlock(glm::ivec2 pos, ShapedBlock block);
+	bool setBlock(glm::vec2 pos, ShapedBlock block);
 
 private:
 	struct hash

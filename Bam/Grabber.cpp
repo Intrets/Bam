@@ -58,7 +58,7 @@ bool Grabber::canActivityLocal(GameState& gameState, int32_t type) {
 		return this->block.has_value();
 	}
 	else if (type == GRABBER::STATE::GRAB) {
-		return !this->block.has_value() && gameState.staticWorld.getBlockRef(this->getGrabbedPos())->isSolid();
+		return !this->block.has_value() && gameState.staticWorld.getBlockRef(this->getGrabbedPos()).isSolid();
 	}
 	return false;
 }
@@ -70,14 +70,14 @@ void Grabber::applyActivityLocalForced(GameState& gameState, int32_t type, int32
 
 	if (this->activityType == GRABBER::STATE::RELEASE) {
 		gameState.staticWorld.removeTraceForced(this->getGrabbedPos());
-		gameState.staticWorld.setBlock(this->block.value(), this->getGrabbedPos());
+		gameState.staticWorld.setBlockForce(this->block.value(), this->getGrabbedPos());
 		this->block = std::nullopt;
 	}
 	else if (this->activityType == GRABBER::STATE::GRAB) {
-		auto b = gameState.staticWorld.getBlockRef(this->getGrabbedPos());
-		this->block = b->getShapedBlock();
-		b->setBlock(ShapedBlock());
-		b->setTrace(this->getHandle());
+		auto& b = gameState.staticWorld.getBlockRef(this->getGrabbedPos());
+		this->block = b.getShapedBlock();
+		b.setBlock(ShapedBlock());
+		b.setTrace(this->getHandle());
 	}
 }
 

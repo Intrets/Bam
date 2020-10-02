@@ -298,6 +298,7 @@
     <ClCompile Include="Grouper.cpp" />
     <ClCompile Include="Incinerator.cpp" />
     <ClCompile Include="InitManagers.cpp" />
+    <ClCompile Include="InventoryItem.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Loader.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="Grouper.h" />
     <ClInclude Include="Incinerator.h" />
     <ClInclude Include="InitManagers.h" />
+    <ClInclude Include="InventoryItem.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LuaActivity.h" />

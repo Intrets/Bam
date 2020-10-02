@@ -293,7 +293,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(5, "Marker Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("marker"),
 				params.uiState.getCursorPositionWorld()
 			);
@@ -302,7 +302,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(6, "Stone Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("cobblestone"),
 				params.uiState.getCursorPositionWorld()
 			);
@@ -311,7 +311,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(7, "Delete Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("air"),
 				params.uiState.getCursorPositionWorld()
 			);

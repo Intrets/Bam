@@ -162,7 +162,7 @@ bool Platform::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgn
 	// TODO: move logic of this loop to staticworld?
 	for (int32_t i = p1.x; i <= p2.x; i++) {
 		for (int32_t j = p1.y; j <= p2.y; j++) {
-			nearChunks[i - p1.x][j - p1.y] = gameState.staticWorld.getChunkByIndex(i, j);
+			nearChunks[i - p1.x][j - p1.y] = &gameState.staticWorld.getChunkByIndex(i, j);
 		}
 	}
 	bool blocked = false;

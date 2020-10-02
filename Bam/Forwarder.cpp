@@ -31,13 +31,13 @@ bool Forwarder::canActivityLocal(GameState& gameState, int32_t type) {
 
 void Forwarder::postActivityStopLocal(GameState& gameState) {
 	auto p = this->getOrigin() + ACTIVITY::GETDIRECTION(this->activityRotation);
-	auto block = gameState.staticWorld.getBlockRef(p);
-	if (!block->isActivity()) {
+	auto& block = gameState.staticWorld.getBlockRef(p);
+	if (!block.isActivity()) {
 		this->applyActivityLocalForced(gameState, 0, 10);
 		return;
 	}
 
-	auto activity = block->getActivity().get();
+	auto activity = block.getActivity().get();
 	if (activity == this) {
 		return;
 	}

@@ -292,6 +292,16 @@ void Activity::stopActivity(GameState& gameState) {
 void Activity::forceChangeActivityState(int32_t type) {
 }
 
+bool Activity::canFillTracesUp(GameState& gameState) {
+	auto const& members = this->getTreeMembers();
+	for (auto member : members) {
+		if (!member->canFillTracesLocal(gameState)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void Activity::fillTracesLocalForced(GameState& gameState) {
 	this->inWorld = true;
 }

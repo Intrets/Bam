@@ -9,7 +9,7 @@ Reader::Reader(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos) {
 }
 
 bool Reader::canActivityLocal(GameState& gameState, int32_t type) {
-	return gameState.staticWorld.getBlockRef(this->getOrigin())->isNonAirBlock();
+	return gameState.staticWorld.getBlockRef(this->getOrigin()).isNonAirBlock();
 }
 
 void Reader::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
