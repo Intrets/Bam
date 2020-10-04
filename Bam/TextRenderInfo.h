@@ -20,7 +20,7 @@ public:
 	// view offset for render info
 	glm::vec2 offset;
 
-	// total size of entire text in [-1, 1] in screenRectangle space 
+	// total size of entire text in [-1, 1] in screenRectangle space
 	// value in [0, inf)
 	glm::vec2 renderedSize;
 

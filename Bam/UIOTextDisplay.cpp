@@ -97,6 +97,7 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 
 		auto& renderInfo = this->text.cachedRenderInfo.value();
 		glm::vec2 screenSize = renderInfo.getRenderedScreenSize();
+		screenSize = glm::min(newScreenRectangle.getAbsSize(), screenSize);
 		newScreenRectangle.setWidth(screenSize.x);
 		newScreenRectangle.setHeight(screenSize.y);
 		this->screenRectangle = newScreenRectangle;
