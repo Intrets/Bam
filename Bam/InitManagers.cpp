@@ -15,6 +15,8 @@
 #include "Timer.h"
 #include "Block.h"
 #include "BlitRendererArrayTexture.h"
+#include "Inventory.h"
+#include "InventoryItem.h"
 
 void initManagers(GLFWwindow* window) {
 	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
@@ -27,6 +29,7 @@ void initManagers(GLFWwindow* window) {
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>());
+	Locator<ReferenceManager<InventoryItem>>::provide(new ReferenceManager<InventoryItem>());
 
 	Locator<BlitRenderer>::provide(new BlitRenderer());
 	Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
@@ -38,4 +41,6 @@ void initManagers(GLFWwindow* window) {
 
 	loadBlocks();
 	loadShapes();
+
+	Locator<Inventory>::provide(new Inventory());
 }

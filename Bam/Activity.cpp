@@ -58,6 +58,10 @@ void Activity::setLabel(std::string text) {
 	}
 }
 
+bool Activity::isInWorld() {
+	return this->inWorld;
+}
+
 bool Activity::idleUp() {
 	for (auto& member : this->getTreeMembers()) {
 		if (!member->idleLocal()) {

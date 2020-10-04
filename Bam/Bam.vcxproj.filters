@@ -408,6 +408,8 @@
       <Filter>Memory\Data\Stores</Filter>
     </ClCompile>
     <ClCompile Include="InventoryItem.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="UIOInventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -733,6 +735,8 @@
       <Filter>Memory\Data\Stores</Filter>
     </ClInclude>
     <ClInclude Include="InventoryItem.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="UIOInventory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

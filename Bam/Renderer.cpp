@@ -9,6 +9,7 @@
 #include "Timer.h"
 #include "BlitRendererArrayTexture.h"
 #include "BlockIDTextures.h"
+#include "Inventory.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;
@@ -29,38 +30,11 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 
 	gameState.appendStaticRenderInfo(renderInfo);
 
+	//Locator<Inventory>::ref().addRenderInfo(gameState, renderInfo, glm::floor(state.uiState.getCursorPositionWorld()));
+
 	Locator<Timer>::ref().newTiming("Prepare UI");
 	uiState.appendRenderInfo(gameState, renderInfo);
 	Locator<Timer>::ref().endTiming("Prepare UI");
-
-	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
-		{
-			glm::vec2(1,0),
-			0,
-			Locator<BlockIDTextures>::ref().getBlockTextureID("mossy_cobblestone.dds"),
-			Locator<BlockIDTextures>::ref().getBlockTextureID("piston_body_stencil.dds"),
-		}
-	);
-
-	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
-		{
-			glm::vec2(1,0),
-			0,
-			Locator<BlockIDTextures>::ref().getBlockTextureID("dirt.dds"),
-			Locator<BlockIDTextures>::ref().getBlockTextureID("shaft.dds"),
-		}
-	);
-
-
-	renderInfo.staticWorldRenderInfo.blockRenderInfos.push_back(
-		{
-			glm::vec2(2,0),
-			0,
-			Locator<BlockIDTextures>::ref().getBlockTextureID("dirt.dds"),
-			Locator<BlockIDTextures>::ref().getBlockTextureID("piston_stencil.dds"),
-		}
-	);
-
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {

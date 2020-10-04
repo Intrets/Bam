@@ -69,6 +69,7 @@ public:
 	std::string const& getLabel() const;
 	void setLabel(std::string text);
 
+	bool isInWorld();
 	bool idleUp();
 	virtual bool idleLocal();
 	virtual bool moveableIdleLocal();

@@ -83,13 +83,17 @@ void UIOTextDisplay::setClickSupport(bool b) {
 	this->clickSupport = b;
 }
 
+void UIOTextDisplay::setWrap(bool b) {
+	this->lineWrap = b;
+}
+
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
 		this->text.invalidateCache();
 	}
 	if (this->shrinkToFit) {
 		// TODO: font customization/setting in text
-		this->text.makeRenderInfo(newScreenRectangle, FONTS::FONT::ROBOTO_12, false, this->clickSupport);
+		this->text.makeRenderInfo(newScreenRectangle, FONTS::FONT::ROBOTO_12, this->lineWrap, this->clickSupport);
 
 		auto& renderInfo = this->text.cachedRenderInfo.value();
 		glm::vec2 screenSize = renderInfo.getRenderedScreenSize();

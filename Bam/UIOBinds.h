@@ -28,5 +28,7 @@ namespace UIOBinds
 		void left(UIOTextDisplay* ptr);
 		void viewUp(UIOTextDisplay* ptr);
 		void viewDown(UIOTextDisplay* ptr);
+		void wrap(UIOTextDisplay* ptr);
+		void nowrap(UIOTextDisplay* ptr);
 	}
 }

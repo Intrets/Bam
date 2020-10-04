@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
-#include "TextRenderInfo.h"	
+#include "TextRenderInfo.h"
 
 class UIOTextDisplay : public UIOBase
 {
@@ -23,6 +23,8 @@ public:
 
 	void setShrinkToFit(bool b);
 	void setClickSupport(bool b);
+
+	void setWrap(bool b);
 
 	void setText(std::string text_);
 	void setText(std::vector<std::string> text_);

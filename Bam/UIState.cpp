@@ -30,6 +30,7 @@
 #include "Block.h"
 #include "Incinerator.h"
 #include "Forwarder.h"
+#include "UIOInventory.h"
 #include <fstream>
 
 #include "UIOConstructActivityInterface.h"
@@ -231,6 +232,18 @@ void UIState::init() {
 
 	UIOActivityInterface* interfacePtr;
 	UIOHideable* interfaceHideablePtr;
+
+	{
+		this->UIs.push_back(
+			UIOConstructer<UIOInventory>::makeConstructer()
+			.window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::HIDE)
+			.hideable()
+			.get()
+		);
+	}
 
 	// Interface
 	{

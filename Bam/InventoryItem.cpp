@@ -11,7 +11,11 @@ bool InventoryBlock::place(GameState& gameState, glm::ivec2 pos) {
 }
 
 bool InventoryBlock::canPlace(GameState& gameState, glm::ivec2 pos) {
-	return gameState.staticWorld.getBlockRef(pos).isOccupied();
+	return !gameState.staticWorld.getBlockRef(pos).isOccupied();
+}
+
+InventoryBlock::InventoryBlock(Handle self, ShapedBlock b) : block(b) {
+	this->selfHandle = self;
 }
 
 void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& renderInfo, glm::ivec2 pos) {
@@ -25,6 +29,14 @@ void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& render
 		color = COLORS::GR::BLOCKED;
 	}
 	renderInfo.selectionRenderInfo.addBox(pos, pos + glm::ivec2(1, 1), color);
+}
+
+std::string InventoryBlock::getName() {
+	return "Block: " + this->block.getBlock().name;
+}
+
+std::string InventoryActivity::getName() {
+	return "Activity: " + this->activity.get()->getTypeName();
 }
 
 bool InventoryActivity::place(GameState& gameState, glm::ivec2 pos) {
