@@ -22,7 +22,7 @@ void WindowTextRenderInfo::addString(FONTS::FONT font, std::string text) {
 
 		glm::vec2 addPos;
 
-		if (this->lineWrap && this->nextPos.x + size.x > 1.0f) {
+		if (this->lineWrap && this->nextPos.x + size.x > 1.0f && c != '\n') {
 			this->newLine();
 		}
 
@@ -41,7 +41,6 @@ void WindowTextRenderInfo::addString(FONTS::FONT font, std::string text) {
 			}
 			it->second[horRange] = static_cast<int32_t>(uvs.size());
 		}
-
 
 		this->pos.push_back(glm::vec4(addPos, size));
 		this->uvs.push_back(fontInfo.charUV[static_cast<int32_t>(c)]);
