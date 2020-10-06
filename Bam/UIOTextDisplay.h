@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UIOBase.h"
-#include "TextRenderInfo.h"	
+#include "TextRenderInfo.h"
 
 class UIOTextDisplay : public UIOBase
 {

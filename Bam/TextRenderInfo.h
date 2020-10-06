@@ -22,7 +22,7 @@ public:
 
 	// total size of entire text in [-1, 1] in screenRectangle space
 	// value in [0, inf)
-	glm::vec2 renderedSize;
+	glm::vec2 renderedSize{ 0.0f, 0.0f };
 
 	// in [-1, 1] in screenRectangle space
 	std::vector<glm::vec4> pos;
@@ -91,12 +91,12 @@ public:
 	FONTS::FONT lastFont;
 	bool lastWrap;
 
-	// TODO: make view behave less weird when resizing window
-	glm::vec2 view = { 0.0f, 0.0f };
+
+	glm::vec2 view;
 
 	std::vector<std::string> const& getLines() const;
 	std::vector<std::string>& getLinesMutable();
-	std::optional<Rectangle> getCursorQuadScreen() const;
+	std::optional<Rectangle> getCursorQuadScreen();
 
 	void invalidateCache();
 	void makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport);

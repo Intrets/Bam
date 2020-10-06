@@ -53,7 +53,7 @@ float UIOSizeType::getHeight(ScreenRectangle screenRectangle) {
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (type) {
 		case UIO::SIZETYPE::PX:
-			heightS = Option<OPTION::UI_SCALE, float>::getVal() * 2 * static_cast<float>(this->px) / pixelSize.y;
+			heightS = Option<OPTION::UI_SCALE, float>::getVal() * 2.0f * static_cast<float>(this->px) / pixelSize.y;
 			break;
 		case UIO::SIZETYPE::FH:
 			heightS = Option<OPTION::UI_SCALE, float>::getVal() * this->relative * 2.0f * 17.0f / pixelSize.y;

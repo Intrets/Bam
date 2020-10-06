@@ -17,8 +17,10 @@ WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_,
 void WindowTextRenderInfo::addString(FONTS::FONT font, std::string text) {
 	FontInfo& fontInfo = Locator<Fonts>::ref().getFont(font);
 
+		glm::ivec2 sizei = glm::floor(glm::vec2(this->screenRectangle.getPixelSize()) * this->screenRectangle.getAbsSize() / 2.0f);
+
 	for (char c : text) {
-		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(this->screenRectangle.getPixelSize()) / this->screenRectangle.getAbsSize() * 4.0f;
+		glm::vec2 size = glm::vec2(fontInfo.charSize[static_cast<int32_t>(c)]) / glm::vec2(sizei) * 2.0f;
 
 		glm::vec2 addPos;
 
@@ -108,7 +110,7 @@ std::vector<std::string>& Text::getLinesMutable() {
 	return this->lines;
 }
 
-std::optional<Rectangle> Text::getCursorQuadScreen() const {
+std::optional<Rectangle> Text::getCursorQuadScreen() {
 	if (!this->cachedRenderInfo.has_value()) {
 		return std::nullopt;
 	}
@@ -136,6 +138,7 @@ void Text::invalidateCache() {
 
 void Text::makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport) {
 	this->lastScreenRectangle = screenRectangle;
+
 	this->lastFont = font;
 	this->lastWrap = wrap;
 	this->lastClickSupport = clickSupport;

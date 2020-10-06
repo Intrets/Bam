@@ -89,7 +89,9 @@ ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	}
 	if (this->shrinkToFit) {
 		// TODO: font customization/setting in text
-		this->text.makeRenderInfo(newScreenRectangle, FONTS::FONT::ROBOTO_12, this->lineWrap, this->clickSupport);
+		if (!this->text.cachedRenderInfo.has_value()) {
+			this->text.makeRenderInfo(newScreenRectangle, FONTS::FONT::ROBOTO_12, this->lineWrap, this->clickSupport);
+		}
 
 		auto& renderInfo = this->text.cachedRenderInfo.value();
 		glm::vec2 screenSize = renderInfo.getRenderedScreenSize();
@@ -110,6 +112,7 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 	if (this->ticksSelected < 30) {
 		ticks = 0;
 	}
+
 	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, FONTS::FONT::ROBOTO_12, depth, this->lineWrap, ticks, this->active, this->clickSupport);
 
 	if (this->active) {
