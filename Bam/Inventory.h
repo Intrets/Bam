@@ -19,10 +19,13 @@ private:
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> hotbar;
 
 public:
+	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getHotbar();
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
 
-	void click(int32_t index);
+	void clickHotbar(int32_t index);
+	void clickWorld(GameState& gameState, glm::vec2 pos);
+	void clickInventory(int32_t index);
 
 	Inventory();
 	~Inventory() = default;

@@ -27,6 +27,7 @@ public:
 
 	void setCursorWorldPosition(glm::vec2 p);
 	void setCursorScreenPosition(glm::vec2 p);
+	void clickWorld(GameState& gameState, glm::vec2 pos);
 	void setWorldRender();
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

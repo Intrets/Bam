@@ -29,6 +29,12 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
+	this->addGameWorldBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->clickWorld(params.gameState, params.uiState.getCursorPositionWorld());
+		return BIND::RESULT::CONTINUE;
+	});
+
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
 		.setPtr(this->hoveringText)
@@ -50,6 +56,10 @@ void UIOCursor::setCursorWorldPosition(glm::vec2 p) {
 
 void UIOCursor::setCursorScreenPosition(glm::vec2 p) {
 	this->hoveringElement->translate(p - this->hoveringElement->getScreenRectangle().getBottomLeft());
+}
+
+void UIOCursor::clickWorld(GameState& gameState, glm::vec2 pos) {
+	this->getInventory().clickWorld(gameState, pos);
 }
 
 void UIOCursor::setWorldRender() {

@@ -425,6 +425,7 @@
     <ClCompile Include="InventoryItem.cpp">
       <Filter>Game\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="UIOHotbar2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -764,6 +765,7 @@
     <ClInclude Include="InventoryItem.h">
       <Filter>Game\Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="UIOHotbar2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

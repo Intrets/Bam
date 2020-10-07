@@ -1,20 +1,20 @@
 #include "common.h"
 
-#include "UIOInventory.h"
+#include "UIOHotbar2.h"
+#include "UIOTextConstructers.h"
+#include "UIOConstructer.h"
+#include "UIOTextDisplay.h"
 #include "Inventory.h"
 #include "InventoryItem.h"
-#include "UIOTextDisplay.h"
-#include "UIOConstructer.h"
-#include "UIOTextConstructers.h"
 
-Inventory& UIOInventory::getInventory() {
+Inventory& UIOHotbar2::getInventory() {
 	return Locator<Inventory>::ref();
 }
 
-UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
-	this->icons.reserve(16);
+UIOHotbar2::UIOHotbar2(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
+	this->icons.reserve(10);
 
-	for (int32_t i = 0; i < 16; i++) {
+	for (int32_t i = 0; i < 10; i++) {
 		UIOTextDisplay* ptr;
 		this->addElement(
 			TextConstructer::constructSingleLineDisplayText(std::to_string(i))
@@ -23,7 +23,7 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 			.button()
 			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			static_cast<UIOInventory*>(self_)->getInventory().clickInventory(i);
+			static_cast<UIOHotbar2*>(self_)->getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		})
 			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
@@ -34,9 +34,9 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 
 }
 
-int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+int32_t UIOHotbar2::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t i = 0;
-	for (auto const& item : this->getInventory().getItems()) {
+	for (auto const& item : this->getInventory().getHotbar()) {
 		if (i > this->icons.size()) {
 			break;
 		}

@@ -29,6 +29,7 @@ void loadBlocks() {
 		}
 
 		DataFront<BlockData>::data[i].name = pairs["name"];
+		DataFront<BlockData>::names[i] = pairs["name"];
 		DataFront<BlockData>::data[i].solid = pairs["solid"] == "true";
 		DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
 
@@ -105,6 +106,10 @@ int32_t ShapedBlock::getStencil() const {
 
 ACTIVITY::DIR ShapedBlock::getRotation() const {
 	return this->rotation;
+}
+
+std::string ShapedBlock::getString() {
+	return this->block.getName() + " " + this->shape.getName();
 }
 
 void ShapedBlock::rotate(ACTIVITY::ROT rot) {

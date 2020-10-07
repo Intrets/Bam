@@ -3,6 +3,10 @@
 #include "Inventory.h"
 #include "GameState.h"
 
+std::vector<UniqueReference<InventoryItem, InventoryItem>> const& Inventory::getHotbar() {
+	return this->hotbar;
+}
+
 std::vector<UniqueReference<InventoryItem, InventoryItem>> const& Inventory::getItems() {
 	return this->items;
 }
@@ -11,7 +15,36 @@ std::optional<UniqueReference<InventoryItem, InventoryItem>> const& Inventory::g
 	return this->cursor;
 }
 
-void Inventory::click(int32_t index) {
+void Inventory::clickHotbar(int32_t index) {
+	if (indexInVector(index, this->hotbar)) {
+		if (this->cursor.has_value()) {
+			auto tmp = std::move(this->cursor.value());
+			this->cursor = std::move(this->hotbar[index]);
+			this->hotbar[index] = std::move(tmp);
+		}
+		else {
+			this->cursor = std::move(this->hotbar[index]);
+			this->hotbar.erase(this->hotbar.begin() + index);
+		}
+	}
+	else {
+		if (this->cursor.has_value()) {
+			this->hotbar.push_back(std::move(this->cursor.value()));
+			this->cursor = std::nullopt;
+		}
+	}
+}
+
+void Inventory::clickWorld(GameState& gameState, glm::vec2 pos) {
+	if (this->cursor.has_value()) {
+		if (cursor.value().get()->place(gameState, pos)) {
+			this->cursor.value().clear();
+			this->cursor = std::nullopt;
+		}
+	}
+}
+
+void Inventory::clickInventory(int32_t index) {
 	if (indexInVector(index, this->items)) {
 		if (this->cursor.has_value()) {
 			auto tmp = std::move(this->cursor.value());

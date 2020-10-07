@@ -32,7 +32,7 @@ void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& render
 }
 
 std::string InventoryBlock::getName() {
-	return "Block: " + this->block.getBlock().name;
+	return this->block.getString();
 }
 
 std::string InventoryActivity::getName() {

@@ -69,6 +69,8 @@ public:
 	int32_t getStencil() const;
 	ACTIVITY::DIR getRotation() const;
 
+	std::string getString();
+
 	void rotate(ACTIVITY::ROT rot);
 
 	bool isSolid() const;
