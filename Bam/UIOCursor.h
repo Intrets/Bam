@@ -5,6 +5,7 @@
 class Inventory;
 class UIOFreeSize;
 class UIOConstrainSize;
+class UIOTextDisplay;
 
 class UIOCursor : public UIOBase
 {
@@ -14,6 +15,7 @@ private:
 
 	bool renderInWorld = false;
 
+	UIOTextDisplay* hoveringText;
 	UIOFreeSize* hoveringFreeElement;
 	UIOBase* hoveringElement;
 

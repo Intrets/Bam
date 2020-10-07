@@ -5,6 +5,7 @@
 #include "UIOCallBackParams.h"
 #include "UIOConstructer.h"
 #include "UIOTextConstructers.h"
+#include "UIOTextDisplay.h"
 #include "Colors.h"
 
 Inventory& UIOCursor::getInventory() {
@@ -30,6 +31,7 @@ UIOCursor::UIOCursor(Handle self) {
 
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
+		.setPtr(this->hoveringText)
 		.background(COLORS::UI::FOREGROUND)
 		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 		.constrainHeight({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.1f })
@@ -63,6 +65,7 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 			item.get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
 		}
 		else {
+			this->hoveringText->setText(cursorItem.value().get()->getName());
 			this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
 		}
 	}
