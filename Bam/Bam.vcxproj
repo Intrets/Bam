@@ -298,6 +298,8 @@
     <ClCompile Include="Grouper.cpp" />
     <ClCompile Include="Incinerator.cpp" />
     <ClCompile Include="InitManagers.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="InventoryItem.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Loader.cpp" />
@@ -331,9 +333,11 @@
     <ClCompile Include="UIOConstructActivityInterface.cpp" />
     <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOConstructLuaInterface.cpp" />
+    <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOHideable.cpp" />
+    <ClCompile Include="UIOInventory.cpp" />
     <ClCompile Include="UIOList.cpp" />
     <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
@@ -406,6 +410,8 @@
     <ClInclude Include="Grouper.h" />
     <ClInclude Include="Incinerator.h" />
     <ClInclude Include="InitManagers.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="InventoryItem.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LuaActivity.h" />
@@ -433,9 +439,11 @@
     <ClInclude Include="UIOConstructActivityInterface.h" />
     <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOConstructLuaInterface.h" />
+    <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOHideable.h" />
+    <ClInclude Include="UIOInventory.h" />
     <ClInclude Include="UIOList.h" />
     <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOInvisible.h" />

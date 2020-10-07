@@ -95,6 +95,9 @@
     <Filter Include="Game\Logic\User IO Controllers\Constructers">
       <UniqueIdentifier>{22ec3228-e39b-4532-a771-59e42dd763c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Inventory">
+      <UniqueIdentifier>{c2f6f99d-7d31-4584-abb2-99d959971278}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferWrappers.cpp">
@@ -407,12 +410,20 @@
     <ClCompile Include="DataFront.cpp">
       <Filter>Memory\Data\Stores</Filter>
     </ClCompile>
-    <ClCompile Include="InventoryItem.cpp" />
-    <ClCompile Include="Inventory.cpp" />
-    <ClCompile Include="UIOInventory.cpp" />
-    <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UpdatedCache.cpp">
       <Filter>Memory\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOCursor.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOInventory.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>Game\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryItem.cpp">
+      <Filter>Game\Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -738,12 +749,20 @@
     <ClInclude Include="DataFront.h">
       <Filter>Memory\Data\Stores</Filter>
     </ClInclude>
-    <ClInclude Include="InventoryItem.h" />
-    <ClInclude Include="Inventory.h" />
-    <ClInclude Include="UIOInventory.h" />
-    <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UpdatedCache.h">
       <Filter>Memory\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOCursor.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Invisible</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOInventory.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>Game\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryItem.h">
+      <Filter>Game\Inventory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
