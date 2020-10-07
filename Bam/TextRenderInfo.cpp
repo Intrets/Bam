@@ -215,8 +215,11 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 
 	if (renderCursor && periodic(tick, 30, 30)) {
 		if (auto const& maybeQuad = this->getCursorQuadScreen()) {
-			auto const& quad = maybeQuad.value();
-			renderInfo.uiRenderInfo.addRectangle(quad.getBottomLeft(), quad.getTopRight(), COLORS::UI::CURSOR, depth++);
+			auto quad = maybeQuad.value();
+			glm::vec2 bottomLeft = glm::max(screenRectangle.getBottomLeft(), glm::min(screenRectangle.getTopRight(), quad.getBottomLeft()));
+			glm::vec2 topRight = glm::max(screenRectangle.getBottomLeft(), glm::min(screenRectangle.getTopRight(), quad.getTopRight()));
+			renderInfo.uiRenderInfo.addRectangle(bottomLeft, topRight, COLORS::UI::CURSOR, depth++);
+			//renderInfo.uiRenderInfo.addRectangle(quad.getBottomLeft(), quad.getTopRight(), COLORS::UI::CURSOR, depth++);
 		}
 	}
 
