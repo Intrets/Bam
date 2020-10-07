@@ -28,7 +28,7 @@ ScreenRectangle UIOGrid::updateSize(ScreenRectangle newScreenRectangle) {
 			newRect.translate(pos);
 
 			elements[i].get()->updateSize(newRect);
-			
+
 			pos.x += gridSize.x;
 			i++;
 		}

@@ -407,6 +407,10 @@
     <ClCompile Include="DataFront.cpp">
       <Filter>Memory\Data\Stores</Filter>
     </ClCompile>
+    <ClCompile Include="InventoryItem.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="UIOInventory.cpp" />
+    <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UpdatedCache.cpp">
       <Filter>Memory\Data</Filter>
     </ClCompile>
@@ -734,6 +738,10 @@
     <ClInclude Include="DataFront.h">
       <Filter>Memory\Data\Stores</Filter>
     </ClInclude>
+    <ClInclude Include="InventoryItem.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="UIOInventory.h" />
+    <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UpdatedCache.h">
       <Filter>Memory\Data</Filter>
     </ClInclude>

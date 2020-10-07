@@ -16,6 +16,8 @@
 #include "UIOBinds.h"
 #include "UIOHideable.h"
 
+#include <type_traits>
+
 template<class T>
 class UIOConstructer
 {
@@ -27,7 +29,9 @@ public:
 	UIOConstructer() = default;
 	~UIOConstructer() = default;
 
-	UIOConstructer<T>& setPtr(T*& ptr);
+	template<class B>
+	UIOConstructer<T>& setPtr(B*& ptr);
+
 	UIOConstructer<UIOPad> pad(UIOSizeType padding);
 	UIOConstructer<UIOPad> padTop(UIOSizeType padding);
 	UIOConstructer<UIOPad> padBottom(UIOSizeType padding);
@@ -80,12 +84,6 @@ public:
 template<class T>
 inline UIOConstructer<T>::UIOConstructer(UniqueReference<UIOBase, T> obj) {
 	this->object = std::move(obj);
-}
-
-template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::setPtr(T*& ptr) {
-	ptr = this->object.get();
-	return *this;
 }
 
 //-------------------------------------------------------------------------------- 
@@ -603,6 +601,14 @@ inline UIOConstructer<T>& UIOConstructer<T>::addBind(std::function<void(UIOBase*
 template<class T>
 inline UIOConstructer<T>& UIOConstructer<T>::addBind(void(*f)(T* ptr)) {
 	f(this->object.get());
+	return *this;
+}
+
+template<class T>
+template<class B>
+inline UIOConstructer<T>& UIOConstructer<T>::setPtr(B*& ptr) {
+	static_assert(std::is_base_of<B, T>::value);
+	ptr = static_cast<B*>(this->object.get());
 	return *this;
 }
 

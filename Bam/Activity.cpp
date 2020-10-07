@@ -58,6 +58,10 @@ void Activity::setLabel(std::string text) {
 	}
 }
 
+bool Activity::isInWorld() {
+	return this->inWorld;
+}
+
 bool Activity::idleUp() {
 	for (auto& member : this->getTreeMembers()) {
 		if (!member->idleLocal()) {
@@ -290,6 +294,16 @@ void Activity::stopActivity(GameState& gameState) {
 }
 
 void Activity::forceChangeActivityState(int32_t type) {
+}
+
+bool Activity::canFillTracesUp(GameState& gameState) {
+	auto const& members = this->getTreeMembers();
+	for (auto member : members) {
+		if (!member->canFillTracesLocal(gameState)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void Activity::fillTracesLocalForced(GameState& gameState) {

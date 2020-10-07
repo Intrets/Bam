@@ -11,7 +11,7 @@ Incinerator::Incinerator(Handle self, glm::ivec2 pos) : SingleBlockActivity(self
 
 bool Incinerator::canActivityLocal(GameState& gameState, int32_t type) {
 	auto p = this->getOrigin() + ACTIVITY::GETDIRECTION(this->activityRotation);
-	return gameState.staticWorld.getBlockRef(p)->isNonAirBlock();
+	return gameState.staticWorld.getBlockRef(p).isNonAirBlock();
 }
 
 void Incinerator::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
@@ -20,7 +20,7 @@ void Incinerator::applyActivityLocalForced(GameState& gameState, int32_t type, i
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 
 	auto p = this->getOrigin() + ACTIVITY::GETDIRECTION(this->activityRotation);
-	gameState.staticWorld.setBlock(ShapedBlock("air", "full", ACTIVITY::DIR::RIGHT), p);
+	gameState.staticWorld.setBlockForce(ShapedBlock("air", "full", ACTIVITY::DIR::RIGHT), p);
 }
 
 ACTIVITY::TYPE Incinerator::getType() {

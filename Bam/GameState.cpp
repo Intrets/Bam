@@ -33,11 +33,16 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	// TODO: culling, seperate from static world
 	Locator<Timer>::ref().newTiming("Prep Activities");
 	auto activityManager = Locator<ReferenceManager<Activity>>::get();
-	int32_t highlightBlockID = Locator<BlockIDTextures>::ref().getBlockTextureID("highlight.dds");
+	//int32_t highlightBlockID = Locator<BlockIDTextures>::ref().getBlockTextureID("highlight.dds");
 	for (auto& p : activityManager->data) {
-		p.second.get()->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
-		if (!p.second.get()->idleLocal()) {
-			renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(p.second.get()->getMovingOrigin(*this), highlightBlockID);
+		auto activity = p.second.get();
+		if (activity->isInWorld()) {
+			activity->appendStaticRenderInfo(*this, renderInfo.staticWorldRenderInfo);
+			if (!activity->idleLocal()) {
+				// TODO: re-add rendering of a block to show activity is active
+				//renderInfo.staticWorldRenderInfo.addBlockWithoutShadow(p.second.get()->getMovingOrigin(*this), highlightBlockID);
+			}
+
 		}
 	}
 	Locator<Timer>::ref().endTiming("Prep Activities");

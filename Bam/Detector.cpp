@@ -10,7 +10,7 @@ Detector::Detector(Handle self, glm::ivec2 pos) : SingleBlockActivity(self, pos)
 
 bool Detector::canActivityLocal(GameState& gameState, int32_t type) {
 	auto p = this->getOrigin() + ACTIVITY::GETDIRECTION(this->activityRotation);
-	return gameState.staticWorld.getBlockRef(p)->isOccupied();
+	return gameState.staticWorld.getBlockRef(p).isOccupied();
 }
 
 void Detector::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {

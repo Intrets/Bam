@@ -30,6 +30,8 @@
 #include "Block.h"
 #include "Incinerator.h"
 #include "Forwarder.h"
+#include "UIOInventory.h"
+#include "UIOCursor.h"
 #include <fstream>
 
 #include "UIOConstructActivityInterface.h"
@@ -182,7 +184,7 @@ void UIState::updateCursor(GLFWwindow* window, glm::vec2 cam) {
 }
 
 void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
-	int32_t depth = 0;
+	int32_t depth = 10;
 	for (auto& UI : this->UIs) {
 		depth = UI.get()->addRenderInfo(gameState, renderInfo, depth);
 	}
@@ -231,6 +233,24 @@ void UIState::init() {
 
 	UIOActivityInterface* interfacePtr;
 	UIOHideable* interfaceHideablePtr;
+
+	{
+		this->UIs.push_back(
+			UIOConstructer<UIOInventory>::makeConstructer()
+			.window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::HIDE)
+			.hideable()
+			.get()
+		);
+	}
+	{
+		this->UIs.push_back(
+			UIOConstructer<UIOCursor>::makeConstructer()
+			.get()
+		);
+	}
 
 	// Interface
 	{
@@ -293,7 +313,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(5, "Marker Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("marker"),
 				params.uiState.getCursorPositionWorld()
 			);
@@ -302,7 +322,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(6, "Stone Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("cobblestone"),
 				params.uiState.getCursorPositionWorld()
 			);
@@ -311,7 +331,7 @@ void UIState::init() {
 
 		hotbarPtr->setTool(7, "Delete Block", [](UIOCallBackParams& params)
 		{
-			params.gameState.staticWorld.setBlock(
+			params.gameState.staticWorld.setBlockForce(
 				ShapedBlock("air"),
 				params.uiState.getCursorPositionWorld()
 			);

@@ -83,6 +83,10 @@ void UIOTextDisplay::setClickSupport(bool b) {
 	this->clickSupport = b;
 }
 
+void UIOTextDisplay::setWrap(bool b) {
+	this->lineWrap = b;
+}
+
 ScreenRectangle UIOTextDisplay::updateSize(ScreenRectangle newScreenRectangle) {
 	if (!newScreenRectangle.equals(this->screenRectangle)) {
 		this->text.invalidateCache();

@@ -24,6 +24,8 @@ public:
 	void setShrinkToFit(bool b);
 	void setClickSupport(bool b);
 
+	void setWrap(bool b);
+
 	void setText(std::string text_);
 	void setText(std::vector<std::string> text_);
 

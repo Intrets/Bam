@@ -129,18 +129,6 @@ void Platform::appendStaticRenderInfo(GameState const& gameState, StaticWorldRen
 		float scale = static_cast<float>(tick - movingTickStart) / movingPace;
 		v += scale * glm::vec2(ACTIVITY::GETDIRECTION(movementDirection));
 	}
-	for (int32_t x = 0; x < this->size.x; x++) {
-		for (int32_t y = 0; y < this->size.y; y++) {
-			// TODO: remove debugging textures 
-			if (this->blocks[x][y].isNonAir()) {
-				glm::vec2 p(x, y);
-				p += v;
-				staticWorldRenderInfo.offsets.push_back(p);
-				staticWorldRenderInfo.offsetsShadow.push_back(p);
-				staticWorldRenderInfo.textureIDs.push_back(this->blocks[x][y].getTexture());
-			}
-		}
-	}
 }
 
 ACTIVITY::TYPE Platform::getType() {
@@ -162,7 +150,7 @@ bool Platform::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgn
 	// TODO: move logic of this loop to staticworld?
 	for (int32_t i = p1.x; i <= p2.x; i++) {
 		for (int32_t j = p1.y; j <= p2.y; j++) {
-			nearChunks[i - p1.x][j - p1.y] = gameState.staticWorld.getChunkByIndex(i, j);
+			nearChunks[i - p1.x][j - p1.y] = &gameState.staticWorld.getChunkByIndex(i, j);
 		}
 	}
 	bool blocked = false;

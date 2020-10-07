@@ -22,7 +22,7 @@ void StaticWorldChunk::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	for (int32_t i = 0; i < CHUNKSIZE; i++) {
 		for (int32_t j = 0; j < CHUNKSIZE; j++) {
 			if (this->staticWorld[i][j].isNonAirBlock()) {
-				renderInfo.staticWorldRenderInfo.addBlockWithShadow(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].getShapedBlock().getTexture(), this->staticWorld[i][j].getRotation());
+				renderInfo.staticWorldRenderInfo.addBlockBack(glm::vec2(i, j) + glm::vec2(this->position), this->staticWorld[i][j].getShapedBlock());
 			}
 			if (this->staticWorld[i][j].isActivity()) {
 				renderInfo.debugRenderInfo.addPoint(glm::vec2(i, j) + glm::vec2(this->position) + glm::vec2(0.5f));

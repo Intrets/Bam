@@ -181,5 +181,13 @@ namespace UIOBinds
 				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 			});
 		}
+
+		void wrap(UIOTextDisplay* ptr) {
+			ptr->setWrap(true);
+		}
+
+		void nowrap(UIOTextDisplay* ptr) {
+			ptr->setWrap(false);
+		}
 	}
 }

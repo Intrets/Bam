@@ -69,6 +69,7 @@ public:
 	std::string const& getLabel() const;
 	void setLabel(std::string text);
 
+	bool isInWorld();
 	bool idleUp();
 	virtual bool idleLocal();
 	virtual bool moveableIdleLocal();
@@ -121,6 +122,7 @@ public:
 
 	// Traces Placement
 	virtual bool canFillTracesLocal(GameState& gameState) = 0;
+	virtual bool canFillTracesUp(GameState& gameState);
 	virtual void fillTracesLocalForced(GameState& gameState);
 	virtual void removeTracesLocalForced(GameState& gameState);
 
