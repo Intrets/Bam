@@ -4,6 +4,7 @@
 #include "Fonts.h"
 #include <optional>
 #include <map>
+#include "UpdatedCache.h"
 
 class TextRenderer;
 struct CameraInfo;
@@ -63,7 +64,7 @@ public:
 
 	std::optional<int32_t> getIndex(glm::vec2 p);
 
-	// first 2 Coordinates in [-1, 1] this->screenRectangle space. 
+	// first 2 Coordinates in [-1, 1] this->screenRectangle space.
 	// second 2 size in same space.
 	std::optional<glm::vec4> getCursorPos(int32_t index) const;
 };
@@ -77,12 +78,17 @@ class Text
 {
 private:
 	std::vector<std::string> lines = { "" };
-	glm::ivec2 cursor;
+	//glm::ivec2 cursor;
+	UpdatedCache<glm::ivec2> cursorCache{ glm::ivec2(0,0) };
+	UpdatedCache<glm::vec2> viewCache{ glm::vec2(0.0f, 0.0f) };
 	int32_t cursorIndex = 0;
+
+	void validateView();
 
 private:
 	ScreenRectangle lastScreenRectangle;
 	bool lastClickSupport;
+	glm::vec2 lastRenderedSize{ 2.0f, 2.0f };
 
 	friend class UIOTextDisplay;
 
@@ -91,8 +97,8 @@ public:
 	FONTS::FONT lastFont;
 	bool lastWrap;
 
-
-	glm::vec2 view;
+	glm::vec2 getView();
+	glm::ivec2 getCursor();
 
 	std::vector<std::string> const& getLines() const;
 	std::vector<std::string>& getLinesMutable();
@@ -115,8 +121,6 @@ public:
 
 	// (!) leaves in invalid state (!) need to move the cursor after using this
 	void zeroCursor();
-
-	glm::ivec2 getCursor();
 
 	void selectIndex(int32_t index);
 

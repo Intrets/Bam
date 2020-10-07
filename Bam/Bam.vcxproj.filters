@@ -407,6 +407,7 @@
     <ClCompile Include="DataFront.cpp">
       <Filter>Memory\Data\Stores</Filter>
     </ClCompile>
+    <ClCompile Include="UpdatedCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -731,6 +732,7 @@
     <ClInclude Include="DataFront.h">
       <Filter>Memory\Data\Stores</Filter>
     </ClInclude>
+    <ClInclude Include="UpdatedCache.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

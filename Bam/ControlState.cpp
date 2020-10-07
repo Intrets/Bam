@@ -19,10 +19,6 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1] = CONTROL::KEY::ACTION0;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2] = CONTROL::KEY::ACTION1;
 	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_3] = CONTROL::KEY::ACTION2;
-	this->keyToControl[GLFW_KEY_A] = CONTROL::KEY::LEFT;
-	this->keyToControl[GLFW_KEY_D] = CONTROL::KEY::RIGHT;
-	this->keyToControl[GLFW_KEY_S] = CONTROL::KEY::DOWN;
-	this->keyToControl[GLFW_KEY_W] = CONTROL::KEY::UP;
 	this->keyToControl[GLFW_KEY_F7] = CONTROL::KEY::TEST_SAVE;
 	this->keyToControl[GLFW_KEY_F8] = CONTROL::KEY::TEST_LOAD;
 	this->keyToControl[GLFW_KEY_F9] = CONTROL::KEY::TOGGLE_DEBUG;
@@ -106,9 +102,13 @@ bool ControlState::activated(BindControl bindControl) {
 			case CONTROL::KEY::MOUSE_POS_CHANGED:
 			case CONTROL::KEY::ACTION0:
 			case CONTROL::KEY::ANYTHING_TEXT:
+			case CONTROL::KEY::RIGHT:
+			case CONTROL::KEY::LEFT:
+			case CONTROL::KEY::UP:
+			case CONTROL::KEY::DOWN:
+				return false;
 				break;
 			default:
-				return false;
 				break;
 		}
 	}

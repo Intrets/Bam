@@ -53,7 +53,7 @@ namespace UIOBinds
 				glm::vec2 click = params.uiState.getCursorPositionScreen() - ptr->getScreenRectangle().getBottomLeft();
 				click /= ptr->getScreenRectangle().getAbsSize();
 				click = click * 2.0f - 1.0f;
-				click += ptr->text.view;
+				click += ptr->text.getView();
 
 				if (ptr->text.cachedRenderInfo.has_value()) {
 					auto maybeIndex = ptr->text.cachedRenderInfo.value().getIndex(click);
