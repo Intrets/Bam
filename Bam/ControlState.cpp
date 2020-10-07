@@ -97,11 +97,6 @@ bool ControlState::activated(BindControl bindControl) {
 
 	if (this->blockUserInput) {
 		switch (bindControl.control) {
-			case CONTROL::KEY::CHAR_BUFFER_CHANGED:
-			case CONTROL::KEY::EVERY_TICK:
-			case CONTROL::KEY::MOUSE_POS_CHANGED:
-			case CONTROL::KEY::ACTION0:
-			case CONTROL::KEY::ANYTHING_TEXT:
 			case CONTROL::KEY::RIGHT:
 			case CONTROL::KEY::LEFT:
 			case CONTROL::KEY::UP:
