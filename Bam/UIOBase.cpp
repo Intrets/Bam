@@ -25,7 +25,6 @@ void UIOBase::deactivate() {
 
 void UIOBase::translate(glm::vec2 p) {
 	this->screenRectangle.translate(p);
-	//this->updateSize(this->screenRectangle);
 	for (auto& element : this->elements) {
 		element.get()->translate(p);
 	}

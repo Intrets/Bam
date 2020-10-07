@@ -20,6 +20,9 @@ private:
 
 public:
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
+	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
+
+	void click(int32_t index);
 
 	Inventory();
 	~Inventory() = default;

@@ -410,6 +410,7 @@
     <ClCompile Include="InventoryItem.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="UIOInventory.cpp" />
+    <ClCompile Include="UIOCursor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -737,6 +738,7 @@
     <ClInclude Include="InventoryItem.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="UIOInventory.h" />
+    <ClInclude Include="UIOCursor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

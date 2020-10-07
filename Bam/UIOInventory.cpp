@@ -15,18 +15,24 @@ Inventory& UIOInventory::getInventory() {
 UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(10, 10)) {
 	this->icons.reserve(100);
 
-	for (size_t i = 0; i < 100; i++) {
+	for (int32_t i = 0; i < 100; i++) {
 		UIOTextDisplay* ptr;
 		this->addElement(
 			TextConstructer::constructSingleLineDisplayText(std::to_string(i))
 			.setPtr(ptr)
 			.alignCenter()
 			.button()
+			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			static_cast<UIOInventory*>(self_)->getInventory().click(i);
+			return BIND::RESULT::CONTINUE;
+		})
 			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
 		this->icons.push_back(ptr);
 	}
+
 }
 
 int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
@@ -39,7 +45,7 @@ int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo
 		i++;
 	}
 	for (; i < this->icons.size(); i++) {
-		this->icons[i]->setText("123");
+		this->icons[i]->setText("");
 	}
 
 	return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);

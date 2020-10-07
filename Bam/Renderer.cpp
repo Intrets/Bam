@@ -44,17 +44,6 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Locator<BlitRendererArrayTexture>::get()->render(
-		renderInfo.staticWorldRenderInfo.offsets,
-		renderInfo.staticWorldRenderInfo.rotations,
-		renderInfo.staticWorldRenderInfo.textureIDs,
-		0,
-		{ 0,0, renderInfo.cameraInfo.x, renderInfo.cameraInfo.y },
-		Locator<BlockIDTextures>::ref().getTextureArrayID(),
-		10.0f,
-		renderInfo.cameraInfo.VP
-	);
-
 	this->blockRenderer.render(
 		renderInfo.staticWorldRenderInfo.blockRenderInfosBack,
 		0,

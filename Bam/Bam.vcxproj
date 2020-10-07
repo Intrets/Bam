@@ -333,6 +333,7 @@
     <ClCompile Include="UIOConstructActivityInterface.cpp" />
     <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOConstructLuaInterface.cpp" />
+    <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOHideable.cpp" />
@@ -437,6 +438,7 @@
     <ClInclude Include="UIOConstructActivityInterface.h" />
     <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOConstructLuaInterface.h" />
+    <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOHideable.h" />

@@ -32,7 +32,7 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 		for (int32_t cj = i0.y; cj <= i1.y; cj++) {
 			auto& staticWorldChunk = this->getChunkByIndex(ci, cj);
 			staticWorldChunk.appendStaticRenderInfo(renderInfo);
-			if (renderInfo.staticWorldRenderInfo.offsets.size() > MAX_STATIC_DRAW) {
+			if (renderInfo.staticWorldRenderInfo.blockRenderInfos.size() > MAX_STATIC_DRAW) {
 				return;
 			}
 		}

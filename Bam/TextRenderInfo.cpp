@@ -316,7 +316,7 @@ void Text::moveView(glm::ivec2 p) {
 	// margin from top
 	float topStop = this->cachedRenderInfo.value().renderedSize.y;
 
-	// margin from bottom 
+	// margin from bottom
 	float botStop = lineHeight;
 
 	if (this->view.y < 0.0f) {
