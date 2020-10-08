@@ -35,6 +35,18 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
+	this->addGameWorldBind({ CONTROL::KEY::ROTATEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
+		return BIND::RESULT::CONTINUE;
+	});
+
+	this->addGameWorldBind({ CONTROL::KEY::ROTATER }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
+		return BIND::RESULT::CONTINUE;
+	});
+
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
 		.setPtr(this->hoveringText)
@@ -59,7 +71,7 @@ void UIOCursor::setCursorScreenPosition(glm::vec2 p) {
 }
 
 void UIOCursor::clickWorld(GameState& gameState, glm::vec2 pos) {
-	this->getInventory().clickWorld(gameState, pos);
+	this->getInventory().clickWorld(gameState, glm::floor(pos));
 }
 
 void UIOCursor::setWorldRender() {
@@ -70,14 +82,10 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	if (auto const& cursorItem = this->getInventory().getCursor()) {
 		if (this->renderInWorld) {
 			this->renderInWorld = false;
-			auto const& item = cursorItem.value();
-
-			item.get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
+			cursorItem.value().get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
 		}
-		else {
-			this->hoveringText->setText(cursorItem.value().get()->getName());
-			this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
-		}
+		this->hoveringText->setText(cursorItem.value().get()->getName());
+		this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
 	}
 	return depth;
 }

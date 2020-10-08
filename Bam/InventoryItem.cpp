@@ -7,14 +7,26 @@
 #include "Colors.h"
 
 bool InventoryBlock::place(GameState& gameState, glm::ivec2 pos) {
-	return gameState.staticWorld.setBlock(pos, this->block);
+	if (gameState.staticWorld.setBlock(pos, this->block)) {
+		this->count--;
+	}
+	return this->count == 0;
 }
 
 bool InventoryBlock::canPlace(GameState& gameState, glm::ivec2 pos) {
 	return !gameState.staticWorld.getBlockRef(pos).isOccupied();
 }
 
-InventoryBlock::InventoryBlock(Handle self, ShapedBlock b) : block(b) {
+void InventoryBlock::rotate(ACTIVITY::ROT rot) {
+	this->block.rotate(rot);
+}
+
+void InventoryBlock::setOrientation(ACTIVITY::DIR dir) {
+	this->block.setOrientation(dir);
+}
+
+InventoryBlock::InventoryBlock(Handle self, ShapedBlock b, int32_t c) : block(b), count(c) {
+	assert(c > 0);
 	this->selfHandle = self;
 }
 
@@ -32,7 +44,12 @@ void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& render
 }
 
 std::string InventoryBlock::getName() {
-	return this->block.getString();
+	return std::to_string(this->count) + "x " +  this->block.getString();
+}
+
+InventoryActivity::InventoryActivity(Handle self, UniqueReference<Activity, Activity> a) {
+	this->selfHandle = self;
+	this->activity = std::move(a);
 }
 
 std::string InventoryActivity::getName() {
@@ -42,7 +59,7 @@ std::string InventoryActivity::getName() {
 bool InventoryActivity::place(GameState& gameState, glm::ivec2 pos) {
 	auto a = this->activity.get();
 	a->forceMoveOriginUp(pos - a->getOrigin());
-	if (a->canFillTracesLocal(gameState)) {
+	if (!a->canFillTracesLocal(gameState)) {
 		return false;
 	}
 	else {
@@ -56,6 +73,13 @@ bool InventoryActivity::canPlace(GameState& gameState, glm::ivec2 pos) {
 	a->forceMoveOriginUp(pos - a->getOrigin());
 
 	return a->canFillTracesLocal(gameState);
+}
+
+void InventoryActivity::rotate(ACTIVITY::ROT rot) {
+	this->activity.get()->rotateForcedUp(glm::ivec2(0,0), rot);
+}
+
+void InventoryActivity::setOrientation(ACTIVITY::DIR dir) {
 }
 
 void InventoryActivity::addWorldRenderInfo(GameState& gameState, RenderInfo& renderInfo, glm::ivec2 pos) {

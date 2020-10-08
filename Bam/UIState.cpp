@@ -239,7 +239,7 @@ void UIState::init() {
 	{
 		this->UIs.push_back(
 			UIOConstructer<UIOHotbar2>::makeConstructer()
-			.window("Inventory", { {0.0f - 0.04f, -0.7f - 0.04f}, {1.0f - 0.04f, -0.45f - 0.04f} },
+			.window("Hotbar", { {0.0f - 0.04f, -0.7f - 0.04f}, {1.0f - 0.04f, -0.45f - 0.04f} },
 					UIOWindow::TYPE::MINIMISE |
 					UIOWindow::TYPE::MOVE |
 					UIOWindow::TYPE::HIDE)

@@ -116,6 +116,10 @@ void ShapedBlock::rotate(ACTIVITY::ROT rot) {
 	this->rotation = ACTIVITY::ROTATE(rot, this->rotation);
 }
 
+void ShapedBlock::setOrientation(ACTIVITY::DIR dir) {
+	this->rotation = dir;
+}
+
 bool ShapedBlock::isSolid() const {
 	return this->block.getData().solid;
 }

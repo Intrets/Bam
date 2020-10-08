@@ -17,7 +17,7 @@ UIOHotbar2::UIOHotbar2(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	for (int32_t i = 0; i < 10; i++) {
 		UIOTextDisplay* ptr;
 		this->addElement(
-			TextConstructer::constructSingleLineDisplayText(std::to_string(i))
+			TextConstructer::constructSingleLineDisplayText("")
 			.setPtr(ptr)
 			.alignCenter()
 			.button()
@@ -40,11 +40,13 @@ int32_t UIOHotbar2::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, 
 		if (i > this->icons.size()) {
 			break;
 		}
-		this->icons[i]->setText(item.get()->getName());
+		if (item.has_value()) {
+			this->icons[i]->setText(item.value().get()->getName());
+		}
+		else {
+			this->icons[i]->setText("");
+		}
 		i++;
-	}
-	for (; i < this->icons.size(); i++) {
-		this->icons[i]->setText("");
 	}
 
 	return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);

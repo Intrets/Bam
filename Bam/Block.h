@@ -72,6 +72,7 @@ public:
 	std::string getString();
 
 	void rotate(ACTIVITY::ROT rot);
+	void setOrientation(ACTIVITY::DIR dir);
 
 	bool isSolid() const;
 	bool isNonAir() const;

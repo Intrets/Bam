@@ -10,7 +10,6 @@ class UIOTextDisplay;
 class UIOCursor : public UIOBase
 {
 private:
-	Inventory& getInventory();
 	glm::vec2 cursorWorldPosition;
 
 	bool renderInWorld = false;
@@ -22,6 +21,8 @@ private:
 	UIOCursor() = default;
 
 public:
+	Inventory& getInventory();
+
 	UIOCursor(Handle self);
 	~UIOCursor() = default;
 
