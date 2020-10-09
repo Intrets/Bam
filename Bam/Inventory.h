@@ -26,6 +26,7 @@ public:
 	void clickHotbar(int32_t index);
 	void clickWorld(GameState& gameState, glm::vec2 pos);
 	void clickInventory(int32_t index);
+	void pickupWorld(GameState& gameState, glm::vec2 pos);
 	void rotateCursorItem(ACTIVITY::ROT rot);
 
 	Inventory();

@@ -47,6 +47,12 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
+	this->addGameWorldBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->getInventory().pickupWorld(params.gameState, params.uiState.getCursorPositionWorld());
+		return BIND::RESULT::CONTINUE;
+	});
+
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
 		.setPtr(this->hoveringText)

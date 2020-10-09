@@ -270,18 +270,18 @@ void UIState::init() {
 	}
 
 	// Interface
-	{
-		this->UIs.push_back(
-			CONSTRUCTER::constructActivityInteractor(interfacePtr)
-			.window("Interactor", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE)
-			.hideable()
-			.setPtr(interfaceHideablePtr)
-			.get()
-		);
-	}
+	//{
+	//	this->UIs.push_back(
+	//		CONSTRUCTER::constructActivityInteractor(interfacePtr)
+	//		.window("Interactor", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+	//				UIOWindow::TYPE::MINIMISE |
+	//				UIOWindow::TYPE::MOVE |
+	//				UIOWindow::TYPE::HIDE)
+	//		.hideable()
+	//		.setPtr(interfaceHideablePtr)
+	//		.get()
+	//	);
+	//}
 
 	// Hotbar
 	{
