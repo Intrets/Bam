@@ -2,11 +2,13 @@
 
 #include "UIOCursor.h"
 #include "Inventory.h"
-#include "UIOCallBackParams.h"
 #include "UIOConstructer.h"
 #include "UIOTextConstructers.h"
 #include "UIOTextDisplay.h"
 #include "Colors.h"
+#include "UIOListSelection.h"
+#include "ActivityHelpers.h"
+#include "Linker.h"
 
 Inventory& UIOCursor::getInventory() {
 	return Locator<Inventory>::ref();
@@ -23,35 +25,52 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::CONTINUE;
 	});
 
+	// -----------------------------------
+	// Switch rendering in world or in UI
+	// -----------------------------------
+
 	this->addGameWorldBind({ CONTROL::KEY::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		static_cast<UIOCursor*>(self_)->setWorldRender();
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-	{
-		static_cast<UIOCursor*>(self_)->clickWorld(params.gameState, params.uiState.getCursorPositionWorld());
-		return BIND::RESULT::CONTINUE;
-	});
+	// -----------------------------------
+	// Cursor rotation
+	// -----------------------------------
 
-	this->addGameWorldBind({ CONTROL::KEY::ROTATEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ROTATER }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
+
+	// -----------------------------------
+	// Pick up thing under cursor
+	// -----------------------------------
 
 	this->addGameWorldBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		static_cast<UIOCursor*>(self_)->getInventory().pickupWorld(params.gameState, params.uiState.getCursorPositionWorld());
 		return BIND::RESULT::CONTINUE;
 	});
+
+	// -----------------------------------
+	// Place/select item
+	// -----------------------------------
+
+	this->addGameWorldBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->clickWorld(params);
+		return BIND::RESULT::CONTINUE;
+	});
+
 
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
@@ -76,8 +95,89 @@ void UIOCursor::setCursorScreenPosition(glm::vec2 p) {
 	this->hoveringElement->translate(p - this->hoveringElement->getScreenRectangle().getBottomLeft());
 }
 
-void UIOCursor::clickWorld(GameState& gameState, glm::vec2 pos) {
-	this->getInventory().clickWorld(gameState, glm::floor(pos));
+void UIOCursor::clickWorld(UIOCallBackParams& params) {
+	auto pos = params.uiState.getCursorPositionWorld();
+	auto& gameState = params.gameState;
+
+	auto [placed, maybeActivity] = this->getInventory().clickWorld(gameState, glm::floor(pos));
+	if (maybeActivity.has_value()) {
+		WeakReference<Activity, Activity> activity{ maybeActivity.value()->selfHandle };
+
+		if (this->target.isValid()) {
+			WeakReference<Activity, Activity> linkTarget = this->target;
+
+			if (sameGroup(linkTarget, activity)) {
+				return;
+			}
+			else {
+				Linker::link(gameState, activity, linkTarget);
+			}
+		}
+
+		this->select(params, activity);
+	}
+	else {
+		if (auto maybeTarget = gameState.staticWorld.getActivity(pos)) {
+			this->select(params, maybeTarget.value());
+		}
+		else {
+			this->target.unset();
+		}
+	}
+}
+
+void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity) {
+	this->target.set(activity);
+
+	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
+
+	static auto updateFunc = [this](UIOBase* self)
+	{
+		std::vector<PairType> membersManaged;
+
+		std::vector<std::pair<int32_t, Activity*>> members;
+		this->target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
+
+		int32_t i = 0;
+		int32_t index = 0;
+		for (auto [depth, activity] : members) {
+			if (activity->selfHandle == this->target.getHandle()) {
+				index = i;
+			}
+			membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(activity->selfHandle) });
+			i++;
+		}
+
+		static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
+	};
+
+	params.uiState.addNamedUIReplace(
+		"ActivityInfo",
+		[]()
+	{
+		return UIOConstructer<UIOListSelection<PairType>>::makeConstructer(
+			[](PairType const& e)
+		{
+			if (e.second.isValid()) {
+				std::stringstream out;
+				out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type: " << e.second.get()->getTypeName() << " label: " << e.second.get()->getLabel();
+				return out.str();
+			}
+			else {
+				return std::string(e.first, ' ') + "invalid";
+			}
+		})
+			.addBindCapture(updateFunc)
+			.window("Activity Info",
+					{ 0.65f, -0.9f, 0.95f, 0.0f },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::RESIZEVERTICAL |
+					UIOWindow::TYPE::RESIZEHORIZONTAL |
+					UIOWindow::TYPE::RESIZE |
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::CLOSE)
+			.get();
+	});
 }
 
 void UIOCursor::setWorldRender() {
@@ -93,6 +193,11 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 		this->hoveringText->setText(cursorItem.value().get()->getName());
 		this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
 	}
+
+	if (this->target.isValid()) {
+		this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+	}
+
 	return depth;
 }
 

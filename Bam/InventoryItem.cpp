@@ -44,7 +44,15 @@ void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& render
 }
 
 std::string InventoryBlock::getName() {
-	return std::to_string(this->count) + "x " +  this->block.getString();
+	return std::to_string(this->count) + "x " + this->block.getString();
+}
+
+INVENTORYITEM::TYPE InventoryBlock::getType() {
+	return INVENTORYITEM::TYPE::BLOCK;
+}
+
+Activity* InventoryActivity::getActivityPtr() {
+	return this->activity.get();
 }
 
 InventoryActivity::InventoryActivity(Handle self, UniqueReference<Activity, Activity> a) {
@@ -56,14 +64,18 @@ std::string InventoryActivity::getName() {
 	return "Activity: " + this->activity.get()->getTypeName();
 }
 
+INVENTORYITEM::TYPE InventoryActivity::getType() {
+	return INVENTORYITEM::TYPE::ACTIVITY;
+}
+
 bool InventoryActivity::place(GameState& gameState, glm::ivec2 pos) {
 	auto a = this->activity.get();
 	a->forceMoveOriginUp(pos - a->getOrigin());
-	if (!a->canFillTracesLocal(gameState)) {
+	if (!a->canFillTracesUp(gameState)) {
 		return false;
 	}
 	else {
-		a->fillTracesLocalForced(gameState);
+		a->fillTracesUpForced(gameState);
 		return true;
 	}
 }
@@ -76,7 +88,7 @@ bool InventoryActivity::canPlace(GameState& gameState, glm::ivec2 pos) {
 }
 
 void InventoryActivity::rotate(ACTIVITY::ROT rot) {
-	this->activity.get()->rotateForcedUp(glm::ivec2(0,0), rot);
+	this->activity.get()->rotateForcedUp(glm::ivec2(0, 0), rot);
 }
 
 void InventoryActivity::setOrientation(ACTIVITY::DIR dir) {
@@ -86,7 +98,9 @@ void InventoryActivity::addWorldRenderInfo(GameState& gameState, RenderInfo& ren
 	auto a = this->activity.get();
 	a->forceMoveOriginUp(pos - a->getOrigin());
 
-	a->appendStaticRenderInfo(gameState, renderInfo.staticWorldRenderInfo);
+	for (auto member : a->getTreeMembers()) {
+		member->appendStaticRenderInfo(gameState, renderInfo.staticWorldRenderInfo);
+	}
 
 	glm::vec4 color;
 

@@ -218,6 +218,28 @@ bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase
 	}
 }
 
+void UIState::addNamedUIReplace(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
+	this->closeNamedUI(name);
+
+	auto ui = f();
+	this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ui);
+	this->addUI(std::move(ui));
+}
+
+void UIState::closeNamedUI(std::string name) {
+	auto namedUI = this->namedUIs.find(name);
+
+	if (namedUI != this->namedUIs.end()) {
+		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+			if (it->handle == namedUI->second.getHandle()) {
+				this->UIs.erase(it);
+				break;
+			}
+		}
+		this->namedUIs.erase(namedUI);
+	}
+}
+
 void UIState::reset() {
 	this->shouldReset_ = true;
 }

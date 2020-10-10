@@ -14,6 +14,7 @@ public:
 
 	// get icon render info
 	virtual std::string getName() = 0;
+	virtual INVENTORYITEM::TYPE getType() = 0;
 
 	// returns true if the item is used up and should be cleaned up
 	virtual	bool place(GameState& gameState, glm::ivec2 pos) = 0;
@@ -35,6 +36,7 @@ private:
 
 public:
 	virtual std::string getName() override;
+	virtual INVENTORYITEM::TYPE getType() override;
 
 	virtual bool place(GameState& gameState, glm::ivec2 pos) override;
 	virtual bool canPlace(GameState& gameState, glm::ivec2 pos) override;
@@ -56,10 +58,13 @@ private:
 	InventoryActivity() = default;
 
 public:
+	Activity* getActivityPtr();
+
 	InventoryActivity(Handle self, UniqueReference<Activity, Activity> a);
 	~InventoryActivity() = default;
 
 	virtual std::string getName() override;
+	virtual INVENTORYITEM::TYPE getType() override;
 
 	virtual bool place(GameState& gameState, glm::ivec2 pos) override;
 	virtual bool canPlace(GameState& gameState, glm::ivec2 pos) override;

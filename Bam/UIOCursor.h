@@ -1,6 +1,9 @@
 #pragma once
 
+#include "ReferenceManager.h"
+#include "Activity.h"
 #include "UIOBase.h"
+#include "UIOCallBackParams.h"
 
 class Inventory;
 class UIOFreeSize;
@@ -18,6 +21,8 @@ private:
 	UIOFreeSize* hoveringFreeElement;
 	UIOBase* hoveringElement;
 
+	ManagedReference<Activity, Activity> target;
+
 	UIOCursor() = default;
 
 public:
@@ -28,7 +33,8 @@ public:
 
 	void setCursorWorldPosition(glm::vec2 p);
 	void setCursorScreenPosition(glm::vec2 p);
-	void clickWorld(GameState& gameState, glm::vec2 pos);
+	void clickWorld(UIOCallBackParams& params);
+	void select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity);
 	void setWorldRender();
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

@@ -14,6 +14,7 @@ private:
 public:
 	Rectangle() = default;
 	Rectangle(glm::vec2 b, glm::vec2 t);
+	Rectangle(float botx, float boty, float topx, float topy);
 
 	void set(glm::vec2 p1, glm::vec2 p2);
 	void set(ScreenRectangle rec);

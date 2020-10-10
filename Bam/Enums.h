@@ -1,5 +1,14 @@
 #pragma once
 
+namespace INVENTORYITEM
+{
+	enum class TYPE
+	{
+		BLOCK,
+		ACTIVITY,
+	};
+}
+
 namespace SHAPE
 {
 	enum TYPE

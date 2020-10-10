@@ -24,7 +24,8 @@ public:
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
 
 	void clickHotbar(int32_t index);
-	void clickWorld(GameState& gameState, glm::vec2 pos);
+
+	std::pair<bool, std::optional<Activity*>> clickWorld(GameState& gameState, glm::vec2 pos);
 	void clickInventory(int32_t index);
 	void pickupWorld(GameState& gameState, glm::vec2 pos);
 	void rotateCursorItem(ACTIVITY::ROT rot);

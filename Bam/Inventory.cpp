@@ -41,13 +41,21 @@ void Inventory::clickHotbar(int32_t index) {
 	}
 }
 
-void Inventory::clickWorld(GameState& gameState, glm::vec2 pos) {
+std::pair<bool, std::optional<Activity*>> Inventory::clickWorld(GameState& gameState, glm::vec2 pos) {
+	std::pair<bool, std::optional<Activity*>> res = { false, std::nullopt };
 	if (this->cursor.has_value()) {
-		if (cursor.value().get()->place(gameState, pos)) {
+		if (this->cursor.value().get()->place(gameState, pos)) {
+			if (this->cursor.value().get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
+				res = { true, static_cast<InventoryActivity*>(this->cursor.value().get())->getActivityPtr() };
+			}
+			else {
+				res = { true, std::nullopt };
+			}
 			this->cursor.value().clear();
 			this->cursor = std::nullopt;
 		}
 	}
+	return res;
 }
 
 void Inventory::clickInventory(int32_t index) {
@@ -108,7 +116,8 @@ Inventory::Inventory() {
 		auto block = refMan->makeUniqueRef<InventoryBlock>(ShapedBlock("diorite", SHAPE::TYPE::FORWARDER, ACTIVITY::DIR::RIGHT), 10);
 		this->cursor = std::move(block);
 	}
-	{
+	for (size_t i = 0; i < 10; i++) {
+
 		auto activity = Locator<ReferenceManager<Activity>>::ref().makeUniqueRef<Piston>(glm::ivec2(0, 0), ACTIVITY::DIR::RIGHT);
 		auto activityItem = refMan->makeUniqueRef<InventoryActivity>(std::move(activity));
 		this->items.push_back(std::move(activityItem));

@@ -5,6 +5,9 @@
 Rectangle::Rectangle(glm::vec2 b, glm::vec2 t) : bot(b), top(t) {
 }
 
+Rectangle::Rectangle(float botx, float boty, float topx, float topy) : bot(botx, boty), top(topx, topy) {
+}
+
 void Rectangle::set(glm::vec2 p1, glm::vec2 p2) {
 	this->bot = glm::min(p1, p2);
 	this->top = glm::max(p1, p2);
