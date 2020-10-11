@@ -13,9 +13,11 @@ class UIOTextDisplay;
 class UIOCursor : public UIOBase
 {
 private:
-	glm::vec2 cursorWorldPosition;
+	glm::vec2 cursorWorldPosition = glm::vec2(0, 0);
 
 	bool renderInWorld = false;
+
+	int32_t selectionTick = 0;
 
 	UIOTextDisplay* hoveringText;
 	UIOFreeSize* hoveringFreeElement;

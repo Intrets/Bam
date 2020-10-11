@@ -8,6 +8,8 @@
 
 class GameState;
 struct RenderInfo;
+class Saver;
+class Loader;
 
 class Inventory
 {
@@ -30,7 +32,10 @@ public:
 	void pickupWorld(GameState& gameState, glm::vec2 pos);
 	void rotateCursorItem(ACTIVITY::ROT rot);
 
-	Inventory();
+	Inventory() = default;
 	~Inventory() = default;
+
+	void save(Saver& saver);
+	void load(Loader& loader);
 };
 

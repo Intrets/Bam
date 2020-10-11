@@ -43,6 +43,18 @@ void InventoryBlock::addWorldRenderInfo(GameState& gameState, RenderInfo& render
 	renderInfo.selectionRenderInfo.addBox(pos, pos + glm::ivec2(1, 1), color);
 }
 
+void InventoryBlock::save(Saver& saver) {
+	this->InventoryItem::save(saver);
+	saver.store(this->count);
+	this->block.save(saver);
+}
+
+void InventoryBlock::load(Loader& loader) {
+	this->InventoryItem::load(loader);
+	loader.retrieve(this->count);
+	this->block.load(loader);
+}
+
 std::string InventoryBlock::getName() {
 	return std::to_string(this->count) + "x " + this->block.getString();
 }
@@ -114,3 +126,20 @@ void InventoryActivity::addWorldRenderInfo(GameState& gameState, RenderInfo& ren
 	a->appendSelectionInfo(gameState, renderInfo, color);
 }
 
+void InventoryActivity::save(Saver& saver) {
+	this->InventoryItem::save(saver);
+	saver.store(this->activity.handle);
+}
+
+void InventoryActivity::load(Loader& loader) {
+	this->InventoryItem::load(loader);
+	loader.retrieve(this->activity.handle);
+}
+
+void InventoryItem::save(Saver& saver) {
+	saver.store(this->selfHandle);
+}
+
+void InventoryItem::load(Loader& loader) {
+	loader.retrieve(this->selfHandle);
+}

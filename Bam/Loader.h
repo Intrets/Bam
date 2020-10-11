@@ -126,6 +126,14 @@ inline bool Loader::retrieve(RAILCRANE::DIR& t) {
 }
 
 template<>
+inline bool Loader::retrieve(INVENTORYITEM::TYPE& t) {
+	int32_t s;
+	this->retrieve(s);
+	t = static_cast<INVENTORYITEM::TYPE>(s);
+	return true;
+}
+
+template<>
 inline bool Loader::retrieve(sol::type& t) {
 	int32_t s;
 	this->retrieve(s);

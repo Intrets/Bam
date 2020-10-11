@@ -110,7 +110,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 				return;
 			}
 			else {
-				Linker::link(gameState, activity, linkTarget);
+				Linker::link(gameState, linkTarget, activity);
 			}
 		}
 
@@ -128,10 +128,11 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 
 void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity) {
 	this->target.set(activity);
+	this->selectionTick = params.gameState.tick;
 
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
 
-	static auto updateFunc = [this](UIOBase* self)
+	auto updateFunc = [this](UIOBase* self)
 	{
 		std::vector<PairType> membersManaged;
 
@@ -149,11 +150,12 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 		}
 
 		static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
+		static_cast<UIOListSelection<PairType>*>(self)->setSelected(index);
 	};
 
 	params.uiState.addNamedUIReplace(
 		"ActivityInfo",
-		[]()
+		[cursorPtr = this, cursor = ManagedReference<UIOBase, UIOCursor>(this->getSelfHandle())]()
 	{
 		return UIOConstructer<UIOListSelection<PairType>>::makeConstructer(
 			[](PairType const& e)
@@ -167,7 +169,39 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				return std::string(e.first, ' ') + "invalid";
 			}
 		})
-			.addBindCapture(updateFunc)
+			.addOnHoverBind({ CONTROL::KEY::ACTION0 }, [cursor](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+		{
+			if (cursor.isValid()) {
+				if (auto maybeSelected = static_cast<UIOListSelection<PairType>*>(self_)->getSelected()) {
+					auto& activity = maybeSelected.value()->second;
+					if (activity.isValid()) {
+						cursor.get()->select(params, activity);
+					}
+				}
+			}
+			return BIND::RESULT::CONTINUE;
+		})
+			.addBindCapture([cursorPtr](UIOBase* self)
+		{
+			std::vector<PairType> membersManaged;
+
+			std::vector<std::pair<int32_t, Activity*>> members;
+			cursorPtr->target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
+
+			int32_t i = 0;
+			int32_t index = 0;
+			for (auto [depth, activity] : members) {
+				if (activity->selfHandle == cursorPtr->target.getHandle()) {
+					index = i;
+				}
+				membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(activity->selfHandle) });
+				i++;
+			}
+
+			static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
+			static_cast<UIOListSelection<PairType>*>(self)->setSelected(index);
+		})
+
 			.window("Activity Info",
 					{ 0.65f, -0.9f, 0.95f, 0.0f },
 					UIOWindow::TYPE::MINIMISE |
@@ -195,7 +229,16 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	}
 
 	if (this->target.isValid()) {
-		this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+		if (periodic(gameState.tick, 80, 40, -this->selectionTick)) {
+			for (auto member : this->target.get()->getRootPtr()->getTreeMembers()) {
+				if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
+					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+				}
+			}
+		}
+		if (periodic(gameState.tick, 40, 20, -this->selectionTick)) {
+			this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+		}
 	}
 
 	return depth;

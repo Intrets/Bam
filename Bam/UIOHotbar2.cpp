@@ -37,7 +37,7 @@ UIOHotbar2::UIOHotbar2(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 int32_t UIOHotbar2::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t i = 0;
 	for (auto const& item : this->getInventory().getHotbar()) {
-		if (i > this->icons.size()) {
+		if (i >= this->icons.size()) {
 			break;
 		}
 		if (item.has_value()) {

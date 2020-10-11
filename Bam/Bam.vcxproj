@@ -301,6 +301,7 @@
     <ClCompile Include="InitManagers.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="InventoryItem.cpp" />
+    <ClCompile Include="InventorySerializerHelper.cpp" />
     <ClCompile Include="IOwrapped.cpp" />
     <ClCompile Include="Linker.cpp" />
     <ClCompile Include="Loader.cpp" />
@@ -414,6 +415,7 @@
     <ClInclude Include="InitManagers.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="InventoryItem.h" />
+    <ClInclude Include="InventorySerializerHelper.h" />
     <ClInclude Include="Linker.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LuaActivity.h" />

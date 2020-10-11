@@ -6,6 +6,8 @@
 #include "Enums.h"
 
 class GameState;
+class Saver;
+class Loader;
 
 class InventoryItem
 {
@@ -26,6 +28,9 @@ public:
 	virtual ~InventoryItem() = default;
 
 	virtual void addWorldRenderInfo(GameState& gameState, RenderInfo& renderInfo, glm::ivec2 pos) = 0;
+
+	virtual void save(Saver& saver);
+	virtual void load(Loader& loader);
 };
 
 class InventoryBlock : public InventoryItem
@@ -48,6 +53,8 @@ public:
 	virtual ~InventoryBlock() = default;
 
 	virtual void addWorldRenderInfo(GameState& gameState, RenderInfo& renderInfo, glm::ivec2 pos) override;
+	virtual void save(Saver& saver) override;
+	virtual void load(Loader& loader) override;
 };
 
 class InventoryActivity : public InventoryItem
@@ -55,11 +62,10 @@ class InventoryActivity : public InventoryItem
 private:
 	UniqueReference<Activity, Activity> activity;
 
-	InventoryActivity() = default;
-
 public:
 	Activity* getActivityPtr();
 
+	InventoryActivity() = default;
 	InventoryActivity(Handle self, UniqueReference<Activity, Activity> a);
 	~InventoryActivity() = default;
 
@@ -72,4 +78,6 @@ public:
 	virtual void setOrientation(ACTIVITY::DIR dir) override;
 
 	virtual void addWorldRenderInfo(GameState& gameState, RenderInfo& renderInfo, glm::ivec2 pos) override;
+	virtual void save(Saver& saver) override;
+	virtual void load(Loader& loader) override;
 };

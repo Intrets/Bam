@@ -37,9 +37,12 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t i = 0;
 	for (auto const& item : this->getInventory().getItems()) {
-		if (i > this->icons.size()) {
+		if (i >= this->icons.size()) {
 			break;
 		}
+		auto& t = this->getInventory();
+		auto man = Locator<ReferenceManager<InventoryItem>>::get();
+		auto man2 = Locator<ReferenceManager<Activity>>::get();
 		this->icons[i]->setText(item.get()->getName());
 		i++;
 	}

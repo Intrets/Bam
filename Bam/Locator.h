@@ -14,6 +14,13 @@ public:
 		object = obj;
 	}
 
+	static void destroy() {
+		if (object != nullptr) {
+			delete object;
+			object = nullptr;
+		}
+	}
+
 private:
 	static T* object;
 };

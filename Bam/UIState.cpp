@@ -138,11 +138,20 @@ void UIState::run(State& state) {
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
 	this->runUIBinds(state);
+
 	for (auto& UI : this->UIsBuffer) {
 		UI.get()->updateSize(r);
 		this->UIs.push_front(std::move(UI));
 	}
 	this->UIsBuffer.clear();
+
+	for (auto& [name, ui] : this->namedUIsBuffer) {
+		this->namedUIs.emplace(std::make_pair(name, ui.handle));
+		this->UIs.push_front(std::move(ui));
+	}
+	this->namedUIsBuffer.clear();
+
+	this->closedBuffer.clear();
 }
 
 bool UIState::updateSize(GLFWwindow* window) {
@@ -195,7 +204,7 @@ void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
 	this->UIsBuffer.push_back(std::move(ref));
 }
 
-bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
+bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
@@ -210,33 +219,42 @@ bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase
 		}
 		return false;
 	}
-	else {
-		auto ui = f();
-		this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ui);
-		this->addUI(std::move(ui));
-		return true;
+
+	auto namedUIBuffered = this->namedUIsBuffer.find(name);
+
+	if (namedUIBuffered != this->namedUIsBuffer.end()) {
+		return false;
 	}
+
+	this->namedUIsBuffer[name] = f();
+	return true;
 }
 
-void UIState::addNamedUIReplace(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
+void UIState::addNamedUIReplace(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
 	this->closeNamedUI(name);
 
-	auto ui = f();
-	this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ui);
-	this->addUI(std::move(ui));
+	this->namedUIsBuffer[name] = f();
 }
 
-void UIState::closeNamedUI(std::string name) {
+void UIState::closeNamedUI(std::string const& name) {
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end()) {
 		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
 			if (it->handle == namedUI->second.getHandle()) {
+				this->closedBuffer.push_back(std::move(*it));
 				this->UIs.erase(it);
 				break;
 			}
 		}
 		this->namedUIs.erase(namedUI);
+	}
+
+	auto namedUIBuffered = this->namedUIsBuffer.find(name);
+
+	if (namedUIBuffered != this->namedUIsBuffer.end()) {
+		this->closedBuffer.push_back(std::move(namedUIBuffered->second));
+		this->namedUIsBuffer.erase(namedUIBuffered);
 	}
 }
 

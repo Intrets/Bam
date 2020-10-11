@@ -5,6 +5,8 @@
 #include "Piston.h"
 #include "WorldBlock.h"
 #include "Block.h"
+#include "Saver.h"
+#include "Loader.h"
 
 std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& Inventory::getHotbar() {
 	return this->hotbar;
@@ -102,29 +104,60 @@ void Inventory::rotateCursorItem(ACTIVITY::ROT rot) {
 	}
 }
 
-Inventory::Inventory() {
-	auto refMan = Locator<ReferenceManager<InventoryItem>>::get();
-	{
-		auto block = refMan->makeUniqueRef<InventoryBlock>(ShapedBlock("diorite", SHAPE::TYPE::DETECTOR, ACTIVITY::DIR::RIGHT), 10);
-		this->items.push_back(std::move(block));
-	}
-	{
-		auto block = refMan->makeUniqueRef<InventoryBlock>(ShapedBlock("diorite", SHAPE::TYPE::FORWARDER, ACTIVITY::DIR::RIGHT), 10);
-		this->items.push_back(std::move(block));
-	}
-	{
-		auto block = refMan->makeUniqueRef<InventoryBlock>(ShapedBlock("diorite", SHAPE::TYPE::FORWARDER, ACTIVITY::DIR::RIGHT), 10);
-		this->cursor = std::move(block);
-	}
-	for (size_t i = 0; i < 10; i++) {
-
-		auto activity = Locator<ReferenceManager<Activity>>::ref().makeUniqueRef<Piston>(glm::ivec2(0, 0), ACTIVITY::DIR::RIGHT);
-		auto activityItem = refMan->makeUniqueRef<InventoryActivity>(std::move(activity));
-		this->items.push_back(std::move(activityItem));
+void Inventory::save(Saver& saver) {
+	saver.store(this->items.size());
+	for (auto& item : items) {
+		saver.store(item.handle);
 	}
 
-	this->hotbar.reserve(10);
-	for (size_t i = 0; i < 10; i++) {
-		this->hotbar.push_back(std::nullopt);
+	bool hasCursor = this->cursor.has_value();
+	saver.store(hasCursor);
+	if (hasCursor) {
+		saver.store(this->cursor.value().handle);
+	}
+
+	saver.store(this->hotbar.size());
+	for (auto& item : hotbar) {
+		saver.store(item.has_value());
+		if (item.has_value()) {
+			saver.store(item.value().handle);
+		}
+	}
+}
+
+void Inventory::load(Loader& loader) {
+	size_t size;
+	loader.retrieve(size);
+	this->items.clear();
+	for (size_t i = 0; i < size; i++) {
+		Handle handle;
+		loader.retrieve(handle);
+		this->items.emplace_back(handle);
+	}
+
+	bool hasCursor;
+	loader.retrieve(hasCursor);
+	if (hasCursor) {
+		Handle handle;
+		loader.retrieve(handle);
+		this->cursor.emplace(handle);
+	}
+	else {
+		this->cursor = std::nullopt;
+	}
+
+	this->hotbar.clear();
+	loader.retrieve(size);
+	for (size_t i = 0; i < size; i++) {
+		bool hasValue;
+		loader.retrieve(hasValue);
+		if (hasValue) {
+			Handle handle;
+			loader.retrieve(handle);
+			this->hotbar.emplace_back(handle);
+		}
+		else {
+			this->hotbar.push_back(std::nullopt);
+		}
 	}
 }

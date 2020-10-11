@@ -8,6 +8,9 @@
 #include "ReferenceManager.h"
 #include "StaticWorldChunk.h"
 #include "ActivityLoaderHelper.h"
+#include "InventorySerializerHelper.h"
+#include "InventoryItem.h"
+#include "Inventory.h"
 
 sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache) {
 	sol::type type;
@@ -87,9 +90,29 @@ bool Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame() {
-	auto manager = new ReferenceManager<Activity>(1024);
-	load(*this, *manager);
-	Locator<ReferenceManager<Activity>>::provide(manager);
+	Locator<Inventory>::destroy();
+	Locator<ReferenceManager<InventoryItem>>::destroy();
+	Locator<ReferenceManager<Activity>>::destroy();
+
+	{
+		auto manager = new ReferenceManager<Activity>(1024);
+		load(*this, *manager);
+		Locator<ReferenceManager<Activity>>::provide(manager);
+	}
+	auto man = Locator<ReferenceManager<Activity>>::get();
+	{
+		auto manager = new ReferenceManager<InventoryItem>(1024);
+		INVENTORYSERIALIZER::load(*this, *manager);
+		Locator<ReferenceManager<InventoryItem>>::provide(manager);
+	}
+
+	man = Locator<ReferenceManager<Activity>>::get();
+	{
+		auto inventory = new Inventory();
+		inventory->load(*this);
+		Locator<Inventory>::provide(inventory);
+	}
+
 
 	this->gameStateRef.load(*this);
 	return true;
