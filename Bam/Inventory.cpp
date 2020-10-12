@@ -65,7 +65,11 @@ void Inventory::clickInventory(int32_t index) {
 		if (this->cursor.has_value()) {
 			auto tmp = std::move(this->cursor.value());
 			this->cursor = std::move(this->items[index]);
-			this->items[index] = std::move(tmp);
+			this->items.erase(this->items.begin() + index);
+			if (!this->addItem(tmp)) {
+				this->items.insert(this->items.begin() + index, std::move(this->cursor.value()));
+				this->cursor = std::move(tmp);
+			}
 		}
 		else {
 			this->cursor = std::move(this->items[index]);
@@ -75,8 +79,9 @@ void Inventory::clickInventory(int32_t index) {
 	}
 	else {
 		if (this->cursor.has_value()) {
-			this->items.push_back(std::move(this->cursor.value()));
-			this->cursor = std::nullopt;
+			if (this->addItem(this->cursor.value())) {
+				this->cursor = std::nullopt;
+			}
 		}
 	}
 }
@@ -102,6 +107,54 @@ void Inventory::rotateCursorItem(ACTIVITY::ROT rot) {
 	if (this->cursor.has_value()) {
 		this->cursor.value().get()->rotate(rot);
 	}
+}
+
+void Inventory::deselectCursor() {
+	if (this->cursor.has_value()) {
+		if (this->addItem(this->cursor.value())) {
+			this->cursor = std::nullopt;
+		}
+	}
+}
+
+bool Inventory::addItem(UniqueReference<InventoryItem, InventoryItem>& item) {
+	switch (item.get()->getType()) {
+		case INVENTORYITEM::TYPE::ACTIVITY:
+			{
+				this->items.push_back(std::move(item));
+				return true;
+				break;
+			}
+		case INVENTORYITEM::TYPE::BLOCK:
+			{
+				for (auto& hotbarItem : this->hotbar) {
+					if (hotbarItem.has_value() &&
+						hotbarItem.value().get()->getType() == INVENTORYITEM::TYPE::BLOCK &&
+						hotbarItem.value().getAs<InventoryBlock>()->getBlock() == item.getAs<InventoryBlock>()->getBlock()
+						) {
+						if (hotbarItem.value().getAs<InventoryBlock>()->incrementCount(item.getAs<InventoryBlock>()->getCount())) {
+							return true;
+						}
+					}
+				}
+
+				for (auto& inventoryItem : this->items) {
+					if (inventoryItem.get()->getType() == INVENTORYITEM::TYPE::BLOCK &&
+						item.getAs<InventoryBlock>()->getBlock() == inventoryItem.getAs<InventoryBlock>()->getBlock()) {
+						if (inventoryItem.getAs<InventoryBlock>()->incrementCount(item.getAs<InventoryBlock>()->getCount())) {
+							return true;
+						}
+					}
+				}
+
+				this->items.push_back(std::move(item));
+				return true;
+				break;
+			}
+		default:
+			break;
+	}
+	return false;
 }
 
 void Inventory::save(Saver& saver) {

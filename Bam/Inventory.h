@@ -20,6 +20,8 @@ private:
 
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> hotbar;
 
+	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
+
 public:
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& getHotbar();
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
@@ -31,6 +33,7 @@ public:
 	void clickInventory(int32_t index);
 	void pickupWorld(GameState& gameState, glm::vec2 pos);
 	void rotateCursorItem(ACTIVITY::ROT rot);
+	void deselectCursor();
 
 	Inventory() = default;
 	~Inventory() = default;

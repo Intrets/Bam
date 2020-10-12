@@ -55,6 +55,20 @@ void InventoryBlock::load(Loader& loader) {
 	this->block.load(loader);
 }
 
+ShapedBlock const& InventoryBlock::getBlock() const {
+	return this->block;
+}
+
+bool InventoryBlock::incrementCount(int32_t c) {
+	assert(c >= 0);
+	this->count += c;
+	return true;
+}
+
+int32_t InventoryBlock::getCount() {
+	return this->count;
+}
+
 std::string InventoryBlock::getName() {
 	return std::to_string(this->count) + "x " + this->block.getString();
 }

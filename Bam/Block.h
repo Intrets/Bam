@@ -77,6 +77,8 @@ public:
 	bool isSolid() const;
 	bool isNonAir() const;
 
+	bool operator==(ShapedBlock const& other) const;
+
 	ShapedBlock(std::string name);
 	ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rot);
 	ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR rot);

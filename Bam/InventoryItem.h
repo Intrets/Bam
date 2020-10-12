@@ -40,6 +40,10 @@ private:
 	ShapedBlock block;
 
 public:
+	ShapedBlock const& getBlock() const;
+	bool incrementCount(int32_t c);
+	int32_t getCount();
+
 	virtual std::string getName() override;
 	virtual INVENTORYITEM::TYPE getType() override;
 

@@ -40,9 +40,6 @@ int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo
 		if (i >= this->icons.size()) {
 			break;
 		}
-		auto& t = this->getInventory();
-		auto man = Locator<ReferenceManager<InventoryItem>>::get();
-		auto man2 = Locator<ReferenceManager<Activity>>::get();
 		this->icons[i]->setText(item.get()->getName());
 		i++;
 	}

@@ -128,6 +128,10 @@ bool ShapedBlock::isNonAir() const {
 	return this->block.getID() != 0;
 }
 
+bool ShapedBlock::operator==(ShapedBlock const& other) const {
+	return this->block.getID() == other.block.getID() && this->shape.getID() == other.shape.getID();
+}
+
 ShapedBlock::ShapedBlock(std::string name) : block(name) {
 }
 

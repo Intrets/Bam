@@ -71,6 +71,15 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
+	// -----------------------------------
+	// Cancel cursor
+	// -----------------------------------
+
+	this->addGlobalBind({ CONTROL::KEY::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		static_cast<UIOCursor*>(self_)->getInventory().deselectCursor();
+		return BIND::RESULT::CONTINUE;
+	});
 
 	this->addElement(
 		TextConstructer::constructSingleLineDisplayText("testing 123", false)
