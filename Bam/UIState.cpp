@@ -33,7 +33,9 @@
 #include "UIOInventory.h"
 #include "UIOCursor.h"
 #include "UIOHotbar2.h"
+#include "Inventory.h"
 #include <fstream>
+#include "ActivitySpawner.h"
 
 #include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
@@ -420,6 +422,14 @@ void UIState::init() {
 		{
 			interfaceHideablePtr->show();
 			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::FORWARDER);
+			return BIND::RESULT::CONTINUE;
+		});
+
+		hotbarPtr->setTool(12, "TEST", [](UIOCallBackParams& params)
+		{
+			auto lua = ACTIVITYSPAWNER::spawn(params.gameState, glm::ivec2(0, 0), ACTIVITY::TYPE::LUA).value();
+			UniqueReference<InventoryItem, InventoryItem> luaItem = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(lua));
+			Locator<Inventory>::ref().addItem(luaItem);
 			return BIND::RESULT::CONTINUE;
 		});
 

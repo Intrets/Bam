@@ -9,6 +9,7 @@
 #include "UIOListSelection.h"
 #include "ActivityHelpers.h"
 #include "Linker.h"
+#include "UIOConstructLuaInterface.h"
 
 Inventory& UIOCursor::getInventory() {
 	return Locator<Inventory>::ref();
@@ -138,6 +139,32 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity) {
 	this->target.set(activity);
 	this->selectionTick = params.gameState.tick;
+
+	if (activity.get()->getType() == ACTIVITY::TYPE::LUA) {
+		static int32_t j = 0;
+		glm::vec2 offset = glm::vec2(0.05f, -0.05f);
+		std::string uiName = "LUA " + std::to_string(activity.handle);
+
+		bool newUI =
+			params.uiState.addNamedUI(
+				uiName,
+				[activity, uiName, offset]()
+		{
+			return CONSTRUCTER::constructLuaInterface(activity)
+				.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
+						UIOWindow::TYPE::MINIMISE |
+						UIOWindow::TYPE::RESIZEVERTICAL |
+						UIOWindow::TYPE::RESIZEHORIZONTAL |
+						UIOWindow::TYPE::RESIZE |
+						UIOWindow::TYPE::MOVE |
+						UIOWindow::TYPE::CLOSE)
+				.get();
+		});
+
+		if (newUI) {
+			j = (j + 1) % 10;
+		}
+	}
 
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
 

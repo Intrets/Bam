@@ -20,12 +20,12 @@ private:
 
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> hotbar;
 
-	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
-
 public:
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& getHotbar();
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
+
+	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
 
 	void clickHotbar(int32_t index);
 
