@@ -9,10 +9,10 @@ private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 
-	bwo::Buffer quad;
-	bwo::Buffer rotation;
-	bwo::Buffer layer;
-	bwo::Buffer position;
+	bwo::ArrayBuffer<glm::vec2> quad{ bwo::BufferHint::STATIC_DRAW };
+	bwo::ArrayBuffer<int32_t> rotation{ bwo::BufferHint::DYNAMIC_DRAW };
+	bwo::ArrayBuffer<int32_t> layer{ bwo::BufferHint::DYNAMIC_DRAW };
+	bwo::ArrayBuffer<glm::vec2> position{ bwo::BufferHint::DYNAMIC_DRAW };
 
 	bwo::UniformTexture2DArray texture_t;
 	bwo::Uniform1f depth;

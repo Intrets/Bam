@@ -28,26 +28,11 @@ void BlitRendererArrayTexture::render(std::vector<glm::vec2> const& positions, s
 
 	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 
-	int32_t remaining = static_cast<int32_t>(positions.size());
-	int32_t start = 0;
+	this->position.set(positions);
+	this->rotation.set(rotations);
+	this->layer.set(layers);
 
-	while (remaining > 0) {
-		int32_t size = glm::min(remaining, BATCH_DRAW_SIZE);
-
-		glBindBuffer(GL_ARRAY_BUFFER, this->position.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * size, &positions[start]);
-
-		glBindBuffer(GL_ARRAY_BUFFER, this->rotation.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int32_t) * size, &rotations[start]);
-
-		glBindBuffer(GL_ARRAY_BUFFER, this->layer.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(int32_t) * size, &layers[start]);
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, size);
-
-		start += size;
-		remaining -= size;
-	}
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(positions.size()));
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	this->VAO.unbind();
@@ -70,9 +55,7 @@ BlitRendererArrayTexture::BlitRendererArrayTexture() :
 		1.0f,  1.0f,
 	};
 
-	glGenBuffers(1, &this->quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                   // attribute
 		2,                   // size
@@ -83,9 +66,7 @@ BlitRendererArrayTexture::BlitRendererArrayTexture() :
 	);
 	glVertexAttribDivisor(0, 0);
 
-	glGenBuffers(1, &this->rotation.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->rotation.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int32_t) * BATCH_DRAW_SIZE, NULL, GL_DYNAMIC_DRAW);
+	this->rotation.bind(GL_ARRAY_BUFFER);
 	glVertexAttribIPointer(
 		1,                                // attribute
 		1,                                // size
@@ -95,9 +76,7 @@ BlitRendererArrayTexture::BlitRendererArrayTexture() :
 	);
 	glVertexAttribDivisor(1, 1);
 
-	glGenBuffers(1, &this->layer.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->layer.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(int32_t) * BATCH_DRAW_SIZE, NULL, GL_DYNAMIC_DRAW);
+	this->layer.bind(GL_ARRAY_BUFFER);
 	glVertexAttribIPointer(
 		2,                                // attribute
 		1,                                // size
@@ -107,9 +86,7 @@ BlitRendererArrayTexture::BlitRendererArrayTexture() :
 	);
 	glVertexAttribDivisor(2, 1);
 
-	glGenBuffers(1, &this->position.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->position.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * BATCH_DRAW_SIZE, NULL, GL_DYNAMIC_DRAW);
+	this->position.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		3,                                // attribute
 		2,                                // size

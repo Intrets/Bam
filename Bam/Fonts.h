@@ -32,8 +32,7 @@ private:
 	FontInfo loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::ivec2 gridDim);
 
 public:
-
-	bwo::Buffer buffer;
+	bwo::FrameBuffer buffer;
 	bwo::Texture fontAtlas;
 
 	std::array<FontInfo, static_cast<int32_t>(FONTS::FONT::FONT_MAX)> fontInfos;

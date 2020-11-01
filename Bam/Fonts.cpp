@@ -79,9 +79,6 @@ FontInfo& Fonts::getFont(FONTS::FONT font) {
 }
 
 Fonts::Fonts() {
-	glGenFramebuffers(1, &this->buffer.ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, this->buffer.ID);
-
 	glGenTextures(1, &this->fontAtlas.ID);
 	glBindTexture(GL_TEXTURE_2D, this->fontAtlas.ID);
 
@@ -98,7 +95,7 @@ Fonts::Fonts() {
 
 	this->pos = glm::vec2(-1.0f, 1.0f);
 
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->fontAtlas.ID, 0);
+	this->buffer.bindTexture(GL_COLOR_ATTACHMENT0, this->fontAtlas, 0);
 
 	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_12)] = loadMonospacedFont("roboto_mono_12px_7x17_36x4.dds", { 7,17 }, { 36,4 });
 	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_14)] = loadMonospacedFont("roboto_mono_14px_8x19_32x4.dds", { 8,19 }, { 32,4 });

@@ -11,8 +11,8 @@ private:
 	bwo::VertexArrayObject VAO;
 	bwo::UniformTexture2D texture;
 
-	bwo::Buffer quad;
-	bwo::Buffer frameBuffer;
+	bwo::ArrayBuffer<glm::vec3> quad{ bwo::BufferHint::STATIC_DRAW };
+	bwo::FrameBuffer frameBuffer;
 
 public:
 	// 2D -> 2D array

@@ -16,7 +16,7 @@ public:
 	std::vector<std::vector<bool>> block;
 	std::vector<std::vector<float>> values;
 
-	bwo::Buffer frameBuffer;
+	//bwo::FrameBuffer frameBuffer;
 	bwo::Texture texture;
 
 	void fillTexture(bool fillTexture);

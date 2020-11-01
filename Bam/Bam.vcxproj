@@ -282,6 +282,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BlockRenderer.cpp" />
+    <ClCompile Include="BlurTest.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="ControlState.cpp" />
@@ -394,6 +395,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockIDTextures.h" />
     <ClInclude Include="BlockRenderer.h" />
+    <ClInclude Include="BlurTest.h" />
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />

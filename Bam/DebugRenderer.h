@@ -12,7 +12,7 @@ private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 	bwo::UniformMatrix4fv VP;
-	bwo::Buffer data;
+	bwo::ArrayBuffer<glm::vec2> data{ bwo::BufferHint::STREAM_DRAW };
 
 	void renderVector(std::vector<glm::vec2> const& line, int32_t type, RenderInfo const& renderInfo);
 

@@ -9,9 +9,9 @@ private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 
-	bwo::Buffer quad;
-	bwo::Buffer UVSource;
-	bwo::Buffer worldTarget;
+	bwo::ArrayBuffer<glm::vec2> quad{ bwo::BufferHint::STATIC_DRAW };
+	bwo::ArrayBuffer<glm::vec4> UVSource{ bwo::BufferHint::STREAM_DRAW };
+	bwo::ArrayBuffer<glm::vec4> worldTarget{ bwo::BufferHint::STREAM_DRAW };
 
 	bwo::UniformTexture2D texture_t;
 	bwo::Uniform1f UVflip;

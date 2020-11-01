@@ -2,6 +2,32 @@
 
 namespace bwo
 {
+	enum class BufferHint
+	{
+		STREAM_DRAW = GL_STREAM_DRAW,
+		STREAM_READ = GL_STREAM_READ,
+		STREAM_COPY = GL_STREAM_COPY,
+		STATIC_DRAW = GL_STATIC_DRAW,
+		STATIC_READ = GL_STATIC_READ,
+		STATIC_COPY = GL_STATIC_COPY,
+		DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
+		DYNAMIC_READ = GL_DYNAMIC_READ,
+		DYNAMIC_COPY = GL_DYNAMIC_COPY,
+	};
+
+	class Texture
+	{
+	public:
+		GLuint ID;
+
+		Texture() = default;
+		Texture(GLuint ID_) : ID(ID_) {
+		};
+		~Texture();
+
+		NOCOPYMOVE(Texture);
+	};
+
 	class VertexArrayObject
 	{
 	private:
@@ -14,8 +40,12 @@ namespace bwo
 				glEnableVertexAttribArray(i);
 			}
 		};
-		void bind() { glBindVertexArray(ID); };
-		void unbind() { glBindVertexArray(0); };
+		void bind() {
+			glBindVertexArray(ID);
+		};
+		void unbind() {
+			glBindVertexArray(0);
+		};
 
 		VertexArrayObject() = default;
 		~VertexArrayObject();
@@ -23,28 +53,40 @@ namespace bwo
 		NOCOPYMOVE(VertexArrayObject);
 	};
 
-	class Buffer
+	class FrameBuffer
 	{
 	public:
 		GLuint ID;
 
-		Buffer() = default;
-		Buffer(GLuint ID_) : ID(ID_) {};
-		~Buffer();
+		FrameBuffer();
+		~FrameBuffer();
 
-		NOCOPYMOVE(Buffer);
+		void bindTexture(GLenum attachment, bwo::Texture const& texture, GLint level);
+
+		NOCOPYMOVE(FrameBuffer);
 	};
 
-	class Texture
+	template<class T>
+	class ArrayBuffer
 	{
+	public:
+
+	private:
+		GLenum usageHint;
+
 	public:
 		GLuint ID;
 
-		Texture() = default;
-		Texture(GLuint ID_) : ID(ID_) {};
-		~Texture();
+		ArrayBuffer(BufferHint hint);
+		~ArrayBuffer();
 
-		NOCOPYMOVE(Texture);
+		void set(std::vector<T> const& data);
+		void set(uint32_t size, std::vector<T> const& data);
+		void setRaw(uint32_t size, void const* data);
+
+		void bind(GLenum location);
+
+		NOCOPYMOVE(ArrayBuffer);
 	};
 
 	class Program
@@ -68,7 +110,8 @@ namespace bwo
 		void use();
 
 		Program() = default;
-		Program(GLuint ID_) : ID(ID_) {};
+		Program(GLuint ID_) : ID(ID_) {
+		};
 		~Program();
 
 		NOCOPYMOVE(Program);
@@ -193,4 +236,35 @@ namespace bwo
 		Uniform1i(std::string name, Program const& program);
 		~Uniform1i() = default;
 	};
+
+	template<class T>
+	inline ArrayBuffer<T>::ArrayBuffer(BufferHint hint) {
+		glGenBuffers(1, &this->ID);
+		this->usageHint = static_cast<GLenum>(hint);
+	}
+
+	template<class T>
+	inline ArrayBuffer<T>::~ArrayBuffer() {
+		glDeleteBuffers(1, &this->ID);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::set(std::vector<T> const& data) {
+		this->setRaw(static_cast<uint32_t>(sizeof(T) * data.size()), &data[0]);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::set(uint32_t size, std::vector<T> const& data) {
+		this->setRaw(static_cast<uint32_t>(sizeof(T) * size), &data[0]);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::setRaw(uint32_t size, void const* data) {
+		glBindBuffer(GL_ARRAY_BUFFER, this->ID);
+		glBufferData(GL_ARRAY_BUFFER, size, data, this->usageHint);
+	}
+	template<class T>
+	inline void ArrayBuffer<T>::bind(GLenum location) {
+		glBindBuffer(location, this->ID);
+	}
 }

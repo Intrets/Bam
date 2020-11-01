@@ -6,10 +6,6 @@ bwo::VertexArrayObject::~VertexArrayObject() {
 	glDeleteVertexArrays(1, &this->ID);
 }
 
-bwo::Buffer::~Buffer() {
-	glDeleteFramebuffers(1, &this->ID);
-}
-
 bwo::Texture::~Texture() {
 	glDeleteTextures(1, &this->ID);
 }
@@ -102,4 +98,17 @@ void bwo::Uniform4fv::set(glm::vec4 vec) {
 
 bwo::Uniform4fv::Uniform4fv(std::string name, Program const& program) {
 	this->location = glGetUniformLocation(program.ID, name.c_str());
+}
+
+bwo::FrameBuffer::FrameBuffer() {
+	glGenFramebuffers(1, &this->ID);
+}
+
+bwo::FrameBuffer::~FrameBuffer() {
+	glDeleteFramebuffers(1, &this->ID);
+}
+
+void bwo::FrameBuffer::bindTexture(GLenum attachment, bwo::Texture const& texture, GLint level) {
+	glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+	glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture.ID, level);
 }

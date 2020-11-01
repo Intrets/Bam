@@ -13,8 +13,8 @@ private:
 	bwo::VertexArrayObject VAO;
 	bwo::Program program;
 
-	bwo::Buffer quad;
-	bwo::Buffer blockInfos;
+	bwo::ArrayBuffer<glm::vec2> quad{ bwo::BufferHint::STATIC_DRAW };
+	bwo::ArrayBuffer<BlockRenderInfo> blockInfos{ bwo::BufferHint::STREAM_DRAW };
 
 	bwo::Uniform1f depth;
 	bwo::UniformMatrix4fv VP;

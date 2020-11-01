@@ -29,8 +29,7 @@ DebugRenderer::DebugRenderer() :
 
 	this->VAO.gen(1);
 
-	glGenBuffers(1, &this->data.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->data.ID);
+	this->data.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		0,                                // attribute
 		2,                                // size
@@ -73,9 +72,7 @@ void DebugRenderer::renderVector(std::vector<glm::vec2> const& line, int32_t typ
 	this->program.use();
 
 	this->VP.set(renderInfo.cameraInfo.VP);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->data.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * line.size(), &(line[0]), GL_STATIC_DRAW);
+	this->data.set(line);
 
 	glDrawArrays(
 		drawtype,	// mode

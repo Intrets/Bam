@@ -427,6 +427,7 @@
     </ClCompile>
     <ClCompile Include="UIOHotbar2.cpp" />
     <ClCompile Include="InventorySerializerHelper.cpp" />
+    <ClCompile Include="BlurTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -768,6 +769,7 @@
     </ClInclude>
     <ClInclude Include="UIOHotbar2.h" />
     <ClInclude Include="InventorySerializerHelper.h" />
+    <ClInclude Include="BlurTest.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

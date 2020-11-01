@@ -29,24 +29,18 @@ void PassThroughRenderer::render2D(GLuint textureTarget, int32_t mipmap, int32_t
 PassThroughRenderer::PassThroughRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("Passthrough")),
 	texture("texture_t", program, 0) {
-
 	static const GLfloat g_quad_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f,
+		   -1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+		   -1.0f,  1.0f, 0.0f,
+		   -1.0f,  1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f,  1.0f, 0.0f,
 	};
-
-	glGenFramebuffers(1, &frameBuffer.ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
 
 	VAO.gen(1);
 
-	glGenBuffers(1, &quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size

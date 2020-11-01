@@ -43,7 +43,7 @@ void PerlinNoise::fillTexture(bool fillTexture) {
 			else {
 				value = 0.0f;
 			}
-			
+
 			value *= 255.0f;
 			if (fillTexture) {
 				tex[i + dpos.x * j] = glm::u8vec4((glm::u8) value);
