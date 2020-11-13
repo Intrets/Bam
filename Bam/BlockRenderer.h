@@ -26,6 +26,6 @@ public:
 	BlockRenderer();
 	~BlockRenderer() = default;
 
-	void render(std::vector<BlockRenderInfo> const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo);
+	void render(std::vector<BlockRenderInfo> const& info, bwo::FrameBuffer& target, std::optional<float> depth_, CameraInfo const& cameraInfo);
 };
 

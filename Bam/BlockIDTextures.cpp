@@ -22,44 +22,32 @@ int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 }
 
 void BlockIDTextures::loadBlockTexture(std::string name) {
-	GLuint newTex = Locator<PathManager>::get()->LoadTextureP(name);
-	glBindTexture(GL_TEXTURE_2D, newTex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	bwo::Texture2D newTex(Locator<PathManager>::get()->LoadTexture2DP(name));
 
 	// Failed to load texture
-	if (newTex == 0) {
+	if (newTex.ID == 0) {
 		printf("Failed to load texture: %s\n\n", name.c_str());
 	}
 
 	GLEnabler glEnabler;
 	glEnabler.disable(GL_BLEND);
 
-	Locator<PassThroughRenderer>::ref().render2DArray(this->textureArray.ID, this->arrayLayers, 0, 0, 0, 128, 128, newTex);
+	Locator<PassThroughRenderer>::ref().render2DArray(
+		this->textureArray,
+		this->arrayLayers,
+		0,
+		newTex
+	);
 }
 
 GLuint BlockIDTextures::getTextureArrayID() {
 	return this->textureArray.ID;
 }
 
-BlockIDTextures::BlockIDTextures() {
+BlockIDTextures::BlockIDTextures() :
+	textureArray(bwo::Texture2DArrayHelper::makeLinearFiltering({ 128, 128, 1024 })) {
 	const std::string textures_raw[] = { "debug.dds", "debug.dds", "sandstone.dds", "dirt.dds",
-		"stone.dds", "gravel.dds", "cobblestone.dds", "gravel2.dds", "mossy_cobblestone.dds", "diorite.dds", "andesite.dds", "podzol.dds", "fruit.dds" };
-
-	glGenTextures(1, &this->textureArray.ID);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, this->textureArray.ID);
-
-	glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &this->maxArrayLayers);
-	this->maxArrayLayers = glm::max(1024, this->maxArrayLayers);
-	// TODO: remove hardcoding of texture size
-	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 128, 128, this->maxArrayLayers);
-
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		   "stone.dds", "gravel.dds", "cobblestone.dds", "gravel2.dds", "mossy_cobblestone.dds", "diorite.dds", "andesite.dds", "podzol.dds", "fruit.dds" };
 
 	for (auto& s : textures_raw) {
 		this->loadBlockTexture(s);

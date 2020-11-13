@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "BufferWrappers.h"
+
 typedef enum
 {
 	OPTIONS
@@ -29,6 +31,7 @@ public:
 
 	GLuint LoadFont(std::string name);
 	GLuint LoadTextureP(std::string name);
+	bwo::Texture2D LoadTexture2DP(std::string name);
 	GLuint LoadShadersP(std::string vertex, std::string fragment);
 	GLuint LoadShadersP(std::string name);
 

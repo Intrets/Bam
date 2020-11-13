@@ -86,7 +86,7 @@ BlockRenderer::BlockRenderer() :
 	this->VAO.unbind();
 }
 
-void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
+void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, bwo::FrameBuffer& target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
 	if (info.size() == 0) {
 		return;
 	}
@@ -109,17 +109,17 @@ void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, GLuint targ
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, target);
-
 	this->texture.set(Locator<BlockIDTextures>::ref().getTextureArrayID());
 	this->VP.set(cameraInfo.VP);
-
-	glm::ivec4 viewport{ 0, 0, cameraInfo.x, cameraInfo.y };
-	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
-
 	this->blockInfos.set(info);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(info.size()));
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	target.draw(
+		{ cameraInfo.x, cameraInfo.y },
+		{ 0,0,cameraInfo.x, cameraInfo.y },
+		[&]()
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(info.size()));
+	});
+
 	this->VAO.unbind();
 }

@@ -19,6 +19,7 @@ namespace bwo
 	{
 	public:
 		GLuint ID;
+		glm::ivec2 size;
 
 		Texture() = default;
 		Texture(GLuint ID_) : ID(ID_) {
@@ -27,6 +28,67 @@ namespace bwo
 
 		NOCOPYMOVE(Texture);
 	};
+
+	class Texture2DArray
+	{
+	public:
+		GLuint ID;
+		glm::ivec3 size;
+
+		Texture2DArray(GLuint handle);
+		Texture2DArray(
+			glm::ivec3 size,
+			GLint level,
+			GLenum internalFormat,
+			GLenum magFilter, GLenum minFilter, GLenum wrapS, GLenum wrapT,
+			GLint border,
+			GLenum pixelFormat,
+			GLenum type,
+			void const* pixels
+		);
+
+		~Texture2DArray();
+
+		Texture2DArray(Texture2DArray&& other);
+		Texture2DArray& operator=(Texture2DArray&& other);
+
+		NOCOPY(Texture2DArray);
+	};
+
+	class Texture2D
+	{
+	public:
+		GLuint ID;
+		glm::ivec2 size;
+
+		Texture2D(GLuint handle);
+		Texture2D(
+			glm::ivec2 size,
+			GLint level,
+			GLenum internalFormat,
+			GLenum magFilter, GLenum minFilter, GLenum wrapS, GLenum wrapT,
+			GLint border,
+			GLenum pixelFormat,
+			GLenum type,
+			void const* pixels
+		);
+
+		~Texture2D();
+
+		Texture2D(Texture2D&& other);
+		Texture2D& operator=(Texture2D&& other);
+
+		NOCOPY(Texture2D);
+	};
+
+	namespace Texture2DHelper
+	{
+		Texture2D makeNoFiltering(glm::ivec2 size);
+	};
+
+	namespace Texture2DArrayHelper{
+		Texture2DArray makeLinearFiltering(glm::ivec3 size);
+	}
 
 	class VertexArrayObject
 	{
@@ -57,11 +119,16 @@ namespace bwo
 	{
 	public:
 		GLuint ID;
+		glm::ivec2 size;
 
+		FrameBuffer(GLFWwindow* window);
 		FrameBuffer();
 		~FrameBuffer();
 
-		void bindTexture(GLenum attachment, bwo::Texture const& texture, GLint level);
+		void bindTexture(GLenum attachment, bwo::Texture2D const& texture, GLint mipmap);
+		void bindTextureLayer(GLenum attachment, bwo::Texture2DArray const& texture, int32_t mipmap, int32_t layer);
+
+		void draw(glm::ivec2 size_, glm::ivec4 viewport, std::function<void()> f);
 
 		NOCOPYMOVE(FrameBuffer);
 	};
@@ -165,6 +232,7 @@ namespace bwo
 
 	public:
 		void set(GLuint texture);
+		void set(bwo::Texture2D const& texture);
 
 		UniformTexture2D() = default;
 		UniformTexture2D(std::string name, Program const& program, int32_t unit);

@@ -2,28 +2,21 @@
 
 #include "PassThroughRenderer.h"
 
-void PassThroughRenderer::render2DArray(GLuint arrayTextureTarget, int32_t layer, int32_t mipmap, int32_t x1, int32_t y1, int32_t x2, int32_t y2, GLuint textureSource) {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
+void PassThroughRenderer::render2DArray(bwo::Texture2DArray& target, int32_t layer, int32_t mipmap, bwo::Texture2D& source) {
 	program.use();
 	VAO.bind();
-	texture.set(textureSource);
-	glViewport(x1, y1, x2, y2);
-	glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, arrayTextureTarget, mipmap, layer);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	VAO.unbind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+	texture.set(source);
 
-void PassThroughRenderer::render2D(GLuint textureTarget, int32_t mipmap, int32_t x1, int32_t y1, int32_t x2, int32_t y2, GLuint textureSource) {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
-	program.use();
-	VAO.bind();
-	texture.set(textureSource);
-	glViewport(x1, y1, x2, y2);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureTarget, mipmap);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	this->frameBuffer.bindTextureLayer(GL_COLOR_ATTACHMENT0, target, mipmap, layer);
+	this->frameBuffer.draw(
+		{ target.size.x, target.size.y },
+		{ 0, 0, target.size.x, target.size.y },
+		[&]()
+	{
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	});
+
 	VAO.unbind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 PassThroughRenderer::PassThroughRenderer() :

@@ -11,7 +11,7 @@ FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::iv
 	std::vector<glm::vec4> uvs;
 	std::vector<glm::vec4> worlds;
 
-	this->laneWidth = glm::max(this->laneWidth, charDim.y / static_cast<float>(this->atlasSize));
+	this->laneWidth = glm::max(this->laneWidth, charDim.y / static_cast<float>(this->fontAtlas.size.y));
 
 	glm::ivec2 texSize;
 	glBindTexture(GL_TEXTURE_2D, tex.ID);
@@ -35,7 +35,7 @@ FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::iv
 	FontInfo fontInfoResult;
 	fontInfoResult.name = name;
 
-	glm::vec2 worldSize = 2.0f * glm::vec2(charDim) / glm::vec2(static_cast<float>(this->atlasSize));
+	glm::vec2 worldSize = 2.0f * glm::vec2(charDim) / glm::vec2(this->fontAtlas.size);
 	//worldSize.y *= -1.0f;
 
 	for (int32_t i = 0; i < 128; i++) {
@@ -64,7 +64,7 @@ FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::iv
 		uvs,
 		worlds,
 		this->buffer.ID,
-		glm::ivec4(0, 0, this->atlasSize, this->atlasSize),
+		glm::ivec4(0, 0, this->fontAtlas.size.x, this->fontAtlas.size.y),
 		tex.ID,
 		std::nullopt,
 		true,
@@ -78,24 +78,12 @@ FontInfo& Fonts::getFont(FONTS::FONT font) {
 	return this->fontInfos[static_cast<int32_t>(font)];
 }
 
-Fonts::Fonts() {
-	glGenTextures(1, &this->fontAtlas.ID);
-	glBindTexture(GL_TEXTURE_2D, this->fontAtlas.ID);
-
-	int32_t maxSize;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize);
-	this->atlasSize = glm::min(maxSize, 256);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->atlasSize, this->atlasSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) 0);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	this->pos = glm::vec2(-1.0f, 1.0f);
+Fonts::Fonts() :
+	fontAtlas(bwo::Texture2DHelper::makeNoFiltering(glm::ivec2(256))) {
 
 	this->buffer.bindTexture(GL_COLOR_ATTACHMENT0, this->fontAtlas, 0);
+
+	this->pos = glm::vec2(-1.0f, 1.0f);
 
 	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_12)] = loadMonospacedFont("roboto_mono_12px_7x17_36x4.dds", { 7,17 }, { 36,4 });
 	this->fontInfos[static_cast<size_t>(FONTS::FONT::ROBOTO_14)] = loadMonospacedFont("roboto_mono_14px_8x19_32x4.dds", { 8,19 }, { 32,4 });

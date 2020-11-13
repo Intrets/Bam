@@ -90,25 +90,29 @@ void UIState::runUIBinds(State& state) {
 
 	state.controlState.writeConsumedBuffer();
 
-	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
-		auto& UI = *it;
-		CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
+	if (this->UIs.size() > 1) {
+		auto it = this->UIs.begin();
+		++it;
+		for (it; it != this->UIs.end();) {
+			auto& UI = *it;
+			CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
 
-		if (res & BIND::RESULT::CLOSE) {
-			it = this->UIs.erase(it);
+			if (res & BIND::RESULT::CLOSE) {
+				it = this->UIs.erase(it);
+			}
+			else if (res & BIND::RESULT::FOCUS) {
+				auto temp = std::move(UI);
+				it = this->UIs.erase(it);
+				this->UIs.push_front(std::move(temp));
+			}
+			else {
+				it++;
+			}
+			if (res & BIND::RESULT::STOP) {
+				return;
+			}
+			state.controlState.writeConsumedBuffer();
 		}
-		else if (res & BIND::RESULT::FOCUS) {
-			auto temp = std::move(UI);
-			it = this->UIs.erase(it);
-			this->UIs.push_front(std::move(temp));
-		}
-		else {
-			it++;
-		}
-		if (res & BIND::RESULT::STOP) {
-			return;
-		}
-		state.controlState.writeConsumedBuffer();
 	}
 
 	if (!state.controlState.worldBindsBlocked()) {
