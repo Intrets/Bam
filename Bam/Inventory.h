@@ -26,6 +26,7 @@ public:
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
 
 	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
+	bool addItemCursor(UniqueReference<InventoryItem, InventoryItem>& item);
 
 	void clickHotbar(int32_t index);
 
@@ -35,7 +36,7 @@ public:
 	void rotateCursorItem(ACTIVITY::ROT rot);
 	void deselectCursor();
 
-	Inventory() = default;
+	Inventory();
 	~Inventory() = default;
 
 	void save(Saver& saver);

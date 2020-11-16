@@ -13,6 +13,7 @@ private:
 	static std::array<T, 1000> data;
 	static std::array<std::string, 1000> names;
 	static std::unordered_map<std::string, int32_t> nameMap;
+	static int32_t size;
 
 	int32_t index;
 
@@ -21,6 +22,7 @@ private:
 
 public:
 	static int32_t getDataID(std::string name);
+	static std::vector<DataFront<T>> listAll();
 
 	T const& getData() const;
 	std::string const& getName() const;
@@ -46,6 +48,9 @@ template<class T>
 std::unordered_map<std::string, int32_t> DataFront<T>::nameMap{};
 
 template<class T>
+int32_t DataFront<T>::size{ 0 };
+
+template<class T>
 inline int32_t DataFront<T>::getDataID(std::string name) {
 	auto it = DataFront<T>::nameMap.find(name);
 	if (it != DataFront<T>::nameMap.end()) {
@@ -54,6 +59,16 @@ inline int32_t DataFront<T>::getDataID(std::string name) {
 	else {
 		return 0;
 	}
+}
+
+template<class T>
+inline std::vector<DataFront<T>> DataFront<T>::listAll() {
+	std::vector<DataFront<T>> res;
+	res.reserve(DataFront<T>::size);
+	for (int32_t i = 0; i < DataFront<T>::size; i++) {
+		res.push_back(DataFront<T>(i));
+	}
+	return res;
 }
 
 template<class T>

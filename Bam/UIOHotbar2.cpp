@@ -31,7 +31,6 @@ UIOHotbar2::UIOHotbar2(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 			);
 		this->icons.push_back(ptr);
 	}
-
 }
 
 int32_t UIOHotbar2::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

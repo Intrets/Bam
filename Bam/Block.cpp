@@ -46,6 +46,7 @@ void loadBlocks() {
 		DataFront<BlockData>::nameMap[pairs["name"]] = i;
 
 		i++;
+		DataFront<BlockData>::size = i;
 	}
 }
 
@@ -142,6 +143,12 @@ ShapedBlock::ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR dir
 }
 
 ShapedBlock::ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
+}
+
+ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, ACTIVITY::DIR rot) : block(blockID), rotation(rot) {
+}
+
+ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot) : block(blockID), shape(shapeID), rotation(rot) {
 }
 
 bool ShapedBlock::load(Loader& loader) {

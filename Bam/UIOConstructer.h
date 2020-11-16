@@ -30,7 +30,7 @@ public:
 	~UIOConstructer() = default;
 
 	template<class B>
-	UIOConstructer<T>& setPtr(B*& ptr);
+	UIOConstructer<T> setPtr(B*& ptr);
 
 	UIOConstructer<UIOPad> pad(UIOSizeType padding);
 	UIOConstructer<UIOPad> padTop(UIOSizeType padding);
@@ -39,7 +39,7 @@ public:
 	UIOConstructer<UIOPad> padRight(UIOSizeType padding);
 
 	UIOConstructer<T>& addBind(std::function<void(UIOBase*)> f);
-	UIOConstructer<T>& addBind(void (*f) (T* ptr));
+	UIOConstructer<T> addBind(void (*f) (T* ptr));
 	UIOConstructer<T>& addBindCapture(std::function<void(T*)> f);
 
 	UIOConstructer<T>& addFocussedBind(BindControl bindControl, CallBack callBack);
@@ -326,6 +326,9 @@ inline UIOConstructer<UIOButton> UIOConstructer<T>::button(bool shrink) {
 
 template<class T>
 inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, Rectangle size, int32_t types) {
+	const int32_t resizeSliverSize = 7;
+
+
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
 	auto mainPad = refMan->makeUniqueRef<UIOPad>(std::move(this->object));
@@ -335,10 +338,10 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		types |= UIOWindow::TYPE::RESIZEHORIZONTAL | UIOWindow::TYPE::RESIZEVERTICAL;
 	}
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
-		mainPadPtr->right = { UIO::SIZETYPE::PX, 10 };
+		mainPadPtr->right = { UIO::SIZETYPE::PX, resizeSliverSize };
 	}
 	if (types & UIOWindow::TYPE::RESIZEVERTICAL) {
-		mainPadPtr->bottom = { UIO::SIZETYPE::PX, 10 };
+		mainPadPtr->bottom = { UIO::SIZETYPE::PX, resizeSliverSize };
 	}
 
 	UIOWindow* windowPtr;
@@ -459,8 +462,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		})
 			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.padTop({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.padRight({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? 10 : 0 })
-			.constrainHeight({ UIO::SIZETYPE::PX, 10 })
+			.padRight({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? resizeSliverSize : 0 })
+			.constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize })
 			.align(UIO::ALIGNMENT::BOTTOMLEFT)
 			.get();
 
@@ -489,8 +492,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		})
 			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.padTop({ UIO::SIZETYPE::FH, 1.2f })
-			.padBottom({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? 10 : 0 })
-			.constrainWidth({ UIO::SIZETYPE::PX, 10 })
+			.padBottom({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? resizeSliverSize : 0 })
+			.constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize })
 			.align(UIO::ALIGNMENT::RIGHT)
 			.get();
 
@@ -519,8 +522,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			}
 			return BIND::RESULT::CONTINUE;
 		})
-			.constrainWidth({ UIO::SIZETYPE::PX, 10 })
-			.constrainHeight({ UIO::SIZETYPE::PX, 10 })
+			.constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize })
+			.constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize })
 			.align(UIO::ALIGNMENT::BOTTOMRIGHT)
 			.get();
 
@@ -599,17 +602,17 @@ inline UIOConstructer<T>& UIOConstructer<T>::addBind(std::function<void(UIOBase*
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addBind(void(*f)(T* ptr)) {
+inline UIOConstructer<T> UIOConstructer<T>::addBind(void(*f)(T* ptr)) {
 	f(this->object.get());
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
 template<class B>
-inline UIOConstructer<T>& UIOConstructer<T>::setPtr(B*& ptr) {
+inline UIOConstructer<T> UIOConstructer<T>::setPtr(B*& ptr) {
 	static_assert(std::is_base_of<B, T>::value);
 	ptr = static_cast<B*>(this->object.get());
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>

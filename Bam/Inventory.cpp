@@ -117,6 +117,12 @@ void Inventory::deselectCursor() {
 	}
 }
 
+Inventory::Inventory() {
+	for (size_t i = 0; i < 10; i++) {
+		this->hotbar.push_back(std::nullopt);
+	}
+}
+
 bool Inventory::addItem(UniqueReference<InventoryItem, InventoryItem>& item) {
 	switch (item.get()->getType()) {
 		case INVENTORYITEM::TYPE::ACTIVITY:
@@ -155,6 +161,16 @@ bool Inventory::addItem(UniqueReference<InventoryItem, InventoryItem>& item) {
 			break;
 	}
 	return false;
+}
+
+bool Inventory::addItemCursor(UniqueReference<InventoryItem, InventoryItem>& item) {
+	if (this->cursor.has_value()) {
+		if (!this->addItem(this->cursor.value())) {
+			return false;
+		}
+	}
+	this->cursor = std::move(item);
+	return true;
 }
 
 void Inventory::save(Saver& saver) {

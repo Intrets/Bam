@@ -78,6 +78,10 @@ namespace ACTIVITY
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
 
+	inline std::string GET_TYPE_NAME(TYPE type) {
+		return TYPE_NAMES[static_cast<rsize_t>(type)];
+	}
+
 	enum DIR
 	{
 		RIGHT,

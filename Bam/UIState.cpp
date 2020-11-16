@@ -36,6 +36,7 @@
 #include "Inventory.h"
 #include <fstream>
 #include "ActivitySpawner.h"
+#include "UIOConstructItemSpawner.h"
 
 #include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
@@ -280,6 +281,20 @@ void UIState::init() {
 
 	UIOActivityInterface* interfacePtr;
 	UIOHideable* interfaceHideablePtr;
+
+	// Item Spawner List
+	{
+		this->UIs.push_back(
+			CONSTRUCTER::constructItemSpawner()
+			.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , 0.0f } },
+					UIOWindow::TYPE::MINIMISE |
+					UIOWindow::TYPE::MOVE |
+					UIOWindow::TYPE::HIDE |
+					UIOWindow::TYPE::RESIZE)
+			.hideable()
+			.get()
+		);
+	}
 
 	// New Hotbar
 	{

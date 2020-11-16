@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug no -Werror|Win32">
@@ -284,6 +284,7 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOConstructItemSpawner.cpp" />
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="DebugRenderInfo.cpp" />
@@ -398,6 +399,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOConstructItemSpawner.h" />
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="DebugRenderInfo.h" />
