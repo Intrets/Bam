@@ -340,7 +340,7 @@
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
     <ClCompile Include="UIOHideable.cpp" />
-    <ClCompile Include="UIOHotbar2.cpp" />
+    <ClCompile Include="UIOHotbar.cpp" />
     <ClCompile Include="UIOInventory.cpp" />
     <ClCompile Include="UIOList.cpp" />
     <ClCompile Include="UIOListSelection.cpp" />
@@ -368,7 +368,6 @@
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
     <ClCompile Include="UIOFreeSize.cpp" />
-    <ClCompile Include="UIOHotbar.cpp" />
     <ClCompile Include="UIOShell.cpp" />
     <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
@@ -449,7 +448,7 @@
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
     <ClInclude Include="UIOHideable.h" />
-    <ClInclude Include="UIOHotbar2.h" />
+    <ClInclude Include="UIOHotbar.h" />
     <ClInclude Include="UIOInventory.h" />
     <ClInclude Include="UIOList.h" />
     <ClInclude Include="UIOListSelection.h" />
@@ -486,7 +485,6 @@
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />
     <ClInclude Include="UIOFreeSize.h" />
-    <ClInclude Include="UIOHotbar.h" />
     <ClInclude Include="UIOShell.h" />
     <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />

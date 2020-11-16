@@ -1,7 +1,6 @@
 #include "common.h"
 
 #include "UIState.h"
-#include "UIOHotbar.h"
 #include "UIOConstrainSize.h"
 #include "UIOWindow.h"
 #include "UIOFreeSize.h"
@@ -32,7 +31,7 @@
 #include "Forwarder.h"
 #include "UIOInventory.h"
 #include "UIOCursor.h"
-#include "UIOHotbar2.h"
+#include "UIOHotbar.h"
 #include "Inventory.h"
 #include <fstream>
 #include "ActivitySpawner.h"
@@ -145,6 +144,15 @@ void UIState::run(State& state) {
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
 	this->runUIBinds(state);
+
+	for (auto it = this->namedUIs.begin(), last = this->namedUIs.end(); it != last;) {
+		if (!it->second.isValid()) {
+			it = this->namedUIs.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 
 	for (auto& UI : this->UIsBuffer) {
 		UI.get()->updateSize(r);
@@ -279,36 +287,6 @@ void UIState::init() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-	UIOActivityInterface* interfacePtr;
-	UIOHideable* interfaceHideablePtr;
-
-	// Item Spawner List
-	{
-		this->UIs.push_back(
-			CONSTRUCTER::constructItemSpawner()
-			.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , 0.0f } },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE |
-					UIOWindow::TYPE::RESIZE)
-			.hideable()
-			.get()
-		);
-	}
-
-	// New Hotbar
-	{
-		this->UIs.push_back(
-			UIOConstructer<UIOHotbar2>::makeConstructer()
-			.window("Hotbar", { {0.0f - 0.04f, -0.7f - 0.04f}, {1.0f - 0.04f, -0.45f - 0.04f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE)
-			.hideable()
-			.get()
-		);
-	}
-
 	// Inventory
 	{
 		this->UIs.push_back(
@@ -330,127 +308,14 @@ void UIState::init() {
 		);
 	}
 
-	// Interface
-	//{
-	//	this->UIs.push_back(
-	//		CONSTRUCTER::constructActivityInteractor(interfacePtr)
-	//		.window("Interactor", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-	//				UIOWindow::TYPE::MINIMISE |
-	//				UIOWindow::TYPE::MOVE |
-	//				UIOWindow::TYPE::HIDE)
-	//		.hideable()
-	//		.setPtr(interfaceHideablePtr)
-	//		.get()
-	//	);
-	//}
-
 	// Hotbar
 	{
-		UIOHotbar* hotbarPtr;
 		auto hotbar = UIOConstructer<UIOHotbar>::makeConstructer()
-			.setPtr(hotbarPtr)
+			.background(COLORS::UI::WINDOWBACKGROUND)
 			.constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f })
 			.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
 			.align(UIO::ALIGNMENT::BOTTOM)
 			.get();
-
-		hotbarPtr->setTool(0, "Piston", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PISTON);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(1, "Platform", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PLATFORM);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(2, "Crane", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::RAILCRANE);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(3, "LUA", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::LUA);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(4, "Grabber", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::GRABBER);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(5, "Marker Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("marker"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(6, "Stone Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("cobblestone"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(7, "Delete Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("air"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(8, "Reader", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::READER);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(9, "Detector", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::DETECTOR);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(10, "Incinerator", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::INCINERATOR);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(11, "Forwarder", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::FORWARDER);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(12, "TEST", [](UIOCallBackParams& params)
-		{
-			auto lua = ACTIVITYSPAWNER::spawn(params.gameState, glm::ivec2(0, 0), ACTIVITY::TYPE::LUA).value();
-			UniqueReference<InventoryItem, InventoryItem> luaItem = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(lua));
-			Locator<Inventory>::ref().addItem(luaItem);
-			return BIND::RESULT::CONTINUE;
-		});
 
 		this->UIs.push_back(std::move(hotbar));
 	}
@@ -598,6 +463,32 @@ void UIState::init() {
 			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
 			listPtr->addElement(std::move(a));
+		}
+		{
+			listPtr->addElement(
+				TextConstructer::constructSingleLineDisplayText("Spawn Items")
+				.alignCenter()
+				.button()
+				.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				params.uiState.addNamedUI("Item Spawner", []()
+				{
+					return CONSTRUCTER::constructItemSpawner()
+						.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , -0.2f } },
+								UIOWindow::TYPE::MINIMISE |
+								UIOWindow::TYPE::MOVE |
+								UIOWindow::TYPE::CLOSE |
+								UIOWindow::TYPE::RESIZE)
+						.hideable()
+						.get();
+				});
+
+				return BIND::RESULT::CONTINUE;
+			})
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH ,1.2f })
+				.get()
+				);
 		}
 		{
 			listPtr->addElement(

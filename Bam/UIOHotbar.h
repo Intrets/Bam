@@ -1,27 +1,20 @@
 #pragma once
 
-#include "UIOBase.h"
+#include "UIOGrid.h"
 
-class UIOButton;
-class UIOShell;
+class Inventory;
 class UIOTextDisplay;
 
-class UIOHotbar : public UIOBase
+class UIOHotbar : public UIOGrid
 {
 private:
-	std::array<std::optional<std::function<void(UIOCallBackParams&)>>, 20> tools;
+	Inventory& getInventory();
 
-	std::array<UIOTextDisplay*, 20> toolTexts;
+	std::vector<UIOTextDisplay*> icons;
 
 public:
 	UIOHotbar(Handle self);
-	virtual ~UIOHotbar() = default;
 
-	void activateTool(int32_t slot, UIOCallBackParams& params);
-
-	void setTool(int32_t slot, std::string name, std::function<void(UIOCallBackParams& params)> f);
-
-	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 };
 

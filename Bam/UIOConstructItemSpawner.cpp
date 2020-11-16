@@ -87,24 +87,14 @@ UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 	})
 		.setPtr(shapeSelectionPtr);
 
-	UIOList* shapedBlockSelectionCombo;
-
+	UIOList* c;
 	listPtr->addElement(
-		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::RIGHT)
-		.setPtr(shapedBlockSelectionCombo)
-		.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.5f })
+		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::UP)
+		.setPtr(c)
 		.get()
 	);
 
-	shapedBlockSelectionCombo->addElement(
-		blockSelection
-		.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
-		.get());
-	shapedBlockSelectionCombo->addElement(
-		shapeSelection
-		.get());
-
-	listPtr->addElement(
+	c->addElement(
 		TextConstructer::constructSingleLineDisplayText("Spawn Block")
 		.button()
 		.onPress([shapeSelectionPtr, blockSelectionPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
@@ -121,8 +111,28 @@ UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 		return BIND::RESULT::CONTINUE;
 	})
 		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 		.get()
 		);
+
+	UIOList* shapedBlockSelectionCombo;
+
+	c->addElement(
+		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::RIGHT)
+		.setPtr(shapedBlockSelectionCombo)
+		.get()
+	);
+
+	shapedBlockSelectionCombo->addElement(
+		blockSelection
+		.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
+		.get()
+	);
+
+	shapedBlockSelectionCombo->addElement(
+		shapeSelection
+		.get()
+	);
 
 	return list;
 }
