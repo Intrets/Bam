@@ -205,18 +205,6 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				return std::string(e.first, ' ') + "invalid";
 			}
 		})
-			.addOnHoverBind({ CONTROL::KEY::ACTION0 }, [cursor](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
-		{
-			if (cursor.isValid()) {
-				if (auto maybeSelected = static_cast<UIOListSelection<PairType>*>(self_)->getSelected()) {
-					auto& activity = maybeSelected.value()->second;
-					if (activity.isValid()) {
-						cursor.get()->select(params, activity);
-					}
-				}
-			}
-			return BIND::RESULT::CONTINUE;
-		})
 			.addBindCapture([cursorPtr](UIOBase* self)
 		{
 			std::vector<PairType> membersManaged;

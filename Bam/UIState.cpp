@@ -91,9 +91,9 @@ void UIState::runUIBinds(State& state) {
 	state.controlState.writeConsumedBuffer();
 
 	if (this->UIs.size() > 1) {
-		auto it = this->UIs.begin();
+		auto it = this->UIs.begin(), last = this->UIs.end();
 		++it;
-		for (it; it != this->UIs.end();) {
+		for (; it != last;) {
 			auto& UI = *it;
 			CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
 
