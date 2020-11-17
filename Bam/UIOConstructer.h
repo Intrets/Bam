@@ -30,45 +30,45 @@ public:
 	~UIOConstructer() = default;
 
 	template<class B>
-	UIOConstructer<T> setPtr(B*& ptr);
+	[[nodiscard]] UIOConstructer<T> setPtr(B*& ptr);
 
-	UIOConstructer<UIOPad> pad(UIOSizeType padding);
-	UIOConstructer<UIOPad> padTop(UIOSizeType padding);
-	UIOConstructer<UIOPad> padBottom(UIOSizeType padding);
-	UIOConstructer<UIOPad> padLeft(UIOSizeType padding);
-	UIOConstructer<UIOPad> padRight(UIOSizeType padding);
+	[[nodiscard]] UIOConstructer<UIOPad> pad(UIOSizeType padding);
+	[[nodiscard]] UIOConstructer<UIOPad> padTop(UIOSizeType padding);
+	[[nodiscard]] UIOConstructer<UIOPad> padBottom(UIOSizeType padding);
+	[[nodiscard]] UIOConstructer<UIOPad> padLeft(UIOSizeType padding);
+	[[nodiscard]] UIOConstructer<UIOPad> padRight(UIOSizeType padding);
 
-	UIOConstructer<T>& addBind(std::function<void(UIOBase*)> f);
-	UIOConstructer<T> addBind(void (*f) (T* ptr));
-	UIOConstructer<T>& addBindCapture(std::function<void(T*)> f);
+	[[nodiscard]] UIOConstructer<T> addBind(std::function<void(UIOBase*)> f);
+	[[nodiscard]] UIOConstructer<T> addBind(void (*f) (T* ptr));
+	[[nodiscard]] UIOConstructer<T> addBindCapture(std::function<void(T*)> f);
 
-	UIOConstructer<T>& addFocussedBind(BindControl bindControl, CallBack callBack);
-	UIOConstructer<T>& addActiveBind(BindControl bindControl, CallBack callBack);
-	UIOConstructer<T>& addGlobalBind(BindControl bindControl, CallBack callBack);
-	UIOConstructer<T>& addOnHoverBind(BindControl bindControl, CallBack callBack);
-	UIOConstructer<T>& addGameWorldBind(BindControl bindControl, CallBack callBack);
+	[[nodiscard]] UIOConstructer<T> addFocussedBind(BindControl bindControl, CallBack callBack);
+	[[nodiscard]] UIOConstructer<T> addActiveBind(BindControl bindControl, CallBack callBack);
+	[[nodiscard]] UIOConstructer<T> addGlobalBind(BindControl bindControl, CallBack callBack);
+	[[nodiscard]] UIOConstructer<T> addOnHoverBind(BindControl bindControl, CallBack callBack);
+	[[nodiscard]] UIOConstructer<T> addGameWorldBind(BindControl bindControl, CallBack callBack);
 
-	UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
-	UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
-	UIOConstructer<UIOConstrainSize> align(UIO::ALIGNMENT align);
-	UIOConstructer<UIOConstrainSize> alignCenter();
-	UIOConstructer<UIOConstrainSize> alignTop();
-	UIOConstructer<UIOConstrainSize> alignBottom();
-	UIOConstructer<UIOConstrainSize> alignLeft();
-	UIOConstructer<UIOConstrainSize> alignRight();
-	UIOConstructer<UIOConstrainSize> alignBottomLeft();
-	UIOConstructer<UIOConstrainSize> alignBottomRight();
-	UIOConstructer<UIOConstrainSize> alignTopLeft();
-	UIOConstructer<UIOConstrainSize> alignTopRight();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> constrainHeight(UIOSizeType height);
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> constrainWidth(UIOSizeType width);
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> align(UIO::ALIGNMENT align);
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignCenter();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignTop();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignBottom();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignLeft();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignRight();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignBottomLeft();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignBottomRight();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignTopLeft();
+	[[nodiscard]] UIOConstructer<UIOConstrainSize> alignTopRight();
 
-	UIOConstructer<UIOColoredBackground> background(glm::vec4 color);
-	UIOConstructer<UIOButton> button(bool shrink = false);
-	UIOConstructer<UIOFreeSize> window(std::string title, Rectangle size, int32_t types);
-	UIOConstructer<UIOFreeSize> free();
-	UIOConstructer<UIOHideable> hideable(bool focusOnShow = true);
+	[[nodiscard]] UIOConstructer<UIOColoredBackground> background(glm::vec4 color);
+	[[nodiscard]] UIOConstructer<UIOButton> button(bool shrink = false);
+	[[nodiscard]] UIOConstructer<UIOFreeSize> window(std::string title, Rectangle size, int32_t types);
+	[[nodiscard]] UIOConstructer<UIOFreeSize> free();
+	[[nodiscard]] UIOConstructer<UIOHideable> hideable(bool focusOnShow = true);
 
-	UIOConstructer<UIOButton>& onRelease(CallBack f);
-	UIOConstructer<UIOButton>& onPress(CallBack f);
+	[[nodiscard]] UIOConstructer<UIOButton> onRelease(CallBack f);
+	[[nodiscard]] UIOConstructer<UIOButton> onPress(CallBack f);
 
 	UniqueReference<UIOBase, T> get();
 
@@ -177,39 +177,39 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padRight(UIOSizeType padding) {
 //-------------------------------------------------------------------------------- 
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addBindCapture(std::function<void(T*)> f) {
+inline UIOConstructer<T> UIOConstructer<T>::addBindCapture(std::function<void(T*)> f) {
 	f(this->object.get());
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addFocussedBind(BindControl bindControl, CallBack callBack) {
+inline UIOConstructer<T> UIOConstructer<T>::addFocussedBind(BindControl bindControl, CallBack callBack) {
 	this->object.get()->addFocussedBind(bindControl, callBack);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addActiveBind(BindControl bindControl, CallBack callBack) {
+inline UIOConstructer<T> UIOConstructer<T>::addActiveBind(BindControl bindControl, CallBack callBack) {
 	this->object.get()->addActiveBind(bindControl, callBack);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addGlobalBind(BindControl bindControl, CallBack callBack) {
+inline UIOConstructer<T> UIOConstructer<T>::addGlobalBind(BindControl bindControl, CallBack callBack) {
 	this->object.get()->addGlobalBind(bindControl, callBack);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addOnHoverBind(BindControl bindControl, CallBack callBack) {
+inline UIOConstructer<T> UIOConstructer<T>::addOnHoverBind(BindControl bindControl, CallBack callBack) {
 	this->object.get()->addOnHoverBind(bindControl, callBack);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addGameWorldBind(BindControl bindControl, CallBack callBack) {
+inline UIOConstructer<T> UIOConstructer<T>::addGameWorldBind(BindControl bindControl, CallBack callBack) {
 	this->object.get()->addGameWorldBind(bindControl, callBack);
-	return *this;
+	return std::move(*this);
 }
 
 //--------------------------------------------------------------------------------
@@ -548,13 +548,13 @@ inline UIOConstructer<UIOHideable> UIOConstructer<T>::hideable(bool focusOnShow)
 //--------------------------------------------------------------------------------
 
 template<>
-inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onRelease(CallBack f) {
+inline UIOConstructer<UIOButton> UIOConstructer<UIOButton>::onRelease(CallBack f) {
 	this->object.get()->setOnRelease(f);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<UIOButton>& UIOConstructer<T>::onRelease(CallBack f) {
+inline UIOConstructer<UIOButton> UIOConstructer<T>::onRelease(CallBack f) {
 	static_assert(0);
 	return UIOConstructer<UIOButton>();
 }
@@ -564,13 +564,13 @@ inline UIOConstructer<UIOButton>& UIOConstructer<T>::onRelease(CallBack f) {
 //--------------------------------------------------------------------------------
 
 template<>
-inline UIOConstructer<UIOButton>& UIOConstructer<UIOButton>::onPress(CallBack f) {
+inline UIOConstructer<UIOButton> UIOConstructer<UIOButton>::onPress(CallBack f) {
 	this->object.get()->setOnPress(f);
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
-inline UIOConstructer<UIOButton>& UIOConstructer<T>::onPress(CallBack f) {
+inline UIOConstructer<UIOButton> UIOConstructer<T>::onPress(CallBack f) {
 	static_assert(0);
 	return UIOConstructer<UIOButton>();
 }
@@ -596,9 +596,9 @@ inline UIOConstructer<T>& UIOConstructer<T>::operator=(UIOConstructer&& other) {
 }
 
 template<class T>
-inline UIOConstructer<T>& UIOConstructer<T>::addBind(std::function<void(UIOBase*)> f) {
+inline UIOConstructer<T> UIOConstructer<T>::addBind(std::function<void(UIOBase*)> f) {
 	f(this->object.get());
-	return *this;
+	return std::move(*this);
 }
 
 template<class T>
