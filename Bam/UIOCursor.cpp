@@ -168,31 +168,13 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
 
-	auto updateFunc = [this](UIOBase* self)
-	{
-		std::vector<PairType> membersManaged;
-
-		std::vector<std::pair<int32_t, Activity*>> members;
-		this->target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
-
-		int32_t i = 0;
-		int32_t index = 0;
-		for (auto [depth, activity] : members) {
-			if (activity->selfHandle == this->target.getHandle()) {
-				index = i;
-			}
-			membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(activity->selfHandle) });
-			i++;
-		}
-
-		static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
-		static_cast<UIOListSelection<PairType>*>(self)->setSelected(index);
-	};
-
 	params.uiState.addNamedUIReplace(
 		"ActivityInfo",
 		[cursorPtr = this, cursor = ManagedReference<UIOBase, UIOCursor>(this->getSelfHandle())]()
 	{
+		UIOTextDisplay* labelName;
+		UIOListSelection<PairType>* list;
+
 		return UIOConstructer<UIOListSelection<PairType>>::makeConstructer(
 			[](PairType const& e)
 		{
@@ -205,6 +187,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				return std::string(e.first, ' ') + "invalid";
 			}
 		})
+			.setPtr(list)
 			.addBindCapture([cursorPtr](UIOBase* self)
 		{
 			std::vector<PairType> membersManaged;
@@ -225,7 +208,26 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 			static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
 			static_cast<UIOListSelection<PairType>*>(self)->setSelected(index);
 		})
-
+			.list(UIO::DIR::DOWN_REVERSE)
+			.addToList(
+				TextConstructer::constructSingleLineTextEdit("")
+				.setPtr(labelName)
+				.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
+				.list(UIO::DIR::LEFT)
+				.addToList(
+					TextConstructer::constructSingleLineDisplayText("test")
+					.button()
+					.onRelease([labelName, list](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			auto name = labelName->text.getLines()[0];
+			name = name.substr(0, name.size() - 1);
+			list->getSelected().value()->second.get()->setLabel(name);
+			list->invalidateView();
+			return BIND::RESULT::CONTINUE;
+		})
+				)
+				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+			)
 			.window("Activity Info",
 					{ 0.65f, -0.9f, 0.95f, 0.0f },
 					UIOWindow::TYPE::MINIMISE |

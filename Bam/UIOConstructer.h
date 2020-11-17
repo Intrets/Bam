@@ -70,7 +70,13 @@ public:
 	[[nodiscard]] UIOConstructer<UIOButton> onRelease(CallBack f);
 	[[nodiscard]] UIOConstructer<UIOButton> onPress(CallBack f);
 
+	[[nodiscard]] UIOConstructer<UIOList> list(UIO::DIR listDir);
+
+	template<class B>
+	[[nodiscard]] UIOConstructer<UIOList> addToList(UIOConstructer<B> e);
+
 	UniqueReference<UIOBase, T> get();
+	T* operator->();
 
 	template<class ...Args>
 	static UIOConstructer<T> makeConstructer(Args&& ...args);
@@ -86,7 +92,7 @@ inline UIOConstructer<T>::UIOConstructer(UniqueReference<UIOBase, T> obj) {
 	this->object = std::move(obj);
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 // pad
 //--------------------------------------------------------------------------------
 
@@ -106,9 +112,9 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::pad(UIOSizeType padding) {
 	return UIOConstructer<UIOPad>(refMan->makeUniqueRef<UIOPad>(std::move(object), padding));
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 // padTop
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 
 template<>
 inline UIOConstructer<UIOPad> UIOConstructer<UIOPad>::padTop(UIOSizeType padding) {
@@ -123,9 +129,9 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padTop(UIOSizeType padding) {
 	return UIOConstructer<UIOPad>(std::move(pad));
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 // padBottom
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 
 template<>
 inline UIOConstructer<UIOPad> UIOConstructer<UIOPad>::padBottom(UIOSizeType padding) {
@@ -140,9 +146,9 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padBottom(UIOSizeType padding) 
 	return UIOConstructer<UIOPad>(std::move(pad));
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 // padLeft
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 
 template<>
 inline UIOConstructer<UIOPad> UIOConstructer<UIOPad>::padLeft(UIOSizeType padding) {
@@ -157,9 +163,9 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padLeft(UIOSizeType padding) {
 	return UIOConstructer<UIOPad>(std::move(pad));
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 // padRight 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 
 template<>
 inline UIOConstructer<UIOPad> UIOConstructer<UIOPad>::padRight(UIOSizeType padding) {
@@ -174,7 +180,7 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padRight(UIOSizeType padding) {
 	return UIOConstructer<UIOPad>(std::move(pad));
 }
 
-//-------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------
 
 template<class T>
 inline UIOConstructer<T> UIOConstructer<T>::addBindCapture(std::function<void(T*)> f) {
@@ -327,7 +333,6 @@ inline UIOConstructer<UIOButton> UIOConstructer<T>::button(bool shrink) {
 template<class T>
 inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, Rectangle size, int32_t types) {
 	const int32_t resizeSliverSize = 7;
-
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
 
@@ -530,7 +535,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		windowPtr->addElement(std::move(cornerBar));
 	}
 
-	return std::move(window);
+	return window;
 }
 
 template<class T>
@@ -575,11 +580,41 @@ inline UIOConstructer<UIOButton> UIOConstructer<T>::onPress(CallBack f) {
 	return UIOConstructer<UIOButton>();
 }
 
+template<class T>
+inline UIOConstructer<UIOList> UIOConstructer<T>::list(UIO::DIR listDir) {
+	auto res = UIOConstructer<UIOList>::makeConstructer(listDir);
+	res->addElement(std::move(this->object));
+	return res;
+}
+
+//--------------------------------------------------------------------------------
+// addToList
+//--------------------------------------------------------------------------------
+
+template<>
+template<class B>
+inline UIOConstructer<UIOList> UIOConstructer<UIOList>::addToList(UIOConstructer<B> e) {
+	(*this)->addElement(e.get());
+	return std::move(*this);
+}
+
+template<class T>
+template<class B>
+inline UIOConstructer<UIOList> UIOConstructer<T>::addToList(UIOConstructer<B> e) {
+	static_assert(0);
+	return UIOConstructer<UIOList>();
+}
+
 //--------------------------------------------------------------------------------
 
 template<class T>
 inline UniqueReference<UIOBase, T> UIOConstructer<T>::get() {
 	return std::move(this->object);
+}
+
+template<class T>
+inline T* UIOConstructer<T>::operator->() {
+	return this->object.get();
 }
 
 template<class T>
