@@ -10,8 +10,9 @@
 
 UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIOList* listPtr;
-	auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE);
-	window.setPtr(listPtr);
+	auto window =
+		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE)
+		.setPtr(listPtr);
 
 	auto uioLua = UIOConstructer<UIOLua>::makeConstructer(ref).get();
 	auto uioLuaPtr = uioLua.get();

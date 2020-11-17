@@ -17,7 +17,8 @@
 
 UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 	UIOList* listPtr;
-	auto list = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN).setPtr(listPtr);
+	auto list = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN)
+		.setPtr(listPtr);
 
 	const ACTIVITY::TYPE activities[] = {
 		ACTIVITY::TYPE::MOVER,
