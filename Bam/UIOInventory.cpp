@@ -6,16 +6,15 @@
 #include "UIOTextDisplay.h"
 #include "UIOConstructer.h"
 #include "UIOTextConstructers.h"
-#include "UIOBinds.h"
 
 Inventory& UIOInventory::getInventory() {
 	return Locator<Inventory>::ref();
 }
 
-UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(10, 10)) {
-	this->icons.reserve(100);
+UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
+	this->icons.reserve(16);
 
-	for (int32_t i = 0; i < 100; i++) {
+	for (int32_t i = 0; i < 16; i++) {
 		UIOTextDisplay* ptr;
 		this->addElement(
 			TextConstructer::constructSingleLineDisplayText(std::to_string(i))
@@ -24,7 +23,7 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(10, 10)) {
 			.button()
 			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			static_cast<UIOInventory*>(self_)->getInventory().click(i);
+			static_cast<UIOInventory*>(self_)->getInventory().clickInventory(i);
 			return BIND::RESULT::CONTINUE;
 		})
 			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
@@ -38,7 +37,7 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(10, 10)) {
 int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	int32_t i = 0;
 	for (auto const& item : this->getInventory().getItems()) {
-		if (i > this->icons.size()) {
+		if (i >= this->icons.size()) {
 			break;
 		}
 		this->icons[i]->setText(item.get()->getName());

@@ -8,6 +8,8 @@
 
 class GameState;
 struct RenderInfo;
+class Saver;
+class Loader;
 
 class Inventory
 {
@@ -16,15 +18,28 @@ private:
 
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> cursor;
 
-	std::vector<UniqueReference<InventoryItem, InventoryItem>> hotbar;
+	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> hotbar;
 
 public:
+	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& getHotbar();
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
 
-	void click(int32_t index);
+	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
+	bool addItemCursor(UniqueReference<InventoryItem, InventoryItem>& item);
+
+	void clickHotbar(int32_t index);
+
+	std::pair<bool, std::optional<Activity*>> clickWorld(GameState& gameState, glm::vec2 pos);
+	void clickInventory(int32_t index);
+	void pickupWorld(GameState& gameState, glm::vec2 pos);
+	void rotateCursorItem(ACTIVITY::ROT rot);
+	void deselectCursor();
 
 	Inventory();
 	~Inventory() = default;
+
+	void save(Saver& saver);
+	void load(Loader& loader);
 };
 

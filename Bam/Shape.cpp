@@ -5,12 +5,14 @@
 #include "BlockIDTextures.h"
 
 void loadShapes() {
+	int32_t i = 0;
 
-	auto set = [](SHAPE::TYPE type, std::string name)
+	auto set = [&i](SHAPE::TYPE type, std::string name)
 	{
 		DataFront<ShapeData>::data[type].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(name + ".dds");
 		DataFront<ShapeData>::names[type] = name;
 		DataFront<ShapeData>::nameMap[name] = type;
+		++i;
 	};
 
 	set(SHAPE::TYPE::BLOCK, "block");
@@ -25,5 +27,7 @@ void loadShapes() {
 	set(SHAPE::TYPE::DETECTOR, "detector_stencil");
 	set(SHAPE::TYPE::INCINERATOR, "incinerator_stencil");
 	set(SHAPE::TYPE::FORWARDER, "forwarder_stencil");
- }
+
+	DataFront<ShapeData>::size = i;
+}
 

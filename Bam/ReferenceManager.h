@@ -41,6 +41,9 @@ class WeakReference : public WeakReferenceBase
 public:
 	T* get() const;
 
+	template<class R>
+	R* getAs() const;
+
 	template<typename N>
 	operator WeakReference<B, N>() const {
 		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
@@ -178,7 +181,7 @@ public:
 template<class B, class T>
 inline T* WeakReference<B, T>::get() const {
 	auto& t = Locator<ReferenceManager<B>>::get()->data;
-	return static_cast<T*>(t[handle].get());
+	return static_cast<T*>(t[this->handle].get());
 }
 
 template<class B, class T>
@@ -401,3 +404,9 @@ inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(ManagedReferenc
 	return *this;
 }
 
+template<class B, class T>
+template<class R>
+inline R* WeakReference<B, T>::getAs() const {
+	auto& t = Locator<ReferenceManager<B>>::get()->data;
+	return static_cast<R*>(t[this->handle].get());
+}

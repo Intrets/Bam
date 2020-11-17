@@ -275,9 +275,6 @@
     <ClCompile Include="UIOFreeSize.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOHotbar.cpp">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClCompile>
     <ClCompile Include="UIOConstrainSize.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
@@ -425,6 +422,9 @@
     <ClCompile Include="InventoryItem.cpp">
       <Filter>Game\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="InventorySerializerHelper.cpp" />
+    <ClCompile Include="UIOConstructItemSpawner.cpp" />
+    <ClCompile Include="UIOHotbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -614,9 +614,6 @@
     <ClInclude Include="UIOFreeSize.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOHotbar.h">
-      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
-    </ClInclude>
     <ClInclude Include="UIOConstrainSize.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
@@ -764,6 +761,9 @@
     <ClInclude Include="InventoryItem.h">
       <Filter>Game\Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="InventorySerializerHelper.h" />
+    <ClInclude Include="UIOConstructItemSpawner.h" />
+    <ClInclude Include="UIOHotbar.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -15,11 +15,15 @@ private:
 
 	CallBackBindResult runFrontBinds(State& state);
 
-	std::unordered_map<std::string, ManagedReference<UIOBase,UIOBase>> namedUIs;
+	std::unordered_map<std::string, ManagedReference<UIOBase, UIOBase>> namedUIs;
 
 public:
 	std::list<UniqueReference<UIOBase, UIOBase>> UIs;
-	std::vector<UniqueReference<UIOBase,UIOBase>> UIsBuffer;
+
+	std::vector<UniqueReference<UIOBase, UIOBase>> UIsBuffer;
+	std::unordered_map<std::string, UniqueReference<UIOBase, UIOBase>> namedUIsBuffer;
+
+	std::vector<UniqueReference<UIOBase, UIOBase>> closedBuffer;
 
 	glm::vec2 getCursorPositionWorld();
 	glm::vec2 getCursorPositionScreen();
@@ -37,7 +41,10 @@ public:
 	// Returns if new UI is created or previous one is brought to the front
 	// true - new object created
 	// false - already exists and brought to the front
-	bool addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
+	bool addNamedUI(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
+	void addNamedUIReplace(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
+
+	void closeNamedUI(std::string const& name);
 
 	void reset();
 	bool shouldReset();

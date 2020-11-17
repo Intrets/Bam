@@ -29,6 +29,7 @@ void loadBlocks() {
 		}
 
 		DataFront<BlockData>::data[i].name = pairs["name"];
+		DataFront<BlockData>::names[i] = pairs["name"];
 		DataFront<BlockData>::data[i].solid = pairs["solid"] == "true";
 		DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
 
@@ -45,6 +46,7 @@ void loadBlocks() {
 		DataFront<BlockData>::nameMap[pairs["name"]] = i;
 
 		i++;
+		DataFront<BlockData>::size = i;
 	}
 }
 
@@ -107,8 +109,16 @@ ACTIVITY::DIR ShapedBlock::getRotation() const {
 	return this->rotation;
 }
 
+std::string ShapedBlock::getString() {
+	return this->block.getName() + " " + this->shape.getName();
+}
+
 void ShapedBlock::rotate(ACTIVITY::ROT rot) {
 	this->rotation = ACTIVITY::ROTATE(rot, this->rotation);
+}
+
+void ShapedBlock::setOrientation(ACTIVITY::DIR dir) {
+	this->rotation = dir;
 }
 
 bool ShapedBlock::isSolid() const {
@@ -117,6 +127,10 @@ bool ShapedBlock::isSolid() const {
 
 bool ShapedBlock::isNonAir() const {
 	return this->block.getID() != 0;
+}
+
+bool ShapedBlock::operator==(ShapedBlock const& other) const {
+	return this->block.getID() == other.block.getID() && this->shape.getID() == other.shape.getID();
 }
 
 ShapedBlock::ShapedBlock(std::string name) : block(name) {
@@ -129,6 +143,12 @@ ShapedBlock::ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR dir
 }
 
 ShapedBlock::ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
+}
+
+ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, ACTIVITY::DIR rot) : block(blockID), rotation(rot) {
+}
+
+ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot) : block(blockID), shape(shapeID), rotation(rot) {
 }
 
 bool ShapedBlock::load(Loader& loader) {

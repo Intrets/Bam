@@ -241,7 +241,6 @@ Handle Activity::impl_getRootHandle() const {
 	else {
 		return this->selfHandle;
 	}
-
 }
 
 std::string Activity::getTypeName() {

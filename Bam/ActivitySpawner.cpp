@@ -13,7 +13,7 @@
 
 const char* initialLuaScript =
 R"rawstring(
--- send(index, ...) 
+-- send(index, ...)
 -- move(index, int32_t)
 -- activate(index, int32_t)
 

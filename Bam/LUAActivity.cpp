@@ -264,7 +264,7 @@ void LuaActivity::updateLabels() {
 					this->labelLists.emplace_back(std::initializer_list<int32_t>{member->getHandle()});
 
 					try {
-						state[member->getLabel()] = index;
+						state[memberLabel] = index;
 					}
 					catch (const sol::error& e) {
 						Locator<Log>::ref().putLine(e.what());

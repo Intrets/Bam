@@ -69,15 +69,22 @@ public:
 	int32_t getStencil() const;
 	ACTIVITY::DIR getRotation() const;
 
+	std::string getString();
+
 	void rotate(ACTIVITY::ROT rot);
+	void setOrientation(ACTIVITY::DIR dir);
 
 	bool isSolid() const;
 	bool isNonAir() const;
+
+	bool operator==(ShapedBlock const& other) const;
 
 	ShapedBlock(std::string name);
 	ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rot);
 	ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR rot);
 	ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot);
+	ShapedBlock(DataFront<BlockData> blockID, ACTIVITY::DIR rot);
+	ShapedBlock(DataFront<BlockData> blockID, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot);
 	ShapedBlock() = default;
 	~ShapedBlock() = default;
 

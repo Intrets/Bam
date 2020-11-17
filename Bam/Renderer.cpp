@@ -38,6 +38,8 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 }
 
 void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
+	bwo::FrameBuffer target{ window };
+
 	Locator<Timer>::ref().newTiming("Render");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -46,21 +48,21 @@ void Renderer::render(GLFWwindow* window, RenderInfo const& renderInfo) {
 
 	this->blockRenderer.render(
 		renderInfo.staticWorldRenderInfo.blockRenderInfosBack,
-		0,
+		target,
 		0.0f,
 		renderInfo.cameraInfo
 	);
 
 	this->blockRenderer.render(
 		renderInfo.staticWorldRenderInfo.blockRenderInfos,
-		0,
+		target,
 		1.0f,
 		renderInfo.cameraInfo
 	);
 
 	this->blockRenderer.render(
 		renderInfo.staticWorldRenderInfo.blockRenderInfosFront,
-		0,
+		target,
 		2.0f,
 		renderInfo.cameraInfo
 	);

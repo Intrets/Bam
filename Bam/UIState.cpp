@@ -1,7 +1,6 @@
 #include "common.h"
 
 #include "UIState.h"
-#include "UIOHotbar.h"
 #include "UIOConstrainSize.h"
 #include "UIOWindow.h"
 #include "UIOFreeSize.h"
@@ -32,7 +31,11 @@
 #include "Forwarder.h"
 #include "UIOInventory.h"
 #include "UIOCursor.h"
+#include "UIOHotbar.h"
+#include "Inventory.h"
 #include <fstream>
+#include "ActivitySpawner.h"
+#include "UIOConstructItemSpawner.h"
 
 #include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
@@ -87,25 +90,29 @@ void UIState::runUIBinds(State& state) {
 
 	state.controlState.writeConsumedBuffer();
 
-	for (auto it = ++this->UIs.begin(); it != this->UIs.end();) {
-		auto& UI = *it;
-		CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
+	if (this->UIs.size() > 1) {
+		auto it = this->UIs.begin(), last = this->UIs.end();
+		++it;
+		for (; it != last;) {
+			auto& UI = *it;
+			CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
 
-		if (res & BIND::RESULT::CLOSE) {
-			it = this->UIs.erase(it);
+			if (res & BIND::RESULT::CLOSE) {
+				it = this->UIs.erase(it);
+			}
+			else if (res & BIND::RESULT::FOCUS) {
+				auto temp = std::move(UI);
+				it = this->UIs.erase(it);
+				this->UIs.push_front(std::move(temp));
+			}
+			else {
+				it++;
+			}
+			if (res & BIND::RESULT::STOP) {
+				return;
+			}
+			state.controlState.writeConsumedBuffer();
 		}
-		else if (res & BIND::RESULT::FOCUS) {
-			auto temp = std::move(UI);
-			it = this->UIs.erase(it);
-			this->UIs.push_front(std::move(temp));
-		}
-		else {
-			it++;
-		}
-		if (res & BIND::RESULT::STOP) {
-			return;
-		}
-		state.controlState.writeConsumedBuffer();
 	}
 
 	if (!state.controlState.worldBindsBlocked()) {
@@ -137,11 +144,29 @@ void UIState::run(State& state) {
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
 	this->runUIBinds(state);
+
+	for (auto it = this->namedUIs.begin(), last = this->namedUIs.end(); it != last;) {
+		if (!it->second.isValid()) {
+			it = this->namedUIs.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+
 	for (auto& UI : this->UIsBuffer) {
 		UI.get()->updateSize(r);
 		this->UIs.push_front(std::move(UI));
 	}
 	this->UIsBuffer.clear();
+
+	for (auto& [name, ui] : this->namedUIsBuffer) {
+		this->namedUIs.emplace(std::make_pair(name, ui.handle));
+		this->UIs.push_front(std::move(ui));
+	}
+	this->namedUIsBuffer.clear();
+
+	this->closedBuffer.clear();
 }
 
 bool UIState::updateSize(GLFWwindow* window) {
@@ -194,7 +219,7 @@ void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
 	this->UIsBuffer.push_back(std::move(ref));
 }
 
-bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
+bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
@@ -209,11 +234,42 @@ bool UIState::addNamedUI(std::string name, std::function<UniqueReference<UIOBase
 		}
 		return false;
 	}
-	else {
-		auto ui = f();
-		this->namedUIs[name] = ManagedReference<UIOBase, UIOBase>(ui);
-		this->addUI(std::move(ui));
-		return true;
+
+	auto namedUIBuffered = this->namedUIsBuffer.find(name);
+
+	if (namedUIBuffered != this->namedUIsBuffer.end()) {
+		return false;
+	}
+
+	this->namedUIsBuffer[name] = f();
+	return true;
+}
+
+void UIState::addNamedUIReplace(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
+	this->closeNamedUI(name);
+
+	this->namedUIsBuffer[name] = f();
+}
+
+void UIState::closeNamedUI(std::string const& name) {
+	auto namedUI = this->namedUIs.find(name);
+
+	if (namedUI != this->namedUIs.end()) {
+		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+			if (it->handle == namedUI->second.getHandle()) {
+				this->closedBuffer.push_back(std::move(*it));
+				this->UIs.erase(it);
+				break;
+			}
+		}
+		this->namedUIs.erase(namedUI);
+	}
+
+	auto namedUIBuffered = this->namedUIsBuffer.find(name);
+
+	if (namedUIBuffered != this->namedUIsBuffer.end()) {
+		this->closedBuffer.push_back(std::move(namedUIBuffered->second));
+		this->namedUIsBuffer.erase(namedUIBuffered);
 	}
 }
 
@@ -231,9 +287,7 @@ void UIState::init() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-	UIOActivityInterface* interfacePtr;
-	UIOHideable* interfaceHideablePtr;
-
+	// Inventory
 	{
 		this->UIs.push_back(
 			UIOConstructer<UIOInventory>::makeConstructer()
@@ -245,6 +299,8 @@ void UIState::init() {
 			.get()
 		);
 	}
+
+	// Cursor renderer
 	{
 		this->UIs.push_back(
 			UIOConstructer<UIOCursor>::makeConstructer()
@@ -252,119 +308,14 @@ void UIState::init() {
 		);
 	}
 
-	// Interface
-	{
-		this->UIs.push_back(
-			CONSTRUCTER::constructActivityInteractor(interfacePtr)
-			.window("Interactor", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE)
-			.hideable()
-			.setPtr(interfaceHideablePtr)
-			.get()
-		);
-	}
-
 	// Hotbar
 	{
-		UIOHotbar* hotbarPtr;
 		auto hotbar = UIOConstructer<UIOHotbar>::makeConstructer()
-			.setPtr(hotbarPtr)
+			.background(COLORS::UI::WINDOWBACKGROUND)
 			.constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f })
 			.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
 			.align(UIO::ALIGNMENT::BOTTOM)
 			.get();
-
-		hotbarPtr->setTool(0, "Piston", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PISTON);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(1, "Platform", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::PLATFORM);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(2, "Crane", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::RAILCRANE);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(3, "LUA", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::LUA);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(4, "Grabber", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::GRABBER);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(5, "Marker Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("marker"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(6, "Stone Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("cobblestone"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(7, "Delete Block", [](UIOCallBackParams& params)
-		{
-			params.gameState.staticWorld.setBlockForce(
-				ShapedBlock("air"),
-				params.uiState.getCursorPositionWorld()
-			);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(8, "Reader", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::READER);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(9, "Detector", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::DETECTOR);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(10, "Incinerator", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::INCINERATOR);
-			return BIND::RESULT::CONTINUE;
-		});
-
-		hotbarPtr->setTool(11, "Forwarder", [interfacePtr, interfaceHideablePtr](UIOCallBackParams& params)
-		{
-			interfaceHideablePtr->show();
-			interfacePtr->spawnHover(params.gameState, params.uiState.getCursorPositionWorld(), ACTIVITY::TYPE::FORWARDER);
-			return BIND::RESULT::CONTINUE;
-		});
 
 		this->UIs.push_back(std::move(hotbar));
 	}
@@ -512,6 +463,32 @@ void UIState::init() {
 			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
 			listPtr->addElement(std::move(a));
+		}
+		{
+			listPtr->addElement(
+				TextConstructer::constructSingleLineDisplayText("Spawn Items")
+				.alignCenter()
+				.button()
+				.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				params.uiState.addNamedUI("Item Spawner", []()
+				{
+					return CONSTRUCTER::constructItemSpawner()
+						.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , -0.2f } },
+								UIOWindow::TYPE::MINIMISE |
+								UIOWindow::TYPE::MOVE |
+								UIOWindow::TYPE::CLOSE |
+								UIOWindow::TYPE::RESIZE)
+						.hideable()
+						.get();
+				});
+
+				return BIND::RESULT::CONTINUE;
+			})
+				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+				.constrainHeight({ UIO::SIZETYPE::FH ,1.2f })
+				.get()
+				);
 		}
 		{
 			listPtr->addElement(

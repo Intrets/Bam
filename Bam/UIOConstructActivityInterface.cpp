@@ -15,8 +15,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructActivityInteractor(UIOActivityInte
 	// Resulting outermost container
 	UIOList* outerListPtr;
 
-	auto outerList = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE);
-	outerList.setPtr(outerListPtr);
+	auto outerList =
+		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE)
+		.setPtr(outerListPtr);
 
 	// Hidden functionality
 	outerListPtr->addElement(

@@ -15,6 +15,7 @@ private:
 
 	std::vector<T> list;
 
+	bool validView = true;
 	std::function<std::string(T const&)> display;
 
 public:
@@ -25,6 +26,8 @@ public:
 	std::optional<T*> getSelected();
 	void setList(std::vector<T>& l);
 	std::vector<T> const& getList();
+
+	void invalidateView();
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
@@ -49,15 +52,17 @@ std::optional<T*> UIOListSelection<T>::getSelected() {
 template<class T>
 void UIOListSelection<T>::setList(std::vector<T>& l) {
 	this->list = l;
-	this->textDisplay->text.empty();
-	for (const auto& e : this->list) {
-		this->textDisplay->text.addLine(this->display(e));
-	}
+	this->validView = false;
 }
 
 template<class T>
 inline std::vector<T> const& UIOListSelection<T>::getList() {
 	return this->list;
+}
+
+template<class T>
+inline void UIOListSelection<T>::invalidateView() {
+	this->validView = false;
 }
 
 template<class T>
@@ -92,6 +97,14 @@ ScreenRectangle UIOListSelection<T>::updateSize(ScreenRectangle newScreenRectang
 
 template<class T>
 inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	if (!this->validView) {
+		this->textDisplay->text.empty();
+		for (const auto& e : this->list) {
+			this->textDisplay->text.addLine(this->display(e));
+		}
+		this->validView = true;
+	}
+
 	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
 
 	if (auto const& maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen()) {

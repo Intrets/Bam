@@ -23,9 +23,8 @@ BlockRenderer::BlockRenderer() :
 		1.0f,  1.0f,
 	};
 
-	glGenBuffers(1, &this->quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                   // attribute
 		2,                   // size
@@ -36,10 +35,7 @@ BlockRenderer::BlockRenderer() :
 	);
 	glVertexAttribDivisor(0, 0);
 
-	glGenBuffers(1, &this->blockInfos.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->blockInfos.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(BlockRenderInfo) * BATCH_DRAW_SIZE, NULL, GL_DYNAMIC_DRAW);
-
+	this->blockInfos.bind(GL_ARRAY_BUFFER);
 
 	constexpr int32_t stride = sizeof(BlockRenderInfo);
 	size_t offset = 0;
@@ -90,7 +86,11 @@ BlockRenderer::BlockRenderer() :
 	this->VAO.unbind();
 }
 
-void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, GLuint target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
+void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, bwo::FrameBuffer& target, std::optional<float> depth_, CameraInfo const& cameraInfo) {
+	if (info.size() == 0) {
+		return;
+	}
+
 	this->VAO.bind();
 	this->program.use();
 
@@ -109,32 +109,17 @@ void BlockRenderer::render(std::vector<BlockRenderInfo> const& info, GLuint targ
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, target);
-
 	this->texture.set(Locator<BlockIDTextures>::ref().getTextureArrayID());
 	this->VP.set(cameraInfo.VP);
+	this->blockInfos.set(info);
 
-	glm::ivec4 viewport{ 0, 0, cameraInfo.x, cameraInfo.y };
-	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+	target.draw(
+		{ cameraInfo.x, cameraInfo.y },
+		{ 0,0,cameraInfo.x, cameraInfo.y },
+		[&]()
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(info.size()));
+	});
 
-	int32_t remaining = static_cast<int32_t>(info.size());
-	int32_t start = 0;
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->blockInfos.ID);
-
-	while (remaining > 0) {
-		int32_t size = glm::min(remaining, BATCH_DRAW_SIZE);
-
-		constexpr int32_t byteSize = sizeof(BlockRenderInfo);
-
-		glBufferSubData(GL_ARRAY_BUFFER, 0, byteSize * size, &info[start]);
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, size);
-
-		start += size;
-		remaining -= size;
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	this->VAO.unbind();
 }

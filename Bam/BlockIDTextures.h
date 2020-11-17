@@ -7,9 +7,8 @@
 class BlockIDTextures
 {
 private:
-	bwo::Texture textureArray;
+	bwo::Texture2DArray textureArray;
 
-	int32_t maxArrayLayers;
 	int32_t arrayLayers = 0;
 
 	std::unordered_map<std::string, int32_t> textures;

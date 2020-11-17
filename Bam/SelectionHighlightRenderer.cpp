@@ -19,9 +19,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 		1.0f,  1.0f,
 	};
 
-	glGenBuffers(1, &this->quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                  // attribute
 		2,                  // size
@@ -32,9 +30,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(0, 0);
 
-	glGenBuffers(1, &this->offset.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
+	this->offset.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		1,                                // attribute
 		2,                                // size
@@ -45,9 +41,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(1, 1);
 
-	glGenBuffers(1, &this->scale.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->scale.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
+	this->scale.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		2,                                // attribute
 		2,                                // size
@@ -58,9 +52,7 @@ SelectionHighlightRenderer::SelectionHighlightRenderer() :
 	);
 	glVertexAttribDivisor(2, 1);
 
-	glGenBuffers(1, &this->color.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->color.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * MAX_STATIC_DRAW, NULL, GL_DYNAMIC_DRAW);
+	this->color.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		3,                                // attribute
 		4,                                // size
@@ -97,14 +89,9 @@ void SelectionHighlightRenderer::render(RenderInfo const& info, GLuint target) {
 
 	int32_t drawCount = glm::min(MAX_STATIC_DRAW, static_cast<int32_t>(info.selectionRenderInfo.offsets.size()));
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->offset.ID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.selectionRenderInfo.offsets)::value_type) * drawCount, &info.selectionRenderInfo.offsets[0]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->scale.ID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(decltype(info.selectionRenderInfo.scales)::value_type) * drawCount, &info.selectionRenderInfo.scales[0]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->color.ID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * drawCount, &info.selectionRenderInfo.colors[0]);
+	this->offset.set(drawCount, info.selectionRenderInfo.offsets);
+	this->scale.set(drawCount, info.selectionRenderInfo.scales);
+	this->color.set(drawCount, info.selectionRenderInfo.colors);
 
 	glDrawArraysInstanced(
 		GL_TRIANGLES,

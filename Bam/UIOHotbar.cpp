@@ -1,92 +1,53 @@
 #include "common.h"
 
 #include "UIOHotbar.h"
-#include "UIOPad.h"
-#include "UIOButton.h"
-#include "GameState.h"
-#include "RenderInfo.h"
-#include "UIOShell.h"
-#include "ControlState.h"
-#include "UIOCallBackParams.h"
-#include "UIOGrid.h"
-#include "UIOTextDisplay.h"
 #include "UIOTextConstructers.h"
 #include "UIOConstructer.h"
+#include "UIOTextDisplay.h"
+#include "Inventory.h"
+#include "InventoryItem.h"
 
-UIOHotbar::UIOHotbar(Handle self) {
-	this->selfHandle = self;
+Inventory& UIOHotbar::getInventory() {
+	return Locator<Inventory>::ref();
+}
 
-	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
+UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
+	this->icons.reserve(10);
 
-	auto tile = refMan->makeUniqueRef<UIOGrid>(glm::ivec2(10, 2));
-
-	for (int32_t i = 0; i < 20; i++) {
-		tile.get()->addElement(
+	for (int32_t i = 0; i < 10; i++) {
+		UIOTextDisplay* ptr;
+		this->addElement(
 			TextConstructer::constructSingleLineDisplayText("")
-			.setPtr(this->toolTexts[i])
+			.setPtr(ptr)
 			.alignCenter()
 			.button()
-			.onPress([this, i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			this->activateTool(i, params);
+			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		})
-			.pad({ UIO::SIZETYPE::PX, 2 })
+			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
 			.get()
 			);
+		this->icons.push_back(ptr);
 	}
-
-	for (auto [bind, i] : {
-		std::make_tuple(CONTROL::KEY::TOOL_1, 0),
-		std::make_tuple(CONTROL::KEY::TOOL_2, 1),
-		std::make_tuple(CONTROL::KEY::TOOL_3, 2),
-		std::make_tuple(CONTROL::KEY::TOOL_4, 3),
-		std::make_tuple(CONTROL::KEY::TOOL_5, 4),
-		std::make_tuple(CONTROL::KEY::TOOL_6, 5),
-		std::make_tuple(CONTROL::KEY::TOOL_7, 6),
-		std::make_tuple(CONTROL::KEY::TOOL_8, 7),
-		std::make_tuple(CONTROL::KEY::TOOL_9, 8),
-		std::make_tuple(CONTROL::KEY::TOOL_0, 9) }) {
-		this->addGlobalBind({ bind }, [this, i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			this->activateTool(i, params);
-			return BIND::RESULT::CONTINUE;
-		});
-	}
-
-	addElement(std::move(tile));
-}
-
-void UIOHotbar::activateTool(int32_t slot, UIOCallBackParams& params) {
-	if (indexInArray(slot, this->tools)) {
-		if (this->tools[slot].has_value()) {
-			this->tools[slot].value()(params);
-		}
-	}
-}
-
-ScreenRectangle UIOHotbar::updateSize(ScreenRectangle newScreenRectangle) {
-	this->screenRectangle = newScreenRectangle;
-	for (auto& element : this->elements) {
-		element.get()->updateSize(newScreenRectangle);
-	}
-	return this->screenRectangle;
 }
 
 int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
-	renderInfo.uiRenderInfo.addRectangle(
-		this->getScreenRectangle().getTopRight(),
-		this->getScreenRectangle().getBottomLeft(),
-		COLORS::UI::WINDOWBACKGROUND,
-		depth++
-	);
-	return depth;
+	int32_t i = 0;
+	for (auto const& item : this->getInventory().getHotbar()) {
+		if (i >= this->icons.size()) {
+			break;
+		}
+		if (item.has_value()) {
+			this->icons[i]->setText(item.value().get()->getName());
+		}
+		else {
+			this->icons[i]->setText("");
+		}
+		i++;
+	}
+
+	return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);
 }
 
-void UIOHotbar::setTool(int32_t slot, std::string name, std::function<void(UIOCallBackParams& params)> f) {
-	if (indexInArray(slot, this->tools)) {
-		this->tools[slot] = f;
-		this->toolTexts[slot]->text.setString(name);
-	}
-}

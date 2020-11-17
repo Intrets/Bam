@@ -14,7 +14,7 @@
 #include "Log.h"
 
 // TODO: keep runtime option, get value from config/command line argument
-bool OPENGL_DEBUG  = true;
+bool OPENGL_DEBUG = true;
 
 GLFWwindow* window;
 
@@ -139,7 +139,7 @@ static int initGLFW() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
 														 /* Initialize the library */
 	if (!glfwInit()) {
 		return -1;
@@ -180,6 +180,17 @@ static int initGLFW() {
 	if (OPENGL_DEBUG && (GLEW_ARB_debug_output || GLEW_KHR_debug)) {
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(MessageCallback, 0);
+
+		GLuint disabledMessageIds = 131185;
+
+		glDebugMessageControl(
+			GL_DEBUG_SOURCE_API,
+			GL_DEBUG_TYPE_OTHER,
+			GL_DONT_CARE,
+			1,
+			&disabledMessageIds,
+			GL_FALSE
+		);
 	}
 
 	return 1;

@@ -2,6 +2,94 @@
 
 namespace bwo
 {
+	enum class BufferHint
+	{
+		STREAM_DRAW = GL_STREAM_DRAW,
+		STREAM_READ = GL_STREAM_READ,
+		STREAM_COPY = GL_STREAM_COPY,
+		STATIC_DRAW = GL_STATIC_DRAW,
+		STATIC_READ = GL_STATIC_READ,
+		STATIC_COPY = GL_STATIC_COPY,
+		DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
+		DYNAMIC_READ = GL_DYNAMIC_READ,
+		DYNAMIC_COPY = GL_DYNAMIC_COPY,
+	};
+
+	class Texture
+	{
+	public:
+		GLuint ID;
+		glm::ivec2 size;
+
+		Texture() = default;
+		Texture(GLuint ID_) : ID(ID_) {
+		};
+		~Texture();
+
+		NOCOPYMOVE(Texture);
+	};
+
+	class Texture2DArray
+	{
+	public:
+		GLuint ID;
+		glm::ivec3 size;
+
+		Texture2DArray(GLuint handle);
+		Texture2DArray(
+			glm::ivec3 size,
+			GLint level,
+			GLenum internalFormat,
+			GLenum magFilter, GLenum minFilter, GLenum wrapS, GLenum wrapT,
+			GLint border,
+			GLenum pixelFormat,
+			GLenum type,
+			void const* pixels
+		);
+
+		~Texture2DArray();
+
+		Texture2DArray(Texture2DArray&& other);
+		Texture2DArray& operator=(Texture2DArray&& other);
+
+		NOCOPY(Texture2DArray);
+	};
+
+	class Texture2D
+	{
+	public:
+		GLuint ID;
+		glm::ivec2 size;
+
+		Texture2D(GLuint handle);
+		Texture2D(
+			glm::ivec2 size,
+			GLint level,
+			GLenum internalFormat,
+			GLenum magFilter, GLenum minFilter, GLenum wrapS, GLenum wrapT,
+			GLint border,
+			GLenum pixelFormat,
+			GLenum type,
+			void const* pixels
+		);
+
+		~Texture2D();
+
+		Texture2D(Texture2D&& other);
+		Texture2D& operator=(Texture2D&& other);
+
+		NOCOPY(Texture2D);
+	};
+
+	namespace Texture2DHelper
+	{
+		Texture2D makeNoFiltering(glm::ivec2 size);
+	};
+
+	namespace Texture2DArrayHelper{
+		Texture2DArray makeLinearFiltering(glm::ivec3 size);
+	}
+
 	class VertexArrayObject
 	{
 	private:
@@ -14,8 +102,12 @@ namespace bwo
 				glEnableVertexAttribArray(i);
 			}
 		};
-		void bind() { glBindVertexArray(ID); };
-		void unbind() { glBindVertexArray(0); };
+		void bind() {
+			glBindVertexArray(ID);
+		};
+		void unbind() {
+			glBindVertexArray(0);
+		};
 
 		VertexArrayObject() = default;
 		~VertexArrayObject();
@@ -23,28 +115,45 @@ namespace bwo
 		NOCOPYMOVE(VertexArrayObject);
 	};
 
-	class Buffer
+	class FrameBuffer
 	{
 	public:
 		GLuint ID;
+		glm::ivec2 size;
 
-		Buffer() = default;
-		Buffer(GLuint ID_) : ID(ID_) {};
-		~Buffer();
+		FrameBuffer(GLFWwindow* window);
+		FrameBuffer();
+		~FrameBuffer();
 
-		NOCOPYMOVE(Buffer);
+		void bindTexture(GLenum attachment, bwo::Texture2D const& texture, GLint mipmap);
+		void bindTextureLayer(GLenum attachment, bwo::Texture2DArray const& texture, int32_t mipmap, int32_t layer);
+
+		void draw(glm::ivec2 size_, glm::ivec4 viewport, std::function<void()> f);
+
+		NOCOPYMOVE(FrameBuffer);
 	};
 
-	class Texture
+	template<class T>
+	class ArrayBuffer
 	{
+	public:
+
+	private:
+		GLenum usageHint;
+
 	public:
 		GLuint ID;
 
-		Texture() = default;
-		Texture(GLuint ID_) : ID(ID_) {};
-		~Texture();
+		ArrayBuffer(BufferHint hint);
+		~ArrayBuffer();
 
-		NOCOPYMOVE(Texture);
+		void set(std::vector<T> const& data);
+		void set(uint32_t size, std::vector<T> const& data);
+		void setRaw(uint32_t size, void const* data);
+
+		void bind(GLenum location);
+
+		NOCOPYMOVE(ArrayBuffer);
 	};
 
 	class Program
@@ -68,7 +177,8 @@ namespace bwo
 		void use();
 
 		Program() = default;
-		Program(GLuint ID_) : ID(ID_) {};
+		Program(GLuint ID_) : ID(ID_) {
+		};
 		~Program();
 
 		NOCOPYMOVE(Program);
@@ -122,6 +232,7 @@ namespace bwo
 
 	public:
 		void set(GLuint texture);
+		void set(bwo::Texture2D const& texture);
 
 		UniformTexture2D() = default;
 		UniformTexture2D(std::string name, Program const& program, int32_t unit);
@@ -193,4 +304,35 @@ namespace bwo
 		Uniform1i(std::string name, Program const& program);
 		~Uniform1i() = default;
 	};
+
+	template<class T>
+	inline ArrayBuffer<T>::ArrayBuffer(BufferHint hint) {
+		glGenBuffers(1, &this->ID);
+		this->usageHint = static_cast<GLenum>(hint);
+	}
+
+	template<class T>
+	inline ArrayBuffer<T>::~ArrayBuffer() {
+		glDeleteBuffers(1, &this->ID);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::set(std::vector<T> const& data) {
+		this->setRaw(static_cast<uint32_t>(sizeof(T) * data.size()), &data[0]);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::set(uint32_t size, std::vector<T> const& data) {
+		this->setRaw(static_cast<uint32_t>(sizeof(T) * size), &data[0]);
+	}
+
+	template<class T>
+	inline void ArrayBuffer<T>::setRaw(uint32_t size, void const* data) {
+		glBindBuffer(GL_ARRAY_BUFFER, this->ID);
+		glBufferData(GL_ARRAY_BUFFER, size, data, this->usageHint);
+	}
+	template<class T>
+	inline void ArrayBuffer<T>::bind(GLenum location) {
+		glBindBuffer(location, this->ID);
+	}
 }

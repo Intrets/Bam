@@ -109,6 +109,13 @@ inline bool Saver::store(RAILCRANE::DIR t) {
 }
 
 template<>
+inline bool Saver::store(INVENTORYITEM::TYPE t) {
+	int32_t s = static_cast<int32_t>(t);
+	store(s);
+	return true;
+}
+
+template<>
 inline bool Saver::store(std::string t) {
 	return storeString(t);
 }

@@ -1,5 +1,14 @@
 #pragma once
 
+namespace INVENTORYITEM
+{
+	enum class TYPE
+	{
+		BLOCK,
+		ACTIVITY,
+	};
+}
+
 namespace SHAPE
 {
 	enum TYPE
@@ -68,6 +77,10 @@ namespace ACTIVITY
 		"forwarder",
 		"_MAX_SHOULD_NOT_SEE_THIS",
 	};
+
+	inline std::string GET_TYPE_NAME(TYPE type) {
+		return TYPE_NAMES[static_cast<rsize_t>(type)];
+	}
 
 	enum DIR
 	{

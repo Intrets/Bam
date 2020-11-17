@@ -4,6 +4,10 @@
 #include "GLEnableWrapper.h"
 
 void BlitRenderer::render(std::vector<glm::vec4> const& uv, std::vector<glm::vec4> const& world, GLuint target, glm::ivec4 viewport, GLuint texture, std::optional<float> depth_, bool flipUVvertical, glm::vec2 offset_, std::optional<glm::vec4> maybeColor) {
+	if (uv.size() == 0) {
+		return;
+	}
+
 	this->VAO.bind();
 	this->program.use();
 
@@ -43,23 +47,10 @@ void BlitRenderer::render(std::vector<glm::vec4> const& uv, std::vector<glm::vec
 
 	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 
-	int32_t remaining = static_cast<int32_t>(uv.size());
-	int32_t start = 0;
+	this->UVSource.set(uv);
+	this->worldTarget.set(world);
 
-	while (remaining > 0) {
-		int32_t size = glm::min(remaining, MAX_BATCH_SIZE);
-
-		glBindBuffer(GL_ARRAY_BUFFER, this->UVSource.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * size, &uv[start]);
-
-		glBindBuffer(GL_ARRAY_BUFFER, this->worldTarget.ID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * size, &world[start]);
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, size);
-
-		start += size;
-		remaining -= size;
-	}
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(uv.size()));
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	this->VAO.unbind();
@@ -89,9 +80,7 @@ BlitRenderer::BlitRenderer() :
 		1.0f,  1.0f,
 	};
 
-	glGenBuffers(1, &this->quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                  // attribute
 		2,                  // size
@@ -102,9 +91,7 @@ BlitRenderer::BlitRenderer() :
 	);
 	glVertexAttribDivisor(0, 0);
 
-	glGenBuffers(1, &this->UVSource.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->UVSource.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * MAX_BATCH_SIZE, NULL, GL_DYNAMIC_DRAW);
+	this->UVSource.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		1,                                // attribute
 		4,                                // size
@@ -115,9 +102,7 @@ BlitRenderer::BlitRenderer() :
 	);
 	glVertexAttribDivisor(1, 1);
 
-	glGenBuffers(1, &this->worldTarget.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, this->worldTarget.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * MAX_BATCH_SIZE, NULL, GL_DYNAMIC_DRAW);
+	this->worldTarget.bind(GL_ARRAY_BUFFER);
 	glVertexAttribPointer(
 		2,                                // attribute
 		4,                                // size

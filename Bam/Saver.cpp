@@ -6,6 +6,9 @@
 #include "StaticWorldChunk.h"
 #include "GameState.h"
 #include "ActivitySaverHelper.h"
+#include "InventoryItem.h"
+#include "InventorySerializerHelper.h"
+#include "Inventory.h"
 
 bool Saver::storeString(std::string s) {
 	size_t ss = s.size();
@@ -15,8 +18,19 @@ bool Saver::storeString(std::string s) {
 }
 
 bool Saver::saveGame() {
-	auto manager = Locator<ReferenceManager<Activity>>::get();
-	save(*this, *manager);
+	{
+		auto manager = Locator<ReferenceManager<Activity>>::get();
+		save(*this, *manager);
+	}
+
+	{
+		auto manager = Locator<ReferenceManager<InventoryItem>>::get();
+		INVENTORYSERIALIZER::save(*this, *manager);
+	}
+
+	{
+		Locator<Inventory>::ref().save(*this);
+	}
 
 	this->gameStateRef.save(*this);
 	return true;

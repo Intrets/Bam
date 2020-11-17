@@ -14,6 +14,10 @@ GLuint PathManager::LoadTextureP(std::string name) {
 	return loadTexture(this->paths[RESOURCE_PATH::GRAPHICS] + name);
 }
 
+bwo::Texture2D PathManager::LoadTexture2DP(std::string name) {
+	return load2DTexture(this->paths[RESOURCE_PATH::GRAPHICS] + name);
+}
+
 GLuint PathManager::LoadShadersP(std::string vertex, std::string fragment) {
 	std::string fullPathVertex = this->paths[RESOURCE_PATH::SHADERS] + vertex;
 	std::string fullPathFragment = this->paths[RESOURCE_PATH::SHADERS] + fragment;

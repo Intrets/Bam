@@ -2,51 +2,38 @@
 
 #include "PassThroughRenderer.h"
 
-void PassThroughRenderer::render2DArray(GLuint arrayTextureTarget, int32_t layer, int32_t mipmap, int32_t x1, int32_t y1, int32_t x2, int32_t y2, GLuint textureSource) {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
+void PassThroughRenderer::render2DArray(bwo::Texture2DArray& target, int32_t layer, int32_t mipmap, bwo::Texture2D& source) {
 	program.use();
 	VAO.bind();
-	texture.set(textureSource);
-	glViewport(x1, y1, x2, y2);
-	glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, arrayTextureTarget, mipmap, layer);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	VAO.unbind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
+	texture.set(source);
 
-void PassThroughRenderer::render2D(GLuint textureTarget, int32_t mipmap, int32_t x1, int32_t y1, int32_t x2, int32_t y2, GLuint textureSource) {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
-	program.use();
-	VAO.bind();
-	texture.set(textureSource);
-	glViewport(x1, y1, x2, y2);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureTarget, mipmap);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	this->frameBuffer.bindTextureLayer(GL_COLOR_ATTACHMENT0, target, mipmap, layer);
+	this->frameBuffer.draw(
+		{ target.size.x, target.size.y },
+		{ 0, 0, target.size.x, target.size.y },
+		[&]()
+	{
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	});
+
 	VAO.unbind();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 PassThroughRenderer::PassThroughRenderer() :
 	program(Locator<PathManager>::get()->LoadShadersP("Passthrough")),
 	texture("texture_t", program, 0) {
-
 	static const GLfloat g_quad_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f,
+		   -1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+		   -1.0f,  1.0f, 0.0f,
+		   -1.0f,  1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f,  1.0f, 0.0f,
 	};
-
-	glGenFramebuffers(1, &frameBuffer.ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.ID);
 
 	VAO.gen(1);
 
-	glGenBuffers(1, &quad.ID);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.ID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	this->quad.setRaw(sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
