@@ -2,6 +2,10 @@
 
 #include "UIOPad.h"
 
+UIOPad::UIOPad(Handle self) {
+	this->selfHandle = self;
+}
+
 UIOPad::UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
 	this->addElement(std::move(main_));

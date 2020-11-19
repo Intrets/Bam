@@ -5,71 +5,51 @@
 #include "UIOBase.h"
 #include "UIOList.h"
 
-//auto window = []()
-//{
-//	return 1;
-//}();
-
-
-//auto window = Window();
-//{
-//	auto list = List();
-//	{
-//
-//
-//	}
-//
-//}
-
-//{
-//	// window gets created and triggers something in global state
-//	Window window;
-//
-//	{
-//		// list gets created and triggers something in global state
-//		List list;
-//
-//		{
-//			// add buttons etc
-//		}
-//
-//		{
-//			// another entry in the list
-//		}
-//
-//		// list gets destructed and this triggers something in global state
-//	}
-//
-//
-//
-//	// window gets destructed and this triggers something in global state
-//}
-
-//class UIOConstructer2
-//{
-//};
-
+struct UIOSizeType;
 
 namespace UIO2
 {
 	class Global
 	{
-	private:
+	public:
 		static UniqueReference<UIOBase, UIOBase> root;
 		static std::vector<WeakReference<UIOBase, UIOBase>> stack;
 
+		static UniqueReference<UIOBase, UIOBase> singlesRoot;
+		static WeakReference<UIOBase, UIOBase> singlesLeaf;
+
 	public:
-		static void up(WeakReference<UIOBase, UIOBase> const& ref);
-		static void add(UniqueReference<UIOBase, UIOBase> ref);
 		static void down();
+		static void start(UniqueReference<UIOBase, UIOBase> ref);
+		static void addSingle(UniqueReference<UIOBase, UIOBase> ref);
+		static void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
+		static void addMulti(UniqueReference<UIOBase, UIOBase> ref);
+
+		static UniqueReference<UIOBase, UIOBase> finish();
 	};
 
-	class List
+	class Scope
+	{
+	public:
+		virtual ~Scope();
+	};
+
+	class List : public Scope
 	{
 	public:
 		List(UIO::DIR dir);
-		~List();
 	};
+
+	class Grid : public Scope
+	{
+	public:
+		Grid(int32_t x, int32_t y);
+	};
+
+	void text(std::string const& t);
+	void constrainHeight(UIOSizeType height);
+	void button();
+	void window(std::string const& title, Rectangle size, int32_t types);
 }
 
 

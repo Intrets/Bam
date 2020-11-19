@@ -32,7 +32,12 @@ private:
 	UIO::ALIGNMENT alignment = UIO::ALIGNMENT::CENTER;
 
 public:
+	void setHeight(UIOSizeType height);
+	void setWidth(UIOSizeType width);
+	void setAlignment(UIO::ALIGNMENT alignment);
+
 	UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_);
+	UIOConstrainSize(Handle self);
 	UIOConstrainSize() = default;
 	~UIOConstrainSize() = default;
 

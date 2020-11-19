@@ -41,7 +41,6 @@ protected:
 
 	template<class T>
 	friend class UIOConstructer;
-	ScreenRectangle screenRectangle;
 
 	using Bind = std::pair<BindControl, CallBack>;
 
@@ -53,6 +52,8 @@ protected:
 
 public:
 	Handle getSelfHandle();
+
+	ScreenRectangle screenRectangle;
 
 	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) = 0;
 	virtual void translate(glm::vec2 p) = 0;

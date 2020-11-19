@@ -19,6 +19,14 @@ void UIOButton::setOnRelease(CallBack f) {
 	this->onRelease = f;
 }
 
+bool UIOButton::isDown() {
+	return this->down;
+}
+
+glm::vec2 const& UIOButton::getMousePressOffset() const {
+	return this->mousePressOffset;
+}
+
 UIOButton::UIOButton(Handle self) {
 	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 	{

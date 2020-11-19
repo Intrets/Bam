@@ -5,7 +5,7 @@
 
 class UIOPad : public UIOBaseSingle
 {
-private:
+public:
 	template<class T>
 	friend class UIOConstructer;
 
@@ -17,6 +17,7 @@ private:
 	std::optional<UIOSizeType> right;
 
 public:
+	UIOPad(Handle self);
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
 

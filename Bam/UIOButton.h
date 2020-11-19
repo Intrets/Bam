@@ -7,13 +7,13 @@
 class UIOButton : public UIOBaseSingle
 {
 private:
-	bool shrinkToFit;
+	bool shrinkToFit = true;
 	bool highlighted;
 
-	glm::vec2 mousePressOffset;
+	glm::vec4 color = COLORS::UI::BACKGROUND;
 
 	bool down = false;
-	glm::vec4 color = COLORS::UI::BACKGROUND;
+	glm::vec2 mousePressOffset;
 
 private:
 	template<class T>
@@ -29,6 +29,9 @@ public:
 
 	void setOnPress(CallBack f);
 	void setOnRelease(CallBack f);
+
+	bool isDown();
+	glm::vec2 const& getMousePressOffset() const;
 
 	UIOButton(Handle self);
 	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);

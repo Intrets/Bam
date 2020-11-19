@@ -2,9 +2,27 @@
 
 #include "UIOConstrainSize.h"
 
+void UIOConstrainSize::setHeight(UIOSizeType height) {
+	assert(!this->maybeHeight.has_value());
+	this->maybeHeight = height;
+}
+
+void UIOConstrainSize::setWidth(UIOSizeType width) {
+	assert(!this->maybeWidth.has_value());
+	this->maybeWidth = width;
+}
+
+void UIOConstrainSize::setAlignment(UIO::ALIGNMENT alignment_) {
+	this->alignment = alignment_;
+}
+
 UIOConstrainSize::UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
 	this->addElement(std::move(main_));
+}
+
+UIOConstrainSize::UIOConstrainSize(Handle self) {
+	this->selfHandle = self;
 }
 
 ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle) {
