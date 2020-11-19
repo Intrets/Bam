@@ -16,7 +16,7 @@ namespace UIO
 	};
 }
 
-class UIOActivityInterface : public UIOBase
+class UIOActivityInterface : public UIOBaseEnd
 {
 private:
 	ManagedReference<Activity, Activity> target;

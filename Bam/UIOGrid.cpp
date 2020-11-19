@@ -1,6 +1,8 @@
 #include "common.h"
 
 #include "UIOGrid.h"
+#include "RenderInfo.h"
+#include "Colors.h"
 
 UIOGrid::UIOGrid(Handle self, glm::ivec2 size_) :
 	size(size_) {
@@ -36,4 +38,12 @@ ScreenRectangle UIOGrid::updateSize(ScreenRectangle newScreenRectangle) {
 		pos.y -= gridSize.y;
 	}
 	return newScreenRectangle;
+}
+
+int32_t UIOGrid::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	for (auto& element : this->elements) {
+		auto rec = element.get()->getScreenRectangle();
+	}
+
+	return this->UIOBaseMulti::addRenderInfo(gameState, renderInfo, depth);
 }

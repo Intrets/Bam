@@ -9,7 +9,6 @@
 #include "ControlState.h"
 #include "GameState.h"
 #include "State.h"
-#include "UIOProxy.h"
 #include "Option.h"
 #include "UIOTextConstructers.h"
 #include "UIOGrid.h"

@@ -284,12 +284,6 @@
     <ClCompile Include="UIOPad.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOProxy.cpp">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOShell.cpp">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
     <ClCompile Include="UIOTextDisplay.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
@@ -425,6 +419,7 @@
     <ClCompile Include="InventorySerializerHelper.cpp" />
     <ClCompile Include="UIOConstructItemSpawner.cpp" />
     <ClCompile Include="UIOHotbar.cpp" />
+    <ClCompile Include="UIOConstructer2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -623,12 +618,6 @@
     <ClInclude Include="UIOPad.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOProxy.h">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOShell.h">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClInclude>
     <ClInclude Include="UIOTextDisplay.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
@@ -764,6 +753,7 @@
     <ClInclude Include="InventorySerializerHelper.h" />
     <ClInclude Include="UIOConstructItemSpawner.h" />
     <ClInclude Include="UIOHotbar.h" />
+    <ClInclude Include="UIOConstructer2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

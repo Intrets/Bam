@@ -4,15 +4,13 @@
 
 #include "Colors.h"
 
-class UIOButton : public UIOBase
+class UIOButton : public UIOBaseSingle
 {
 private:
 	bool shrinkToFit;
 	bool highlighted;
 
 	glm::vec2 mousePressOffset;
-
-	std::optional<UIOBase*> maybeMain;
 
 	bool down = false;
 	glm::vec4 color = COLORS::UI::BACKGROUND;

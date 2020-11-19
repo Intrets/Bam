@@ -2,7 +2,7 @@
 
 #include "UIOBase.h"
 
-class UIOInvisible : public UIOBase
+class UIOInvisible : public UIOBaseMulti
 {
 public:
 	UIOInvisible(Handle self);

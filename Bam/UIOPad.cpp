@@ -4,13 +4,11 @@
 
 UIOPad::UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
-	this->main = main_.get();
 	this->addElement(std::move(main_));
 }
 
 UIOPad::UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding) {
 	this->selfHandle = self;
-	this->main = main_.get();
 	this->addElement(std::move(main_));
 
 	this->bottom = padding;
@@ -41,6 +39,6 @@ ScreenRectangle UIOPad::updateSize(ScreenRectangle newScreenRectangle) {
 	newScreenRectangle.setBottomLeft(newScreenRectangle.getBottomLeft() + botScale);
 	newScreenRectangle.setTopRight(newScreenRectangle.getTopRight() - topScale);
 
-	main->updateSize(newScreenRectangle);
+	main.get()->updateSize(newScreenRectangle);
 	return this->screenRectangle;
 }

@@ -12,7 +12,6 @@
 #include "UIOTextConstructers.h"
 #include "UIOFreeSize.h"
 #include "Rectangle.h"
-#include "UIOShell.h"
 #include "UIOBinds.h"
 #include "UIOHideable.h"
 
@@ -366,8 +365,8 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 		.align(UIO::ALIGNMENT::TOP)
 		.get();
 
-	windowPtr->topBarPtr = topBar.get();
-	windowPtr->addElement(std::move(topBar));
+	windowPtr->topBar = topBar.get();
+	windowPtr->addElementMulti(std::move(topBar));
 
 	if (types & UIOWindow::TYPE::CLOSE) {
 		auto close = TextConstructer::constructSingleLineDisplayText(" x")
@@ -472,7 +471,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			.align(UIO::ALIGNMENT::BOTTOMLEFT)
 			.get();
 
-		windowPtr->addElement(std::move(bottomBar));
+		windowPtr->addElementMulti(std::move(bottomBar));
 	}
 
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
@@ -502,7 +501,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			.align(UIO::ALIGNMENT::RIGHT)
 			.get();
 
-		windowPtr->addElement(std::move(rightBar));
+		windowPtr->addElementMulti(std::move(rightBar));
 	}
 
 	if (types & UIOWindow::TYPE::RESIZE) {
@@ -532,7 +531,7 @@ inline UIOConstructer<UIOFreeSize> UIOConstructer<T>::window(std::string title, 
 			.align(UIO::ALIGNMENT::BOTTOMRIGHT)
 			.get();
 
-		windowPtr->addElement(std::move(cornerBar));
+		windowPtr->addElementMulti(std::move(cornerBar));
 	}
 
 	return window;

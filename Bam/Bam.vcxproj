@@ -284,6 +284,7 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOConstructer2.cpp" />
     <ClCompile Include="UIOConstructItemSpawner.cpp" />
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
@@ -346,7 +347,6 @@
     <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOLua.cpp" />
-    <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
@@ -368,7 +368,6 @@
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
     <ClCompile Include="UIOFreeSize.cpp" />
-    <ClCompile Include="UIOShell.cpp" />
     <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOWindow.cpp" />
@@ -398,6 +397,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOConstructer2.h" />
     <ClInclude Include="UIOConstructItemSpawner.h" />
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
@@ -454,7 +454,6 @@
     <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOLua.h" />
-    <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
@@ -485,7 +484,6 @@
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />
     <ClInclude Include="UIOFreeSize.h" />
-    <ClInclude Include="UIOShell.h" />
     <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOWindow.h" />

@@ -20,3 +20,4 @@ void UIRenderInfo::addRectangle(Rectangle& rec, glm::vec4 color) {
 	this->positions.push_back(glm::vec3(rec.getBottomLeft(), 0));
 	this->colors.push_back(color);
 }
+

@@ -3,7 +3,6 @@
 #include "UIOHideable.h"
 
 UIOHideable::UIOHideable(Handle selfHandle, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow_) {
-	this->main = main_.get();
 	this->addElement(std::move(main_));
 	this->focusOnShow = focusOnShow_;
 }
@@ -27,7 +26,7 @@ CallBackBindResult UIOHideable::runGlobalBinds(State& state) {
 	}
 
 	if (!this->hidden) {
-		res |= this->UIOBase::runGlobalBinds(state);
+		res |= this->UIOBaseSingle::runGlobalBinds(state);
 		if (res & BIND::RESULT::HIDE) {
 			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
@@ -41,7 +40,7 @@ CallBackBindResult UIOHideable::runGlobalBinds(State& state) {
 
 CallBackBindResult UIOHideable::runFocussedBinds(State& state) {
 	if (!this->hidden) {
-		int32_t res = this->UIOBase::runFocussedBinds(state);
+		int32_t res = this->UIOBaseSingle::runFocussedBinds(state);
 		if (res & BIND::RESULT::HIDE) {
 			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
@@ -55,7 +54,7 @@ CallBackBindResult UIOHideable::runFocussedBinds(State& state) {
 
 CallBackBindResult UIOHideable::runOnHoverBinds(State& state) {
 	if (!this->hidden) {
-		int32_t res = this->UIOBase::runOnHoverBinds(state);
+		int32_t res = this->UIOBaseSingle::runOnHoverBinds(state);
 		if (res & BIND::RESULT::HIDE) {
 			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
@@ -69,7 +68,7 @@ CallBackBindResult UIOHideable::runOnHoverBinds(State& state) {
 
 CallBackBindResult UIOHideable::runActiveBinds(State& state) {
 	if (!this->hidden) {
-		int32_t res = this->UIOBase::runActiveBinds(state);
+		int32_t res = this->UIOBaseSingle::runActiveBinds(state);
 		if (res & BIND::RESULT::HIDE) {
 			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
@@ -83,7 +82,7 @@ CallBackBindResult UIOHideable::runActiveBinds(State& state) {
 
 CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
 	if (!this->hidden) {
-		int32_t res = this->UIOBase::runGameWorldBinds(state);
+		int32_t res = this->UIOBaseSingle::runGameWorldBinds(state);
 		if (res & BIND::RESULT::HIDE) {
 			res &= ~BIND::RESULT::HIDE;
 			this->hidden = true;
@@ -97,14 +96,9 @@ CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
 
 int32_t UIOHideable::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (!this->hidden) {
-		return this->UIOBase::addRenderInfo(gameState, renderInfo, depth);
+		return this->UIOBaseSingle::addRenderInfo(gameState, renderInfo, depth);
 	}
 	else {
 		return depth;
 	}
-}
-
-ScreenRectangle UIOHideable::updateSize(ScreenRectangle newScreenRectangle) {
-	this->screenRectangle = this->main->updateSize(newScreenRectangle);
-	return this->screenRectangle;
 }

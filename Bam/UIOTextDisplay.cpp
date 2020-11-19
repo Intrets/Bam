@@ -20,7 +20,7 @@ UIOTextDisplay::UIOTextDisplay(Handle self, bool lineWrap_) {
 }
 
 void UIOTextDisplay::translate(glm::vec2 p) {
-	this->UIOBase::translate(p);
+	this->UIOBaseEnd::translate(p);
 	if (this->text.cachedRenderInfo.has_value()) {
 		this->text.cachedRenderInfo.value().screenRectangle.translate(p);
 		this->text.lastScreenRectangle.translate(p);

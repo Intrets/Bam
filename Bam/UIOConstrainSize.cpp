@@ -4,8 +4,7 @@
 
 UIOConstrainSize::UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
-	this->main = main_.get();
-	addElement(std::move(main_));
+	this->addElement(std::move(main_));
 }
 
 ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle) {
@@ -18,7 +17,7 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 		newScreenRectangle.setHeight(this->maybeHeight.value().getHeight(this->screenRectangle));
 	}
 
-	newScreenRectangle = this->main->updateSize(newScreenRectangle);
+	newScreenRectangle = this->main.get()->updateSize(newScreenRectangle);
 
 	glm::vec2 p;
 	switch (this->alignment) {

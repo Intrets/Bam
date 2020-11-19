@@ -2,7 +2,7 @@
 
 #include "UIOBase.h"
 
-class UIOHideable : public UIOBase
+class UIOHideable : public UIOBaseSingle
 {
 private:
 	bool hidden = false;
@@ -14,8 +14,6 @@ private:
 	bool focusOnShow = true;
 
 public:
-	UIOBase* main;
-
 	UIOHideable(Handle selfHandle, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow);
 
 	void hide();
@@ -28,7 +26,5 @@ public:
 	virtual CallBackBindResult runGameWorldBinds(State& state) override;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
-
-	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };
 

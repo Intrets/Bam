@@ -8,7 +8,7 @@
 #include "Colors.h"
 
 template<class T>
-class UIOListSelection : public UIOBase
+class UIOListSelection : public UIOBaseSingle
 {
 private:
 	UIOTextDisplay* textDisplay;
@@ -31,6 +31,7 @@ public:
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
+
 };
 
 template<class T>
@@ -67,7 +68,7 @@ inline void UIOListSelection<T>::invalidateView() {
 
 template<class T>
 UIOListSelection<T>::UIOListSelection(Handle self) {
-	display = [](const T&)
+	this->display = [](const T&)
 	{
 		return "";
 	};
@@ -105,7 +106,7 @@ inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderIn
 		this->validView = true;
 	}
 
-	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
+	depth = UIOBaseSingle::addRenderInfo(gameState, renderInfo, depth);
 
 	if (auto const& maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen()) {
 		auto const& cursorQuad = maybeCursorQuad.value();

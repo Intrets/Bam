@@ -3,11 +3,8 @@
 #include "UIOBase.h"
 #include "UIOSizeType.h"
 
-class UIOPad : public UIOBase
+class UIOPad : public UIOBaseSingle
 {
-private:
-	UIOBase* main;
-
 private:
 	template<class T>
 	friend class UIOConstructer;

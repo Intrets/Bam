@@ -5,6 +5,7 @@
 #include "RenderInfo.h"
 #include "UIOCallBackParams.h"
 #include "Colors.h"
+#include "UIOEmpty.h"
 
 void UIOButton::setColor(glm::vec4 c) {
 	this->color = c;
@@ -64,11 +65,12 @@ UIOButton::UIOButton(Handle self) {
 			return BIND::RESULT::CONTINUE;
 		}
 	});
+
+	this->main = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOEmpty>();
 }
 
 UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) :
 	UIOButton(self) {
-	this->maybeMain = main.get();
 	this->addElement(std::move(main));
 }
 
@@ -78,11 +80,9 @@ UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main, bool s
 }
 
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
-	if (this->maybeMain) {
-		auto temp = this->maybeMain.value()->updateSize(newScreenRectangle);
-		if (this->shrinkToFit) {
-			newScreenRectangle = temp;
-		}
+	auto temp = this->main.get()->updateSize(newScreenRectangle);
+	if (this->shrinkToFit) {
+		newScreenRectangle = temp;
 	}
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;
@@ -97,9 +97,7 @@ int32_t UIOButton::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 		c = COLORS::LIGHTEN(c);
 	}
 
-	if (this->maybeMain) {
-		depth = this->maybeMain.value()->addRenderInfo(gameState, renderInfo, depth + 1);
-	}
+	depth = this->main.get()->addRenderInfo(gameState, renderInfo, depth + 1);
 	renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.getBottomLeft(), this->screenRectangle.getTopRight(), c, depth++);
 	return depth;
 }

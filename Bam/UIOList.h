@@ -17,7 +17,7 @@ namespace UIO
 	};
 }
 
-class UIOList : public UIOBase
+class UIOList : public UIOBaseMulti
 {
 private:
 	UIO::DIR direction;

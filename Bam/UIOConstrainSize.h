@@ -20,12 +20,8 @@ namespace UIO
 	};
 }
 
-
-class UIOConstrainSize : public UIOBase
+class UIOConstrainSize : public UIOBaseSingle
 {
-private:
-	UIOBase* main;
-
 private:
 	template<class T>
 	friend class UIOConstructer;
