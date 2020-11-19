@@ -8,8 +8,10 @@
 #include "UIOConstructer.h"
 #include "UIOCallBackParams.h"
 #include "UIOGrid.h"
+#include "UIOHideable.h"
+#include "UIOProxy.h"
 
-UniqueReference<UIOBase, UIOBase> UIO2::Global::root;
+UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
 UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
 std::vector<WeakReference<UIOBase, UIOBase>> UIO2::Global::stack;
 WeakReference<UIOBase, UIOBase> UIO2::Global::singlesLeaf;
@@ -28,6 +30,12 @@ void UIO2::Global::start(UniqueReference<UIOBase, UIOBase> ref) {
 	WeakReference<UIOBase, UIOBase> weak = ref;
 	UIO2::Global::root = std::move(ref);
 	UIO2::Global::stack.push_back(weak);
+}
+
+void UIO2::Global::start() {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOProxy>();
+	UIO2::Global::stack.push_back(ref);
+	UIO2::Global::root = std::move(ref);
 }
 
 void UIO2::Global::addSingle(UniqueReference<UIOBase, UIOBase> ref) {
@@ -70,16 +78,17 @@ void UIO2::Global::addMulti(UniqueReference<UIOBase, UIOBase> ref) {
 	UIO2::Global::stack.push_back(weakRef);
 }
 
-UniqueReference<UIOBase, UIOBase> UIO2::Global::finish() {
+UniqueReference<UIOBase, UIOBase> UIO2::Global::end() {
 	assert(stack.size() == 1);
-	return std::move(UIO2::Global::root);
+	return std::move(UIO2::Global::root.get()->getMain());
 }
 
-void UIO2::text(std::string const& t) {
+UIOTextDisplay* UIO2::text(std::string const& t) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
-	ref.get()->setText(t);
-	ref.get()->text.hideCursor();
-	ref.get()->setShrinkToFit(true);
+	auto ptr = ref.get();
+	ptr->setText(t);
+	ptr->text.hideCursor();
+	ptr->setShrinkToFit(true);
 
 	if (UIO2::Global::singlesLeaf.isNull()) {
 		UIO2::Global::stack.back().get()->addElement(std::move(ref));
@@ -89,22 +98,29 @@ void UIO2::text(std::string const& t) {
 		UIO2::Global::stack.back().get()->addElement(std::move(UIO2::Global::singlesRoot));
 		UIO2::Global::singlesLeaf.clear();
 	}
+
+	return ptr;
 }
 
-void UIO2::constrainHeight(UIOSizeType height) {
+UIOConstrainSize* UIO2::constrainHeight(UIOSizeType height) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOConstrainSize>();
+	auto ptr = ref.get();
 	ref.get()->setHeight(height);
 
 	UIO2::Global::addSingle(std::move(ref));
+
+	return ptr;
 }
 
-void UIO2::button() {
+UIOButton* UIO2::button() {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOButton>();
+	auto ptr = ref.get();
 
 	UIO2::Global::addSingle(std::move(ref));
+	return ptr;
 }
 
-void UIO2::window(std::string const& title, Rectangle size, int32_t types) {
+UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types) {
 	const int32_t resizeSliverSize = 7;
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
@@ -311,6 +327,17 @@ void UIO2::window(std::string const& title, Rectangle size, int32_t types) {
 	}
 
 	UIO2::Global::addSingle(std::move(window.get()), leaf);
+
+	return windowPtr;
+}
+
+UIOHideable* UIO2::hideable() {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOHideable>();
+	auto ptr = ref.get();
+
+	UIO2::Global::addSingle(std::move(ref));
+
+	return ptr;
 }
 
 UIO2::Scope::~Scope() {

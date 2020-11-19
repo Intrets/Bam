@@ -290,27 +290,37 @@ void UIState::init() {
 
 	// Test
 	{
-		UIO2::Global::start(refMan->makeUniqueRef<UIOList>(UIO::DIR::DOWN));
+		//UIO2::Global::start(refMan->makeUniqueRef<UIOList>(UIO::DIR::DOWN));
+		UIO2::Global::start();
 
-		UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.25f });
-		UIO2::button();
-		UIO2::text("test2");
-
-		UIO2::constrainHeight({ UIO::SIZETYPE::PX, 300 });
 		{
-			//auto grid = UIO2::Grid(2, 4);
-			auto list = UIO2::List(UIO::DIR::RIGHT);
+			auto list0 = UIO2::List(UIO::DIR::DOWN);
 
-			for (size_t i = 0; i < 8; i++) {
-				UIO2::text(std::to_string(i));
+			UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.25f });
+			UIO2::button();
+			UIO2::text("test2");
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::PX, 300 });
+			{
+				//auto grid = UIO2::Grid(2, 4);
+				auto list = UIO2::List(UIO::DIR::RIGHT);
+
+				for (size_t i = 0; i < 8; i++) {
+					UIO2::text(std::to_string(i));
+				}
 			}
+
+			UIO2::text("test2111111111111111111");
 		}
 
-		UIO2::text("test2111111111111111111");
-
-		auto result = UIO2::Global::finish();
+		auto result = UIO2::Global::end();
 
 		this->UIs.push_back(std::move(result));
+	}
+
+	{
+		//UIO2::Global::start()
+
 	}
 
 	// Inventory

@@ -347,6 +347,7 @@
     <ClCompile Include="UIOListSelection.cpp" />
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOLua.cpp" />
+    <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
@@ -454,6 +455,7 @@
     <ClInclude Include="UIOListSelection.h" />
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOLua.h" />
+    <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />

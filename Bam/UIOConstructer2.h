@@ -6,13 +6,19 @@
 #include "UIOList.h"
 
 struct UIOSizeType;
+class UIOTextDisplay;
+class UIOButton;
+class UIOConstrainSize;
+class UIOWindow;
+class UIOHideable;
+class UIOProxy;
 
 namespace UIO2
 {
 	class Global
 	{
 	public:
-		static UniqueReference<UIOBase, UIOBase> root;
+		static UniqueReference<UIOBase, UIOProxy> root;
 		static std::vector<WeakReference<UIOBase, UIOBase>> stack;
 
 		static UniqueReference<UIOBase, UIOBase> singlesRoot;
@@ -21,11 +27,12 @@ namespace UIO2
 	public:
 		static void down();
 		static void start(UniqueReference<UIOBase, UIOBase> ref);
+		static void start();
 		static void addSingle(UniqueReference<UIOBase, UIOBase> ref);
 		static void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
 		static void addMulti(UniqueReference<UIOBase, UIOBase> ref);
 
-		static UniqueReference<UIOBase, UIOBase> finish();
+		static UniqueReference<UIOBase, UIOBase> end();
 	};
 
 	class Scope
@@ -46,10 +53,11 @@ namespace UIO2
 		Grid(int32_t x, int32_t y);
 	};
 
-	void text(std::string const& t);
-	void constrainHeight(UIOSizeType height);
-	void button();
-	void window(std::string const& title, Rectangle size, int32_t types);
+	UIOTextDisplay* text(std::string const& t);
+	UIOConstrainSize* constrainHeight(UIOSizeType height);
+	UIOButton* button();
+	UIOWindow* window(std::string const& title, Rectangle size, int32_t types);
+	UIOHideable* hideable();
 }
 
 

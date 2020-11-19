@@ -2,7 +2,12 @@
 
 #include "UIOHideable.h"
 
-UIOHideable::UIOHideable(Handle selfHandle, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow_) {
+UIOHideable::UIOHideable(Handle self) {
+	this->selfHandle = self;
+}
+
+UIOHideable::UIOHideable(Handle self, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow_) {
+	this->selfHandle = self;
 	this->addElement(std::move(main_));
 	this->focusOnShow = focusOnShow_;
 }

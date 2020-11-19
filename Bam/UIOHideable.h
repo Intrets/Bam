@@ -14,6 +14,7 @@ private:
 	bool focusOnShow = true;
 
 public:
+	UIOHideable(Handle self);
 	UIOHideable(Handle selfHandle, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow);
 
 	void hide();
