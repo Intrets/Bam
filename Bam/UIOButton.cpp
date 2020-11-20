@@ -71,7 +71,13 @@ UIOButton::UIOButton(Handle self) {
 	{
 		if (this->down) {
 			this->down = false;
-			return this->onRelease(state, self_) | BIND::RESULT::CONTINUE;
+
+			if (self_->getScreenRectangle().contains(state.uiState.getCursorPositionScreen())) {
+				return this->onRelease(state, self_) | BIND::RESULT::CONTINUE;
+			}
+			else {
+				return BIND::RESULT::CONTINUE;
+			}
 		}
 		else {
 			return BIND::RESULT::CONTINUE;

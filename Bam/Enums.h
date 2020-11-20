@@ -6,6 +6,8 @@ namespace UIO
 	{
 		CONSTRAIN_SIZE,
 		PAD,
+		LIST,
+		GRID,
 		UNSPECIFIED,
 	};
 

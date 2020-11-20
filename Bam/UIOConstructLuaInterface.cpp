@@ -10,7 +10,7 @@
 #include "UIOConstructer2.h"
 
 UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
-	auto list = UIO2::listStart(UIO::DIR::DOWN_REVERSE);
+	auto list = UIO2::startList(UIO::DIR::DOWN_REVERSE);
 
 	auto uioLua = UIO2::makeEnd<UIOLua>(ref);
 
@@ -22,7 +22,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	// ----------------------------------------
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.2f });
-	UIO2::gridStart(3, 1);
+	UIO2::startGrid(3, 1);
 
 	std::vector<std::string> w = { "" };
 	if (uioLua->getWatched().isValid()) {
@@ -43,7 +43,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIO2::background(COLORS::UI::BACKGROUND);
 	auto outputText = UIO2::makeEnd(TextConstructer::constructDisplayText("output").get());
 
-	UIO2::end();
+	UIO2::endList();
 
 	// ---------------------------------------------
 	// Control Buttons: Save/Load Pull/Push filename
@@ -51,7 +51,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	UIO2::padTop({ UIO::SIZETYPE::PX, 1 });
-	UIO2::gridStart(4, 1);
+	UIO2::startGrid(4, 1);
 
 	auto pushButton = UIO2::textButton("Push");
 
@@ -61,11 +61,11 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	auto interruptButton = UIO2::textButton("Interrupt");
 
-	UIO2::end();
+	UIO2::endGrid();
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	UIO2::padTop({ UIO::SIZETYPE::PX, 1 });
-	UIO2::gridStart(3, 1);
+	UIO2::startGrid(3, 1);
 
 	UIO2::background(COLORS::UI::BACKGROUND);
 	auto saveFileName = UIO2::makeEnd(TextConstructer::constructSingleLineTextEdit("test.lua").get());
@@ -74,9 +74,9 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	auto saveButton = UIO2::textButton("Save");
 
-	UIO2::end();
+	UIO2::endGrid();
 
-	UIO2::end();
+	UIO2::endList();
 
 	// -----
 	// Binds

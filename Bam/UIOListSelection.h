@@ -24,7 +24,7 @@ public:
 
 	void setSelected(int32_t index);
 	std::optional<T*> getSelected();
-	void setList(std::vector<T>& l);
+	void setList(std::vector<T> const& l);
 	std::vector<T> const& getList();
 
 	void invalidateView();
@@ -51,7 +51,7 @@ std::optional<T*> UIOListSelection<T>::getSelected() {
 }
 
 template<class T>
-void UIOListSelection<T>::setList(std::vector<T>& l) {
+void UIOListSelection<T>::setList(std::vector<T> const& l) {
 	this->list = l;
 	this->validView = false;
 }

@@ -12,6 +12,7 @@
 #include "UIOProxy.h"
 #include "UIOColoredBackground.h"
 #include "UIOPad.h"
+#include "UIOBinds.h"
 
 UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
 UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
@@ -434,7 +435,7 @@ UIOPad* UIO2::padRight(UIOSizeType padding) {
 	return ptr;
 }
 
-UIOList* UIO2::listStart(UIO::DIR dir) {
+UIOList* UIO2::startList(UIO::DIR dir) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
 	auto ptr = ref.get();
 
@@ -443,7 +444,7 @@ UIOList* UIO2::listStart(UIO::DIR dir) {
 	return ptr;
 }
 
-UIOGrid* UIO2::gridStart(int32_t x, int32_t y) {
+UIOGrid* UIO2::startGrid(int32_t x, int32_t y) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
 	auto ptr = ref.get();
 
@@ -461,7 +462,97 @@ UIOButton* UIO2::textButton(std::string const& text) {
 	return ptr;
 }
 
-void UIO2::end() {
+UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
+	auto ptr = res.get();
+	ptr->text.addLine(text);
+
+	UIOBinds::TextEdit::clickSelect(ptr);
+	UIOBinds::Base::activatable(ptr);
+
+	UIOBinds::TextEdit::left(ptr);
+	UIOBinds::TextEdit::right(ptr);
+
+	UIOBinds::TextEdit::inputNoLineBreaks(ptr);
+
+	UIOBinds::TextEdit::backspace(ptr);
+	UIOBinds::TextEdit::del(ptr);
+	UIOBinds::TextEdit::tab(ptr);
+
+	UIO2::makeEnd(std::move(res));
+	return ptr;
+}
+
+UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
+	auto ptr = res.get();
+
+	ptr->text.empty();
+	for (auto& line : text) {
+		ptr->text.addLine(line);
+	}
+
+	UIOBinds::TextEdit::clickSelect(ptr);
+	UIOBinds::Base::activatable(ptr);
+
+	UIOBinds::TextEdit::up(ptr);
+	UIOBinds::TextEdit::down(ptr);
+	UIOBinds::TextEdit::left(ptr);
+	UIOBinds::TextEdit::right(ptr);
+
+	UIOBinds::TextEdit::input(ptr);
+
+	UIOBinds::TextEdit::backspace(ptr);
+	UIOBinds::TextEdit::del(ptr);
+	UIOBinds::TextEdit::tab(ptr);
+
+	UIOBinds::TextEdit::viewDown(ptr);
+	UIOBinds::TextEdit::viewUp(ptr);
+
+	UIO2::makeEnd(std::move(res));
+
+	return ptr;
+}
+
+UIOTextDisplay* UIO2::textDisplaySingle(std::string const& text, bool shrinkToFit) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
+	auto ptr = res.get();
+	ptr->text.setString(text);
+	ptr->text.hideCursor();
+	ptr->setShrinkToFit(shrinkToFit);
+
+	UIO2::makeEnd(std::move(res));
+
+	return ptr;
+}
+
+UIOTextDisplay* UIO2::textDisplayMulti(std::vector<std::string> const& text) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
+	auto ptr = res.get();
+	ptr->text.setLines(text);
+
+	UIOBinds::TextEdit::viewDown(ptr);
+	UIOBinds::TextEdit::viewUp(ptr);
+
+	UIO2::makeEnd(std::move(res));
+
+	return ptr;
+}
+
+UIOTextDisplay* UIO2::textDisplayMulti(std::string const& text) {
+	std::vector<std::string> temp{ text };
+	return UIO2::textDisplayMulti(temp);
+}
+
+void UIO2::endList() {
+	assert(UIO2::Global::stack.size() > 1);
+	assert(UIO2::Global::stack.back().get()->getUIOType() == UIO::TYPE::LIST);
+	UIO2::Global::down();
+}
+
+void UIO2::endGrid() {
+	assert(UIO2::Global::stack.size() > 1);
+	assert(UIO2::Global::stack.back().get()->getUIOType() == UIO::TYPE::GRID);
 	UIO2::Global::down();
 }
 

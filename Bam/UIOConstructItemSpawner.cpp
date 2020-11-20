@@ -14,11 +14,10 @@
 #include "Shape.h"
 #include "UIOListSelection.h"
 #include "UIOTextConstructers.h"
+#include "UIOConstructer2.h"
 
-UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
-	UIOList* listPtr;
-	auto list = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN)
-		.setPtr(listPtr);
+UIOList* UIO2::constructItemSpawner() {
+	auto list = UIO2::startList(UIO::DIR::DOWN);
 
 	const ACTIVITY::TYPE activities[] = {
 		ACTIVITY::TYPE::MOVER,
@@ -34,12 +33,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 	};
 
 	for (auto type : activities) {
-		listPtr->addElement(
-			TextConstructer::constructSingleLineDisplayText(ACTIVITY::GET_TYPE_NAME(type))
-			.alignCenter()
-			.button()
-			.onRelease(
-				[type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+		UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type))->setOnRelease(
+			[type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (auto maybeItem = ACTIVITYSPAWNER::spawn(params.gameState, { 0,0 }, type)) {
 				auto& item = maybeItem.value();
@@ -51,57 +47,38 @@ UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 			}
 
 			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.get()
-			);
+		});
 	}
 
-	UIOListSelection<DataFront<BlockData>>* blockSelectionPtr;
-	auto blockSelection =
-		UIOConstructer<UIOListSelection<DataFront<BlockData>>>::makeConstructer(
-			[](DataFront<BlockData> const& e)
+	UIO2::startList(UIO::DIR::DOWN_REVERSE);
+
+	UIO2::startGrid(2, 1);
+
+	auto blocksList = DataFront<BlockData>::listAll();
+
+	auto blockSelection = UIO2::makeEnd<UIOListSelection<DataFront<BlockData>>>(
+		[](DataFront<BlockData> const& e)
 	{
 		return e.getName();
-	})
-		.addBind(
-			[](UIOListSelection<DataFront<BlockData>>* l)
-	{
-		auto blocks = DataFront<BlockData>::listAll();
-		l->setList(blocks);
-	})
-		.setPtr(blockSelectionPtr);
+	});
+	blockSelection->setList(blocksList);
 
-	UIOListSelection<DataFront<ShapeData>>* shapeSelectionPtr;
-	auto shapeSelection =
-		UIOConstructer<UIOListSelection<DataFront<ShapeData>>>::makeConstructer(
-			[](DataFront<ShapeData> const& e)
+	auto shapesList = DataFront<ShapeData>::listAll();
+
+	auto shapeSelection = UIO2::makeEnd<UIOListSelection<DataFront<ShapeData>>>(
+		[](DataFront<ShapeData> const& e)
 	{
 		return e.getName();
-	})
-		.addBind(
-			[](UIOListSelection<DataFront<ShapeData>>* l)
-	{
-		auto shapes = DataFront<ShapeData>::listAll();
-		l->setList(shapes);
-	})
-		.setPtr(shapeSelectionPtr);
+	});
+	shapeSelection->setList(shapesList);
 
-	UIOList* c;
-	listPtr->addElement(
-		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::UP)
-		.setPtr(c)
-		.get()
-	);
+	UIO2::endGrid();
 
-	c->addElement(
-		TextConstructer::constructSingleLineDisplayText("Spawn Block")
-		.button()
-		.onPress([shapeSelectionPtr, blockSelectionPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	UIO2::textButton("Spawn Block")->setOnRelease([shapeSelection, blockSelection](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		auto block = blockSelectionPtr->getSelected();
-		auto shape = shapeSelectionPtr->getSelected();
+		auto block = blockSelection->getSelected();
+		auto shape = shapeSelection->getSelected();
 
 		if (block.has_value() && shape.has_value()) {
 			ShapedBlock shapedBlock{ *block.value(), *shape.value(), ACTIVITY::DIR::RIGHT };
@@ -110,30 +87,9 @@ UIOConstructer<UIOList> CONSTRUCTER::constructItemSpawner() {
 			Locator<Inventory>::ref().addItemCursor(inventoryItem);
 		}
 		return BIND::RESULT::CONTINUE;
-	})
-		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-		.get()
-		);
+	});
 
-	UIOList* shapedBlockSelectionCombo;
-
-	c->addElement(
-		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::RIGHT)
-		.setPtr(shapedBlockSelectionCombo)
-		.get()
-	);
-
-	shapedBlockSelectionCombo->addElement(
-		blockSelection
-		.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
-		.get()
-	);
-
-	shapedBlockSelectionCombo->addElement(
-		shapeSelection
-		.get()
-	);
-
-	return list;
+	UIO2::endList();
+	UIO2::endList();
+	return nullptr;
 }

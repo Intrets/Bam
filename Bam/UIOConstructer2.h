@@ -91,12 +91,20 @@ namespace UIO2
 	UIOPad* padLeft(UIOSizeType padding);
 	UIOPad* padRight(UIOSizeType padding);
 
-	UIOList* listStart(UIO::DIR dir);
-	UIOGrid* gridStart(int32_t x, int32_t y);
+	UIOList* startList(UIO::DIR dir);
+	UIOGrid* startGrid(int32_t x, int32_t y);
 
 	UIOButton* textButton(std::string const& text);
 
-	void end();
+	UIOTextDisplay* textEditSingle(std::string const& text);
+	UIOTextDisplay* textEditMulti(std::vector<std::string> const& text);
+	UIOTextDisplay* textDisplaySingle(std::string const& text, bool shrinkToFit = true);
+	UIOTextDisplay* textDisplayMulti(std::vector<std::string> const& text);
+	UIOTextDisplay* textDisplayMulti(std::string const& text);
+
+	void endList();
+	void endGrid();
+
 
 	template<class T, class... Args> T* makeSingle(Args&&... args);
 

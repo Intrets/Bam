@@ -26,5 +26,7 @@ public:
 	UIOList(Handle self, UIO::DIR dir);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual UIO::TYPE getUIOType() override;
 };
 

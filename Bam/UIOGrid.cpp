@@ -47,3 +47,7 @@ int32_t UIOGrid::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int
 
 	return this->UIOBaseMulti::addRenderInfo(gameState, renderInfo, depth);
 }
+
+UIO::TYPE UIOGrid::getUIOType() {
+	return UIO::TYPE::GRID;
+}
