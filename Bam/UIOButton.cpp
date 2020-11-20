@@ -19,6 +19,10 @@ void UIOButton::setOnRelease(CallBack f) {
 	this->onRelease = f;
 }
 
+void UIOButton::setShrinkToFit(bool b) {
+	this->shrinkToFit = b;
+}
+
 bool UIOButton::isDown() {
 	return this->down;
 }

@@ -15,6 +15,7 @@ class UIOHideable;
 class UIOProxy;
 class UIOGrid;
 class UIOColoredBackground;
+class UIOPad;
 
 namespace UIO2
 {
@@ -64,8 +65,8 @@ namespace UIO2
 		Grid(int32_t x, int32_t y);
 	};
 
-	UIOTextDisplay* text(std::string const& t);
-	UIOButton* button();
+	UIOTextDisplay* text(std::string const& t, bool shrinkToFit = true);
+	UIOButton* button(bool shrinkToFit = false);
 	UIOWindow* window(std::string const& title, Rectangle size, int32_t types);
 	UIOHideable* hideable();
 
@@ -83,6 +84,8 @@ namespace UIO2
 	UIOConstrainSize* alignBottomRight();
 	UIOConstrainSize* alignTopLeft();
 	UIOConstrainSize* alignTopRight();
+
+	UIOPad* pad(UIOSizeType padding);
 
 	UIOList* listStart(UIO::DIR dir);
 	UIOGrid* gridStart(int32_t x, int32_t y);

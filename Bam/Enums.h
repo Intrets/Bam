@@ -5,6 +5,7 @@ namespace UIO
 	enum class TYPE
 	{
 		CONSTRAIN_SIZE,
+		PAD,
 		UNSPECIFIED,
 	};
 
@@ -26,10 +27,16 @@ namespace UIO
 }
 
 class UIOConstrainSize;
+class UIOPad;
 
 template<>
 constexpr UIO::TYPE UIO::GET_TYPE<UIOConstrainSize>() {
-	return UIO::TYPE::CONSTRAIN_SIZE; 
+	return UIO::TYPE::CONSTRAIN_SIZE;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOPad>() {
+	return UIO::TYPE::PAD;
 }
 
 template<class T>

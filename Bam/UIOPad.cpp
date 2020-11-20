@@ -46,3 +46,7 @@ ScreenRectangle UIOPad::updateSize(ScreenRectangle newScreenRectangle) {
 	main.get()->updateSize(newScreenRectangle);
 	return this->screenRectangle;
 }
+
+UIO::TYPE UIOPad::getUIOType() {
+	return UIO::TYPE::PAD;
+}

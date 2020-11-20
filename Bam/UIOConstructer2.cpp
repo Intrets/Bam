@@ -11,12 +11,12 @@
 #include "UIOHideable.h"
 #include "UIOProxy.h"
 #include "UIOColoredBackground.h"
+#include "UIOPad.h"
 
 UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
 UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
 std::vector<WeakReference<UIOBase, UIOBase>> UIO2::Global::stack;
 WeakReference<UIOBase, UIOBase> UIO2::Global::singlesLeaf;
-
 
 UIO2::List::List(UIO::DIR dir) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
@@ -99,12 +99,12 @@ UniqueReference<UIOBase, UIOBase> UIO2::Global::end() {
 	return std::move(UIO2::Global::root.get()->getMain());
 }
 
-UIOTextDisplay* UIO2::text(std::string const& t) {
+UIOTextDisplay* UIO2::text(std::string const& t, bool shrinkToFit) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
 	auto ptr = ref.get();
 	ptr->setText(t);
 	ptr->text.hideCursor();
-	ptr->setShrinkToFit(true);
+	ptr->setShrinkToFit(shrinkToFit);
 
 	UIO2::Global::addEnd(std::move(ref));
 
@@ -123,9 +123,11 @@ UIOConstrainSize* UIO2::constrainWidth(UIOSizeType width) {
 	return ptr;
 }
 
-UIOButton* UIO2::button() {
+UIOButton* UIO2::button(bool shrinkToFit) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOButton>();
 	auto ptr = ref.get();
+
+	ptr->setShrinkToFit(shrinkToFit);
 
 	UIO2::Global::addSingle(std::move(ref));
 	return ptr;
@@ -397,6 +399,15 @@ UIOConstrainSize* UIO2::alignTopLeft() {
 
 UIOConstrainSize* UIO2::alignTopRight() {
 	return UIO2::align(UIO::ALIGNMENT::TOPRIGHT);
+}
+
+UIOPad* UIO2::pad(UIOSizeType padding) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	ptr->left = padding;
+	ptr->right = padding;
+	ptr->top = padding;
+	ptr->bottom = padding;
+	return ptr;
 }
 
 UIOList* UIO2::listStart(UIO::DIR dir) {

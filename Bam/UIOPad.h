@@ -2,6 +2,7 @@
 
 #include "UIOBase.h"
 #include "UIOSizeType.h"
+#include "Enums.h"
 
 class UIOPad : public UIOBaseSingle
 {
@@ -22,5 +23,7 @@ public:
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual UIO::TYPE getUIOType() override;
 };
 

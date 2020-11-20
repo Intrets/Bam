@@ -288,36 +288,7 @@ void UIState::init() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-	// Test
-	{
-		//UIO2::Global::start(refMan->makeUniqueRef<UIOList>(UIO::DIR::DOWN));
-		UIO2::Global::start();
-
-		{
-			auto list0 = UIO2::List(UIO::DIR::DOWN);
-
-			UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.25f });
-			UIO2::button();
-			UIO2::text("test2");
-
-			UIO2::constrainHeight({ UIO::SIZETYPE::PX, 300 });
-			{
-				//auto grid = UIO2::Grid(2, 4);
-				auto list = UIO2::List(UIO::DIR::RIGHT);
-
-				for (size_t i = 0; i < 8; i++) {
-					UIO2::text(std::to_string(i));
-				}
-			}
-
-			UIO2::text("test2111111111111111111");
-		}
-
-		auto result = UIO2::Global::end();
-
-		this->UIs.push_back(std::move(result));
-	}
-
+	// Inventory
 	{
 		UIO2::Global::start();
 
@@ -349,8 +320,92 @@ void UIState::init() {
 		UIO2::background(COLORS::UI::WINDOWBACKGROUND);
 		UIO2::makeEnd<UIOHotbar>();
 
+		this->UIs.push_back(UIO2::Global::end());
+	}
+
+	{
+		UIO2::Global::start();
+
+		UIO2::window("Debug Info 2", { {-0.5f, -0.8f}, {-0.2f, 1.0f} },
+					 UIOWindow::TYPE::MINIMISE |
+					 UIOWindow::TYPE::RESIZE |
+					 UIOWindow::TYPE::MOVE);
+		{
+			auto mainList = UIO2::List(UIO::DIR::DOWN);
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 16.3f });
+			UIO2::background(COLORS::UI::BACKGROUND);
+			UIO2::text("TODO: add bind", false);
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 });
+			UIO2::makeEnd<UIOEmpty>();
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			UIO2::background(COLORS::UI::BACKGROUND);
+			UIO2::text("test.save", false);
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			UIO2::listStart(UIO::DIR::RIGHT);
+			{
+				UIO2::constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f });
+				UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+				UIO2::button();
+				UIO2::alignCenter();
+				UIO2::text("save");
+
+				UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+				UIO2::button();
+				UIO2::alignCenter();
+				UIO2::text("load");
+			}
+			UIO2::end();
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 });
+			UIO2::makeEnd<UIOEmpty>();
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+			UIO2::button();
+			UIO2::alignCenter();
+			UIO2::text("Debug Render");
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+			UIO2::button()->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
+			UIO2::alignCenter();
+			UIO2::text("Toggle Seperate Render Thread");
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+			UIO2::button()->setOnRelease(
+				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				params.uiState.addNamedUI("Item Spawner", []()
+				{
+					return CONSTRUCTER::constructItemSpawner()
+						.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , -0.2f } },
+								UIOWindow::TYPE::MINIMISE |
+								UIOWindow::TYPE::MOVE |
+								UIOWindow::TYPE::CLOSE |
+								UIOWindow::TYPE::RESIZE)
+						.hideable()
+						.get();
+				});
+
+				return BIND::RESULT::CONTINUE;
+			});
+			UIO2::alignCenter();
+			UIO2::text("Spawn Item");
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 });
+			UIO2::makeEnd<UIOEmpty>();
+
+			UIO2::background(COLORS::UI::BACKGROUND);
+			UIO2::text("1\n2\n3\n4", false);
+		}
 
 		this->UIs.push_back(UIO2::Global::end());
+
 	}
 
 	// save/load and other stuff

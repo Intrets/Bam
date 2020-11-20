@@ -29,6 +29,7 @@ public:
 
 	void setOnPress(CallBack f);
 	void setOnRelease(CallBack f);
+	void setShrinkToFit(bool b);
 
 	bool isDown();
 	glm::vec2 const& getMousePressOffset() const;
