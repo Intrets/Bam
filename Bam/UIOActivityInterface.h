@@ -3,7 +3,6 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 #include "UIOBase.h"
-#include "UIOConstructActivityInterface.h"
 
 class UIState;
 

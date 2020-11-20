@@ -410,6 +410,30 @@ UIOPad* UIO2::pad(UIOSizeType padding) {
 	return ptr;
 }
 
+UIOPad* UIO2::padTop(UIOSizeType padding) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	ptr->top = padding;
+	return ptr;
+}
+
+UIOPad* UIO2::padBot(UIOSizeType padding) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	ptr->bottom = padding;
+	return ptr;
+}
+
+UIOPad* UIO2::padLeft(UIOSizeType padding) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	ptr->left = padding;
+	return ptr;
+}
+
+UIOPad* UIO2::padRight(UIOSizeType padding) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	ptr->right = padding;
+	return ptr;
+}
+
 UIOList* UIO2::listStart(UIO::DIR dir) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
 	auto ptr = ref.get();
@@ -424,6 +448,15 @@ UIOGrid* UIO2::gridStart(int32_t x, int32_t y) {
 	auto ptr = ref.get();
 
 	UIO2::Global::addMulti(std::move(ref));
+
+	return ptr;
+}
+
+UIOButton* UIO2::textButton(std::string const& text) {
+	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
+	auto ptr = UIO2::button();
+	UIO2::alignCenter();
+	UIO2::makeEnd(TextConstructer::constructSingleLineDisplayText(text).get());
 
 	return ptr;
 }

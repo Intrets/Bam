@@ -323,9 +323,6 @@
     <ClCompile Include="TickLimiter.cpp">
       <Filter>Program Control</Filter>
     </ClCompile>
-    <ClCompile Include="UIOConstructActivityInterface.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
-    </ClCompile>
     <ClCompile Include="UIOActivityInterface.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
@@ -660,9 +657,6 @@
     </ClInclude>
     <ClInclude Include="TickLimiter.h">
       <Filter>Program Control</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOConstructActivityInterface.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="UIOActivityInterface.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>

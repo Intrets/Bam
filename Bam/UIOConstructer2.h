@@ -86,9 +86,15 @@ namespace UIO2
 	UIOConstrainSize* alignTopRight();
 
 	UIOPad* pad(UIOSizeType padding);
+	UIOPad* padTop(UIOSizeType padding);
+	UIOPad* padBot(UIOSizeType padding);
+	UIOPad* padLeft(UIOSizeType padding);
+	UIOPad* padRight(UIOSizeType padding);
 
 	UIOList* listStart(UIO::DIR dir);
 	UIOGrid* gridStart(int32_t x, int32_t y);
+
+	UIOButton* textButton(std::string const& text);
 
 	void end();
 

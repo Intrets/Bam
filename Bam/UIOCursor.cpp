@@ -10,6 +10,7 @@
 #include "ActivityHelpers.h"
 #include "Linker.h"
 #include "UIOConstructLuaInterface.h"
+#include "UIOConstructer2.h"
 
 Inventory& UIOCursor::getInventory() {
 	return Locator<Inventory>::ref();
@@ -150,15 +151,18 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				uiName,
 				[activity, uiName, offset]()
 		{
-			return CONSTRUCTER::constructLuaInterface(activity)
-				.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
-						UIOWindow::TYPE::MINIMISE |
-						UIOWindow::TYPE::RESIZEVERTICAL |
-						UIOWindow::TYPE::RESIZEHORIZONTAL |
-						UIOWindow::TYPE::RESIZE |
-						UIOWindow::TYPE::MOVE |
-						UIOWindow::TYPE::CLOSE)
-				.get();
+			UIO2::Global::start();
+
+			UIO2::window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
+						 UIOWindow::TYPE::MINIMISE |
+						 UIOWindow::TYPE::RESIZEVERTICAL |
+						 UIOWindow::TYPE::RESIZEHORIZONTAL |
+						 UIOWindow::TYPE::RESIZE |
+						 UIOWindow::TYPE::MOVE |
+						 UIOWindow::TYPE::CLOSE);
+			UIO2::constructLuaInterface(activity);
+
+			return UIO2::Global::end();
 		});
 
 		if (newUI) {

@@ -35,10 +35,7 @@
 #include <fstream>
 #include "ActivitySpawner.h"
 #include "UIOConstructItemSpawner.h"
-
-#include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
-
 #include "UIOConstructer2.h"
 
 CallBackBindResult UIState::runFrontBinds(State& state) {
@@ -405,7 +402,6 @@ void UIState::init() {
 		}
 
 		this->UIs.push_back(UIO2::Global::end());
-
 	}
 
 	// save/load and other stuff

@@ -7,307 +7,229 @@
 #include "UIOCallBackParams.h"
 #include <fstream>
 #include "StringHelpers.h"
+#include "UIOConstructer2.h"
 
-UIOConstructer<UIOList> CONSTRUCTER::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
-	UIOList* listPtr;
-	auto window =
-		UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN_REVERSE)
-		.setPtr(listPtr);
+UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
+	auto list = UIO2::listStart(UIO::DIR::DOWN_REVERSE);
 
-	auto uioLua = UIOConstructer<UIOLua>::makeConstructer(ref).get();
-	auto uioLuaPtr = uioLua.get();
+	auto uioLua = UIO2::makeEnd<UIOLua>(ref);
 
-	listPtr->addElement(std::move(uioLua));
+	UIO2::background(COLORS::UI::BACKGROUND);
+	auto luaText = UIO2::makeEnd(TextConstructer::constructTextEdit(ref.get()->getScript()).get());
 
-	UIOTextDisplay* luaTextPtr;
-	{
-		auto luaEditor = TextConstructer::constructTextEdit(ref.get()->getScript())
-			.setPtr(luaTextPtr)
-			.background(COLORS::UI::BACKGROUND)
-			.get();
+	// ----------------------------------------
+	// Watched Variables and Output from script
+	// ----------------------------------------
 
-		listPtr->addElement(std::move(luaEditor));
+	UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.2f });
+	UIO2::gridStart(3, 1);
+
+	std::vector<std::string> w = { "" };
+	if (uioLua->getWatched().isValid()) {
+		w = uioLua->getWatched().get()->getWatchedVars();
+		if (w.empty()) {
+			w = { "" };
+		}
 	}
+	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+	UIO2::background(COLORS::UI::BACKGROUND);
+	auto watchText = UIO2::makeEnd(TextConstructer::constructTextEdit(w).get());
 
-	// list of vars to be watched
-	UIOTextDisplay* watchTextPtr;
-	// text window to display watched vars
-	UIOTextDisplay* displayWatchTextPtr;
-	UIOTextDisplay* outputTextPtr;
-	// name of .lua file
+	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+	UIO2::background(COLORS::UI::BACKGROUND);
+	auto displayWatchText = UIO2::makeEnd(TextConstructer::constructDisplayText("watch").get());
 
+	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+	UIO2::background(COLORS::UI::BACKGROUND);
+	auto outputText = UIO2::makeEnd(TextConstructer::constructDisplayText("output").get());
+
+	UIO2::end();
+
+	// ---------------------------------------------
+	// Control Buttons: Save/Load Pull/Push filename
+	// ---------------------------------------------
+
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	UIO2::padTop({ UIO::SIZETYPE::PX, 1 });
+	UIO2::gridStart(4, 1);
+
+	auto pushButton = UIO2::textButton("Push");
+
+	auto pullButton = UIO2::textButton("Pull");
+
+	auto runButton = UIO2::textButton("Run");
+
+	auto interruptButton = UIO2::textButton("Interrupt");
+
+	UIO2::end();
+
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	UIO2::padTop({ UIO::SIZETYPE::PX, 1 });
+	UIO2::gridStart(3, 1);
+
+	UIO2::background(COLORS::UI::BACKGROUND);
+	auto saveFileName = UIO2::makeEnd(TextConstructer::constructSingleLineTextEdit("test.lua").get());
+
+	auto loadButton = UIO2::textButton("Load");
+
+	auto saveButton = UIO2::textButton("Save");
+
+	UIO2::end();
+
+	UIO2::end();
+
+	// -----
+	// Binds
+	// -----
+
+	watchText->addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		UIOGrid* watchGridPtr;
-		auto watchGrid = UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(3, 1))
-			.setPtr(watchGridPtr)
-			.constrainHeight({ UIO::SIZETYPE::RELATIVE_HEIGHT, 0.2f })
-			.get();
+		auto self = static_cast<UIOTextDisplay*>(self_);
 
-		{
-			std::vector<std::string> w = { "" };
-			if (uioLuaPtr->getWatched().isValid()) {
-				w = uioLuaPtr->getWatched().get()->getWatchedVars();
-				if (w.empty()) {
-					w = { "" };
+		if (uioLua->getWatched().isValid()) {
+			std::vector<std::string> result;
+			for (auto const& line : self->text.getLines()) {
+				if (line.size() > 1) {
+					result.push_back(line.substr(0, line.size() - 1));
 				}
 			}
+			uioLua->getWatched().get()->setWatchedVars(result);
+		}
+		return BIND::CONTINUE;
+	});
 
-			watchGridPtr->addElement(
-				TextConstructer::constructTextEdit(w)
-				.setPtr(watchTextPtr)
-				.addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				auto self = static_cast<UIOTextDisplay*>(self_);
+	displayWatchText->addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLua, watchText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		auto self = static_cast<UIOTextDisplay*>(self_);
 
-				if (uioLuaPtr->getWatched().isValid()) {
-					std::vector<std::string> result;
-					for (auto const& line : self->text.getLines()) {
-						if (line.size() > 1) {
-							result.push_back(line.substr(0, line.size() - 1));
+		if (uioLua->getWatched().isValid()) {
+			auto lua = uioLua->getWatched().get();
+			self->text.empty();
+			for (auto& line : lua->getWatchedVars()) {
+				sol::object object = lua->getLuaObject(line);
+				auto type = object.get_type();
+				std::string out = "invalid";
+
+				switch (type) {
+					case sol::type::string:
+						out = object.as<std::string>();
+						break;
+					case sol::type::number:
+						if (object.is<int>()) {
+							out = std::to_string(object.as<int32_t>());
 						}
-					}
-
-					uioLuaPtr->getWatched().get()->setWatchedVars(result);
-				}
-				return BIND::CONTINUE;
-			})
-				.background(COLORS::UI::BACKGROUND)
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.get()
-				);
-
-			watchGridPtr->addElement(
-				TextConstructer::constructDisplayText("watch")
-				.setPtr(displayWatchTextPtr)
-				.addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLuaPtr, watchTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				auto self = static_cast<UIOTextDisplay*>(self_);
-
-				if (uioLuaPtr->getWatched().isValid()) {
-					auto lua = uioLuaPtr->getWatched().get();
-					self->text.empty();
-					for (auto& line : lua->getWatchedVars()) {
-						sol::object object = lua->getLuaObject(line);
-						auto type = object.get_type();
-						std::string out = "invalid";
-
-						switch (type) {
-							case sol::type::none:
-								break;
-							case sol::type::lua_nil:
-								break;
-							case sol::type::string:
-								out = object.as<std::string>();
-								break;
-							case sol::type::number:
-								if (object.is<int>()) {
-									out = std::to_string(object.as<int32_t>());
-								}
-								else {
-									out = std::to_string(object.as<double>());
-								}
-								break;
-							case sol::type::thread:
-								break;
-							case sol::type::boolean:
-								out = object.as<bool>() ? "true" : "false";
-								break;
-							case sol::type::function:
-								break;
-							case sol::type::userdata:
-								break;
-							case sol::type::lightuserdata:
-								break;
-							case sol::type::table:
-								out = "table";
-								break;
-							case sol::type::poly:
-								break;
-							default:
-								break;
+						else {
+							out = std::to_string(object.as<double>());
 						}
-
-						self->text.addLine(line + ": " + out);
-					}
+						break;
+					case sol::type::boolean:
+						out = object.as<bool>() ? "true" : "false";
+						break;
+					case sol::type::table:
+						out = "table";
+						break;
+					case sol::type::none:
+					case sol::type::lua_nil:
+					case sol::type::thread:
+					case sol::type::function:
+					case sol::type::userdata:
+					case sol::type::lightuserdata:
+					case sol::type::poly:
+					default:
+						break;
 				}
-				return BIND::CONTINUE;
-			})
-				.background(COLORS::UI::BACKGROUND)
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.get()
-				);
 
-			watchGridPtr->addElement(
-				TextConstructer::constructDisplayText("output")
-				.setPtr(outputTextPtr)
-				.background(COLORS::UI::BACKGROUND)
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.get()
-			);
+				self->text.addLine(line + ": " + out);
+			}
+		}
+		return BIND::CONTINUE;
+	});
+
+	pushButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		if (uioLua->getWatched().isValid()) {
+			uioLua->getWatched().get()->setScript(join(luaText->text.getLines()), params.gameState);
+		}
+		return BIND::RESULT::CONTINUE;
+	});
+
+	pullButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		if (uioLua->getWatched().isValid()) {
+			luaText->text.getLinesMutable().clear();
+			split(0, uioLua->getWatched().get()->getScript(), luaText->text.getLinesMutable(), '\n', true, true);
+			luaText->text.invalidateCache();
+		}
+		return BIND::RESULT::CONTINUE;
+	});
+
+	runButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		if (uioLua->getWatched().isValid()) {
+			uioLua->getWatched().get()->start();
 		}
 
-		listPtr->addElement(std::move(watchGrid));
-	}
+		return BIND::RESULT::CONTINUE;
+	});
 
-	// Push Pull Run Interrupt
+	interruptButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		UIOGrid* row1Ptr;
-		listPtr->addElement(
-			UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(4, 1))
-			.setPtr(row1Ptr)
-			.padTop({ UIO::SIZETYPE::PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.get()
-		);
+		if (uioLua->getWatched().isValid()) {
+			uioLua->getWatched().get()->stop();
+		}
+		return BIND::RESULT::CONTINUE;
+	});
 
-		row1Ptr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Push")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			if (uioLuaPtr->getWatched().isValid()) {
-				uioLuaPtr->getWatched().get()->setScript(join(luaTextPtr->text.getLines()), params.gameState);
-			}
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
 
-		row1Ptr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Pull")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			if (uioLuaPtr->getWatched().isValid()) {
-				luaTextPtr->text.getLinesMutable().clear();
-				split(0, uioLuaPtr->getWatched().get()->getScript(), luaTextPtr->text.getLinesMutable(), '\n', true, true);
-				luaTextPtr->text.invalidateCache();
-			}
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
-
-		row1Ptr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Run")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			if (uioLuaPtr->getWatched().isValid()) {
-				uioLuaPtr->getWatched().get()->start();
-			}
-
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
-
-		row1Ptr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Interrupt")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([luaTextPtr, uioLuaPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			if (uioLuaPtr->getWatched().isValid()) {
-				uioLuaPtr->getWatched().get()->stop();
-			}
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
-	}
-
-	// File Name - Save - Load
+	loadButton->setOnRelease([saveFileName, luaText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		UIOGrid* luaControlPtr;
-		listPtr->addElement(
-			UIOConstructer<UIOGrid>::makeConstructer(glm::ivec2(3, 1))
-			.setPtr(luaControlPtr)
-			.padTop({ UIO::SIZETYPE::PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.get()
-		);
+		std::string name = saveFileName->text.getLines().front();
+		name.resize(name.size() - 1);
 
-		UIOTextDisplay* fileTextPtr;
-		luaControlPtr->addElement(
-			TextConstructer::constructSingleLineTextEdit("test.lua")
-			.setPtr(fileTextPtr)
-			.background(COLORS::UI::BACKGROUND)
-			.get()
-		);
+		std::ifstream file;
+		Locator<PathManager>::ref().openLUA(file, name);
 
-		// Load
-		luaControlPtr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Load")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			std::string name = fileTextPtr->text.getLines().front();
-			name.resize(name.size() - 1);
+		luaText->text.empty();
+		std::string line;
+		while (std::getline(file, line)) {
+			luaText->text.addLine(line);
+		}
 
-			std::ifstream file;
-			Locator<PathManager>::ref().openLUA(file, name);
+		return BIND::RESULT::CONTINUE;
+	});
 
-			luaTextPtr->text.empty();
-			std::string line;
-			while (std::getline(file, line)) {
-				luaTextPtr->text.addLine(line);
+	saveButton->setOnRelease([saveFileName, luaText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		std::string name = saveFileName->text.getLines().front();
+		name.resize(name.size() - 1);
+
+		std::ofstream file;
+
+		Locator<PathManager>::ref().openLUA(file, name);
+
+		for (auto const& line : luaText->text.getLines()) {
+			file << line;
+		}
+
+		file.close();
+
+		return BIND::RESULT::CONTINUE;
+	});
+
+	uioLua->getWatched().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(outputText->getSelfHandle())](std::string text)
+	{
+		if (display.isValid()) {
+			std::vector<std::string> lines;
+			split(0, text, lines, '\n', true);
+			for (auto& line : lines) {
+				display.get()->text.addLine(line);
 			}
 
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get());
+			display.get()->text.moveCursor(glm::ivec2(0, lines.size()));
+		}
 
-		// Save
-		luaControlPtr->addElement(
-			TextConstructer::constructSingleLineDisplayText("Save")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([fileTextPtr, luaTextPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			std::string name = fileTextPtr->text.getLines().front();
-			name.resize(name.size() - 1);
+		return BIND::RESULT::CONTINUE;
+	});
 
-			std::ofstream file;
-
-			Locator<PathManager>::ref().openLUA(file, name);
-
-			for (auto const& line : luaTextPtr->text.getLines()) {
-				file << line;
-			}
-
-			file.close();
-
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get());
-
-		uioLuaPtr->getWatched().get()->setPrintFunction(
-			[display = ManagedReference<UIOBase, UIOTextDisplay>(outputTextPtr->getSelfHandle())](std::string text)
-		{
-			if (display.isValid()) {
-				std::vector<std::string> lines;
-				split(0, text, lines, '\n', true);
-				for (auto& line : lines) {
-					display.get()->text.addLine(line);
-				}
-
-				display.get()->text.moveCursor(glm::ivec2(0, lines.size()));
-			}
-
-			return BIND::RESULT::CONTINUE;
-		});
-	}
-
-	return window;
+	return list;
 }
