@@ -319,21 +319,16 @@ void UIState::init() {
 	}
 
 	{
-		//UIO2::Global::start()
+		UIO2::Global::start();
 
-	}
+		UIO2::hideable();
+		UIO2::window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+					 UIOWindow::TYPE::MINIMISE |
+					 UIOWindow::TYPE::MOVE |
+					 UIOWindow::TYPE::HIDE);
+		UIO2::makeEnd<UIOInventory>();
 
-	// Inventory
-	{
-		this->UIs.push_back(
-			UIOConstructer<UIOInventory>::makeConstructer()
-			.window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE)
-			.hideable()
-			.get()
-		);
+		this->UIs.push_back(UIO2::Global::end());
 	}
 
 	// Cursor renderer
@@ -346,14 +341,16 @@ void UIState::init() {
 
 	// Hotbar
 	{
-		auto hotbar = UIOConstructer<UIOHotbar>::makeConstructer()
-			.background(COLORS::UI::WINDOWBACKGROUND)
-			.constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f })
-			.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
-			.align(UIO::ALIGNMENT::BOTTOM)
-			.get();
+		UIO2::Global::start();
 
-		this->UIs.push_back(std::move(hotbar));
+		UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f });
+		UIO2::constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f });
+		UIO2::alignBottom();
+		UIO2::background(COLORS::UI::WINDOWBACKGROUND);
+		UIO2::makeEnd<UIOHotbar>();
+
+
+		this->UIs.push_back(UIO2::Global::end());
 	}
 
 	// save/load and other stuff

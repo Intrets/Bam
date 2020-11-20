@@ -10,6 +10,7 @@
 #include "UIOGrid.h"
 #include "UIOHideable.h"
 #include "UIOProxy.h"
+#include "UIOColoredBackground.h"
 
 UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
 UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
@@ -78,8 +79,23 @@ void UIO2::Global::addMulti(UniqueReference<UIOBase, UIOBase> ref) {
 	UIO2::Global::stack.push_back(weakRef);
 }
 
+void UIO2::Global::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
+	if (UIO2::Global::singlesLeaf.isNull()) {
+		UIO2::Global::stack.back().get()->addElement(std::move(ref));
+	}
+	else {
+		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
+		UIO2::Global::stack.back().get()->addElement(std::move(UIO2::Global::singlesRoot));
+		UIO2::Global::singlesLeaf.clear();
+	}
+}
+
 UniqueReference<UIOBase, UIOBase> UIO2::Global::end() {
-	assert(stack.size() == 1);
+	assert(UIO2::Global::stack.size() == 1);
+	assert(UIO2::Global::singlesRoot.isNull());
+
+	UIO2::Global::singlesLeaf.clear();
+	UIO2::Global::stack.clear();
 	return std::move(UIO2::Global::root.get()->getMain());
 }
 
@@ -90,25 +106,20 @@ UIOTextDisplay* UIO2::text(std::string const& t) {
 	ptr->text.hideCursor();
 	ptr->setShrinkToFit(true);
 
-	if (UIO2::Global::singlesLeaf.isNull()) {
-		UIO2::Global::stack.back().get()->addElement(std::move(ref));
-	}
-	else {
-		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
-		UIO2::Global::stack.back().get()->addElement(std::move(UIO2::Global::singlesRoot));
-		UIO2::Global::singlesLeaf.clear();
-	}
+	UIO2::Global::addEnd(std::move(ref));
 
 	return ptr;
 }
 
 UIOConstrainSize* UIO2::constrainHeight(UIOSizeType height) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOConstrainSize>();
-	auto ptr = ref.get();
-	ref.get()->setHeight(height);
+	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	ptr->setHeight(height);
+	return ptr;
+}
 
-	UIO2::Global::addSingle(std::move(ref));
-
+UIOConstrainSize* UIO2::constrainWidth(UIOSizeType width) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	ptr->setWidth(width);
 	return ptr;
 }
 
@@ -338,6 +349,76 @@ UIOHideable* UIO2::hideable() {
 	UIO2::Global::addSingle(std::move(ref));
 
 	return ptr;
+}
+
+UIOColoredBackground* UIO2::background(glm::vec4 color) {
+	auto ptr = UIO2::Global::addSingle<UIOColoredBackground>();
+	ptr->color = color;
+	return ptr;
+}
+
+UIOConstrainSize* UIO2::align(UIO::ALIGNMENT alignment) {
+	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	ptr->setAlignment(alignment);
+	return ptr;
+}
+
+UIOConstrainSize* UIO2::alignCenter() {
+	return UIO2::align(UIO::ALIGNMENT::CENTER);
+}
+
+UIOConstrainSize* UIO2::alignTop() {
+	return UIO2::align(UIO::ALIGNMENT::TOP);
+}
+
+UIOConstrainSize* UIO2::alignBottom() {
+	return UIO2::align(UIO::ALIGNMENT::BOTTOM);
+}
+
+UIOConstrainSize* UIO2::alignLeft() {
+	return UIO2::align(UIO::ALIGNMENT::LEFT);
+}
+
+UIOConstrainSize* UIO2::alignRight() {
+	return UIO2::align(UIO::ALIGNMENT::RIGHT);
+}
+
+UIOConstrainSize* UIO2::alignBottomLeft() {
+	return UIO2::align(UIO::ALIGNMENT::BOTTOMLEFT);
+}
+
+UIOConstrainSize* UIO2::alignBottomRight() {
+	return UIO2::align(UIO::ALIGNMENT::BOTTOMRIGHT);
+}
+
+UIOConstrainSize* UIO2::alignTopLeft() {
+	return UIO2::align(UIO::ALIGNMENT::TOPLEFT);
+}
+
+UIOConstrainSize* UIO2::alignTopRight() {
+	return UIO2::align(UIO::ALIGNMENT::TOPRIGHT);
+}
+
+UIOList* UIO2::listStart(UIO::DIR dir) {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
+	auto ptr = ref.get();
+
+	UIO2::Global::addMulti(std::move(ref));
+
+	return ptr;
+}
+
+UIOGrid* UIO2::gridStart(int32_t x, int32_t y) {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
+	auto ptr = ref.get();
+
+	UIO2::Global::addMulti(std::move(ref));
+
+	return ptr;
+}
+
+void UIO2::end() {
+	UIO2::Global::down();
 }
 
 UIO2::Scope::~Scope() {

@@ -6,6 +6,7 @@
 #include "Rectangle.h"
 #include "ReferenceManager.h"
 #include "ControlState.h"
+#include "Enums.h"
 
 class UIOBase;
 struct RenderInfo;
@@ -83,6 +84,8 @@ public:
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) = 0;
 
 	ScreenRectangle const& getScreenRectangle() const;
+
+	virtual UIO::TYPE getUIOType();
 
 	virtual ~UIOBase() = default;
 };

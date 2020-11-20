@@ -5,6 +5,8 @@
 #include "UIOBase.h"
 #include "UIOList.h"
 
+#include "UIOConstrainSize.h"
+
 struct UIOSizeType;
 class UIOTextDisplay;
 class UIOButton;
@@ -12,6 +14,8 @@ class UIOConstrainSize;
 class UIOWindow;
 class UIOHideable;
 class UIOProxy;
+class UIOGrid;
+class UIOColoredBackground;
 
 namespace UIO2
 {
@@ -28,9 +32,17 @@ namespace UIO2
 		static void down();
 		static void start(UniqueReference<UIOBase, UIOBase> ref);
 		static void start();
+
+		template<class T>
+		static T* addOrModifySingle();
+
+		template<class T>
+		static T* addSingle();
+
 		static void addSingle(UniqueReference<UIOBase, UIOBase> ref);
 		static void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
 		static void addMulti(UniqueReference<UIOBase, UIOBase> ref);
+		static void addEnd(UniqueReference<UIOBase, UIOBase> ref);
 
 		static UniqueReference<UIOBase, UIOBase> end();
 	};
@@ -54,15 +66,94 @@ namespace UIO2
 	};
 
 	UIOTextDisplay* text(std::string const& t);
-	UIOConstrainSize* constrainHeight(UIOSizeType height);
 	UIOButton* button();
 	UIOWindow* window(std::string const& title, Rectangle size, int32_t types);
 	UIOHideable* hideable();
+
+	UIOColoredBackground* background(glm::vec4 color);
+
+	UIOConstrainSize* constrainHeight(UIOSizeType height);
+	UIOConstrainSize* constrainWidth(UIOSizeType width);
+	UIOConstrainSize* align(UIO::ALIGNMENT alignment);
+	UIOConstrainSize* alignCenter();
+	UIOConstrainSize* alignTop();
+	UIOConstrainSize* alignBottom();
+	UIOConstrainSize* alignLeft();
+	UIOConstrainSize* alignRight();
+	UIOConstrainSize* alignBottomLeft();
+	UIOConstrainSize* alignBottomRight();
+	UIOConstrainSize* alignTopLeft();
+	UIOConstrainSize* alignTopRight();
+
+	UIOList* listStart(UIO::DIR dir);
+	UIOGrid* gridStart(int32_t x, int32_t y);
+
+	void end();
+
+	template<class T, class... Args> T* makeSingle(Args&&... args);
+
+	template<class T> T* makeEnd(UniqueReference<UIOBase, T> ref);
+
+	template<class T, class... Args> T* makeEnd(Args&&... args);
+}
+
+template<class T, class... Args>
+T* UIO2::makeSingle(Args&&... args) {
+	static_assert(std::is_base_of<UIOBase, T>::value);
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
+	auto ptr = ref.get();
+
+	UIO2::Global::addSingle(std::move(ref));
+
+	return ptr;
+}
+
+template<class T>
+T* UIO2::makeEnd(UniqueReference<UIOBase, T> ref) {
+	static_assert(std::is_base_of<UIOBase, T>::value);
+	auto ptr = ref.get();
+
+	UIO2::Global::addEnd(std::move(ref));
+
+	return ptr;
+}
+
+template<class T, class... Args>
+T* UIO2::makeEnd(Args&&... args) {
+	static_assert(std::is_base_of<UIOBase, T>::value);
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
+	auto ptr = ref.get();
+
+	UIO2::Global::addEnd(std::move(ref));
+
+	return ptr;
 }
 
 
+template<class T>
+T* UIO2::Global::addOrModifySingle() {
+	static_assert(UIO::GET_TYPE<T>() != UIO::TYPE::UNSPECIFIED);
 
+	WeakReference<UIOBase, UIOBase> leaf;
 
+	if (UIO2::Global::singlesLeaf.isNull() ||
+		UIO2::Global::singlesLeaf.get()->getUIOType() != UIO::GET_TYPE<T>()) {
+
+		auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
+		UIO2::Global::addSingle(std::move(ref));
+	}
+
+	return static_cast<T*>(UIO2::Global::singlesLeaf.get());
+}
+
+template<class T>
+inline T* UIO2::Global::addSingle() {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
+	auto ptr = ref.get();
+	UIO2::Global::addSingle(std::move(ref));
+
+	return ptr;
+}
 
 
 

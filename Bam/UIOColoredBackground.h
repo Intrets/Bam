@@ -8,6 +8,7 @@ class UIOColoredBackground : public UIOBaseSingle
 public:
 	glm::vec4 color = COLORS::UI::BACKGROUND;
 
+	UIOColoredBackground(Handle self);
 	UIOColoredBackground(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOColoredBackground(Handle self, glm::vec4 c, UniqueReference<UIOBase, UIOBase> main_);
 

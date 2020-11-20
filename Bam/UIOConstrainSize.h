@@ -41,6 +41,8 @@ public:
 	UIOConstrainSize() = default;
 	~UIOConstrainSize() = default;
 
+	virtual UIO::TYPE getUIOType() override;
+
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };
 

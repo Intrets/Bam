@@ -25,6 +25,10 @@ UIOConstrainSize::UIOConstrainSize(Handle self) {
 	this->selfHandle = self;
 }
 
+UIO::TYPE UIOConstrainSize::getUIOType() {
+	return UIO::TYPE::CONSTRAIN_SIZE;
+}
+
 ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
 

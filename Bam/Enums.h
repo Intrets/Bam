@@ -1,5 +1,29 @@
 #pragma once
 
+namespace UIO
+{
+	enum class TYPE
+	{
+		CONSTRAIN_SIZE,
+		UNSPECIFIED,
+	};
+
+	template<class T>
+	constexpr TYPE GET_TYPE();
+}
+
+class UIOConstrainSize;
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOConstrainSize>() {
+	return UIO::TYPE::CONSTRAIN_SIZE; 
+}
+
+template<class T>
+constexpr UIO::TYPE UIO::GET_TYPE() {
+	return UIO::TYPE::UNSPECIFIED;
+}
+
 namespace INVENTORYITEM
 {
 	enum class TYPE

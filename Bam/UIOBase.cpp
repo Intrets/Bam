@@ -7,6 +7,10 @@ ScreenRectangle const& UIOBase::getScreenRectangle() const {
 	return this->screenRectangle;
 }
 
+UIO::TYPE UIOBase::getUIOType() {
+	return UIO::TYPE::UNSPECIFIED;
+}
+
 Handle UIOBase::getSelfHandle() {
 	return this->selfHandle;
 }

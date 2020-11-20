@@ -3,6 +3,10 @@
 #include "UIOColoredBackground.h"
 #include "RenderInfo.h"
 
+UIOColoredBackground::UIOColoredBackground(Handle self) {
+	this->selfHandle = self;
+}
+
 UIOColoredBackground::UIOColoredBackground(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->addElement(std::move(main_));
 	this->selfHandle = self;
