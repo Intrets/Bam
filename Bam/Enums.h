@@ -10,6 +10,19 @@ namespace UIO
 
 	template<class T>
 	constexpr TYPE GET_TYPE();
+
+	enum class ALIGNMENT
+	{
+		TOP,
+		BOTTOM,
+		LEFT,
+		RIGHT,
+		TOPLEFT,
+		TOPRIGHT,
+		BOTTOMLEFT,
+		BOTTOMRIGHT,
+		CENTER,
+	};
 }
 
 class UIOConstrainSize;

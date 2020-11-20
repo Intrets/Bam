@@ -3,22 +3,7 @@
 #include "UIOBase.h"
 
 #include "UIOSizeType.h"
-
-namespace UIO
-{
-	enum class ALIGNMENT
-	{
-		TOP,
-		BOTTOM,
-		LEFT,
-		RIGHT,
-		TOPLEFT,
-		TOPRIGHT,
-		BOTTOMLEFT,
-		BOTTOMRIGHT,
-		CENTER,
-	};
-}
+#include "Enums.h"
 
 class UIOConstrainSize : public UIOBaseSingle
 {

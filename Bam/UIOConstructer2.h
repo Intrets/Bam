@@ -4,8 +4,7 @@
 
 #include "UIOBase.h"
 #include "UIOList.h"
-
-#include "UIOConstrainSize.h"
+#include "Enums.h"
 
 struct UIOSizeType;
 class UIOTextDisplay;
