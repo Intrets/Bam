@@ -3,7 +3,7 @@
 #include "UIOBase.h"
 #include "TextRenderInfo.h"
 
-class UIOTextDisplay : public UIOBase
+class UIOTextDisplay : public UIOBaseEnd
 {
 private:
 	bool lineWrap = false;

@@ -284,12 +284,6 @@
     <ClCompile Include="UIOPad.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOProxy.cpp">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOShell.cpp">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClCompile>
     <ClCompile Include="UIOTextDisplay.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClCompile>
@@ -311,14 +305,8 @@
     <ClCompile Include="UIOColoredBackground.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOConstructer.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
-    </ClCompile>
     <ClCompile Include="Colors.cpp">
       <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOTextConstructers.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="UIOBinds.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
@@ -328,9 +316,6 @@
     </ClCompile>
     <ClCompile Include="TickLimiter.cpp">
       <Filter>Program Control</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOConstructActivityInterface.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="UIOActivityInterface.cpp">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
@@ -425,6 +410,10 @@
     <ClCompile Include="InventorySerializerHelper.cpp" />
     <ClCompile Include="UIOConstructItemSpawner.cpp" />
     <ClCompile Include="UIOHotbar.cpp" />
+    <ClCompile Include="UIOConstructer2.cpp" />
+    <ClCompile Include="UIOProxy.cpp" />
+    <ClCompile Include="UIOConstructDebugInfo.cpp" />
+    <ClCompile Include="UIOConstructActivityInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -623,12 +612,6 @@
     <ClInclude Include="UIOPad.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOProxy.h">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOShell.h">
-      <Filter>Game\Logic\User IO Controllers\Components</Filter>
-    </ClInclude>
     <ClInclude Include="UIOTextDisplay.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
     </ClInclude>
@@ -653,14 +636,8 @@
     <ClInclude Include="UIOColoredBackground.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOConstructer.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
-    </ClInclude>
     <ClInclude Include="Colors.h">
       <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOTextConstructers.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="UIOBinds.h">
       <Filter>Game\Logic\User IO Controllers</Filter>
@@ -670,9 +647,6 @@
     </ClInclude>
     <ClInclude Include="TickLimiter.h">
       <Filter>Program Control</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOConstructActivityInterface.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="UIOActivityInterface.h">
       <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
@@ -764,6 +738,10 @@
     <ClInclude Include="InventorySerializerHelper.h" />
     <ClInclude Include="UIOConstructItemSpawner.h" />
     <ClInclude Include="UIOHotbar.h" />
+    <ClInclude Include="UIOConstructer2.h" />
+    <ClInclude Include="UIOProxy.h" />
+    <ClInclude Include="UIOConstructDebugInfo.h" />
+    <ClInclude Include="UIOConstructActivityInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

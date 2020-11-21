@@ -10,7 +10,7 @@ class UIOFreeSize;
 class UIOConstrainSize;
 class UIOTextDisplay;
 
-class UIOCursor : public UIOBase
+class UIOCursor : public UIOBaseMulti
 {
 private:
 	glm::vec2 cursorWorldPosition = glm::vec2(0, 0);
@@ -19,16 +19,17 @@ private:
 
 	int32_t selectionTick = 0;
 
-	UIOTextDisplay* hoveringText;
-	UIOFreeSize* hoveringFreeElement;
-	UIOBase* hoveringElement;
-
 	ManagedReference<Activity, Activity> target;
 
 	UIOCursor() = default;
 
 public:
+	UIOTextDisplay* hoveringText;
+	UIOFreeSize* hoveringFreeElement;
+	UIOBase* hoveringElement;
+
 	Inventory& getInventory();
+	ManagedReference<Activity, Activity> const& getTarget() const;
 
 	UIOCursor(Handle self);
 	~UIOCursor() = default;

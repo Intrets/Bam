@@ -4,6 +4,7 @@
 #include "UIOBase.h"
 #include "UIOCallBackParams.h"
 #include "UIOTextDisplay.h"
+#include "UIOButton.h"
 
 namespace UIOBinds
 {
@@ -190,4 +191,18 @@ namespace UIOBinds
 			ptr->setWrap(false);
 		}
 	}
+}
+
+void UIOBinds::Button::close(UIOButton* ptr) {
+	ptr->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::CLOSE;
+	});
+}
+
+void UIOBinds::Button::hide(UIOButton* ptr) {
+	ptr->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::HIDE;
+	});
 }

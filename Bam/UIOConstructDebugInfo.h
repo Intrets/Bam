@@ -4,5 +4,5 @@ class UIOList;
 
 namespace UIO2
 {
-	UIOList* constructItemSpawner();
+	UIOList* constructDebugInfo();
 }

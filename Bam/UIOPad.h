@@ -2,13 +2,11 @@
 
 #include "UIOBase.h"
 #include "UIOSizeType.h"
+#include "Enums.h"
 
-class UIOPad : public UIOBase
+class UIOPad : public UIOBaseSingle
 {
-private:
-	UIOBase* main;
-
-private:
+public:
 	template<class T>
 	friend class UIOConstructer;
 
@@ -20,9 +18,12 @@ private:
 	std::optional<UIOSizeType> right;
 
 public:
+	UIOPad(Handle self);
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual UIO::TYPE getUIOType() override;
 };
 

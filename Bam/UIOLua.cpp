@@ -23,3 +23,7 @@ ScreenRectangle UIOLua::updateSize(ScreenRectangle newScreenRectangle) {
 
 	return this->screenRectangle;
 }
+
+int32_t UIOLua::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
+	return depth;
+}

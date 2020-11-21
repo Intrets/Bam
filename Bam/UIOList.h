@@ -17,7 +17,7 @@ namespace UIO
 	};
 }
 
-class UIOList : public UIOBase
+class UIOList : public UIOBaseMulti
 {
 private:
 	UIO::DIR direction;
@@ -26,5 +26,7 @@ public:
 	UIOList(Handle self, UIO::DIR dir);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual UIO::TYPE getUIOType() override;
 };
 

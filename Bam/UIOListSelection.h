@@ -2,13 +2,13 @@
 
 #include "UIOBase.h"
 #include "UIOTextDisplay.h"
-#include "UIOTextConstructers.h"
 #include "UIOBinds.h"
 #include "RenderInfo.h"
 #include "Colors.h"
+#include "UIOConstructer2.h"
 
 template<class T>
-class UIOListSelection : public UIOBase
+class UIOListSelection : public UIOBaseSingle
 {
 private:
 	UIOTextDisplay* textDisplay;
@@ -24,7 +24,7 @@ public:
 
 	void setSelected(int32_t index);
 	std::optional<T*> getSelected();
-	void setList(std::vector<T>& l);
+	void setList(std::vector<T> const& l);
 	std::vector<T> const& getList();
 
 	void invalidateView();
@@ -50,7 +50,7 @@ std::optional<T*> UIOListSelection<T>::getSelected() {
 }
 
 template<class T>
-void UIOListSelection<T>::setList(std::vector<T>& l) {
+void UIOListSelection<T>::setList(std::vector<T> const& l) {
 	this->list = l;
 	this->validView = false;
 }
@@ -67,19 +67,20 @@ inline void UIOListSelection<T>::invalidateView() {
 
 template<class T>
 UIOListSelection<T>::UIOListSelection(Handle self) {
-	display = [](const T&)
+	this->display = [](const T&)
 	{
 		return "";
 	};
 
 	this->selfHandle = self;
-	this->addElement(
-		TextConstructer::constructDisplayText("")
-		.setPtr(this->textDisplay)
-		//.addBaseBind(UIOBinds::Base::activatable)
-		.addBind(UIOBinds::TextEdit::clickSelect)
-		.get()
-	);
+
+	UIO2::Global::push();
+
+	auto text = UIO2::textDisplayMulti("");
+	this->textDisplay = text;
+	UIOBinds::TextEdit::clickSelect(this->textDisplay);
+
+	this->addElement(UIO2::Global::pop());
 }
 
 template<class T>
@@ -105,7 +106,7 @@ inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderIn
 		this->validView = true;
 	}
 
-	depth = UIOBase::addRenderInfo(gameState, renderInfo, depth);
+	depth = UIOBaseSingle::addRenderInfo(gameState, renderInfo, depth);
 
 	if (auto const& maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen()) {
 		auto const& cursorQuad = maybeCursorQuad.value();

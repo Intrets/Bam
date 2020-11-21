@@ -9,9 +9,7 @@
 #include "ControlState.h"
 #include "GameState.h"
 #include "State.h"
-#include "UIOProxy.h"
 #include "Option.h"
-#include "UIOTextConstructers.h"
 #include "UIOGrid.h"
 #include "UIOList.h"
 #include "UIOPad.h"
@@ -22,7 +20,6 @@
 #include "Timer.h"
 #include "Colors.h"
 #include "UIOColoredBackground.h"
-#include "UIOConstructer.h"
 #include "UIOBinds.h"
 #include "StringHelpers.h"
 #include "LuaActivity.h"
@@ -36,9 +33,11 @@
 #include <fstream>
 #include "ActivitySpawner.h"
 #include "UIOConstructItemSpawner.h"
-
-#include "UIOConstructActivityInterface.h"
 #include "UIOActivityInterface.h"
+#include "UIOConstructer2.h"
+#include "UIOConstructDebugInfo.h"
+
+#include "UIOConstructDebugInfo.h"
 
 CallBackBindResult UIState::runFrontBinds(State& state) {
 	CallBackBindResult activeResult =
@@ -251,6 +250,12 @@ void UIState::addNamedUIReplace(std::string const& name, std::function<UniqueRef
 	this->namedUIsBuffer[name] = f();
 }
 
+void UIState::addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref) {
+	this->closeNamedUI(name);
+
+	this->namedUIsBuffer[name] = std::move(ref);
+}
+
 void UIState::closeNamedUI(std::string const& name) {
 	auto namedUI = this->namedUIs.find(name);
 
@@ -289,244 +294,53 @@ void UIState::init() {
 
 	// Inventory
 	{
-		this->UIs.push_back(
-			UIOConstructer<UIOInventory>::makeConstructer()
-			.window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::HIDE)
-			.hideable()
-			.get()
-		);
+		UIO2::Global::push();
+
+		UIO2::hideable();
+		UIO2::window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+					 UIOWindow::TYPE::MINIMISE |
+					 UIOWindow::TYPE::MOVE |
+					 UIOWindow::TYPE::HIDE);
+		UIO2::makeEnd<UIOInventory>();
+
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// Cursor renderer
 	{
-		this->UIs.push_back(
-			UIOConstructer<UIOCursor>::makeConstructer()
-			.get()
-		);
+		UIO2::Global::push();
+
+		UIO2::makeEnd<UIOCursor>();
+
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// Hotbar
 	{
-		auto hotbar = UIOConstructer<UIOHotbar>::makeConstructer()
-			.background(COLORS::UI::WINDOWBACKGROUND)
-			.constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f })
-			.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
-			.align(UIO::ALIGNMENT::BOTTOM)
-			.get();
+		UIO2::Global::push();
 
-		this->UIs.push_back(std::move(hotbar));
+		UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f });
+		UIO2::constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f });
+		UIO2::alignBottom();
+		UIO2::background(COLORS::UI::WINDOWBACKGROUND);
+		UIO2::makeEnd<UIOHotbar>();
+
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// save/load and other stuff
 	{
-		UIOList* listPtr;
-		auto window = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::DOWN)
-			.setPtr(listPtr)
-			.window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::RESIZEVERTICAL |
-					UIOWindow::TYPE::RESIZEHORIZONTAL |
-					UIOWindow::TYPE::RESIZE |
-					UIOWindow::TYPE::MOVE)
-			.get();
+		UIO2::Global::push();
 
-		this->UIs.push_back(std::move(window));
+		UIO2::window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
+					 UIOWindow::TYPE::MINIMISE |
+					 UIOWindow::TYPE::RESIZEVERTICAL |
+					 UIOWindow::TYPE::RESIZEHORIZONTAL |
+					 UIOWindow::TYPE::RESIZE |
+					 UIOWindow::TYPE::MOVE);
+		UIO2::constructDebugInfo();
 
-		//auto list = refMan->makeUniqueRef<UIOList>(UIO::DIR::DOWN);
-		{
-			UIOTextDisplay* ptr;
-			auto text = TextConstructer::constructDisplayText("").setPtr(ptr)
-				.addBind([](UIOTextDisplay* ptr)
-			{
-				ptr->addGlobalBind(
-					{ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) },
-					[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-				{
-					auto self = static_cast<UIOTextDisplay*>(self_);
-					self->setText(Locator<Timer>::ref().print());
-					return BIND::RESULT::CONTINUE;
-				});
-			})
-				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight({ UIO::SIZETYPE::FH, 16.3f })
-				.get();
-
-			listPtr->addElement(std::move(text));
-		}
-		{
-			listPtr->addElement(
-				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
-				.get()
-			);
-		}
-		{
-			UIOTextDisplay* textPtr;
-			auto text = TextConstructer::constructSingleLineTextEdit("test.save").setPtr(textPtr)
-				.background(COLORS::UI::BACKGROUND)
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-				.get();
-
-			listPtr->addElement(std::move(text));
-
-			auto saveButton = TextConstructer::constructSingleLineDisplayText("save")
-				.align(UIO::ALIGNMENT::CENTER)
-				.button()
-				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				if (textPtr->text.getLines().size() == 0) {
-					return BIND::RESULT::CONTINUE;
-				}
-				auto name = textPtr->text.getLines().front();
-				name.erase(name.end() - 1);
-
-				params.gameState.saveFile = name;
-				return BIND::RESULT::CONTINUE;
-			})
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-				.get();
-
-			listPtr->addElement(std::move(saveButton));
-
-			auto loadButton = TextConstructer::constructSingleLineDisplayText("load")
-				.align(UIO::ALIGNMENT::CENTER)
-				.button()
-				.onPress([textPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				if (textPtr->text.getLines().size() == 0) {
-					return BIND::RESULT::CONTINUE;
-				}
-				auto name = textPtr->text.getLines().front();
-				name.erase(name.end() - 1);
-
-				params.gameState.loadFile = name;
-				params.uiState.reset();
-				return BIND::RESULT::CONTINUE;
-			})
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-				.get();
-
-			listPtr->addElement(std::move(loadButton));
-		}
-		{
-			listPtr->addElement(
-				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
-				.get()
-			);
-		}
-		{
-			UIOButton* ptr;
-			auto a = TextConstructer::constructSingleLineDisplayText("Debug Render")
-				.align(UIO::ALIGNMENT::CENTER)
-				.button()
-				.setPtr(ptr)
-				.onRelease(
-					[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
-				auto self = static_cast<UIOButton*>(self_);
-				self->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-				return BIND::RESULT::CONTINUE;
-			})
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-				.get();
-
-			ptr->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-
-			listPtr->addElement(std::move(a));
-		}
-		{
-			UIOButton* ptr;
-			auto a = TextConstructer::constructSingleLineDisplayText("Toggle Seperate Render Thread")
-				.align(UIO::ALIGNMENT::CENTER)
-				.button()
-				.setPtr(ptr)
-				.onRelease(
-					[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
-				auto self = static_cast<UIOButton*>(self_);
-				self->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-				return BIND::RESULT::CONTINUE;
-			})
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-				.get();
-
-			ptr->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
-
-			listPtr->addElement(std::move(a));
-		}
-		{
-			listPtr->addElement(
-				TextConstructer::constructSingleLineDisplayText("Spawn Items")
-				.alignCenter()
-				.button()
-				.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-			{
-				params.uiState.addNamedUI("Item Spawner", []()
-				{
-					return CONSTRUCTER::constructItemSpawner()
-						.window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , -0.2f } },
-								UIOWindow::TYPE::MINIMISE |
-								UIOWindow::TYPE::MOVE |
-								UIOWindow::TYPE::CLOSE |
-								UIOWindow::TYPE::RESIZE)
-						.hideable()
-						.get();
-				});
-
-				return BIND::RESULT::CONTINUE;
-			})
-				.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-				.constrainHeight({ UIO::SIZETYPE::FH ,1.2f })
-				.get()
-				);
-		}
-		{
-			listPtr->addElement(
-				UIOConstructer<UIOEmpty>::makeConstructer()
-				.constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 })
-				.get()
-			);
-		}
-		{
-			auto a = TextConstructer::constructDisplayText("")
-				.addBind(UIOBinds::Base::activatable)
-				.addBind([](UIOTextDisplay* ptr)
-			{
-				ptr->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-				{
-					auto self = static_cast<UIOTextDisplay*>(self_);
-
-					auto& vec = self->text.getLinesMutable();
-					if (vec.size() > 100) {
-						vec.erase(vec.begin(), vec.begin() + 50);
-					}
-
-					auto newLines = Locator<Log>::ref().getLines();
-					for (auto& newLine : newLines) {
-						self->text.addLine(newLine);
-					}
-					if (newLines.size() != 0) {
-						self->text.moveCursor(glm::ivec2(100000, newLines.size()));
-					}
-					return BIND::RESULT::CONTINUE;
-				});
-
-			})
-				.background(COLORS::UI::BACKGROUND)
-				.get();
-
-			listPtr->addElement(std::move(a));
-		}
+		this->UIs.push_back(std::move(UIO2::Global::pop()));
 	}
 
 	// wasd movement in world

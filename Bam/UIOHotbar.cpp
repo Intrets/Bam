@@ -1,11 +1,11 @@
 #include "common.h"
 
 #include "UIOHotbar.h"
-#include "UIOTextConstructers.h"
-#include "UIOConstructer.h"
 #include "UIOTextDisplay.h"
 #include "Inventory.h"
 #include "InventoryItem.h"
+#include "UIOConstructer2.h"
+#include "UIOButton.h"
 
 Inventory& UIOHotbar::getInventory() {
 	return Locator<Inventory>::ref();
@@ -15,21 +15,18 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	this->icons.reserve(10);
 
 	for (int32_t i = 0; i < 10; i++) {
-		UIOTextDisplay* ptr;
-		this->addElement(
-			TextConstructer::constructSingleLineDisplayText("")
-			.setPtr(ptr)
-			.alignCenter()
-			.button()
-			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::Global::push();
+
+		auto [button, text] = UIO2::textButton2(std::to_string(i));
+
+		this->icons.push_back(text);
+		button->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
-		this->icons.push_back(ptr);
+		});
+
+		this->addElement(UIO2::Global::pop());
 	}
 }
 

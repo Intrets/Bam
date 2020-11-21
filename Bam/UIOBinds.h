@@ -2,6 +2,7 @@
 
 class UIOBase;
 class UIOTextDisplay;
+class UIOButton;
 
 namespace UIOBinds
 {
@@ -30,5 +31,11 @@ namespace UIOBinds
 		void viewDown(UIOTextDisplay* ptr);
 		void wrap(UIOTextDisplay* ptr);
 		void nowrap(UIOTextDisplay* ptr);
+	}
+
+	namespace Button
+	{
+		void close(UIOButton* ptr);
+		void hide(UIOButton* ptr);
 	}
 }

@@ -2,10 +2,31 @@
 
 #include "UIOConstrainSize.h"
 
+void UIOConstrainSize::setHeight(UIOSizeType height) {
+	assert(!this->maybeHeight.has_value());
+	this->maybeHeight = height;
+}
+
+void UIOConstrainSize::setWidth(UIOSizeType width) {
+	assert(!this->maybeWidth.has_value());
+	this->maybeWidth = width;
+}
+
+void UIOConstrainSize::setAlignment(UIO::ALIGNMENT alignment_) {
+	this->alignment = alignment_;
+}
+
 UIOConstrainSize::UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
-	this->main = main_.get();
-	addElement(std::move(main_));
+	this->addElement(std::move(main_));
+}
+
+UIOConstrainSize::UIOConstrainSize(Handle self) {
+	this->selfHandle = self;
+}
+
+UIO::TYPE UIOConstrainSize::getUIOType() {
+	return UIO::TYPE::CONSTRAIN_SIZE;
 }
 
 ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle) {
@@ -18,7 +39,7 @@ ScreenRectangle UIOConstrainSize::updateSize(ScreenRectangle newScreenRectangle)
 		newScreenRectangle.setHeight(this->maybeHeight.value().getHeight(this->screenRectangle));
 	}
 
-	newScreenRectangle = this->main->updateSize(newScreenRectangle);
+	newScreenRectangle = this->main.get()->updateSize(newScreenRectangle);
 
 	glm::vec2 p;
 	switch (this->alignment) {

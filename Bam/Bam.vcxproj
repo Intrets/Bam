@@ -284,6 +284,9 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOConstructActivityInfo.cpp" />
+    <ClCompile Include="UIOConstructDebugInfo.cpp" />
+    <ClCompile Include="UIOConstructer2.cpp" />
     <ClCompile Include="UIOConstructItemSpawner.cpp" />
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
@@ -333,8 +336,6 @@
     <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
-    <ClCompile Include="UIOConstructActivityInterface.cpp" />
-    <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOConstructLuaInterface.cpp" />
     <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
@@ -347,7 +348,6 @@
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOLua.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
-    <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
@@ -368,7 +368,6 @@
     <ClCompile Include="UIOButton.cpp" />
     <ClCompile Include="UIOConstrainSize.cpp" />
     <ClCompile Include="UIOFreeSize.cpp" />
-    <ClCompile Include="UIOShell.cpp" />
     <ClCompile Include="UIOSizeType.cpp" />
     <ClCompile Include="UIOTextDisplay.cpp" />
     <ClCompile Include="UIOWindow.cpp" />
@@ -398,6 +397,9 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOConstructActivityInfo.h" />
+    <ClInclude Include="UIOConstructDebugInfo.h" />
+    <ClInclude Include="UIOConstructer2.h" />
     <ClInclude Include="UIOConstructItemSpawner.h" />
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="DebugRenderer.h" />
@@ -441,8 +443,6 @@
     <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />
-    <ClInclude Include="UIOConstructActivityInterface.h" />
-    <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOConstructLuaInterface.h" />
     <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UIOEmpty.h" />
@@ -455,7 +455,6 @@
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOLua.h" />
     <ClInclude Include="UIOProxy.h" />
-    <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
@@ -485,7 +484,6 @@
     <ClInclude Include="UIOButton.h" />
     <ClInclude Include="UIOConstrainSize.h" />
     <ClInclude Include="UIOFreeSize.h" />
-    <ClInclude Include="UIOShell.h" />
     <ClInclude Include="UIOSizeType.h" />
     <ClInclude Include="UIOTextDisplay.h" />
     <ClInclude Include="UIOWindow.h" />

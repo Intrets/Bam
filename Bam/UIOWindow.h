@@ -3,7 +3,7 @@
 #include "UIOBase.h"
 #include "UIOButton.h"
 
-class UIOWindow : public UIOBase
+class UIOWindow : public UIOBaseMulti
 {
 public:
 	enum TYPE
@@ -17,9 +17,8 @@ public:
 		HIDE = 1 << 6,
 	};
 
-
 	UIOBase* main;
-	UIOBase* topBarPtr;
+	UIOBase* topBar;
 
 	bool minimized = false;
 
@@ -28,7 +27,6 @@ public:
 	UIOWindow() = default;
 	virtual ~UIOWindow() = default;
 
-	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
 	virtual CallBackBindResult runOnHoverBinds(State& state) override;
@@ -36,5 +34,8 @@ public:
 	virtual CallBackBindResult runActiveBinds(State& state) override;
 	virtual CallBackBindResult runGlobalBinds(State& state) override;
 	virtual CallBackBindResult runGameWorldBinds(State& state) override;
+
+	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
+	virtual void addElementMulti(UniqueReference<UIOBase, UIOBase> element);
 };
 

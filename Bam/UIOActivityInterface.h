@@ -3,7 +3,6 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 #include "UIOBase.h"
-#include "UIOConstructActivityInterface.h"
 
 class UIState;
 
@@ -16,7 +15,7 @@ namespace UIO
 	};
 }
 
-class UIOActivityInterface : public UIOBase
+class UIOActivityInterface : public UIOBaseEnd
 {
 private:
 	ManagedReference<Activity, Activity> target;

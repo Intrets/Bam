@@ -1,18 +1,26 @@
 #include "common.h"
 
 #include "UIOCursor.h"
+
 #include "Inventory.h"
-#include "UIOConstructer.h"
-#include "UIOTextConstructers.h"
-#include "UIOTextDisplay.h"
 #include "Colors.h"
 #include "UIOListSelection.h"
 #include "ActivityHelpers.h"
 #include "Linker.h"
 #include "UIOConstructLuaInterface.h"
+#include "UIOConstructer2.h"
+#include "UIOSizeType.h"
+#include "UIOColoredBackground.h"
+#include "UIOWindow.h"
+#include "UIOFreeSize.h"
+#include "UIOConstructActivityInfo.h"
 
 Inventory& UIOCursor::getInventory() {
 	return Locator<Inventory>::ref();
+}
+
+ManagedReference<Activity, Activity> const& UIOCursor::getTarget() const {
+	return this->target;
 }
 
 UIOCursor::UIOCursor(Handle self) {
@@ -82,19 +90,16 @@ UIOCursor::UIOCursor(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addElement(
-		TextConstructer::constructSingleLineDisplayText("testing 123", false)
-		.setPtr(this->hoveringText)
-		.background(COLORS::UI::FOREGROUND)
-		.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-		.constrainHeight({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.1f })
-		.constrainWidth({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.1f })
-		.background(COLORS::UI::RED)
-		.setPtr(this->hoveringElement)
-		.free()
-		.setPtr(this->hoveringFreeElement)
-		.get()
-	);
+	UIO2::Global::push();
+
+	this->hoveringFreeElement = UIO2::free();
+	this->hoveringElement = UIO2::background(COLORS::UI::RED);
+	UIO2::constrainSize({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.1f });
+	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
+	UIO2::background(COLORS::UI::FOREGROUND);
+	this->hoveringText = UIO2::textDisplaySingle("testing 123", false);
+
+	this->addElement(UIO2::Global::pop());
 }
 
 void UIOCursor::setCursorWorldPosition(glm::vec2 p) {
@@ -150,15 +155,18 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				uiName,
 				[activity, uiName, offset]()
 		{
-			return CONSTRUCTER::constructLuaInterface(activity)
-				.window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
-						UIOWindow::TYPE::MINIMISE |
-						UIOWindow::TYPE::RESIZEVERTICAL |
-						UIOWindow::TYPE::RESIZEHORIZONTAL |
-						UIOWindow::TYPE::RESIZE |
-						UIOWindow::TYPE::MOVE |
-						UIOWindow::TYPE::CLOSE)
-				.get();
+			UIO2::Global::push();
+
+			UIO2::window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
+						 UIOWindow::TYPE::MINIMISE |
+						 UIOWindow::TYPE::RESIZEVERTICAL |
+						 UIOWindow::TYPE::RESIZEHORIZONTAL |
+						 UIOWindow::TYPE::RESIZE |
+						 UIOWindow::TYPE::MOVE |
+						 UIOWindow::TYPE::CLOSE);
+			UIO2::constructLuaInterface(activity);
+
+			return UIO2::Global::pop();
 		});
 
 		if (newUI) {
@@ -168,76 +176,22 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 
 	using PairType = std::pair<int32_t, ManagedReference<Activity, Activity>>;
 
+	UIO2::Global::push();
+
+	UIO2::window("Activity Info",
+				 { 0.65f, -0.9f, 0.95f, 0.0f },
+				 UIOWindow::TYPE::MINIMISE |
+				 UIOWindow::TYPE::RESIZEVERTICAL |
+				 UIOWindow::TYPE::RESIZEHORIZONTAL |
+				 UIOWindow::TYPE::RESIZE |
+				 UIOWindow::TYPE::MOVE |
+				 UIOWindow::TYPE::CLOSE);
+	UIO2::constructActivityInfo(this);
+
 	params.uiState.addNamedUIReplace(
 		"ActivityInfo",
-		[cursorPtr = this, cursor = ManagedReference<UIOBase, UIOCursor>(this->getSelfHandle())]()
-	{
-		UIOTextDisplay* labelName;
-		UIOListSelection<PairType>* list;
-
-		return UIOConstructer<UIOListSelection<PairType>>::makeConstructer(
-			[](PairType const& e)
-		{
-			if (e.second.isValid()) {
-				std::stringstream out;
-				out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type: " << e.second.get()->getTypeName() << " label: " << e.second.get()->getLabel();
-				return out.str();
-			}
-			else {
-				return std::string(e.first, ' ') + "invalid";
-			}
-		})
-			.setPtr(list)
-			.addBindCapture([cursorPtr](UIOBase* self)
-		{
-			std::vector<PairType> membersManaged;
-
-			std::vector<std::pair<int32_t, Activity*>> members;
-			cursorPtr->target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
-
-			int32_t i = 0;
-			int32_t index = 0;
-			for (auto [depth, activity] : members) {
-				if (activity->selfHandle == cursorPtr->target.getHandle()) {
-					index = i;
-				}
-				membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(activity->selfHandle) });
-				i++;
-			}
-
-			static_cast<UIOListSelection<PairType>*>(self)->setList(membersManaged);
-			static_cast<UIOListSelection<PairType>*>(self)->setSelected(index);
-		})
-			.list(UIO::DIR::DOWN_REVERSE)
-			.addToList(
-				TextConstructer::constructSingleLineTextEdit("")
-				.setPtr(labelName)
-				.constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f })
-				.list(UIO::DIR::LEFT)
-				.addToList(
-					TextConstructer::constructSingleLineDisplayText("test")
-					.button()
-					.onRelease([labelName, list](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			auto name = labelName->text.getLines()[0];
-			name = name.substr(0, name.size() - 1);
-			list->getSelected().value()->second.get()->setLabel(name);
-			list->invalidateView();
-			return BIND::RESULT::CONTINUE;
-		})
-				)
-				.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			)
-			.window("Activity Info",
-					{ 0.65f, -0.9f, 0.95f, 0.0f },
-					UIOWindow::TYPE::MINIMISE |
-					UIOWindow::TYPE::RESIZEVERTICAL |
-					UIOWindow::TYPE::RESIZEHORIZONTAL |
-					UIOWindow::TYPE::RESIZE |
-					UIOWindow::TYPE::MOVE |
-					UIOWindow::TYPE::CLOSE)
-			.get();
-	});
+		UIO2::Global::pop()
+	);
 }
 
 void UIOCursor::setWorldRender() {

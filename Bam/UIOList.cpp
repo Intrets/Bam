@@ -88,3 +88,7 @@ ScreenRectangle UIOList::updateSize(ScreenRectangle newScreenRectangle) {
 
 	return this->screenRectangle;
 }
+
+UIO::TYPE UIOList::getUIOType() {
+	return UIO::TYPE::LIST;
+}

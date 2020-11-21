@@ -6,6 +6,7 @@
 #include "Rectangle.h"
 #include "ReferenceManager.h"
 #include "ControlState.h"
+#include "Enums.h"
 
 class UIOBase;
 struct RenderInfo;
@@ -36,11 +37,11 @@ typedef std::function<CallBackBindResult(UIOCallBackParams& UIOCallBackParams, U
 class UIOBase
 {
 protected:
+	Handle selfHandle;
 	bool active = false;
 
-	Handle selfHandle;
-
-	std::vector<UniqueReference<UIOBase, UIOBase>> elements;
+	template<class T>
+	friend class UIOConstructer;
 
 	using Bind = std::pair<BindControl, CallBack>;
 
@@ -50,26 +51,21 @@ protected:
 	std::vector<Bind> globalBinds;
 	std::vector<Bind> gameWorldBinds;
 
-protected:
-	template<class T>
-	friend class UIOConstructer;
+public:
+	Handle getSelfHandle();
 
 	ScreenRectangle screenRectangle;
 
-public:
-	ScreenRectangle const& getScreenRectangle() const;
+	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) = 0;
+	virtual void translate(glm::vec2 p) = 0;
+	virtual void setScreenPixels(glm::ivec2 px) = 0;
 
-	Handle getSelfHandle();
-
-	void addElement(UniqueReference<UIOBase, UIOBase> element);
+	bool contains(glm::vec2 p) const;
 
 	void activate();
 	void deactivate();
 
-	virtual void translate(glm::vec2 p);
-	void setScreenPixels(glm::ivec2 px);
 	void moveTopLeftTo(glm::vec2 p);
-	bool contains(glm::vec2 p) const;
 
 	void addGlobalBind(BindControl bindControl, CallBack callBack);
 	void addFocussedBind(BindControl bindControl, CallBack callBack);
@@ -85,9 +81,74 @@ public:
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) = 0;
 
-	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth);
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) = 0;
 
-	UIOBase() = default;
+	ScreenRectangle const& getScreenRectangle() const;
+
+	virtual UIO::TYPE getUIOType();
+
 	virtual ~UIOBase() = default;
 };
 
+class UIOBaseMulti : public UIOBase
+{
+protected:
+	std::vector<UniqueReference<UIOBase, UIOBase>> elements;
+
+public:
+	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
+
+	virtual void translate(glm::vec2 p) override;
+	virtual void setScreenPixels(glm::ivec2 px) override;
+
+	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual CallBackBindResult runGlobalBinds(State& state) override;
+	virtual CallBackBindResult runFocussedBinds(State& state) override;
+	virtual CallBackBindResult runOnHoverBinds(State& state) override;
+	virtual CallBackBindResult runActiveBinds(State& state) override;
+	virtual CallBackBindResult runGameWorldBinds(State& state) override;
+
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
+
+	UIOBaseMulti() = default;
+	virtual ~UIOBaseMulti() = default;
+};
+
+class UIOBaseSingle : public UIOBase
+{
+protected:
+	UniqueReference<UIOBase, UIOBase> main;
+
+public:
+	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
+
+	virtual void translate(glm::vec2 p) override;
+	virtual void setScreenPixels(glm::ivec2 px) override;
+
+	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
+
+	virtual CallBackBindResult runGlobalBinds(State& state) override;
+	virtual CallBackBindResult runFocussedBinds(State& state) override;
+	virtual CallBackBindResult runOnHoverBinds(State& state) override;
+	virtual CallBackBindResult runActiveBinds(State& state) override;
+	virtual CallBackBindResult runGameWorldBinds(State& state) override;
+
+	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
+
+	UIOBaseSingle() = default;
+	virtual ~UIOBaseSingle() = default;
+};
+
+class UIOBaseEnd : public UIOBase
+{
+private:
+	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
+
+public:
+	virtual void translate(glm::vec2 p) override;
+	virtual void setScreenPixels(glm::ivec2 px) override;
+
+	UIOBaseEnd() = default;
+	virtual ~UIOBaseEnd() = default;
+};

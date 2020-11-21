@@ -10,7 +10,6 @@
 
 UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
 	this->selfHandle = self;
-	this->main = main_.get();
 	this->addElement(std::move(main_));
 }
 
@@ -18,24 +17,15 @@ UIOWindow::UIOWindow(Handle self) {
 	this->selfHandle = self;
 }
 
-ScreenRectangle UIOWindow::updateSize(ScreenRectangle newScreenRectangle) {
-	this->screenRectangle = newScreenRectangle;
-
-	for (auto& element : this->elements) {
-		element.get()->updateSize(this->screenRectangle);
-	}
-	return this->screenRectangle;
-}
-
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec2 px = glm::vec2(1.0f) / glm::vec2(this->screenRectangle.getPixelSize());
 	if (this->minimized) {
-		depth = topBarPtr->addRenderInfo(gameState, renderInfo, depth++);
-		renderInfo.uiRenderInfo.addRectangle(this->topBarPtr->getScreenRectangle().getBottomLeft() - px, this->topBarPtr->getScreenRectangle().getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
+		depth = topBar->addRenderInfo(gameState, renderInfo, depth++);
+		renderInfo.uiRenderInfo.addRectangle(this->topBar->getScreenRectangle().getBottomLeft() - px, this->topBar->getScreenRectangle().getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
 		return depth;
 	}
 	else {
-		depth = this->UIOBase::addRenderInfo(gameState, renderInfo, depth++);
+		depth = this->UIOBaseMulti::addRenderInfo(gameState, renderInfo, depth++);
 		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.getBottomLeft() - px, this->screenRectangle.getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
 		return depth;
 	}
@@ -43,45 +33,55 @@ int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 
 CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 	if (this->minimized) {
-		return this->topBarPtr->runGlobalBinds(state);
+		return this->topBar->runGlobalBinds(state);
 	}
 	else {
-		return this->UIOBase::runGlobalBinds(state);
+		return this->UIOBaseMulti::runGlobalBinds(state);
 	}
 }
 
 CallBackBindResult UIOWindow::runGameWorldBinds(State& state) {
 	if (this->minimized) {
-		return this->topBarPtr->runGameWorldBinds(state);
+		return this->topBar->runGameWorldBinds(state);
 	}
 	else {
-		return this->UIOBase::runGameWorldBinds(state);
+		return this->UIOBaseMulti::runGameWorldBinds(state);
 	}
+}
+
+void UIOWindow::addElement(UniqueReference<UIOBase, UIOBase> element) {
+	assert(this->main == nullptr);
+	this->main = element.get();
+	this->addElementMulti(std::move(element));
+}
+
+void UIOWindow::addElementMulti(UniqueReference<UIOBase, UIOBase> element) {
+	this->UIOBaseMulti::addElement(std::move(element));
 }
 
 CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 	if (this->minimized) {
-		return this->topBarPtr->runFocussedBinds(state);
+		return this->topBar->runFocussedBinds(state);
 	}
 	else {
-		return this->UIOBase::runFocussedBinds(state);
+		return this->UIOBaseMulti::runFocussedBinds(state);
 	}
 }
 
 CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
 	if (this->minimized) {
-		return this->topBarPtr->runOnHoverBinds(state);
+		return this->topBar->runOnHoverBinds(state);
 	}
 	else {
-		return  this->UIOBase::runOnHoverBinds(state);
+		return  this->UIOBaseMulti::runOnHoverBinds(state);
 	}
 }
 
 CallBackBindResult UIOWindow::runActiveBinds(State& state) {
 	if (this->minimized) {
-		return this->topBarPtr->runActiveBinds(state);
+		return this->topBar->runActiveBinds(state);
 	}
 	else {
-		return this->UIOBase::runActiveBinds(state);
+		return this->UIOBaseMulti::runActiveBinds(state);
 	}
 }

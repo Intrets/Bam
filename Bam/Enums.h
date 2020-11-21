@@ -1,5 +1,63 @@
 #pragma once
 
+namespace UIO
+{
+	enum class TYPE
+	{
+		CONSTRAIN_SIZE,
+		PAD,
+		LIST,
+		GRID,
+		UNSPECIFIED,
+	};
+
+	template<class T>
+	constexpr TYPE GET_TYPE();
+
+	enum class ALIGNMENT
+	{
+		TOP,
+		BOTTOM,
+		LEFT,
+		RIGHT,
+		TOPLEFT,
+		TOPRIGHT,
+		BOTTOMLEFT,
+		BOTTOMRIGHT,
+		CENTER,
+	};
+}
+
+class UIOConstrainSize;
+class UIOPad;
+class UIOList;
+class UIOGrid;
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOConstrainSize>() {
+	return UIO::TYPE::CONSTRAIN_SIZE;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOPad>() {
+	return UIO::TYPE::PAD;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOList>() {
+	return UIO::TYPE::LIST;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOGrid>() {
+	return UIO::TYPE::GRID;
+}
+
+template<class T>
+constexpr UIO::TYPE UIO::GET_TYPE() {
+	return UIO::TYPE::UNSPECIFIED;
+}
+
 namespace INVENTORYITEM
 {
 	enum class TYPE

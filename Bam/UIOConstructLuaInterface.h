@@ -11,7 +11,8 @@ class WeakReference;
 class LuaActivity;
 class Activity;
 
-namespace CONSTRUCTER
+namespace UIO2
 {
-	UIOConstructer<UIOList> constructLuaInterface(WeakReference<Activity, LuaActivity> ref);
+	UIOList* constructLuaInterface(WeakReference<Activity, LuaActivity> ref);
 }
+
