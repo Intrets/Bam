@@ -129,7 +129,7 @@ UIOList* UIO2::constructDebugInfo() {
 	{
 		params.uiState.addNamedUI("Item Spawner", []()
 		{
-			UIO2::Global::start();
+			UIO2::Global::push();
 
 			UIO2::hideable();
 			UIO2::window("Item Spawner", { { 0.5f, -1.0f }, { 1.0f , -0.2f } },
@@ -139,7 +139,7 @@ UIOList* UIO2::constructDebugInfo() {
 						 UIOWindow::TYPE::RESIZE);
 			UIO2::constructItemSpawner();
 
-			return UIO2::Global::end();
+			return UIO2::Global::pop();
 		});
 
 		return BIND::RESULT::CONTINUE;

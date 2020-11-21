@@ -30,6 +30,8 @@ namespace UIO
 
 class UIOConstrainSize;
 class UIOPad;
+class UIOList;
+class UIOGrid;
 
 template<>
 constexpr UIO::TYPE UIO::GET_TYPE<UIOConstrainSize>() {
@@ -39,6 +41,16 @@ constexpr UIO::TYPE UIO::GET_TYPE<UIOConstrainSize>() {
 template<>
 constexpr UIO::TYPE UIO::GET_TYPE<UIOPad>() {
 	return UIO::TYPE::PAD;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOList>() {
+	return UIO::TYPE::LIST;
+}
+
+template<>
+constexpr UIO::TYPE UIO::GET_TYPE<UIOGrid>() {
+	return UIO::TYPE::GRID;
 }
 
 template<class T>

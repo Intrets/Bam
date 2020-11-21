@@ -14,90 +14,89 @@
 #include "UIOPad.h"
 #include "UIOBinds.h"
 
-UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
-UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
-std::vector<WeakReference<UIOBase, UIOBase>> UIO2::Global::stack;
-WeakReference<UIOBase, UIOBase> UIO2::Global::singlesLeaf;
+//UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
+//UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
+//std::vector<WeakReference<UIOBase, UIOBase>> UIO2::Global::stack;
+//WeakReference<UIOBase, UIOBase> UIO2::Global::singlesLeaf;
 
-UIO2::List::List(UIO::DIR dir) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
-	UIO2::Global::addMulti(std::move(ref));
+std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
+
+void UIO2::ConstructerState::addSingle(UniqueReference<UIOBase, UIOBase> ref) {
+	WeakReference<UIOBase, UIOBase> weakRef = ref;
+
+	if (this->singlesLeaf.isNotNull()) {
+		this->singlesLeaf.get()->addElement(std::move(ref));
+	}
+	else {
+		this->singlesRoot = std::move(ref);
+	}
+
+	this->singlesLeaf = weakRef;
 }
 
-void UIO2::Global::down() {
-	UIO2::Global::stack.pop_back();
+void UIO2::ConstructerState::addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf) {
+	if (this->singlesLeaf.isNotNull()) {
+		this->singlesLeaf.get()->addElement(std::move(ref));
+	}
+	else {
+		this->singlesRoot = std::move(ref);
+	}
+
+	this->singlesLeaf = leaf;
 }
 
-void UIO2::Global::start(UniqueReference<UIOBase, UIOBase> ref) {
-	WeakReference<UIOBase, UIOBase> weak = ref;
-	UIO2::Global::root = std::move(ref);
-	UIO2::Global::stack.push_back(weak);
+void UIO2::ConstructerState::addMulti(UniqueReference<UIOBase, UIOBase> ref) {
+	WeakReference<UIOBase, UIOBase> weakRef = ref;
+
+	if (this->singlesLeaf.isNull()) {
+		this->stack.back().get()->addElement(std::move(ref));
+	}
+	else {
+		this->singlesLeaf.get()->addElement(std::move(ref));
+		this->stack.back().get()->addElement(std::move(this->singlesRoot));
+
+		this->singlesLeaf.clear();
+		assert(this->singlesRoot.isNull());
+	}
+	this->stack.push_back(weakRef);
 }
 
-void UIO2::Global::start() {
+void UIO2::ConstructerState::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
+	if (this->singlesLeaf.isNull()) {
+		this->stack.back().get()->addElement(std::move(ref));
+	}
+	else {
+		this->singlesLeaf.get()->addElement(std::move(ref));
+		this->stack.back().get()->addElement(std::move(this->singlesRoot));
+		this->singlesLeaf.clear();
+	}
+}
+
+UIO2::ConstructerState* UIO2::Global::getState() {
+	return UIO2::Global::states.back().get();
+}
+
+void UIO2::Global::push() {
+	UIO2::Global::states.push_back(std::make_unique<ConstructerState>());
+	auto& state = UIO2::Global::states.back();
+
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOProxy>();
-	UIO2::Global::stack.push_back(ref);
-	UIO2::Global::root = std::move(ref);
+	state->stack.push_back(ref);
+	state->root = std::move(ref);
 }
 
-void UIO2::Global::addSingle(UniqueReference<UIOBase, UIOBase> ref) {
-	WeakReference<UIOBase, UIOBase> weakRef = ref;
+UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
+	assert(UIO2::Global::states.size() > 0);
+	auto& state = UIO2::Global::states.back();
 
-	if (UIO2::Global::singlesLeaf.isNotNull()) {
-		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
-	}
-	else {
-		UIO2::Global::singlesRoot = std::move(ref);
-	}
+	state->singlesLeaf.clear();
+	state->stack.clear();
 
-	UIO2::Global::singlesLeaf = weakRef;
-}
+	auto res = std::move(state->root.get()->getMain());
 
-void UIO2::Global::addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf) {
-	if (UIO2::Global::singlesLeaf.isNotNull()) {
-		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
-	}
-	else {
-		UIO2::Global::singlesRoot = std::move(ref);
-	}
+	UIO2::Global::states.pop_back();
 
-	UIO2::Global::singlesLeaf = leaf;
-}
-
-void UIO2::Global::addMulti(UniqueReference<UIOBase, UIOBase> ref) {
-	WeakReference<UIOBase, UIOBase> weakRef = ref;
-
-	if (UIO2::Global::singlesLeaf.isNull()) {
-		UIO2::Global::stack.back().get()->addElement(std::move(ref));
-	}
-	else {
-		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
-		UIO2::Global::stack.back().get()->addElement(std::move(UIO2::Global::singlesRoot));
-
-		UIO2::Global::singlesLeaf.clear();
-		assert(UIO2::Global::singlesRoot.isNull());
-	}
-	UIO2::Global::stack.push_back(weakRef);
-}
-
-void UIO2::Global::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
-	if (UIO2::Global::singlesLeaf.isNull()) {
-		UIO2::Global::stack.back().get()->addElement(std::move(ref));
-	}
-	else {
-		UIO2::Global::singlesLeaf.get()->addElement(std::move(ref));
-		UIO2::Global::stack.back().get()->addElement(std::move(UIO2::Global::singlesRoot));
-		UIO2::Global::singlesLeaf.clear();
-	}
-}
-
-UniqueReference<UIOBase, UIOBase> UIO2::Global::end() {
-	assert(UIO2::Global::stack.size() == 1);
-	assert(UIO2::Global::singlesRoot.isNull());
-
-	UIO2::Global::singlesLeaf.clear();
-	UIO2::Global::stack.clear();
-	return std::move(UIO2::Global::root.get()->getMain());
+	return res;
 }
 
 UIOTextDisplay* UIO2::text(std::string const& t, bool shrinkToFit) {
@@ -107,19 +106,19 @@ UIOTextDisplay* UIO2::text(std::string const& t, bool shrinkToFit) {
 	ptr->text.hideCursor();
 	ptr->setShrinkToFit(shrinkToFit);
 
-	UIO2::Global::addEnd(std::move(ref));
+	UIO2::Global::getState()->addEnd(std::move(ref));
 
 	return ptr;
 }
 
 UIOConstrainSize* UIO2::constrainHeight(UIOSizeType height) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
 	ptr->setHeight(height);
 	return ptr;
 }
 
 UIOConstrainSize* UIO2::constrainWidth(UIOSizeType width) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
 	ptr->setWidth(width);
 	return ptr;
 }
@@ -130,7 +129,7 @@ UIOButton* UIO2::button(bool shrinkToFit) {
 
 	ptr->setShrinkToFit(shrinkToFit);
 
-	UIO2::Global::addSingle(std::move(ref));
+	UIO2::Global::getState()->addSingle(std::move(ref));
 	return ptr;
 }
 
@@ -340,7 +339,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		windowPtr->addElementMulti(std::move(cornerBar));
 	}
 
-	UIO2::Global::addSingle(std::move(window.get()), leaf);
+	UIO2::Global::getState()->addSingle(std::move(window.get()), leaf);
 
 	return windowPtr;
 }
@@ -349,19 +348,19 @@ UIOHideable* UIO2::hideable() {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOHideable>();
 	auto ptr = ref.get();
 
-	UIO2::Global::addSingle(std::move(ref));
+	UIO2::Global::getState()->addSingle(std::move(ref));
 
 	return ptr;
 }
 
 UIOColoredBackground* UIO2::background(glm::vec4 color) {
-	auto ptr = UIO2::Global::addSingle<UIOColoredBackground>();
+	auto ptr = UIO2::Global::getState()->addSingle<UIOColoredBackground>();
 	ptr->color = color;
 	return ptr;
 }
 
 UIOConstrainSize* UIO2::align(UIO::ALIGNMENT alignment) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOConstrainSize>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
 	ptr->setAlignment(alignment);
 	return ptr;
 }
@@ -403,7 +402,7 @@ UIOConstrainSize* UIO2::alignTopRight() {
 }
 
 UIOPad* UIO2::pad(UIOSizeType padding) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
 	ptr->left = padding;
 	ptr->right = padding;
 	ptr->top = padding;
@@ -412,25 +411,25 @@ UIOPad* UIO2::pad(UIOSizeType padding) {
 }
 
 UIOPad* UIO2::padTop(UIOSizeType padding) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
 	ptr->top = padding;
 	return ptr;
 }
 
 UIOPad* UIO2::padBot(UIOSizeType padding) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
 	ptr->bottom = padding;
 	return ptr;
 }
 
 UIOPad* UIO2::padLeft(UIOSizeType padding) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
 	ptr->left = padding;
 	return ptr;
 }
 
 UIOPad* UIO2::padRight(UIOSizeType padding) {
-	auto ptr = UIO2::Global::addOrModifySingle<UIOPad>();
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
 	ptr->right = padding;
 	return ptr;
 }
@@ -439,7 +438,7 @@ UIOList* UIO2::startList(UIO::DIR dir) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
 	auto ptr = ref.get();
 
-	UIO2::Global::addMulti(std::move(ref));
+	UIO2::Global::getState()->addMulti(std::move(ref));
 
 	return ptr;
 }
@@ -448,7 +447,7 @@ UIOGrid* UIO2::startGrid(int32_t x, int32_t y) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
 	auto ptr = ref.get();
 
-	UIO2::Global::addMulti(std::move(ref));
+	UIO2::Global::getState()->addMulti(std::move(ref));
 
 	return ptr;
 }
@@ -545,22 +544,9 @@ UIOTextDisplay* UIO2::textDisplayMulti(std::string const& text) {
 }
 
 void UIO2::endList() {
-	assert(UIO2::Global::stack.size() > 1);
-	assert(UIO2::Global::stack.back().get()->getUIOType() == UIO::TYPE::LIST);
-	UIO2::Global::down();
+	UIO2::Global::getState()->pop<UIOList>();
 }
 
 void UIO2::endGrid() {
-	assert(UIO2::Global::stack.size() > 1);
-	assert(UIO2::Global::stack.back().get()->getUIOType() == UIO::TYPE::GRID);
-	UIO2::Global::down();
-}
-
-UIO2::Scope::~Scope() {
-	UIO2::Global::down();
-}
-
-UIO2::Grid::Grid(int32_t x, int32_t y) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
-	UIO2::Global::addMulti(std::move(ref));
+	UIO2::Global::getState()->pop<UIOGrid>();
 }

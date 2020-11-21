@@ -151,7 +151,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				uiName,
 				[activity, uiName, offset]()
 		{
-			UIO2::Global::start();
+			UIO2::Global::push();
 
 			UIO2::window(uiName, { static_cast<float>(j + 1) * offset + glm::vec2(-1.0f, -0.7f), static_cast<float>(j + 1) * offset + glm::vec2(-0.6f, 1.0f) },
 						 UIOWindow::TYPE::MINIMISE |
@@ -162,7 +162,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 						 UIOWindow::TYPE::CLOSE);
 			UIO2::constructLuaInterface(activity);
 
-			return UIO2::Global::end();
+			return UIO2::Global::pop();
 		});
 
 		if (newUI) {

@@ -19,50 +19,39 @@ class UIOPad;
 
 namespace UIO2
 {
+	struct ConstructerState
+	{
+		UniqueReference<UIOBase, UIOProxy> root;
+		std::vector<WeakReference<UIOBase, UIOBase>> stack;
+
+		UniqueReference<UIOBase, UIOBase> singlesRoot;
+		WeakReference<UIOBase, UIOBase> singlesLeaf;
+
+		void addSingle(UniqueReference<UIOBase, UIOBase> ref);
+		void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
+		void addMulti(UniqueReference<UIOBase, UIOBase> ref);
+		void addEnd(UniqueReference<UIOBase, UIOBase> ref);
+
+		template<class T>
+		void pop();
+
+		template<class T>
+		T* addOrModifySingle();
+
+		template<class T>
+		T* addSingle();
+	};
+
 	class Global
 	{
 	public:
-		static UniqueReference<UIOBase, UIOProxy> root;
-		static std::vector<WeakReference<UIOBase, UIOBase>> stack;
+		static std::vector<std::unique_ptr<ConstructerState>> states;
 
-		static UniqueReference<UIOBase, UIOBase> singlesRoot;
-		static WeakReference<UIOBase, UIOBase> singlesLeaf;
+		static ConstructerState* getState();
 
-	public:
-		static void down();
-		static void start(UniqueReference<UIOBase, UIOBase> ref);
-		static void start();
+		static void push();
 
-		template<class T>
-		static T* addOrModifySingle();
-
-		template<class T>
-		static T* addSingle();
-
-		static void addSingle(UniqueReference<UIOBase, UIOBase> ref);
-		static void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
-		static void addMulti(UniqueReference<UIOBase, UIOBase> ref);
-		static void addEnd(UniqueReference<UIOBase, UIOBase> ref);
-
-		static UniqueReference<UIOBase, UIOBase> end();
-	};
-
-	class Scope
-	{
-	public:
-		virtual ~Scope();
-	};
-
-	class List : public Scope
-	{
-	public:
-		List(UIO::DIR dir);
-	};
-
-	class Grid : public Scope
-	{
-	public:
-		Grid(int32_t x, int32_t y);
+		static UniqueReference<UIOBase, UIOBase> pop();
 	};
 
 	UIOTextDisplay* text(std::string const& t, bool shrinkToFit = true);
@@ -118,7 +107,7 @@ T* UIO2::makeSingle(Args&&... args) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
 	auto ptr = ref.get();
 
-	UIO2::Global::addSingle(std::move(ref));
+	UIO2::Global::getState()->addSingle(std::move(ref));
 
 	return ptr;
 }
@@ -128,7 +117,7 @@ T* UIO2::makeEnd(UniqueReference<UIOBase, T> ref) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
 	auto ptr = ref.get();
 
-	UIO2::Global::addEnd(std::move(ref));
+	UIO2::Global::getState()->addEnd(std::move(ref));
 
 	return ptr;
 }
@@ -139,33 +128,40 @@ T* UIO2::makeEnd(Args&&... args) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
 	auto ptr = ref.get();
 
-	UIO2::Global::addEnd(std::move(ref));
+	UIO2::Global::getState()->addEnd(std::move(ref));
 
 	return ptr;
 }
 
+template<class T>
+inline void UIO2::ConstructerState::pop() {
+	assert(this->stack.size() > 1);
+	assert(this->stack.back().get()->getUIOType() == UIO::GET_TYPE<T>());
+
+	UIO2::ConstructerState::stack.pop_back();
+}
 
 template<class T>
-T* UIO2::Global::addOrModifySingle() {
+T* UIO2::ConstructerState::addOrModifySingle() {
 	static_assert(UIO::GET_TYPE<T>() != UIO::TYPE::UNSPECIFIED);
 
 	WeakReference<UIOBase, UIOBase> leaf;
 
-	if (UIO2::Global::singlesLeaf.isNull() ||
-		UIO2::Global::singlesLeaf.get()->getUIOType() != UIO::GET_TYPE<T>()) {
+	if (this->singlesLeaf.isNull() ||
+		this->singlesLeaf.get()->getUIOType() != UIO::GET_TYPE<T>()) {
 
 		auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
-		UIO2::Global::addSingle(std::move(ref));
+		this->addSingle(std::move(ref));
 	}
 
-	return static_cast<T*>(UIO2::Global::singlesLeaf.get());
+	return static_cast<T*>(this->singlesLeaf.get());
 }
 
 template<class T>
-inline T* UIO2::Global::addSingle() {
+inline T* UIO2::ConstructerState::addSingle() {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
 	auto ptr = ref.get();
-	UIO2::Global::addSingle(std::move(ref));
+	this->addSingle(std::move(ref));
 
 	return ptr;
 }

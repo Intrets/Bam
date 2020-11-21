@@ -6,6 +6,7 @@
 #include "UIOBinds.h"
 #include "RenderInfo.h"
 #include "Colors.h"
+#include "UIOConstructer2.h"
 
 template<class T>
 class UIOListSelection : public UIOBaseSingle
@@ -31,7 +32,6 @@ public:
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
-
 };
 
 template<class T>
@@ -74,13 +74,14 @@ UIOListSelection<T>::UIOListSelection(Handle self) {
 	};
 
 	this->selfHandle = self;
-	this->addElement(
-		TextConstructer::constructDisplayText("")
-		.setPtr(this->textDisplay)
-		//.addBaseBind(UIOBinds::Base::activatable)
-		.addBind(UIOBinds::TextEdit::clickSelect)
-		.get()
-	);
+
+	UIO2::Global::push();
+
+	auto text = UIO2::textDisplayMulti("");
+	this->textDisplay = text;
+	UIOBinds::TextEdit::clickSelect(this->textDisplay);
+
+	this->addElement(UIO2::Global::pop());
 }
 
 template<class T>

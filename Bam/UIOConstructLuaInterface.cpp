@@ -43,7 +43,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIO2::background(COLORS::UI::BACKGROUND);
 	auto outputText = UIO2::textDisplayMulti("output");
 
-	UIO2::endList();
+	UIO2::endGrid();
 
 	// ---------------------------------------------
 	// Control Buttons: Save/Load Pull/Push filename

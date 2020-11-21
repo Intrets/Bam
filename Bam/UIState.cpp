@@ -290,7 +290,7 @@ void UIState::init() {
 
 	// Inventory
 	{
-		UIO2::Global::start();
+		UIO2::Global::push();
 
 		UIO2::hideable();
 		UIO2::window("Inventory", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
@@ -299,21 +299,21 @@ void UIState::init() {
 					 UIOWindow::TYPE::HIDE);
 		UIO2::makeEnd<UIOInventory>();
 
-		this->UIs.push_back(UIO2::Global::end());
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// Cursor renderer
 	{
-		UIO2::Global::start();
+		UIO2::Global::push();
 
 		UIO2::makeEnd<UIOCursor>();
 
-		this->UIs.push_back(UIO2::Global::end());
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// Hotbar
 	{
-		UIO2::Global::start();
+		UIO2::Global::push();
 
 		UIO2::constrainHeight({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.05f });
 		UIO2::constrainWidth({ UIO::SIZETYPE::RELATIVE_WIDTH, 0.5f });
@@ -321,12 +321,12 @@ void UIState::init() {
 		UIO2::background(COLORS::UI::WINDOWBACKGROUND);
 		UIO2::makeEnd<UIOHotbar>();
 
-		this->UIs.push_back(UIO2::Global::end());
+		this->UIs.push_back(UIO2::Global::pop());
 	}
 
 	// save/load and other stuff
 	{
-		UIO2::Global::start();
+		UIO2::Global::push();
 
 		UIO2::window("Debug Info", { {-1.0f, -0.8f}, {-0.7f, 1.0f} },
 					 UIOWindow::TYPE::MINIMISE |
@@ -336,7 +336,7 @@ void UIState::init() {
 					 UIOWindow::TYPE::MOVE);
 		UIO2::constructDebugInfo();
 
-		this->UIs.push_back(std::move(UIO2::Global::end()));
+		this->UIs.push_back(std::move(UIO2::Global::pop()));
 	}
 
 	// wasd movement in world
