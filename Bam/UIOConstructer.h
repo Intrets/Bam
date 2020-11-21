@@ -17,6 +17,8 @@
 
 #include <type_traits>
 
+#include "UIOWindow.h"
+
 template<class T>
 class UIOConstructer
 {
@@ -163,7 +165,7 @@ inline UIOConstructer<UIOPad> UIOConstructer<T>::padLeft(UIOSizeType padding) {
 }
 
 //--------------------------------------------------------------------------------
-// padRight 
+// padRight
 //--------------------------------------------------------------------------------
 
 template<>

@@ -304,10 +304,11 @@ void UIState::init() {
 
 	// Cursor renderer
 	{
-		this->UIs.push_back(
-			UIOConstructer<UIOCursor>::makeConstructer()
-			.get()
-		);
+		UIO2::Global::start();
+
+		UIO2::makeEnd<UIOCursor>();
+
+		this->UIs.push_back(UIO2::Global::end());
 	}
 
 	// Hotbar

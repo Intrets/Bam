@@ -105,7 +105,6 @@ namespace UIO2
 	void endList();
 	void endGrid();
 
-
 	template<class T, class... Args> T* makeSingle(Args&&... args);
 
 	template<class T> T* makeEnd(UniqueReference<UIOBase, T> ref);

@@ -15,7 +15,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	auto uioLua = UIO2::makeEnd<UIOLua>(ref);
 
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto luaText = UIO2::makeEnd(TextConstructer::constructTextEdit(ref.get()->getScript()).get());
+	auto luaText = UIO2::textEditMulti({ ref.get()->getScript() });
 
 	// ----------------------------------------
 	// Watched Variables and Output from script
@@ -33,15 +33,15 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	}
 	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto watchText = UIO2::makeEnd(TextConstructer::constructTextEdit(w).get());
+	auto watchText = UIO2::textEditMulti(w);
 
 	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto displayWatchText = UIO2::makeEnd(TextConstructer::constructDisplayText("watch").get());
+	auto displayWatchText = UIO2::textDisplayMulti("watch");
 
 	UIO2::pad({ UIO::SIZETYPE::STATIC_PX, 1 });
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto outputText = UIO2::makeEnd(TextConstructer::constructDisplayText("output").get());
+	auto outputText = UIO2::textDisplayMulti("output");
 
 	UIO2::endList();
 
@@ -68,7 +68,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIO2::startGrid(3, 1);
 
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto saveFileName = UIO2::makeEnd(TextConstructer::constructSingleLineTextEdit("test.lua").get());
+	auto saveFileName = UIO2::textEditSingle("test.lua");
 
 	auto loadButton = UIO2::textButton("Load");
 
