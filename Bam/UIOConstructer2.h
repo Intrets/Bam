@@ -15,6 +15,7 @@ class UIOHideable;
 class UIOProxy;
 class UIOGrid;
 class UIOColoredBackground;
+class UIOFreeSize;
 class UIOPad;
 
 namespace UIO2
@@ -63,6 +64,7 @@ namespace UIO2
 
 	UIOConstrainSize* constrainHeight(UIOSizeType height);
 	UIOConstrainSize* constrainWidth(UIOSizeType width);
+	UIOConstrainSize* constrainSize(UIOSizeType size);
 	UIOConstrainSize* align(UIO::ALIGNMENT alignment);
 	UIOConstrainSize* alignCenter();
 	UIOConstrainSize* alignTop();
@@ -73,6 +75,8 @@ namespace UIO2
 	UIOConstrainSize* alignBottomRight();
 	UIOConstrainSize* alignTopLeft();
 	UIOConstrainSize* alignTopRight();
+
+	UIOFreeSize* free();
 
 	UIOPad* pad(UIOSizeType padding);
 	UIOPad* padTop(UIOSizeType padding);

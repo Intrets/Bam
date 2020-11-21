@@ -13,6 +13,7 @@
 #include "UIOColoredBackground.h"
 #include "UIOPad.h"
 #include "UIOBinds.h"
+#include "UIOFreeSize.h"
 
 //UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
 //UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
@@ -123,6 +124,13 @@ UIOConstrainSize* UIO2::constrainWidth(UIOSizeType width) {
 	return ptr;
 }
 
+UIOConstrainSize* UIO2::constrainSize(UIOSizeType size) {
+	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
+	ptr->setWidth(size);
+	ptr->setHeight(size);
+	return ptr;
+}
+
 UIOButton* UIO2::button(bool shrinkToFit) {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOButton>();
 	auto ptr = ref.get();
@@ -153,57 +161,72 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		mainPadPtr->bottom = { UIO::SIZETYPE::PX, resizeSliverSize };
 	}
 
-	UIOWindow* windowPtr;
-	auto window = UIOConstructer<UIOWindow>::makeConstructer(std::move(mainPad))
-		.setPtr(windowPtr)
-		.addBind(UIOBinds::Base::focusable)
-		.addBind(UIOBinds::Base::blockWorldBinds)
-		.free();
+	// ------------------
+	// Main Window object
+	// ------------------
+
+	UIO2::Global::push();
+
+	UIO2::free();
+	auto windowPtr = UIO2::makeEnd<UIOWindow>(std::move(mainPad));
+	UIOBinds::Base::focusable(windowPtr);
+	UIOBinds::Base::blockWorldBinds(windowPtr);
 	windowPtr->screenRectangle.set(size);
 
-	UIOList* topList;
-	auto topBar = UIOConstructer<UIOList>::makeConstructer(UIO::DIR::LEFT)
-		.setPtr(topList)
-		.addBind(UIOBinds::Base::focusable)
-		.addBind(UIOBinds::Base::blockWorldBinds)
-		.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-		.align(UIO::ALIGNMENT::TOP)
-		.get();
+	UniqueReference<UIOBase, UIOBase> windowRef = UIO2::Global::pop();
 
-	windowPtr->topBar = topBar.get();
-	windowPtr->addElementMulti(std::move(topBar));
+	// -------
+	// Top Bar
+	// -------
+
+	UIO2::Global::push();
+
+	UIO2::alignTop();
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	auto topBar = UIO2::startList(UIO::DIR::LEFT);
+	UIOBinds::Base::focusable(topBar);
+	UIOBinds::Base::blockWorldBinds(topBar);
+
+	windowPtr->addElementMulti(UIO2::Global::pop());
+	windowPtr->topBar = topBar;
+
+	// ----------------------
+	// Top Bar Elements setup
+	// ----------------------
+
+	UIO2::Global::push();
+
+	UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
+	auto button = UIO2::textButton(" x");
 
 	if (types & UIOWindow::TYPE::CLOSE) {
-		auto close = TextConstructer::constructSingleLineDisplayText(" x")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			return BIND::RESULT::CLOSE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
-			.get();
-
-		topList->addElement(std::move(close));
+		UIOBinds::Button::close(button);
 	}
 	else if (types & UIOWindow::TYPE::HIDE) {
-		auto hide = TextConstructer::constructSingleLineDisplayText(" x")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			return BIND::RESULT::HIDE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
-			.get();
-
-		topList->addElement(std::move(hide));
+		UIOBinds::Button::hide(button);
 
 	}
+
+	topBar->addElement(UIO2::Global::pop());
+	UIO2::Global::push();
+
+
+
+	//auto hide = TextConstructer::constructSingleLineDisplayText(" x")
+	//	.align(UIO::ALIGNMENT::CENTER)
+	//	.button()
+	//	.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	//{
+	//	return BIND::RESULT::HIDE;
+	//})
+	//	.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
+	//	.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
+	//	.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
+	//	.get();
+
+	//topBar->addElement(std::move(hide));
+
+	//}
 
 	if (types & UIOWindow::TYPE::MINIMISE) {
 		auto close = TextConstructer::constructSingleLineDisplayText(" _")
@@ -219,7 +242,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
 
-		topList->addElement(std::move(close));
+		topBar->addElement(std::move(close));
 	}
 
 	UIOButton* titleBarPtr;
@@ -239,15 +262,19 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 			.setPtr(titleBarPtr)
 			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
-		topList->addElement(std::move(titleBar));
+		topBar->addElement(std::move(titleBar));
 	}
 	else {
 		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
 			.background(COLORS::UI::FOREGROUND)
 			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
 			.get();
-		topList->addElement(std::move(titleBar));
+		topBar->addElement(std::move(titleBar));
 	}
+
+	// --------------------
+	// Resize Buttons setup
+	// --------------------
 
 	if (types & UIOWindow::TYPE::RESIZEVERTICAL) {
 		auto bottomBar = UIOConstructer<UIOButton>::makeConstructer()
@@ -339,7 +366,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		windowPtr->addElementMulti(std::move(cornerBar));
 	}
 
-	UIO2::Global::getState()->addSingle(std::move(window.get()), leaf);
+	UIO2::Global::getState()->addSingle(std::move(windowRef), leaf);
 
 	return windowPtr;
 }
@@ -399,6 +426,15 @@ UIOConstrainSize* UIO2::alignTopLeft() {
 
 UIOConstrainSize* UIO2::alignTopRight() {
 	return UIO2::align(UIO::ALIGNMENT::TOPRIGHT);
+}
+
+UIOFreeSize* UIO2::free() {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOFreeSize>();
+	auto ptr = ref.get();
+
+	UIO2::Global::getState()->addSingle(std::move(ref));
+
+	return ptr;
 }
 
 UIOPad* UIO2::pad(UIOSizeType padding) {
