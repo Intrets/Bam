@@ -4,8 +4,8 @@
 #include "Inventory.h"
 #include "InventoryItem.h"
 #include "UIOTextDisplay.h"
-#include "UIOConstructer.h"
-#include "UIOTextConstructers.h"
+#include "UIOConstructer2.h"
+#include "UIOButton.h"
 
 Inventory& UIOInventory::getInventory() {
 	return Locator<Inventory>::ref();
@@ -15,23 +15,19 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 	this->icons.reserve(16);
 
 	for (int32_t i = 0; i < 16; i++) {
-		UIOTextDisplay* ptr;
-		this->addElement(
-			TextConstructer::constructSingleLineDisplayText(std::to_string(i))
-			.setPtr(ptr)
-			.alignCenter()
-			.button()
-			.onPress([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::Global::push();
+
+		auto [button, text] = UIO2::textButton2(std::to_string(i));
+
+		this->icons.push_back(text);
+		button->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			static_cast<UIOInventory*>(self_)->getInventory().clickInventory(i);
 			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.get()
-			);
-		this->icons.push_back(ptr);
-	}
+		});
 
+		this->addElement(UIO2::Global::pop());
+	}
 }
 
 int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

@@ -5,7 +5,7 @@
 #include "UIOSizeType.h"
 #include "UIOConstrainSize.h"
 #include "UIOButton.h"
-#include "UIOConstructer.h"
+#include "UIOWindow.h"
 #include "UIOCallBackParams.h"
 #include "UIOGrid.h"
 #include "UIOHideable.h"
@@ -14,11 +14,7 @@
 #include "UIOPad.h"
 #include "UIOBinds.h"
 #include "UIOFreeSize.h"
-
-//UniqueReference<UIOBase, UIOProxy> UIO2::Global::root;
-//UniqueReference<UIOBase, UIOBase> UIO2::Global::singlesRoot;
-//std::vector<WeakReference<UIOBase, UIOBase>> UIO2::Global::stack;
-//WeakReference<UIOBase, UIOBase> UIO2::Global::singlesLeaf;
+#include "UIOEmpty.h"
 
 std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
 
@@ -183,7 +179,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 
 	UIO2::alignTop();
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-	auto topBar = UIO2::startList(UIO::DIR::LEFT);
+	auto topBar = UIO2::startList(UIO::DIR::RIGHT_REVERSE);
 	UIOBinds::Base::focusable(topBar);
 	UIOBinds::Base::blockWorldBinds(topBar);
 
@@ -194,82 +190,69 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	// Top Bar Elements setup
 	// ----------------------
 
+	// ---------
+	// Title Bar
+	// ---------
+
 	UIO2::Global::push();
 
-	UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
-	auto button = UIO2::textButton(" x");
-
-	if (types & UIOWindow::TYPE::CLOSE) {
-		UIOBinds::Button::close(button);
-	}
-	else if (types & UIOWindow::TYPE::HIDE) {
-		UIOBinds::Button::hide(button);
-
-	}
-
-	topBar->addElement(UIO2::Global::pop());
-	UIO2::Global::push();
-
-
-
-	//auto hide = TextConstructer::constructSingleLineDisplayText(" x")
-	//	.align(UIO::ALIGNMENT::CENTER)
-	//	.button()
-	//	.onRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-	//{
-	//	return BIND::RESULT::HIDE;
-	//})
-	//	.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-	//	.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-	//	.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
-	//	.get();
-
-	//topBar->addElement(std::move(hide));
-
-	//}
-
-	if (types & UIOWindow::TYPE::MINIMISE) {
-		auto close = TextConstructer::constructSingleLineDisplayText(" _")
-			.align(UIO::ALIGNMENT::CENTER)
-			.button()
-			.onRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
-		{
-			windowPtr->minimized = !windowPtr->minimized;
-			return BIND::RESULT::CONTINUE;
-		})
-			.pad({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.constrainWidth({ UIO::SIZETYPE::FH, 1.2f })
-			.get();
-
-		topBar->addElement(std::move(close));
-	}
-
-	UIOButton* titleBarPtr;
 	if (types & UIOWindow::TYPE::MOVE) {
-		auto titleBar = TextConstructer::constructSingleLineDisplayText(title)
-			.button()
-			.addFocussedBind(
-				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		auto button = UIO2::textButton(title);
+		button->addFocussedBind(
+			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
+			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
 				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) - self->getMousePressOffset());
 			}
 			return BIND::RESULT::CONTINUE;
-		})
-			.setPtr(titleBarPtr)
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.get();
-		topBar->addElement(std::move(titleBar));
+		});
 	}
 	else {
-		auto titleBar = TextConstructer::constructSingleLineDisplayText(title, false)
-			.background(COLORS::UI::FOREGROUND)
-			.constrainHeight({ UIO::SIZETYPE::FH, 1.2f })
-			.get();
-		topBar->addElement(std::move(titleBar));
+		UIO2::pad({ UIO::SIZETYPE::PX, 1 });
+		UIO2::textDisplaySingle(title);
+	}
+
+	topBar->addElement(UIO2::Global::pop());
+
+	// --------
+	// Minimise
+	// --------
+
+	if (types & UIOWindow::TYPE::MINIMISE) {
+		UIO2::Global::push();
+
+		UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
+		auto button = UIO2::textButton(" _");
+		button->setOnRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			windowPtr->minimized = !windowPtr->minimized;
+			return BIND::RESULT::CONTINUE;
+		});
+
+		topBar->addElement(UIO2::Global::pop());
+	}
+
+	// ----------
+	// Close/Hide
+	// ----------
+
+	if (types & UIOWindow::TYPE::CLOSE || types & UIOWindow::TYPE::HIDE) {
+		UIO2::Global::push();
+
+		UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
+		auto button = UIO2::textButton(" x");
+
+		if (types & UIOWindow::TYPE::CLOSE) {
+			UIOBinds::Button::close(button);
+		}
+		else if (types & UIOWindow::TYPE::HIDE) {
+			UIOBinds::Button::hide(button);
+
+		}
+
+		topBar->addElement(UIO2::Global::pop());
 	}
 
 	// --------------------
@@ -277,10 +260,19 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	// --------------------
 
 	if (types & UIOWindow::TYPE::RESIZEVERTICAL) {
-		auto bottomBar = UIOConstructer<UIOButton>::makeConstructer()
-			.addFocussedBind(
-				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::Global::push();
+
+		UIO2::alignBottomLeft();
+		UIO2::constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize });
+		UIO2::padRight({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? resizeSliverSize : 0 });
+		UIO2::padLeft({ UIO::SIZETYPE::PX, 1 });
+		UIO2::padTop({ UIO::SIZETYPE::PX, 1 });
+		auto button = UIO2::button();
+		UIO2::makeEnd<UIOEmpty>();
+
+		button->addFocussedBind(
+			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
+			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -295,22 +287,25 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
 			return BIND::RESULT::CONTINUE;
-		})
-			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.padTop({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.padRight({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEHORIZONTAL ? resizeSliverSize : 0 })
-			.constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize })
-			.align(UIO::ALIGNMENT::BOTTOMLEFT)
-			.get();
+		});
 
-		windowPtr->addElementMulti(std::move(bottomBar));
+		windowPtr->addElementMulti(UIO2::Global::pop());
 	}
 
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
-		auto rightBar = UIOConstructer<UIOButton>::makeConstructer()
-			.addFocussedBind(
-				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::Global::push();
+
+		UIO2::alignRight();
+		UIO2::constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize });
+		UIO2::padLeft({ UIO::SIZETYPE::PX, 1 });
+		UIO2::padTop({ UIO::SIZETYPE::FH, 1.2f });
+		UIO2::padBot({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? resizeSliverSize : 0 });
+		auto button = UIO2::button();
+		UIO2::makeEnd<UIOEmpty>();
+
+		button->addFocussedBind(
+			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
+			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -325,22 +320,23 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
 			return BIND::RESULT::CONTINUE;
-		})
-			.padLeft({ UIO::SIZETYPE::STATIC_PX, 1 })
-			.padTop({ UIO::SIZETYPE::FH, 1.2f })
-			.padBottom({ UIO::SIZETYPE::PX, types & UIOWindow::TYPE::RESIZEVERTICAL ? resizeSliverSize : 0 })
-			.constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize })
-			.align(UIO::ALIGNMENT::RIGHT)
-			.get();
+		});
 
-		windowPtr->addElementMulti(std::move(rightBar));
+		windowPtr->addElementMulti(UIO2::Global::pop());
 	}
 
 	if (types & UIOWindow::TYPE::RESIZE) {
-		auto cornerBar = UIOConstructer<UIOButton>::makeConstructer()
-			.addFocussedBind(
-				{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-				[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		UIO2::Global::push();
+
+		UIO2::alignBottomRight();
+		UIO2::constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize });
+		UIO2::constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize });
+		auto button = UIO2::button();
+		UIO2::makeEnd<UIOEmpty>();
+
+		button->addFocussedBind(
+			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
+			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -357,13 +353,9 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 				windowPtr->updateSize(windowPtr->screenRectangle);
 			}
 			return BIND::RESULT::CONTINUE;
-		})
-			.constrainWidth({ UIO::SIZETYPE::PX, resizeSliverSize })
-			.constrainHeight({ UIO::SIZETYPE::PX, resizeSliverSize })
-			.align(UIO::ALIGNMENT::BOTTOMRIGHT)
-			.get();
+		});
 
-		windowPtr->addElementMulti(std::move(cornerBar));
+		windowPtr->addElementMulti(UIO2::Global::pop());
 	}
 
 	UIO2::Global::getState()->addSingle(std::move(windowRef), leaf);
@@ -489,12 +481,16 @@ UIOGrid* UIO2::startGrid(int32_t x, int32_t y) {
 }
 
 UIOButton* UIO2::textButton(std::string const& text) {
-	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
-	auto ptr = UIO2::button();
-	UIO2::alignCenter();
-	UIO2::makeEnd(TextConstructer::constructSingleLineDisplayText(text).get());
+	return UIO2::textButton2(text).first;
+}
 
-	return ptr;
+std::pair<UIOButton*, UIOTextDisplay*> UIO2::textButton2(std::string const& text_) {
+	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
+	auto button = UIO2::button();
+	UIO2::alignCenter();
+	auto text = UIO2::textDisplaySingle(text_);
+
+	return { button, text };
 }
 
 UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {

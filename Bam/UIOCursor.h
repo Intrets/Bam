@@ -29,6 +29,7 @@ public:
 	UIOBase* hoveringElement;
 
 	Inventory& getInventory();
+	ManagedReference<Activity, Activity> const& getTarget() const;
 
 	UIOCursor(Handle self);
 	~UIOCursor() = default;

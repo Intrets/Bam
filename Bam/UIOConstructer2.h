@@ -88,6 +88,7 @@ namespace UIO2
 	UIOGrid* startGrid(int32_t x, int32_t y);
 
 	UIOButton* textButton(std::string const& text);
+	std::pair<UIOButton*, UIOTextDisplay*> textButton2(std::string const& text);
 
 	UIOTextDisplay* textEditSingle(std::string const& text);
 	UIOTextDisplay* textEditMulti(std::vector<std::string> const& text);

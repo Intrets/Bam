@@ -284,6 +284,7 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOConstructActivityInfo.cpp" />
     <ClCompile Include="UIOConstructDebugInfo.cpp" />
     <ClCompile Include="UIOConstructer2.cpp" />
     <ClCompile Include="UIOConstructItemSpawner.cpp" />
@@ -398,6 +399,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOConstructActivityInfo.h" />
     <ClInclude Include="UIOConstructDebugInfo.h" />
     <ClInclude Include="UIOConstructer2.h" />
     <ClInclude Include="UIOConstructItemSpawner.h" />

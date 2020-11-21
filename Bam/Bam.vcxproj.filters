@@ -419,6 +419,7 @@
     <ClCompile Include="UIOConstructer2.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
     <ClCompile Include="UIOConstructDebugInfo.cpp" />
+    <ClCompile Include="UIOConstructActivityInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -752,6 +753,7 @@
     <ClInclude Include="UIOConstructer2.h" />
     <ClInclude Include="UIOProxy.h" />
     <ClInclude Include="UIOConstructDebugInfo.h" />
+    <ClInclude Include="UIOConstructActivityInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

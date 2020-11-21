@@ -252,6 +252,12 @@ void UIState::addNamedUIReplace(std::string const& name, std::function<UniqueRef
 	this->namedUIsBuffer[name] = f();
 }
 
+void UIState::addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref) {
+	this->closeNamedUI(name);
+
+	this->namedUIsBuffer[name] = std::move(ref);
+}
+
 void UIState::closeNamedUI(std::string const& name) {
 	auto namedUI = this->namedUIs.find(name);
 

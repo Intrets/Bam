@@ -42,7 +42,9 @@ public:
 	// true - new object created
 	// false - already exists and brought to the front
 	bool addNamedUI(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
+
 	void addNamedUIReplace(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f);
+	void addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref);
 
 	void closeNamedUI(std::string const& name);
 
