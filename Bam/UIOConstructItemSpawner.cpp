@@ -3,9 +3,7 @@
 #include "UIOConstructItemSpawner.h"
 
 #include "UIOList.h"
-#include "UIOConstructer.h"
 #include "Enums.h"
-#include "UIOTextConstructers.h"
 #include "Inventory.h"
 #include "ActivitySpawner.h"
 #include "UIOCallBackParams.h"
@@ -13,8 +11,9 @@
 #include "Block.h"
 #include "Shape.h"
 #include "UIOListSelection.h"
-#include "UIOTextConstructers.h"
 #include "UIOConstructer2.h"
+#include "UIOSizeType.h"
+#include "UIOButton.h"
 
 UIOList* UIO2::constructItemSpawner() {
 	auto list = UIO2::startList(UIO::DIR::DOWN);

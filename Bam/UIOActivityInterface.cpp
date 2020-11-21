@@ -14,7 +14,6 @@
 #include "ActivitySpawner.h"
 #include "UIOConstructLuaInterface.h"
 #include "UIOList.h"
-#include "UIOConstructer.h"
 #include "ActivityCopier.h"
 
 UIOActivityInterface::UIOActivityInterface(Handle self) {

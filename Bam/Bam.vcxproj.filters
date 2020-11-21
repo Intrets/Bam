@@ -305,14 +305,8 @@
     <ClCompile Include="UIOColoredBackground.cpp">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClCompile>
-    <ClCompile Include="UIOConstructer.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
-    </ClCompile>
     <ClCompile Include="Colors.cpp">
       <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="UIOTextConstructers.cpp">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClCompile>
     <ClCompile Include="UIOBinds.cpp">
       <Filter>Game\Logic\User IO Controllers</Filter>
@@ -642,14 +636,8 @@
     <ClInclude Include="UIOColoredBackground.h">
       <Filter>Game\Logic\User IO Controllers\Components</Filter>
     </ClInclude>
-    <ClInclude Include="UIOConstructer.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
-    </ClInclude>
     <ClInclude Include="Colors.h">
       <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="UIOTextConstructers.h">
-      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
     </ClInclude>
     <ClInclude Include="UIOBinds.h">
       <Filter>Game\Logic\User IO Controllers</Filter>

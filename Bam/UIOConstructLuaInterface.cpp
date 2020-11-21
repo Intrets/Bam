@@ -1,13 +1,16 @@
 #include "common.h"
 
 #include "UIOConstructLuaInterface.h"
-#include "UIOConstructer.h"
 #include "UIOLua.h"
 #include "UIOGrid.h"
 #include "UIOCallBackParams.h"
 #include <fstream>
 #include "StringHelpers.h"
 #include "UIOConstructer2.h"
+#include "UIOSizeType.h"
+#include "Colors.h"
+#include "UIOTextDisplay.h"
+#include "UIOButton.h"
 
 UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	auto list = UIO2::startList(UIO::DIR::DOWN_REVERSE);

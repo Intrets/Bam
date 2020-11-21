@@ -336,7 +336,6 @@
     <ClCompile Include="UIOBinds.cpp" />
     <ClCompile Include="UIOColoredBackground.cpp" />
     <ClCompile Include="UIOCallBackParams.cpp" />
-    <ClCompile Include="UIOConstructer.cpp" />
     <ClCompile Include="UIOConstructLuaInterface.cpp" />
     <ClCompile Include="UIOCursor.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
@@ -349,7 +348,6 @@
     <ClCompile Include="UIOInvisible.cpp" />
     <ClCompile Include="UIOLua.cpp" />
     <ClCompile Include="UIOProxy.cpp" />
-    <ClCompile Include="UIOTextConstructers.cpp" />
     <ClCompile Include="UIState.cpp" />
     <ClCompile Include="RailCrane.cpp" />
     <ClCompile Include="ReferenceManager.cpp" />
@@ -445,7 +443,6 @@
     <ClInclude Include="UIOBinds.h" />
     <ClInclude Include="UIOColoredBackground.h" />
     <ClInclude Include="UIOCallBackParams.h" />
-    <ClInclude Include="UIOConstructer.h" />
     <ClInclude Include="UIOConstructLuaInterface.h" />
     <ClInclude Include="UIOCursor.h" />
     <ClInclude Include="UIOEmpty.h" />
@@ -458,7 +455,6 @@
     <ClInclude Include="UIOInvisible.h" />
     <ClInclude Include="UIOLua.h" />
     <ClInclude Include="UIOProxy.h" />
-    <ClInclude Include="UIOTextConstructers.h" />
     <ClInclude Include="UIState.h" />
     <ClInclude Include="RailCrane.h" />
     <ClInclude Include="ReferenceManager.h" />
