@@ -87,6 +87,8 @@ UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
 	auto& state = UIO2::Global::states.back();
 
 	assert(state->stack.size() == 1);
+	assert(state->singlesLeaf.isNull());
+	assert(state->singlesRoot.isNull());
 
 	state->singlesLeaf.clear();
 	state->stack.clear();
