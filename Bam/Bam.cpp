@@ -3,15 +3,11 @@
 #include "common.h"
 
 #include <iostream>
-
+#include <sstream>
 #include <chrono>
 #include <thread>
-#include "ControlState.h"
 #include "Main.h"
 #include "InitManagers.h"
-#include <sstream>
-
-#include "Log.h"
 
 // TODO: keep runtime option, get value from config/command line argument
 bool OPENGL_DEBUG = true;
@@ -132,22 +128,19 @@ MessageCallback(GLenum source,
 
 
 static int initGLFW() {
-	//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
 	if (OPENGL_DEBUG) {
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
-														 /* Initialize the library */
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	if (!glfwInit()) {
 		return -1;
 	}
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(1800, 1000, "Hello World", NULL, NULL);
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	window = glfwCreateWindow(1800, 1000, "Bam", NULL, NULL);
 
 	glfwSetWindowPos(window, 80, 40);
 	if (!window) {
@@ -155,7 +148,6 @@ static int initGLFW() {
 		return -1;
 	}
 
-	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 	glewExperimental = true;
 
@@ -166,14 +158,10 @@ static int initGLFW() {
 
 	printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
 
-	// constrain cursor to window
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	// back culling
-	//glDisable(GL_CULL_FACE);
 
 	glfwSwapInterval(1);
 
@@ -192,6 +180,8 @@ static int initGLFW() {
 			GL_FALSE
 		);
 	}
+
+	glfwMaximizeWindow(window);
 
 	return 1;
 }

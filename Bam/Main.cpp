@@ -77,7 +77,6 @@ void mainLoop(GLFWwindow* window) {
 			state.gameState.saveFile = std::nullopt;
 		}
 
-
 		bool rendering = false;
 		if (stateChanged && tickLimiterRender.ready()) {
 

@@ -3,40 +3,17 @@
 #include "UIState.h"
 #include "UIOConstrainSize.h"
 #include "UIOWindow.h"
-#include "UIOFreeSize.h"
-#include "UIOTextDisplay.h"
 #include "UIOInvisible.h"
 #include "ControlState.h"
 #include "GameState.h"
 #include "State.h"
 #include "Option.h"
-#include "UIOGrid.h"
-#include "UIOList.h"
-#include "UIOPad.h"
-#include "UIOSizeType.h"
-#include "Saver.h"
-#include "Loader.h"
 #include "UIOEmpty.h"
 #include "Timer.h"
-#include "Colors.h"
-#include "UIOColoredBackground.h"
-#include "UIOBinds.h"
-#include "StringHelpers.h"
-#include "LuaActivity.h"
-#include "Block.h"
-#include "Incinerator.h"
-#include "Forwarder.h"
 #include "UIOInventory.h"
 #include "UIOCursor.h"
 #include "UIOHotbar.h"
-#include "Inventory.h"
-#include <fstream>
-#include "ActivitySpawner.h"
-#include "UIOConstructItemSpawner.h"
-#include "UIOActivityInterface.h"
 #include "UIOConstructer2.h"
-#include "UIOConstructDebugInfo.h"
-
 #include "UIOConstructDebugInfo.h"
 
 CallBackBindResult UIState::runFrontBinds(State& state) {
@@ -242,12 +219,6 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 
 	this->namedUIsBuffer[name] = f();
 	return true;
-}
-
-void UIState::addNamedUIReplace(std::string const& name, std::function<UniqueReference<UIOBase, UIOBase>()> f) {
-	this->closeNamedUI(name);
-
-	this->namedUIsBuffer[name] = f();
 }
 
 void UIState::addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref) {
