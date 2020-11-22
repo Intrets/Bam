@@ -18,7 +18,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	auto uioLua = UIO2::makeEnd<UIOLua>(ref);
 
 	UIO2::background(COLORS::UI::BACKGROUND);
-	auto luaText = UIO2::textEditMulti({ ref.get()->getScript() });
+	auto luaText = UIO2::textEditMulti(ref.get()->getScript());
 
 	// ----------------------------------------
 	// Watched Variables and Output from script

@@ -15,6 +15,7 @@
 #include "UIOBinds.h"
 #include "UIOFreeSize.h"
 #include "UIOEmpty.h"
+#include "StringHelpers.h"
 
 std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
 
@@ -520,8 +521,8 @@ UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {
 	return ptr;
 }
 
-UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
+UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text, bool lineWrap) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(lineWrap);
 	auto ptr = res.get();
 
 	ptr->text.empty();
@@ -551,6 +552,12 @@ UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text) {
 	return ptr;
 }
 
+UIOTextDisplay* UIO2::textEditMulti(std::string const& text, bool lineWrap) {
+	std::vector<std::string> lines;
+	split(0, text, lines, '\n', true);
+	return UIO2::textEditMulti(lines, lineWrap);
+}
+
 UIOTextDisplay* UIO2::textDisplaySingle(std::string const& text, bool shrinkToFit) {
 	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
 	auto ptr = res.get();
@@ -563,8 +570,8 @@ UIOTextDisplay* UIO2::textDisplaySingle(std::string const& text, bool shrinkToFi
 	return ptr;
 }
 
-UIOTextDisplay* UIO2::textDisplayMulti(std::vector<std::string> const& text) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
+UIOTextDisplay* UIO2::textDisplayMulti(std::vector<std::string> const& text, bool lineWrap) {
+	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(lineWrap);
 	auto ptr = res.get();
 	ptr->text.setLines(text);
 
@@ -576,9 +583,9 @@ UIOTextDisplay* UIO2::textDisplayMulti(std::vector<std::string> const& text) {
 	return ptr;
 }
 
-UIOTextDisplay* UIO2::textDisplayMulti(std::string const& text) {
+UIOTextDisplay* UIO2::textDisplayMulti(std::string const& text, bool lineWrap) {
 	std::vector<std::string> temp{ text };
-	return UIO2::textDisplayMulti(temp);
+	return UIO2::textDisplayMulti(temp, lineWrap);
 }
 
 void UIO2::endList() {
@@ -588,3 +595,4 @@ void UIO2::endList() {
 void UIO2::endGrid() {
 	UIO2::Global::getState()->pop<UIOGrid>();
 }
+

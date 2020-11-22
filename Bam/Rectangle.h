@@ -53,6 +53,7 @@ public:
 	void translateBottom(float s);
 	void setHeight(float h);
 	void setWidth(float w);
+	void setSize(glm::vec2 size);
 
 	float getWidth() const;
 	float getHeight() const;

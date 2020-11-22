@@ -108,6 +108,11 @@ void Rectangle::setWidth(float w) {
 	this->top.x = this->bot.x + w;
 }
 
+void Rectangle::setSize(glm::vec2 size) {
+	this->setWidth(size.x);
+	this->setHeight(size.y);
+}
+
 float Rectangle::getWidth() const {
 	return this->top.x - this->bot.x;
 }

@@ -78,7 +78,7 @@ UIOListSelection<T>::UIOListSelection(Handle self) {
 
 	UIO2::Global::push();
 
-	auto text = UIO2::textDisplayMulti("");
+	auto text = UIO2::textDisplayMulti("", false);
 	this->textDisplay = text;
 	UIOBinds::TextEdit::clickSelect(this->textDisplay);
 

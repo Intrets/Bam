@@ -91,10 +91,11 @@ namespace UIO2
 	std::pair<UIOButton*, UIOTextDisplay*> textButton2(std::string const& text);
 
 	UIOTextDisplay* textEditSingle(std::string const& text);
-	UIOTextDisplay* textEditMulti(std::vector<std::string> const& text);
+	UIOTextDisplay* textEditMulti(std::vector<std::string> const& text, bool lineWrap = true);
+	UIOTextDisplay* textEditMulti(std::string const& text, bool lineWrap = true);
 	UIOTextDisplay* textDisplaySingle(std::string const& text, bool shrinkToFit = true);
-	UIOTextDisplay* textDisplayMulti(std::vector<std::string> const& text);
-	UIOTextDisplay* textDisplayMulti(std::string const& text);
+	UIOTextDisplay* textDisplayMulti(std::vector<std::string> const& text, bool lineWrap = true);
+	UIOTextDisplay* textDisplayMulti(std::string const& text, bool lineWrap = true);
 
 	void endList();
 	void endGrid();
