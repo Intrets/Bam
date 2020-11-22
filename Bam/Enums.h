@@ -14,6 +14,8 @@ namespace UIO
 	template<class T>
 	constexpr TYPE GET_TYPE();
 
+	std::string GET_NAME(TYPE type);
+
 	enum class ALIGNMENT
 	{
 		TOP,

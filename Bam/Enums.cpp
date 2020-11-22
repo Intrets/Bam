@@ -32,3 +32,26 @@ std::string ELEMENT::getName(ELEMENT::TYPE type) {
 	}
 }
 
+std::string UIO::GET_NAME(TYPE type) {
+	switch (type) {
+		case UIO::TYPE::GRID:
+			return "Grid";
+			break;
+		case UIO::TYPE::LIST:
+			return "List";
+			break;
+		case UIO::TYPE::PAD:
+			return "Pad";
+			break;
+		case UIO::TYPE::CONSTRAIN_SIZE:
+			return "ConstrainSize";
+			break;
+		case UIO::TYPE::UNSPECIFIED:
+			return "Unspecified";
+			break;
+		default :
+			assert(0);
+			return "";
+			break;
+	}
+}

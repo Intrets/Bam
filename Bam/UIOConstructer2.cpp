@@ -86,6 +86,8 @@ UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
 	assert(UIO2::Global::states.size() > 0);
 	auto& state = UIO2::Global::states.back();
 
+	assert(state->stack.size() == 1);
+
 	state->singlesLeaf.clear();
 	state->stack.clear();
 
@@ -184,9 +186,6 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	UIOBinds::Base::focusable(topBar);
 	UIOBinds::Base::blockWorldBinds(topBar);
 
-	windowPtr->addElementMulti(UIO2::Global::pop());
-	windowPtr->topBar = topBar;
-
 	// ----------------------
 	// Top Bar Elements setup
 	// ----------------------
@@ -255,6 +254,10 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 
 		topBar->addElement(UIO2::Global::pop());
 	}
+
+	UIO2::endList();
+	windowPtr->addElementMulti(UIO2::Global::pop());
+	windowPtr->topBar = topBar;
 
 	// --------------------
 	// Resize Buttons setup
