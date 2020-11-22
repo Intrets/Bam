@@ -6,11 +6,6 @@ UIOFreeSize::UIOFreeSize(Handle self) {
 	this->selfHandle = self;
 }
 
-UIOFreeSize::UIOFreeSize(Handle self, UniqueReference<UIOBase, UIOBase> main) {
-	this->selfHandle = self;
-	this->addElement(std::move(main));
-}
-
 ScreenRectangle UIOFreeSize::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
 

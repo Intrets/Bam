@@ -35,8 +35,7 @@ public:
 	glm::vec2 const& getMousePressOffset() const;
 
 	UIOButton(Handle self);
-	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main);
-	UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main, bool shrink);
+	virtual ~UIOButton() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

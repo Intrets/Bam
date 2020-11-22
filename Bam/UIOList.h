@@ -24,6 +24,7 @@ private:
 
 public:
 	UIOList(Handle self, UIO::DIR dir);
+	virtual ~UIOList() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 

@@ -32,7 +32,7 @@ public:
 	ManagedReference<Activity, Activity> const& getTarget() const;
 
 	UIOCursor(Handle self);
-	~UIOCursor() = default;
+	virtual ~UIOCursor() = default;
 
 	void setCursorWorldPosition(glm::vec2 p);
 	void setCursorScreenPosition(glm::vec2 p);

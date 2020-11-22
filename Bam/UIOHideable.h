@@ -15,7 +15,7 @@ private:
 
 public:
 	UIOHideable(Handle self);
-	UIOHideable(Handle selfHandle, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow);
+	virtual ~UIOHideable() = default;
 
 	void hide();
 	void show();

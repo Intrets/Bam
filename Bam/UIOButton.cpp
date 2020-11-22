@@ -87,16 +87,6 @@ UIOButton::UIOButton(Handle self) {
 	this->main = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOEmpty>();
 }
 
-UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main) :
-	UIOButton(self) {
-	this->addElement(std::move(main));
-}
-
-UIOButton::UIOButton(Handle self, UniqueReference<UIOBase, UIOBase> main, bool shrink) :
-	UIOButton(self, std::move(main)) {
-	this->shrinkToFit = shrink;
-}
-
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {
 	auto temp = this->main.get()->updateSize(newScreenRectangle);
 	if (this->shrinkToFit) {

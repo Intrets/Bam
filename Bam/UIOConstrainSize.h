@@ -21,9 +21,7 @@ public:
 	void setWidth(UIOSizeType width);
 	void setAlignment(UIO::ALIGNMENT alignment);
 
-	UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOConstrainSize(Handle self);
-	UIOConstrainSize() = default;
 	~UIOConstrainSize() = default;
 
 	virtual UIO::TYPE getUIOType() override;

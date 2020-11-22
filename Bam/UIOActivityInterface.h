@@ -28,6 +28,7 @@ private:
 
 public:
 	UIOActivityInterface(Handle self);
+	virtual ~UIOActivityInterface() = default;
 
 	void exit();
 	void cancel(bool full);

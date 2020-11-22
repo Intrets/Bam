@@ -164,7 +164,8 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	UIO2::Global::push();
 
 	UIO2::free();
-	auto windowPtr = UIO2::makeEnd<UIOWindow>(std::move(mainPad));
+	auto windowPtr = UIO2::makeEnd<UIOWindow>();
+	windowPtr->addElement(std::move(mainPad));
 	UIOBinds::Base::focusable(windowPtr);
 	UIOBinds::Base::blockWorldBinds(windowPtr);
 	windowPtr->screenRectangle.set(size);

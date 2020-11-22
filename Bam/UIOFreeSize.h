@@ -7,7 +7,7 @@ class UIOFreeSize : public UIOBaseSingle
 {
 public:
 	UIOFreeSize(Handle self);
-	UIOFreeSize(Handle self, UniqueReference<UIOBase, UIOBase> main);
+	virtual ~UIOFreeSize() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 };

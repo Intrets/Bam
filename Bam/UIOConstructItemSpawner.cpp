@@ -16,7 +16,7 @@
 #include "UIOButton.h"
 
 UIOList* UIO2::constructItemSpawner() {
-	auto list = UIO2::startList(UIO::DIR::DOWN);
+	UIO2::startList(UIO::DIR::DOWN);
 
 	const ACTIVITY::TYPE activities[] = {
 		ACTIVITY::TYPE::MOVER,
@@ -55,6 +55,7 @@ UIOList* UIO2::constructItemSpawner() {
 
 	auto blocksList = DataFront<BlockData>::listAll();
 
+	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
 	auto blockSelection = UIO2::makeEnd<UIOListSelection<DataFront<BlockData>>>(
 		[](DataFront<BlockData> const& e)
 	{
@@ -64,6 +65,7 @@ UIOList* UIO2::constructItemSpawner() {
 
 	auto shapesList = DataFront<ShapeData>::listAll();
 
+	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
 	auto shapeSelection = UIO2::makeEnd<UIOListSelection<DataFront<ShapeData>>>(
 		[](DataFront<ShapeData> const& e)
 	{

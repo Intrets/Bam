@@ -22,9 +22,7 @@ public:
 
 	bool minimized = false;
 
-	UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_);
 	UIOWindow(Handle self);
-	UIOWindow() = default;
 	virtual ~UIOWindow() = default;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

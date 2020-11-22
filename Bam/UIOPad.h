@@ -19,8 +19,7 @@ public:
 
 public:
 	UIOPad(Handle self);
-	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_);
-	UIOPad(Handle self, UniqueReference<UIOBase, UIOBase> main_, UIOSizeType padding);
+	virtual ~UIOPad() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 

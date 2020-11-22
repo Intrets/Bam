@@ -16,11 +16,6 @@ void UIOConstrainSize::setAlignment(UIO::ALIGNMENT alignment_) {
 	this->alignment = alignment_;
 }
 
-UIOConstrainSize::UIOConstrainSize(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
-	this->selfHandle = self;
-	this->addElement(std::move(main_));
-}
-
 UIOConstrainSize::UIOConstrainSize(Handle self) {
 	this->selfHandle = self;
 }

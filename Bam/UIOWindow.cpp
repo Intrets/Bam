@@ -8,11 +8,6 @@
 #include "UIOList.h"
 #include "RenderInfo.h"
 
-UIOWindow::UIOWindow(Handle self, UniqueReference<UIOBase, UIOBase> main_) {
-	this->selfHandle = self;
-	this->addElement(std::move(main_));
-}
-
 UIOWindow::UIOWindow(Handle self) {
 	this->selfHandle = self;
 }

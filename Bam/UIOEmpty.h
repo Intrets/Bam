@@ -6,6 +6,7 @@ class UIOEmpty : public UIOBase
 {
 public:
 	UIOEmpty(Handle self_);
+	virtual ~UIOEmpty() = default;
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
 

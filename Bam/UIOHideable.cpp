@@ -6,12 +6,6 @@ UIOHideable::UIOHideable(Handle self) {
 	this->selfHandle = self;
 }
 
-UIOHideable::UIOHideable(Handle self, UniqueReference<UIOBase, UIOBase> main_, bool focusOnShow_) {
-	this->selfHandle = self;
-	this->addElement(std::move(main_));
-	this->focusOnShow = focusOnShow_;
-}
-
 void UIOHideable::hide() {
 	this->hidden = true;
 }

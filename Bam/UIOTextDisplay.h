@@ -17,6 +17,8 @@ public:
 	UIOTextDisplay(Handle self);
 	UIOTextDisplay(Handle self, bool lineWrap);
 
+	virtual ~UIOTextDisplay() = default;
+
 	virtual void translate(glm::vec2 p) override;
 
 	virtual	CallBackBindResult runActiveBinds(State& state) override;

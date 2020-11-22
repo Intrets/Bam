@@ -22,6 +22,8 @@ public:
 	UIOListSelection(Handle self);
 	UIOListSelection(Handle self, std::function<std::string(T const&)> f);
 
+	virtual ~UIOListSelection() = default;
+
 	void setSelected(int32_t index);
 	std::optional<T*> getSelected();
 	void setList(std::vector<T> const& l);

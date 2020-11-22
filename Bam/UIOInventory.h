@@ -14,6 +14,7 @@ private:
 
 public:
 	UIOInventory(Handle self);
+	virtual ~UIOInventory() = default;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 };
