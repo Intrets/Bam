@@ -407,13 +407,27 @@
     <ClCompile Include="InventoryItem.cpp">
       <Filter>Game\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="InventorySerializerHelper.cpp" />
-    <ClCompile Include="UIOConstructItemSpawner.cpp" />
-    <ClCompile Include="UIOHotbar.cpp" />
-    <ClCompile Include="UIOConstructer2.cpp" />
-    <ClCompile Include="UIOProxy.cpp" />
-    <ClCompile Include="UIOConstructDebugInfo.cpp" />
-    <ClCompile Include="UIOConstructActivityInfo.cpp" />
+    <ClCompile Include="UIOConstructActivityInfo.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstructDebugInfo.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstructer2.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOConstructItemSpawner.cpp">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOProxy.cpp">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOHotbar.cpp">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClCompile>
+    <ClCompile Include="InventorySerializerHelper.cpp">
+      <Filter>Game\Serial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -735,13 +749,27 @@
     <ClInclude Include="InventoryItem.h">
       <Filter>Game\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="InventorySerializerHelper.h" />
-    <ClInclude Include="UIOConstructItemSpawner.h" />
-    <ClInclude Include="UIOHotbar.h" />
-    <ClInclude Include="UIOConstructer2.h" />
-    <ClInclude Include="UIOProxy.h" />
-    <ClInclude Include="UIOConstructDebugInfo.h" />
-    <ClInclude Include="UIOConstructActivityInfo.h" />
+    <ClInclude Include="UIOConstructItemSpawner.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstructActivityInfo.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstructDebugInfo.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOConstructer2.h">
+      <Filter>Game\Logic\User IO Controllers\Constructers</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOProxy.h">
+      <Filter>Game\Logic\User IO Controllers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIOHotbar.h">
+      <Filter>Game\Logic\User IO Controllers\User Interactables\Visible</Filter>
+    </ClInclude>
+    <ClInclude Include="InventorySerializerHelper.h">
+      <Filter>Game\Serial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
