@@ -428,6 +428,7 @@
     <ClCompile Include="InventorySerializerHelper.cpp">
       <Filter>Game\Serial</Filter>
     </ClCompile>
+    <ClCompile Include="ActivityGhost.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -770,6 +771,7 @@
     <ClInclude Include="InventorySerializerHelper.h">
       <Filter>Game\Serial</Filter>
     </ClInclude>
+    <ClInclude Include="ActivityGhost.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

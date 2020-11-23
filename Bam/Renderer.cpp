@@ -11,6 +11,9 @@
 #include "BlockIDTextures.h"
 #include "Inventory.h"
 
+// TODO: remove import
+#include "ActivityGhost.h"
+
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
 	auto& gameState = state.gameState;
 	auto& uiState = state.uiState;
@@ -30,7 +33,9 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 
 	gameState.appendStaticRenderInfo(renderInfo);
 
-	//Locator<Inventory>::ref().addRenderInfo(gameState, renderInfo, glm::floor(state.uiState.getCursorPositionWorld()));
+	ActivityGhost ghost;
+	Inventory& inventory = Locator<Inventory>::ref();
+	ghost.addRenderInfo(state.gameState, renderInfo, state.uiState, inventory);
 
 	Locator<Timer>::ref().newTiming("Prepare UI");
 	uiState.appendRenderInfo(gameState, renderInfo);

@@ -97,6 +97,18 @@ BlockData const& ShapedBlock::getBlock() const {
 	return this->block.getData();
 }
 
+ShapeData const& ShapedBlock::getShape() const {
+	return this->shape.getData();
+}
+
+DataFront<BlockData> const& ShapedBlock::getBlockData() const {
+	return this->block;
+}
+
+DataFront<ShapeData> const& ShapedBlock::getShapeData() const {
+	return this->shape;
+}
+
 int32_t ShapedBlock::getTexture() const {
 	return this->block.getData().texture;
 }
@@ -139,16 +151,19 @@ ShapedBlock::ShapedBlock(std::string name) : block(name) {
 ShapedBlock::ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR dir) : block(blockID), shape(shapeID), rotation(dir) {
 }
 
-ShapedBlock::ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR dir) : block(block), shape(shape), rotation(dir) {
+ShapedBlock::ShapedBlock(std::string const& block, std::string const& shape, ACTIVITY::DIR dir) : block(block), shape(shape), rotation(dir) {
 }
 
-ShapedBlock::ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
+ShapedBlock::ShapedBlock(std::string const& block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
 }
 
 ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, ACTIVITY::DIR rot) : block(blockID), rotation(rot) {
 }
 
 ShapedBlock::ShapedBlock(DataFront<BlockData> blockID, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot) : block(blockID), shape(shapeID), rotation(rot) {
+}
+
+ShapedBlock::ShapedBlock(std::string const& block, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot) : block(block), shape(shapeID), rotation(rot) {
 }
 
 bool ShapedBlock::load(Loader& loader) {

@@ -268,6 +268,7 @@
   <ItemGroup>
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActivityCopier.cpp" />
+    <ClCompile Include="ActivityGhost.cpp" />
     <ClCompile Include="ActivityHelpers.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
     <ClCompile Include="ActivityLoaderHelper.cpp" />
@@ -380,6 +381,7 @@
   <ItemGroup>
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActivityCopier.h" />
+    <ClInclude Include="ActivityGhost.h" />
     <ClInclude Include="ActivityHelpers.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
     <ClInclude Include="ActivityLoaderHelper.h" />

@@ -125,11 +125,9 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 				return;
 			}
 			else {
-				Linker::link(gameState, linkTarget, activity);
+				assert(Linker::link(gameState, linkTarget, activity));
 			}
 		}
-
-		this->select(params, activity);
 	}
 	else {
 		if (auto maybeTarget = gameState.staticWorld.getActivity(pos)) {

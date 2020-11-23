@@ -28,6 +28,27 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 
 		this->addElement(UIO2::Global::pop());
 	}
+
+	const std::pair<int32_t, CONTROL::KEY> maps[] = {
+		{0, CONTROL::KEY::TOOL_1},
+		{1, CONTROL::KEY::TOOL_2},
+		{2, CONTROL::KEY::TOOL_3},
+		{3, CONTROL::KEY::TOOL_4},
+		{4, CONTROL::KEY::TOOL_5},
+		{5, CONTROL::KEY::TOOL_6},
+		{6, CONTROL::KEY::TOOL_7},
+		{7, CONTROL::KEY::TOOL_8},
+		{8, CONTROL::KEY::TOOL_9},
+		{9, CONTROL::KEY::TOOL_0},
+	};
+
+	for (auto [i, key] : maps) {
+		this->addGameWorldBind({ key }, [i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		{
+			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
+			return BIND::RESULT::CONTINUE;
+		});
+	}
 }
 
 int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

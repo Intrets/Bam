@@ -64,6 +64,10 @@ private:
 
 public:
 	BlockData const& getBlock() const;
+	ShapeData const& getShape() const;
+
+	DataFront<BlockData> const& getBlockData() const;
+	DataFront<ShapeData> const& getShapeData() const;
 
 	int32_t getTexture() const;
 	int32_t getStencil() const;
@@ -81,10 +85,11 @@ public:
 
 	ShapedBlock(std::string name);
 	ShapedBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rot);
-	ShapedBlock(std::string block, std::string shape, ACTIVITY::DIR rot);
-	ShapedBlock(std::string block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot);
+	ShapedBlock(std::string const& block, std::string const& shape, ACTIVITY::DIR rot);
+	ShapedBlock(std::string const& block, SHAPE::TYPE shapeID, ACTIVITY::DIR rot);
 	ShapedBlock(DataFront<BlockData> blockID, ACTIVITY::DIR rot);
 	ShapedBlock(DataFront<BlockData> blockID, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot);
+	ShapedBlock(std::string const& block, DataFront<ShapeData> shapeID, ACTIVITY::DIR rot);
 	ShapedBlock() = default;
 	~ShapedBlock() = default;
 
