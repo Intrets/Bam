@@ -27,6 +27,10 @@ bool UIOButton::isDown() {
 	return this->down;
 }
 
+void UIOButton::dePress() {
+	this->down = false;
+}
+
 glm::vec2 const& UIOButton::getMousePressOffset() const {
 	return this->mousePressOffset;
 }
@@ -51,7 +55,7 @@ UIOButton::UIOButton(Handle self) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED,CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 			self_->deactivate();

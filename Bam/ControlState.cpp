@@ -130,6 +130,10 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 		this->controlState[static_cast<size_t>(CONTROL::KEY::ANYTHING_TEXT)] = CONTROL::STATE::PRESSED;
 	}
 
+	if (action == GLFW_PRESS) {
+		this->controlState[static_cast<size_t>(CONTROL::KEY::ANYTHING_KEY)] = CONTROL::STATE::PRESSED;
+	}
+
 	switch (key) {
 		case GLFW_KEY_LEFT_SHIFT:
 		case GLFW_KEY_RIGHT_SHIFT:

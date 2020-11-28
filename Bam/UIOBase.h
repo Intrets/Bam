@@ -96,6 +96,8 @@ protected:
 	std::vector<UniqueReference<UIOBase, UIOBase>> elements;
 
 public:
+	void clear();
+
 	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
 
 	virtual void translate(glm::vec2 p) override;

@@ -15,6 +15,7 @@
 #include "UIOTextDisplay.h"
 #include "Timer.h"
 #include "UIOBinds.h"
+#include "UIOConstructActivityBuilder.h"
 
 UIOList* UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
@@ -61,6 +62,9 @@ UIOList* UIO2::constructDebugInfo() {
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	auto renderThread = UIO2::textButton("Toggle Seperate Render Thread");
 
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	auto builderTest = UIO2::textButton("Builder");
+
 	// ----------------------------------
 	// Button for opening Item Spawner UI
 	// ----------------------------------
@@ -88,6 +92,22 @@ UIOList* UIO2::constructDebugInfo() {
 	// -----
 	// Binds
 	// -----
+
+	builderTest->setOnRelease(
+		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		UIO2::Global::push();
+
+		UIO2::window("Activity Builder Test", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+					 UIOWindow::TYPE::MINIMISE |
+					 UIOWindow::TYPE::MOVE |
+					 UIOWindow::TYPE::RESIZE |
+					 UIOWindow::TYPE::CLOSE);
+		UIO2::constructActivityBuilder();
+
+		params.uiState.addUI(UIO2::Global::pop());
+		return BIND::RESULT::CONTINUE;
+	});
 
 	saveButton->setOnRelease(
 		[saveName](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult

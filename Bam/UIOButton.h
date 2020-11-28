@@ -32,6 +32,8 @@ public:
 	void setShrinkToFit(bool b);
 
 	bool isDown();
+	void dePress();
+
 	glm::vec2 const& getMousePressOffset() const;
 
 	UIOButton(Handle self);

@@ -27,8 +27,8 @@ void ActivityGhost::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, 
 				auto const* worldBlock = &gameState.staticWorld.getBlockConstRef(pos).getShapedBlock();
 				if (cursorPos.x == i && cursorPos.y == j && worldBlock->getBlockData().getName() == "air") {
 					if (auto const& cursor = inventory.getCursor()) {
-						if (cursor->get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
-							worldBlock = &cursor->getAs<InventoryBlock>()->getBlock();
+						if (cursor.value().get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
+							worldBlock = &cursor.value().getAs<InventoryBlock>()->getBlock();
 						}
 					}
 				}

@@ -429,6 +429,8 @@
       <Filter>Game\Serial</Filter>
     </ClCompile>
     <ClCompile Include="ActivityGhost.cpp" />
+    <ClCompile Include="UIOConstructActivityBuilder.cpp" />
+    <ClCompile Include="UIODropDownList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -772,6 +774,8 @@
       <Filter>Game\Serial</Filter>
     </ClInclude>
     <ClInclude Include="ActivityGhost.h" />
+    <ClInclude Include="UIOConstructActivityBuilder.h" />
+    <ClInclude Include="UIODropDownList.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

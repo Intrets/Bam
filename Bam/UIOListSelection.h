@@ -25,7 +25,7 @@ public:
 	virtual ~UIOListSelection() = default;
 
 	void setSelected(int32_t index);
-	std::optional<T*> getSelected();
+	std::optional<T const*> getSelected();
 	void setList(std::vector<T> const& l);
 	std::vector<T> const& getList();
 
@@ -41,7 +41,7 @@ inline void UIOListSelection<T>::setSelected(int32_t index) {
 }
 
 template<class T>
-std::optional<T*> UIOListSelection<T>::getSelected() {
+std::optional<T const*> UIOListSelection<T>::getSelected() {
 	auto selection = this->textDisplay->text.getCursor().y;
 	if (indexInVector(selection, this->list)) {
 		return &this->list[selection];

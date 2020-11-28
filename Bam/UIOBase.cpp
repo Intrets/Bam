@@ -15,6 +15,10 @@ Handle UIOBase::getSelfHandle() {
 	return this->selfHandle;
 }
 
+void UIOBaseMulti::clear() {
+	this->elements.clear();
+}
+
 void UIOBaseMulti::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	this->elements.push_back(std::move(element));
 }
