@@ -251,6 +251,20 @@ void UIState::closeNamedUI(std::string const& name) {
 	}
 }
 
+void UIState::closeUI(WeakReference<UIOBase, UIOBase> ref) {
+	this->closeUI(ref.handle);
+}
+
+void UIState::closeUI(Handle handle) {
+	for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+		if (it->handle == handle) {
+			this->closedBuffer.push_back(std::move(*it));
+			this->UIs.erase(it);
+			break;
+		}
+	}
+}
+
 void UIState::reset() {
 	this->shouldReset_ = true;
 }
@@ -276,7 +290,7 @@ void UIState::init() {
 					 UIOWindow::TYPE::CLOSE);
 
 		UIO2::startList(UIO::DIR::DOWN);
-		for (size_t i = 0; i < 5; i++) {
+		for (size_t i = 0; i < 1; i++) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 			auto test = UIO2::makeEnd<UIODropDownList<uint32_t>>([](auto e)
 			{

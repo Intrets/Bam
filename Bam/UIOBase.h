@@ -34,14 +34,13 @@ typedef State UIOCallBackParams;
 
 typedef std::function<CallBackBindResult(UIOCallBackParams& UIOCallBackParams, UIOBase* self)> CallBack;
 
+class UIState;
+
 class UIOBase
 {
 protected:
 	Handle selfHandle;
 	bool active = false;
-
-	template<class T>
-	friend class UIOConstructer;
 
 	using Bind = std::pair<BindControl, CallBack>;
 

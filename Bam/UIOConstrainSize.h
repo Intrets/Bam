@@ -8,9 +8,6 @@
 class UIOConstrainSize : public UIOBaseSingle
 {
 private:
-	template<class T>
-	friend class UIOConstructer;
-
 	std::optional<UIOSizeType> maybeHeight;
 	std::optional<UIOSizeType> maybeWidth;
 

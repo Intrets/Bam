@@ -1,8 +1,5 @@
 #pragma once
 
-template<class>
-class UIOConstructer;
-
 class UIOList;
 
 template<class, class>

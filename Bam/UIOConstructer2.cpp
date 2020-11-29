@@ -16,6 +16,7 @@
 #include "UIOFreeSize.h"
 #include "UIOEmpty.h"
 #include "StringHelpers.h"
+#include "UIODestructible.h"
 
 std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
 
@@ -429,6 +430,15 @@ UIOConstrainSize* UIO2::alignTopRight() {
 
 UIOFreeSize* UIO2::free() {
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOFreeSize>();
+	auto ptr = ref.get();
+
+	UIO2::Global::getState()->addSingle(std::move(ref));
+
+	return ptr;
+}
+
+UIODestructible* UIO2::destructible() {
+	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIODestructible>();
 	auto ptr = ref.get();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));

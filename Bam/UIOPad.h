@@ -7,9 +7,6 @@
 class UIOPad : public UIOBaseSingle
 {
 public:
-	template<class T>
-	friend class UIOConstructer;
-
 	friend class UIOHotbar;
 
 	std::optional<UIOSizeType> top;

@@ -46,6 +46,8 @@ public:
 	void addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref);
 
 	void closeNamedUI(std::string const& name);
+	void closeUI(WeakReference<UIOBase, UIOBase> ref);
+	void closeUI(Handle handle);
 
 	void reset();
 	bool shouldReset();

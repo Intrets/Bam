@@ -17,6 +17,7 @@ class UIOGrid;
 class UIOColoredBackground;
 class UIOFreeSize;
 class UIOPad;
+class UIODestructible;
 
 namespace UIO2
 {
@@ -77,6 +78,8 @@ namespace UIO2
 	UIOConstrainSize* alignTopRight();
 
 	UIOFreeSize* free();
+
+	UIODestructible* destructible();
 
 	UIOPad* pad(UIOSizeType padding);
 	UIOPad* padTop(UIOSizeType padding);

@@ -16,9 +16,6 @@ private:
 	glm::vec2 mousePressOffset;
 
 private:
-	template<class T>
-	friend class UIOConstructer;
-
 	friend class UIOHotbar;
 
 	CallBack onPress;

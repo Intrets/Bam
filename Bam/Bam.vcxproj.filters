@@ -431,6 +431,8 @@
     <ClCompile Include="ActivityGhost.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
     <ClCompile Include="UIODropDownList.cpp" />
+    <ClCompile Include="UIOAnchoredProxy.cpp" />
+    <ClCompile Include="UIODestructible.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -776,6 +778,8 @@
     <ClInclude Include="ActivityGhost.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />
     <ClInclude Include="UIODropDownList.h" />
+    <ClInclude Include="UIOAnchoredProxy.h" />
+    <ClInclude Include="UIODestructible.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -285,6 +285,7 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
     <ClCompile Include="UIOConstructActivityInfo.cpp" />
     <ClCompile Include="UIOConstructDebugInfo.cpp" />
@@ -340,6 +341,7 @@
     <ClCompile Include="UIOCallBackParams.cpp" />
     <ClCompile Include="UIOConstructLuaInterface.cpp" />
     <ClCompile Include="UIOCursor.cpp" />
+    <ClCompile Include="UIODestructible.cpp" />
     <ClCompile Include="UIODropDownList.cpp" />
     <ClCompile Include="UIOEmpty.cpp" />
     <ClCompile Include="UIOGrid.cpp" />
@@ -401,6 +403,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />
     <ClInclude Include="UIOConstructActivityInfo.h" />
     <ClInclude Include="UIOConstructDebugInfo.h" />
@@ -450,6 +453,7 @@
     <ClInclude Include="UIOCallBackParams.h" />
     <ClInclude Include="UIOConstructLuaInterface.h" />
     <ClInclude Include="UIOCursor.h" />
+    <ClInclude Include="UIODestructible.h" />
     <ClInclude Include="UIODropDownList.h" />
     <ClInclude Include="UIOEmpty.h" />
     <ClInclude Include="UIOGrid.h" />
