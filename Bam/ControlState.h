@@ -68,9 +68,9 @@ namespace CONTROL
 	enum STATE
 	{
 		UP = 0,
-		RELEASED = 1 << 0,
+		DOWN = 1 << 0,
 		PRESSED = 1 << 1,
-		DOWN = 1 << 2,
+		RELEASED = 1 << 2,
 		REPEAT = 1 << 3,
 	};
 
