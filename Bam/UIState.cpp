@@ -118,9 +118,6 @@ void UIState::runUIBinds(State& state) {
 }
 
 void UIState::run(State& state) {
-	ScreenRectangle r;
-	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
-
 	this->runUIBinds(state);
 
 	for (auto it = this->namedUIs.begin(), last = this->namedUIs.end(); it != last;) {
@@ -133,7 +130,6 @@ void UIState::run(State& state) {
 	}
 
 	for (auto& UI : this->UIsBuffer) {
-		UI.get()->updateSize(r);
 		this->UIs.push_front(std::move(UI));
 	}
 	this->UIsBuffer.clear();
