@@ -22,7 +22,7 @@ bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> 
 		r1.get()->addChild(std::move(r));
 	}
 
-	Locator<ReferenceManager<Activity>>::get()->deleteReference(&toDelete);
+	Locator<ReferenceManager<Activity>>::get()->deleteReference(toDelete.handle);
 	return true;
 }
 

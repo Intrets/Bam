@@ -33,12 +33,12 @@ void UIO2::constructActivityBuilder() {
 			}
 		}
 
-		/*auto list = */UIO2::makeEnd<UIODropDownList<std::string>>([](auto e)
+		auto list = UIO2::makeEnd<UIODropDownList<std::string>>([](auto e)
 		{
 			return e;
 		});
 
-		//list->setList(items);
+		list->setList(items);
 
 		UIO2::endGrid();
 	}

@@ -275,46 +275,6 @@ void UIState::init() {
 	ScreenRectangle r;
 	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
 
-	// Drop Down Test
-	{
-		UIO2::Global::push();
-
-		UIO2::window("Activity Builder Test", { {0.0f - 0.04f, -0.1f - 0.04f}, {0.5f - 0.04f, 1.0f - 0.04f} },
-					 UIOWindow::TYPE::MINIMISE |
-					 UIOWindow::TYPE::MOVE |
-					 UIOWindow::TYPE::RESIZE |
-					 UIOWindow::TYPE::CLOSE);
-
-		UIO2::startList(UIO::DIR::DOWN);
-		for (size_t i = 0; i < 1; i++) {
-			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-			auto test = UIO2::makeEnd<UIODropDownList<uint32_t>>([](auto e)
-			{
-				return "item: " + std::to_string(e);
-			});
-
-			test->setList({ 1, 2, 3, 4, 5, 6 });
-		}
-		UIO2::endList();
-
-		this->UIs.push_back(UIO2::Global::pop());
-	}
-
-	// Activity Builder test
-	//{
-	//	UIO2::Global::push();
-
-	//	UIO2::window("Activity Builder Test", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-	//				 UIOWindow::TYPE::MINIMISE |
-	//				 UIOWindow::TYPE::MOVE |
-	//				 UIOWindow::TYPE::RESIZE |
-	//				 UIOWindow::TYPE::CLOSE);
-	//	UIO2::constructActivityBuilder();
-
-
-	//	this->UIs.push_back(UIO2::Global::pop());
-	//}
-
 	// Inventory
 	{
 		UIO2::Global::push();

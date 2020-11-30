@@ -29,6 +29,7 @@ public:
 	UIOTextDisplay* buttonText;
 
 	UIODropDownList(Handle self, std::function<std::string(T const&)> f);
+	virtual ~UIODropDownList() = default;
 
 	std::optional<T const*> getSelected();
 	bool select(int32_t index);
@@ -42,7 +43,10 @@ template<class T>
 inline void UIODropDownList<T>::spawnPopUpList(UIState& uiState) {
 	UIO2::Global::push();
 
-	UIO2::background(COLORS::DARKEN(COLORS::UI::BACKGROUND));
+	UIO2::padTop({ UIO::SIZETYPE::PX, 3 });
+	UIO2::padRight({ UIO::SIZETYPE::PX, 3 });
+	UIO2::padLeft({ UIO::SIZETYPE::PX, 3 });
+	UIO2::background(COLORS::DARKEN2(COLORS::UI::BACKGROUND));
 	UIO2::startList(UIO::DIR::DOWN);
 
 	int32_t index = 0;

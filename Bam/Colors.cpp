@@ -47,6 +47,10 @@ glm::vec4 COLORS::DARKEN(glm::vec4 color) {
 	return color * glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
 }
 
+glm::vec4 COLORS::DARKEN2(glm::vec4 color) {
+	return color * glm::vec4(0.64f, 0.64f, 0.64f, 1.0f);
+}
+
 glm::vec4 COLORS::LIGHTEN(glm::vec4 color) {
 	return color / glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
 }

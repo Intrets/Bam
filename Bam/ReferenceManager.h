@@ -354,7 +354,6 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 	freeData(h);
 }
 
-
 template<class B>
 inline ReferenceManager<B>::~ReferenceManager() {
 	for (auto [_, managed] : this->managedReferences) {

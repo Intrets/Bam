@@ -36,6 +36,7 @@ constexpr uint32_t operator"" _hex(const char* c, std::size_t size) {
 namespace COLORS
 {
 	glm::vec4 DARKEN(glm::vec4 color);
+	glm::vec4 DARKEN2(glm::vec4 color);
 	glm::vec4 LIGHTEN(glm::vec4 color);
 
 	glm::vec4 rgb(int32_t r, int32_t g, int32_t b);
