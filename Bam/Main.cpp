@@ -55,8 +55,9 @@ void mainLoop(GLFWwindow* window) {
 
 	bool stateChanged = false;
 
+	RenderInfo renderInfo;
+
 	while (!glfwWindowShouldClose(window)) {
-		RenderInfo renderInfo;
 
 		if (state.uiState.shouldReset()) {
 			state.uiState.clear();
@@ -92,6 +93,7 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("UI update size");
 
 			Locator<Timer>::ref().newTiming("Prepare render");
+			renderInfo = RenderInfo();
 			renderer.prepareRender(window, renderInfo, state);
 			Locator<Timer>::ref().endTiming("Prepare render");
 
