@@ -10,6 +10,7 @@ void loadShapes() {
 	auto set = [&i](SHAPE::TYPE type, std::string name)
 	{
 		DataFront<ShapeData>::data[type].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(name + ".dds");
+		DataFront<ShapeData>::data[type].name = name;
 		DataFront<ShapeData>::names[type] = name;
 		DataFront<ShapeData>::nameMap[name] = type;
 		++i;

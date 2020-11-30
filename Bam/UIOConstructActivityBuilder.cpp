@@ -29,7 +29,9 @@ void UIO2::constructActivityBuilder() {
 		for (auto const& item : Locator<Inventory>::ref().getItems()) {
 			if (item.get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
 				auto block = static_cast<InventoryBlock*>(item.get());
-				items.push_back(block->getBlock().getShape().name);
+				if (block->getBlock().getShapeData() == type) {
+					items.push_back(block->getBlock().getBlock().name);
+				}
 			}
 		}
 

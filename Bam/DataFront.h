@@ -29,6 +29,9 @@ public:
 
 	int32_t getID() const;
 
+	bool operator==(const DataFront<T>& other) const;
+	bool operator==(const int32_t& other) const;
+
 	DataFront(int32_t index_);
 	DataFront(std::string name);
 	DataFront();
@@ -84,6 +87,16 @@ inline std::string const& DataFront<T>::getName() const {
 template<class T>
 inline int32_t DataFront<T>::getID() const {
 	return this->index;
+}
+
+template<class T>
+inline bool DataFront<T>::operator==(const DataFront<T>& other) const {
+	return this->index == other.index;
+}
+
+template<class T>
+inline bool DataFront<T>::operator==(const int32_t& other) const {
+	return this->index == other;
 }
 
 template<class T>
