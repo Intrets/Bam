@@ -48,16 +48,17 @@ UIOButton::UIOButton(Handle self) {
 
 	this->selfHandle = self;
 
-	this->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
+	this->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL, CONTROL::STATE::PRESSED },
 						 [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		self_->activate();
-		return BIND::RESULT::CONTINUE;
+		return BIND::RESULT::CONSUME;
 	});
 
 	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
+		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen()) ||
+			!params.controlState.activated({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL })) {
 			self_->deactivate();
 		}
 		return BIND::RESULT::CONTINUE;

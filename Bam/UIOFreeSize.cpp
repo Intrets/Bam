@@ -7,8 +7,6 @@ UIOFreeSize::UIOFreeSize(Handle self) {
 }
 
 ScreenRectangle UIOFreeSize::updateSize(ScreenRectangle newScreenRectangle) {
-	this->screenRectangle = newScreenRectangle;
-
 	ScreenRectangle r = this->main.get()->getScreenRectangle();
 
 	if (r.getPixelSize().x != 0 && r.getPixelSize().y != 0) {
@@ -19,6 +17,8 @@ ScreenRectangle UIOFreeSize::updateSize(ScreenRectangle newScreenRectangle) {
 
 	r.setPixelSize(newScreenRectangle.getPixelSize());
 	this->main.get()->updateSize(r);
+
+	this->screenRectangle = this->main.get()->getScreenRectangle();
 
 	return this->screenRectangle;
 }

@@ -55,6 +55,7 @@ void ControlState::cycleStates() {
 	this->scrollDistance = 0;
 	this->blockUserInput = false;
 	this->controlState[static_cast<int32_t>(CONTROL::KEY::MOUSE_POS_CHANGED)] = CONTROL::STATE::PRESSED;
+	this->controlState[static_cast<int32_t>(CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL)] = CONTROL::STATE::PRESSED;
 	this->controlState[static_cast<int32_t>(CONTROL::KEY::EVERY_TICK)] = CONTROL::STATE::PRESSED;
 
 	this->consumed.fill(false);

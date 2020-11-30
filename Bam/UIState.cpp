@@ -19,6 +19,10 @@
 #include "UIODropDownList.h"
 
 CallBackBindResult UIState::runFrontBinds(State& state) {
+	if (this->UIs.size() == 0) {
+		return BIND::RESULT::CONTINUE;
+	}
+
 	CallBackBindResult activeResult =
 		this->UIs.front().get()->runOnHoverBinds(state) |
 		this->UIs.front().get()->runFocussedBinds(state) |
@@ -190,6 +194,10 @@ void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 }
 
 void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
+	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::CONSUME;
+	});
 	this->UIsBuffer.push_back(std::move(ref));
 }
 
@@ -216,11 +224,20 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 	}
 
 	this->namedUIsBuffer[name] = f();
+	this->namedUIsBuffer[name].get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::CONSUME;
+	});
 	return true;
 }
 
 void UIState::addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref) {
 	this->closeNamedUI(name);
+
+	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::CONSUME;
+	});
 
 	this->namedUIsBuffer[name] = std::move(ref);
 }
@@ -286,7 +303,7 @@ void UIState::init() {
 					 UIOWindow::TYPE::HIDE);
 		UIO2::makeEnd<UIOInventory>();
 
-		this->UIs.push_back(UIO2::Global::pop());
+		this->addUI(UIO2::Global::pop());
 	}
 
 	// Cursor renderer
@@ -295,7 +312,7 @@ void UIState::init() {
 
 		UIO2::makeEnd<UIOCursor>();
 
-		this->UIs.push_back(UIO2::Global::pop());
+		this->addUI(UIO2::Global::pop());
 	}
 
 	// Hotbar
@@ -308,7 +325,7 @@ void UIState::init() {
 		UIO2::background(COLORS::UI::WINDOWBACKGROUND);
 		UIO2::makeEnd<UIOHotbar>();
 
-		this->UIs.push_back(UIO2::Global::pop());
+		this->addUI(UIO2::Global::pop());
 	}
 
 	// save/load and other stuff
@@ -323,7 +340,7 @@ void UIState::init() {
 					 UIOWindow::TYPE::MOVE);
 		UIO2::constructDebugInfo();
 
-		this->UIs.push_back(std::move(UIO2::Global::pop()));
+		this->addUI(UIO2::Global::pop());
 	}
 
 	// wasd movement in world
