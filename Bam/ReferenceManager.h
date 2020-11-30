@@ -166,7 +166,6 @@ public:
 	void unsubscribe(ManagedReference<B, T>& managedReference);
 
 	void deleteReference(Handle h);
-	void deleteReference(WeakReferenceBase* b);
 
 	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
 		for (int32_t i = 1; i < size; i++) {
@@ -274,18 +273,47 @@ inline UniqueReference<B, T> ReferenceManager<B>::makeUniqueRef(Args&& ...args) 
 template<class B>
 template<class T>
 inline void ReferenceManager<B>::subscribe(ManagedReference<B, T>& toManage) {
-	managedReferences.insert(std::make_pair(toManage.getHandle(), &toManage));
+#ifdef _DEBUG
+	auto range = managedReferences.equal_range(toManage.getHandle());
+
+	auto it = range.first;
+	auto end = range.second;
+
+	for (; it != end; it++) {
+		assert(it->second != static_cast<ManagedReferenceBase*>(&toManage));
+	}
+#endif
+
+	this->managedReferences.insert(std::make_pair(toManage.getHandle(), &toManage));
 }
 
 template<class B>
 template<class T>
 inline void ReferenceManager<B>::unsubscribe(ManagedReference<B, T>& managedReference) {
 	auto range = managedReferences.equal_range(managedReference.getHandle());
+
+#ifdef _DEBUG
+	{
+		auto it = range.first;
+		auto end = range.second;
+		int32_t count = 0;
+
+		for (; it != end; it++) {
+			if (it->second == static_cast<ManagedReferenceBase*>(&managedReference)) {
+				count++;
+			}
+		}
+
+		assert(count == 1);
+	}
+#endif
+
 	auto it = range.first;
 	auto end = range.second;
+
 	for (; it != end; it++) {
 		if (it->second == static_cast<ManagedReferenceBase*>(&managedReference)) {
-			managedReferences.erase(it);
+			it = managedReferences.erase(it);
 			break;
 		}
 	}
@@ -326,11 +354,6 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 	freeData(h);
 }
 
-template<class B>
-inline void ReferenceManager<B>::deleteReference(WeakReferenceBase* b) {
-	deleteReference(b->handle);
-	b->handle = 0;
-}
 
 template<class B>
 inline ReferenceManager<B>::~ReferenceManager() {
@@ -382,6 +405,7 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B
 			return *this;
 		}
 	}
+	assert(this->handle != other.handle);
 	this->deleteObject();
 	this->handle = other.handle;
 	other.handle = 0;
