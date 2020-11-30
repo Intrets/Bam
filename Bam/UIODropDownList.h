@@ -47,24 +47,35 @@ inline void UIODropDownList<T>::spawnPopUpList(UIState& uiState) {
 	UIO2::padRight({ UIO::SIZETYPE::PX, 3 });
 	UIO2::padLeft({ UIO::SIZETYPE::PX, 3 });
 	UIO2::background(COLORS::DARKEN2(COLORS::UI::BACKGROUND));
+
 	UIO2::startList(UIO::DIR::DOWN);
 
-	int32_t index = 0;
-	for (auto& element : this->list) {
-
+	if (this->list.size() == 0) {
 		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-		auto button = UIO2::textButton(this->display(element));
-		button->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(this->getSelfHandle())](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+		auto button = UIO2::textButton("nothing");
+		button->setColor(COLORS::UI::RED);
+		button->setOnPress([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			if (ref.isValid()) {
-				ref.get()->select(index);
-			}
 			return BIND::RESULT::CLOSE;
 		});
-
-		++index;
 	}
+	else {
 
+		int32_t index = 0;
+		for (auto& element : this->list) {
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			auto button = UIO2::textButton(this->display(element));
+			button->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(this->getSelfHandle())](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			{
+				if (ref.isValid()) {
+					ref.get()->select(index);
+				}
+				return BIND::RESULT::CLOSE;
+			});
+
+			++index;
+		}
+	}
 	UIO2::endList();
 
 	this->proxy->setProxy(std::move(UIO2::Global::pop()), uiState);

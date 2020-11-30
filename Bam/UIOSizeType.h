@@ -38,7 +38,7 @@ struct UIOSizeType
 	UIOSizeType(UIO::SIZETYPE t, int32_t val);
 	UIOSizeType(UIO::SIZETYPE t, float val);
 
-	float getWidth(ScreenRectangle screenRectangle);
-	float getHeight(ScreenRectangle screenRectangle);
+	float getWidth(ScreenRectangle screenRectangle) const;
+	float getHeight(ScreenRectangle screenRectangle) const;
 };
 

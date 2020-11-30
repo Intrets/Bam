@@ -16,7 +16,7 @@ UIOSizeType::UIOSizeType(UIO::SIZETYPE t, float val) {
 	this->absolute_height = val;
 }
 
-float UIOSizeType::getWidth(ScreenRectangle screenRectangle) {
+float UIOSizeType::getWidth(ScreenRectangle screenRectangle) const {
 	float widthS;
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (this->type) {
@@ -48,7 +48,7 @@ float UIOSizeType::getWidth(ScreenRectangle screenRectangle) {
 	return widthS;
 }
 
-float UIOSizeType::getHeight(ScreenRectangle screenRectangle) {
+float UIOSizeType::getHeight(ScreenRectangle screenRectangle) const {
 	float heightS;
 	auto pixelSize = screenRectangle.getPixelSize();
 	switch (type) {

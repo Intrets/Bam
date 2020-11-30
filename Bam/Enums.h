@@ -1,5 +1,17 @@
 #pragma once
 
+namespace UIOPAD
+{
+	enum class TYPE
+	{
+		SHRINK,
+		FREE,
+		SIZETYPE,
+	};
+
+
+}
+
 namespace UIO
 {
 	enum class TYPE
