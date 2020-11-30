@@ -16,7 +16,6 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 
 	UIO2::Global::push();
 
-
 	UIO2::free();
 	this->destructible = UIO2::destructible();
 	this->proxyBase.set(this->destructible->getSelfHandle());
@@ -32,12 +31,46 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 		}
 	});
 
+	ptr->addOnHoverBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		return BIND::RESULT::CONSUME;
+	});
+
 	uiState.addUI(UIO2::Global::pop());
 }
 
 ScreenRectangle UIOAnchoredProxy::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
 	if (this->proxyBase.isValid()) {
+		const float scale = 10.0f;
+		switch (this->alignment) {
+			case UIO::ALIGNMENT::TOP:
+				newScreenRectangle.setBot(-scale);
+				break;
+			case UIO::ALIGNMENT::BOTTOM:
+				newScreenRectangle.setTop(scale);
+				break;
+			case UIO::ALIGNMENT::LEFT:
+				newScreenRectangle.setRight(scale);
+				break;
+			case UIO::ALIGNMENT::RIGHT:
+				newScreenRectangle.setLeft(-scale);
+				break;
+			case UIO::ALIGNMENT::TOPRIGHT:
+				newScreenRectangle.setBottomLeft({ -scale, -scale });
+				break;
+			case UIO::ALIGNMENT::TOPLEFT:
+				newScreenRectangle.setBottomRight({ scale, -scale });
+				break;
+			case UIO::ALIGNMENT::BOTTOMLEFT:
+				newScreenRectangle.setTopRight({ scale, scale });
+				break;
+			case UIO::ALIGNMENT::BOTTOMRIGHT:
+				newScreenRectangle.setTopLeft({ -scale,scale });
+				break;
+			default:
+				break;
+		}
 		this->proxyBase.get()->updateSize(newScreenRectangle);
 	}
 	return this->screenRectangle;

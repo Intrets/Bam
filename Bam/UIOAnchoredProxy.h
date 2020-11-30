@@ -1,12 +1,16 @@
 #pragma once
 
 #include "UIOBase.h"
+#include "Enums.h"
 
 class UIODestructible;
 class UIState;
 
 class UIOAnchoredProxy : public UIOBaseEnd
 {
+private:
+	UIO::ALIGNMENT alignment = UIO::ALIGNMENT::TOP;
+
 public:
 	ManagedReference<UIOBase, UIOBase> proxyBase;
 	UIODestructible* destructible;

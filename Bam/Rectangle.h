@@ -46,6 +46,11 @@ public:
 	void setTopRight(glm::vec2 p);
 	void setBottomLeft(glm::vec2 p);
 
+	void setTop(float s);
+	void setBot(float s);
+	void setRight(float s);
+	void setLeft(float s);
+
 	void translate(glm::vec2 p);
 	void translateLeft(float s);
 	void translateRight(float s);

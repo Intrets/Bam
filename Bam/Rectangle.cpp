@@ -79,6 +79,22 @@ glm::vec2 Rectangle::getBottomLeft() const {
 	return this->bot;
 }
 
+void Rectangle::setTop(float s) {
+	this->top.y = s;
+}
+
+void Rectangle::setBot(float s) {
+	this->bot.y = s;
+}
+
+void Rectangle::setRight(float s) {
+	this->top.x = s;
+}
+
+void Rectangle::setLeft(float s) {
+	this->bot.x = s;
+}
+
 void Rectangle::translate(glm::vec2 p) {
 	this->bot += p;
 	this->top += p;
