@@ -320,6 +320,9 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 	{
 		ref.second->invalidate();
 	});
+
+	managedReferences.erase(range.first, range.second);
+
 	freeData(h);
 }
 
