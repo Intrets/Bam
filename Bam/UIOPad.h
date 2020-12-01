@@ -14,7 +14,6 @@ struct UIOPadType
 	UIOPadType& operator=(UIOPAD::TYPE const& t);
 	UIOPadType& operator=(UIOSizeType const& s);
 
-
 	UIOPadType();
 	UIOPadType(UIOPAD::TYPE t);
 	UIOPadType(UIOSizeType s);
@@ -29,16 +28,6 @@ public:
 	UIOPadType bottom;
 	UIOPadType left;
 	UIOPadType right;
-
-	//std::optional<std::variant<UIOSizeType> top;
-	//std::optional<std::variant<UIOSizeType> bottom;
-	//std::optional<std::variant<UIOSizeType> left;
-	//std::optional<std::variant<UIOSizeType> right;
-
-	//std::optional<UIOSizeType> top;
-	//std::optional<UIOSizeType> bottom;
-	//std::optional<UIOSizeType> left;
-	//std::optional<UIOSizeType> right;
 
 public:
 	UIOPad(Handle self);
