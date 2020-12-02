@@ -20,10 +20,17 @@ private:
 
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> hotbar;
 
+	std::vector<InventoryActivity const*> listActivities();
+	std::vector<InventoryBlock const*> listBlocks();
+
 public:
 	std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& getHotbar();
 	std::vector<UniqueReference<InventoryItem, InventoryItem>> const& getItems();
 	std::optional<UniqueReference<InventoryItem, InventoryItem>> const& getCursor();
+
+	bool canExtract(std::vector<std::pair<ShapedBlock, int32_t>> collection);
+	bool extract(std::vector<std::pair<ShapedBlock, int32_t>> const& collection);
+	bool extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collection);
 
 	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
 	bool addItemCursor(UniqueReference<InventoryItem, InventoryItem>& item);

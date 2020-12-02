@@ -65,7 +65,12 @@ bool InventoryBlock::incrementCount(int32_t c) {
 	return true;
 }
 
-int32_t InventoryBlock::getCount() {
+void InventoryBlock::decrementCount(int32_t c) {
+	assert(c >= 0);
+	this->count -= c;
+}
+
+int32_t InventoryBlock::getCount() const {
 	return this->count;
 }
 

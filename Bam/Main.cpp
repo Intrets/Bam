@@ -58,7 +58,6 @@ void mainLoop(GLFWwindow* window) {
 	RenderInfo renderInfo;
 
 	while (!glfwWindowShouldClose(window)) {
-
 		if (state.uiState.shouldReset()) {
 			state.uiState.clear();
 			state.uiState.init();

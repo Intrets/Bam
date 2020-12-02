@@ -63,7 +63,7 @@ UIOPadType& UIOPadType::operator=(UIOSizeType const& s) {
 UIOPadType::UIOPadType() : UIOPadType(UIOPAD::TYPE::SHRINK) {
 }
 
-UIOPadType::UIOPadType(UIOPAD::TYPE t) : size(UIO::SIZETYPE::ABSOLUTE_HEIGHT, -1), type(t) {
+UIOPadType::UIOPadType(UIOPAD::TYPE t) : size(UIO::SIZETYPE::ABSOLUTE_HEIGHT, -1.0f), type(t) {
 }
 
 UIOPadType::UIOPadType(UIOSizeType s) : size(s), type(UIOPAD::TYPE::SIZETYPE) {

@@ -8,6 +8,43 @@
 #include "Saver.h"
 #include "Loader.h"
 
+std::vector<InventoryActivity const*> Inventory::listActivities() {
+	std::vector<InventoryActivity const*> res;
+
+
+	for (auto& item : this->items) {
+		if (item.get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
+			res.push_back(item.getAs<InventoryActivity>());
+		}
+	}
+
+	for (auto& item : this->hotbar) {
+		if (item && item.value().get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
+			res.push_back(item.value().getAs<InventoryActivity>());
+		}
+	}
+
+	return res;
+}
+
+std::vector<InventoryBlock const*> Inventory::listBlocks() {
+	std::vector<InventoryBlock const*> res;
+
+	for (auto& item : this->items) {
+		if (item.get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
+			res.push_back(item.getAs<InventoryBlock>());
+		}
+	}
+
+	for (auto& item : this->hotbar) {
+		if (item && item.value().get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
+			res.push_back(item.value().getAs<InventoryBlock>());
+		}
+	}
+
+	return res;
+}
+
 std::vector<std::optional<UniqueReference<InventoryItem, InventoryItem>>> const& Inventory::getHotbar() {
 	return this->hotbar;
 }
@@ -18,6 +55,97 @@ std::vector<UniqueReference<InventoryItem, InventoryItem>> const& Inventory::get
 
 std::optional<UniqueReference<InventoryItem, InventoryItem>> const& Inventory::getCursor() {
 	return this->cursor;
+}
+
+bool Inventory::canExtract(std::vector<std::pair<ShapedBlock, int32_t>> collection) {
+	auto inventoryBlocks = this->listBlocks();
+
+	for (auto [block, count] : collection) {
+		for (auto inventoryBlock : inventoryBlocks) {
+			if (block == inventoryBlock->getBlock()) {
+				count -= inventoryBlock->getCount();
+				count = glm::max(0, count);
+			}
+
+			if (count == 0) {
+				break;
+			}
+		}
+		if (count != 0) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Inventory::extract(std::vector<std::pair<ShapedBlock, int32_t>> const& collection) {
+	if (!this->canExtract(collection)) {
+		return false;
+	}
+	else {
+		this->extractForce(collection);
+		return true;
+	}
+}
+
+bool Inventory::extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collection) {
+	for (auto [block, count] : collection) {
+		for (auto it = this->items.begin(); it != this->items.end();) {
+			auto item = it->get();
+			if (item->getType() == INVENTORYITEM::TYPE::BLOCK) {
+				auto blockItem = static_cast<InventoryBlock*>(item);
+				if (blockItem->getBlock() == block) {
+					if (blockItem->getCount() <= count) {
+						count -= blockItem->getCount();
+						it = this->items.erase(it);
+						continue;
+					}
+					else {
+						blockItem->decrementCount(count);
+						count = 0;
+						break;
+					}
+				}
+			}
+			it++;
+		}
+
+		if (count == 0) {
+			continue;
+		}
+
+		for (auto it = this->hotbar.begin(); it != this->hotbar.end();) {
+			if (!it->has_value()) {
+				continue;
+			}
+
+			auto item = it->value().get();
+
+			if (item->getType() == INVENTORYITEM::TYPE::BLOCK) {
+				auto blockItem = static_cast<InventoryBlock*>(item);
+				if (blockItem->getBlock() == block) {
+					if (blockItem->getCount() <= count) {
+						count -= blockItem->getCount();
+						it = this->hotbar.erase(it);
+						continue;
+					}
+					else {
+						blockItem->decrementCount(count);
+						count = 0;
+						break;
+					}
+				}
+			}
+
+			it++;
+		}
+
+		assert(count == 0);
+	}
+
+
+	return false;
 }
 
 void Inventory::clickHotbar(int32_t index) {
