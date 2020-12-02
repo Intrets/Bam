@@ -115,7 +115,7 @@ bool Inventory::extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collec
 			continue;
 		}
 
-		for (auto it = this->hotbar.begin(); it != this->hotbar.end();) {
+		for (auto it = this->hotbar.begin(); it != this->hotbar.end(); it++) {
 			if (!it->has_value()) {
 				continue;
 			}
@@ -127,7 +127,7 @@ bool Inventory::extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collec
 				if (blockItem->getBlock() == block) {
 					if (blockItem->getCount() <= count) {
 						count -= blockItem->getCount();
-						it = this->hotbar.erase(it);
+						*it = std::nullopt;
 						continue;
 					}
 					else {
@@ -137,8 +137,6 @@ bool Inventory::extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collec
 					}
 				}
 			}
-
-			it++;
 		}
 
 		assert(count == 0);
