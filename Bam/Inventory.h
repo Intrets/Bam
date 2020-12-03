@@ -34,6 +34,9 @@ public:
 
 	bool addItem(UniqueReference<InventoryItem, InventoryItem>& item);
 	bool addItemCursor(UniqueReference<InventoryItem, InventoryItem>& item);
+	bool addItemCursor(UniqueReference<Activity, Activity>& activity);
+
+	bool hasSpace() const;
 
 	void clickHotbar(int32_t index);
 

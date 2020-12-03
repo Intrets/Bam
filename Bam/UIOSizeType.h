@@ -18,11 +18,6 @@ namespace UIO
 
 struct UIOSizeType
 {
-	//enum TYPE
-	//{
-	//	FH, PX, STATIC_PX, ABSOLUTE_HEIGHT, ABSOLUTE_WIDTH, RELATIVE_HEIGHT, RELATIVE_WIDTH
-	//} type;
-
 	UIO::SIZETYPE type;
 
 	union

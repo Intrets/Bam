@@ -82,6 +82,10 @@ INVENTORYITEM::TYPE InventoryBlock::getType() {
 	return INVENTORYITEM::TYPE::BLOCK;
 }
 
+UniqueReference<Activity, Activity> InventoryActivity::extract() {
+	return std::move(this->activity);
+}
+
 Activity* InventoryActivity::getActivityPtr() {
 	return this->activity.get();
 }

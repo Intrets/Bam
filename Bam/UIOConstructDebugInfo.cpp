@@ -103,7 +103,7 @@ UIOList* UIO2::constructDebugInfo() {
 					 UIOWindow::TYPE::MOVE |
 					 UIOWindow::TYPE::RESIZE |
 					 UIOWindow::TYPE::CLOSE);
-		UIO2::constructActivityBuilder();
+		UIO2::constructActivityBuilder(ACTIVITY::TYPE::PISTON);
 
 		params.uiState.addUI(UIO2::Global::pop());
 		return BIND::RESULT::CONTINUE;

@@ -69,6 +69,9 @@ private:
 	UniqueReference<Activity, Activity> activity;
 
 public:
+	[[nodiscard]]
+	UniqueReference<Activity, Activity> extract();
+
 	Activity* getActivityPtr();
 
 	InventoryActivity() = default;

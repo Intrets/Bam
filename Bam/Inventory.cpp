@@ -142,7 +142,6 @@ bool Inventory::extractForce(std::vector<std::pair<ShapedBlock, int32_t>> collec
 		assert(count == 0);
 	}
 
-
 	return false;
 }
 
@@ -296,6 +295,22 @@ bool Inventory::addItemCursor(UniqueReference<InventoryItem, InventoryItem>& ite
 		}
 	}
 	this->cursor = std::move(item);
+	return true;
+}
+
+bool Inventory::addItemCursor(UniqueReference<Activity, Activity>& activity) {
+	UniqueReference<InventoryItem, InventoryItem> res = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(activity));
+
+	if (this->addItemCursor(res)) {
+		return true;
+	}
+	else {
+		activity = std::move(res.getAs<InventoryActivity>()->extract());
+		return false;
+	}
+}
+
+bool Inventory::hasSpace() const {
 	return true;
 }
 

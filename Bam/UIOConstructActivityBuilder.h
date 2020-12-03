@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Enums.h"
+
 namespace UIO2
 {
-	void constructActivityBuilder();
+	bool constructActivityBuilder(ACTIVITY::TYPE activityType);
 }
 

@@ -21,9 +21,11 @@ class UIODropDownList : public UIOBaseMulti
 private:
 	std::function<std::string(T const&)> display;
 
+	std::optional<std::function<std::vector<T>(UIOCallBackParams&)>> listGenerator;
+
 public:
 	UIOAnchoredProxy* proxy;
-	int32_t selected = 0;
+	int32_t selected = -1;
 	std::vector<T> list;
 
 	UIOTextDisplay* buttonText;
@@ -34,13 +36,18 @@ public:
 	std::optional<T const*> getSelected();
 	bool select(int32_t index);
 
-	void spawnPopUpList(UIState& uiState);
+	void spawnPopUpList(UIOCallBackParams& params);
 
 	void setList(std::vector<T> const& l);
+	void setList(std::function<std::vector<T>(UIOCallBackParams&)> f);
 };
 
 template<class T>
-inline void UIODropDownList<T>::spawnPopUpList(UIState& uiState) {
+inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
+	if (this->listGenerator) {
+		this->list = this->listGenerator.value()(params);
+	}
+
 	UIO2::Global::push();
 
 	UIO2::padTop({ UIO::SIZETYPE::PX, 3 });
@@ -60,7 +67,6 @@ inline void UIODropDownList<T>::spawnPopUpList(UIState& uiState) {
 		});
 	}
 	else {
-
 		int32_t index = 0;
 		for (auto& element : this->list) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
@@ -78,7 +84,7 @@ inline void UIODropDownList<T>::spawnPopUpList(UIState& uiState) {
 	}
 	UIO2::endList();
 
-	this->proxy->setProxy(std::move(UIO2::Global::pop()), uiState);
+	this->proxy->setProxy(std::move(UIO2::Global::pop()), params.uiState);
 }
 
 template<class T>
@@ -92,10 +98,11 @@ inline UIODropDownList<T>::UIODropDownList(Handle self, std::function<std::strin
 
 	auto [button, text] = UIO2::textButton2("");
 	this->buttonText = text;
+	button = button;
 
 	button->setOnRelease([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		this->spawnPopUpList(params.uiState);
+		this->spawnPopUpList(params);
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -132,6 +139,12 @@ inline bool UIODropDownList<T>::select(int32_t index) {
 
 template<class T>
 inline void UIODropDownList<T>::setList(std::vector<T> const& l) {
+	assert(!this->listGenerator.has_value());
 	this->list = l;
+}
+
+template<class T>
+inline void UIODropDownList<T>::setList(std::function<std::vector<T>(UIOCallBackParams&)> f) {
+	this->listGenerator = f;
 }
 
