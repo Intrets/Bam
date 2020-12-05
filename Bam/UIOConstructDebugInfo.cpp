@@ -16,6 +16,7 @@
 #include "Timer.h"
 #include "UIOBinds.h"
 #include "UIOConstructActivityBuilder.h"
+#include "UIOAnchoredProxy.h"
 
 UIOList* UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
@@ -62,8 +63,10 @@ UIOList* UIO2::constructDebugInfo() {
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	auto renderThread = UIO2::textButton("Toggle Seperate Render Thread");
 
+	UIO2::constrainHeight({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.0f });
+	auto proxy = UIO2::makeEnd<UIOAnchoredProxy>();
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-	auto builderTest = UIO2::textButton("Builder");
+	auto builderTest = UIO2::textButton("Builder2");
 
 	// ----------------------------------
 	// Button for opening Item Spawner UI
@@ -93,19 +96,50 @@ UIOList* UIO2::constructDebugInfo() {
 	// Binds
 	// -----
 
-	builderTest->setOnRelease(
-		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	builderTest->setOnPress([proxy](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
+		const ACTIVITY::TYPE types[] = {
+			ACTIVITY::TYPE::PISTON,
+			ACTIVITY::TYPE::GRABBER,
+			ACTIVITY::TYPE::RAILCRANE,
+			ACTIVITY::TYPE::LUA,
+			ACTIVITY::TYPE::READER,
+			ACTIVITY::TYPE::DETECTOR,
+			ACTIVITY::TYPE::INCINERATOR,
+			ACTIVITY::TYPE::FORWARDER,
+		};
+
 		UIO2::Global::push();
 
-		UIO2::window("Activity Builder Test", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
-					 UIOWindow::TYPE::MINIMISE |
-					 UIOWindow::TYPE::MOVE |
-					 UIOWindow::TYPE::RESIZE |
-					 UIOWindow::TYPE::CLOSE);
-		UIO2::constructActivityBuilder(ACTIVITY::TYPE::PISTON);
+		UIO2::padTop({ UIO::SIZETYPE::PX, 3 });
+		UIO2::padRight({ UIO::SIZETYPE::PX, 3 });
+		UIO2::padLeft({ UIO::SIZETYPE::PX, 3 });
+		UIO2::background(COLORS::DARKEN2(COLORS::UI::BACKGROUND));
 
-		params.uiState.addUI(UIO2::Global::pop());
+		UIO2::startList(UIO::DIR::DOWN);
+		for (auto type : types) {
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			auto button = UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type));
+			button->setOnRelease([type = type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				UIO2::Global::push();
+
+				UIO2::window("Builder", { {0.5f - 0.04f, -0.1f - 0.04f}, {1.0f - 0.04f, 1.0f - 0.04f} },
+							 UIOWindow::TYPE::MINIMISE |
+							 UIOWindow::TYPE::MOVE |
+							 UIOWindow::TYPE::RESIZE |
+							 UIOWindow::TYPE::CLOSE);
+				UIO2::constructActivityBuilder(type);
+
+				params.uiState.addNamedUIReplace("Builder", UIO2::Global::pop());
+
+				return BIND::RESULT::CLOSE;
+			});
+		}
+		UIO2::endList();
+
+		proxy->setProxy(UIO2::Global::pop(), params.uiState);
+
 		return BIND::RESULT::CONTINUE;
 	});
 
