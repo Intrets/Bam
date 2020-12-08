@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 namespace bwo
 {
 	enum class BufferHint
@@ -35,7 +37,6 @@ namespace bwo
 		GLuint ID;
 		glm::ivec3 size;
 
-		Texture2DArray(GLuint handle);
 		Texture2DArray(
 			glm::ivec3 size,
 			GLint level,
@@ -86,7 +87,8 @@ namespace bwo
 		Texture2D makeNoFiltering(glm::ivec2 size);
 	};
 
-	namespace Texture2DArrayHelper{
+	namespace Texture2DArrayHelper
+	{
 		Texture2DArray makeLinearFiltering(glm::ivec3 size);
 	}
 
@@ -173,15 +175,25 @@ namespace bwo
 
 		GLuint ID;
 
+		std::string vertexShaderName;
+		std::string fragmentShaderName;
+		std::string description;
+
 	public:
+		static std::unordered_map<int32_t, Program*> refs;
+		static std::string listAll();
+		static std::optional<Program const*> lookup(int32_t id);
+
 		void use();
 
-		Program() = default;
-		Program(GLuint ID_) : ID(ID_) {
-		};
+		Program(std::string const& name, std::string const& description);
+		Program(std::string const& vert, std::string const& frag, std::string const& description);
 		~Program();
 
 		NOCOPYMOVE(Program);
+
+	private:
+		Program() = default;
 	};
 
 	class Uniform2iv

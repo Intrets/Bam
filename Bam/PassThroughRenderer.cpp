@@ -20,7 +20,7 @@ void PassThroughRenderer::render2DArray(bwo::Texture2DArray& target, int32_t lay
 }
 
 PassThroughRenderer::PassThroughRenderer() :
-	program(Locator<PathManager>::get()->LoadShadersP("Passthrough")),
+	program("Passthrough", "PassThroughRenderer"),
 	texture("texture_t", program, 0) {
 	static const GLfloat g_quad_vertex_buffer_data[] = {
 		   -1.0f, -1.0f, 0.0f,

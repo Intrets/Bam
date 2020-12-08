@@ -1,6 +1,9 @@
 #include "common.h"
 #include "BufferWrappers.h"
 
+#include <sstream>
+
+std::unordered_map<int32_t, bwo::Program*> bwo::Program::refs;
 
 bwo::VertexArrayObject::~VertexArrayObject() {
 	glDeleteVertexArrays(1, &this->ID);
@@ -10,11 +13,44 @@ bwo::Texture::~Texture() {
 	glDeleteTextures(1, &this->ID);
 }
 
+std::string bwo::Program::listAll() {
+	std::stringstream out;
+
+	for (auto [index, program] : bwo::Program::refs) {
+		out << program->description << ". ID: " << index << " Shaders: " << program->fragmentShaderName << " " << program->vertexShaderName << "\n\n";
+	}
+
+	return out.str();
+}
+
+std::optional<bwo::Program const*> bwo::Program::lookup(int32_t id) {
+	auto it = bwo::Program::refs.find(id);
+
+	if (it == bwo::Program::refs.end()) {
+		return std::nullopt;
+	}
+	else {
+		return it->second;
+	}
+}
+
 void bwo::Program::use() {
 	glUseProgram(this->ID);
 }
 
+bwo::Program::Program(std::string const& name, std::string const& description) : Program(name, name, description) {
+}
+
+bwo::Program::Program(std::string const& vert, std::string const& frag, std::string const& description_) {
+	this->ID = Locator<PathManager>::ref().LoadShadersP(vert + ".vert", frag + ".frag");
+	this->vertexShaderName = vert + ".vert";
+	this->fragmentShaderName = frag + ".frag";
+	this->description = description_;
+	bwo::Program::refs[this->ID] = this;
+}
+
 bwo::Program::~Program() {
+	Program::refs.erase(this->ID);
 	glDeleteProgram(this->ID);
 }
 

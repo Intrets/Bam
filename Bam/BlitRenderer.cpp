@@ -63,7 +63,7 @@ void BlitRenderer::render(glm::vec4 uv, glm::vec4 world, GLuint target, glm::ive
 }
 
 BlitRenderer::BlitRenderer() :
-	program(Locator<PathManager>::ref().LoadShadersP("Blit")),
+	program("Blit", "BlitRenderer"),
 	UVflip("UVflip", this->program),
 	texture_t("texture_t", this->program, 0),
 	depth("depth", this->program),

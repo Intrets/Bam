@@ -39,7 +39,7 @@ void BlitRendererArrayTexture::render(std::vector<glm::vec2> const& positions, s
 }
 
 BlitRendererArrayTexture::BlitRendererArrayTexture() :
-	program(Locator<PathManager>::get()->LoadShadersP("BlitArray")),
+	program("BlitArray", "BlitRendererArrayTexture"),
 	texture_t("texture_t", this->program, 0),
 	depth("depth", this->program),
 	VP("VP", this->program) {

@@ -8,7 +8,7 @@
 #include "CameraInfo.h"
 
 BlockRenderer::BlockRenderer() :
-	program(Locator<PathManager>::get()->LoadShadersP("BlockShader")),
+	program("BlockShader", "BlockRenderer"),
 	texture("textureSampler", this->program, 0),
 	depth("depth", this->program),
 	VP("VP", this->program) {

@@ -30,7 +30,7 @@ void UIbackgroundRenderer::render(UIRenderInfo const& renderInfo, GLuint target,
 }
 
 UIbackgroundRenderer::UIbackgroundRenderer() :
-	program(Locator<PathManager>::get()->LoadShadersP("UIbg.vert", "UIbg.frag")) {
+	program("UIbg", "UIbackgroundRenderer") {
 	static const GLfloat g_quad_vertex_buffer_data[] = {
 		0.0f,  0.0f,  0.0f,
 		1.0f,  0.0f,  0.0f,
