@@ -9,10 +9,18 @@
 #include "UIOConstrainSize.h"
 #include "RenderInfo.h"
 
-void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& uiState) {
+void UIOAnchoredProxy::closeProxy() {
 	if (this->proxyBase.isValid()) {
 		this->destructible->destruct = true;
 	}
+}
+
+bool UIOAnchoredProxy::hasProxy() {
+	return this->proxyBase.isValid();
+}
+
+void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& uiState) {
+	this->closeProxy();
 
 	UIO2::Global::push();
 

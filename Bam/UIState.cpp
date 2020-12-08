@@ -33,6 +33,7 @@ CallBackBindResult UIState::runFrontBinds(State& state) {
 	bool shouldExit = false;
 	if (activeResult & BIND::RESULT::CLOSE) {
 		this->UIs.pop_front();
+		res |= BIND::RESULT::CLOSE;
 		shouldExit = true;
 	}
 	if (activeResult & BIND::RESULT::STOP) {
@@ -74,7 +75,12 @@ void UIState::runUIBinds(State& state) {
 
 	if (this->UIs.size() > 1) {
 		auto it = this->UIs.begin(), last = this->UIs.end();
-		++it;
+		if (front & BIND::RESULT::CLOSE) {
+			front &= ~BIND::RESULT::CLOSE;
+		}
+		else {
+			++it;
+		}
 		for (; it != last;) {
 			auto& UI = *it;
 			CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);

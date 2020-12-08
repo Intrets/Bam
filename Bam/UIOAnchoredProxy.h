@@ -15,6 +15,8 @@ public:
 	ManagedReference<UIOBase, UIOBase> proxyBase;
 	UIODestructible* destructible;
 
+	void closeProxy();
+	bool hasProxy();
 	void setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& uiState);
 
 	virtual ScreenRectangle updateSize(ScreenRectangle newScreenRectangle) override;
