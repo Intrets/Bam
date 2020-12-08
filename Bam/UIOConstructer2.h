@@ -30,10 +30,17 @@ namespace UIO2
 		UniqueReference<UIOBase, UIOBase> singlesRoot;
 		WeakReference<UIOBase, UIOBase> singlesLeaf;
 
+		std::vector<UIOBase*> refs;
+
 		void addSingle(UniqueReference<UIOBase, UIOBase> ref);
 		void addSingle(UniqueReference<UIOBase, UIOBase> ref, WeakReference<UIOBase, UIOBase> leaf);
 		void addMulti(UniqueReference<UIOBase, UIOBase> ref);
 		void addEnd(UniqueReference<UIOBase, UIOBase> ref);
+
+		void push_ref(UIOBase* ptr);
+
+		template<class T>
+		T* pop_ref();
 
 		template<class T>
 		void pop();
@@ -142,6 +149,13 @@ T* UIO2::makeEnd(Args&&... args) {
 	UIO2::Global::getState()->addEnd(std::move(ref));
 
 	return ptr;
+}
+
+template<class T>
+inline T* UIO2::ConstructerState::pop_ref() {
+	T* ref = this->refs.back();
+	this->refs.pop_back();
+	return ref;
 }
 
 template<class T>

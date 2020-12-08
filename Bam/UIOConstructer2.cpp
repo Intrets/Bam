@@ -72,6 +72,10 @@ void UIO2::ConstructerState::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
 	}
 }
 
+void UIO2::ConstructerState::push_ref(UIOBase* ptr) {
+	this->refs.push_back(ptr);
+}
+
 UIO2::ConstructerState* UIO2::Global::getState() {
 	return UIO2::Global::states.back().get();
 }
@@ -88,6 +92,8 @@ void UIO2::Global::push() {
 UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
 	assert(UIO2::Global::states.size() > 0);
 	auto& state = UIO2::Global::states.back();
+
+	assert(state->refs.size() == 0);
 
 	assert(state->stack.size() == 1);
 	assert(state->singlesLeaf.isNull());
