@@ -56,7 +56,6 @@ MessageCallback(GLenum source,
 			}
 	}
 
-
 	std::string severityMessage;
 	switch (severity) {
 		case 0x9146:

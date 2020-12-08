@@ -24,11 +24,11 @@ void Rectangle::set(Rectangle rec) {
 }
 
 bool Rectangle::equals(Rectangle& other) const {
-	return this->bot == other.bot && this->top == other.top;
+	return norm2(this->bot - other.bot) < glm::epsilon<float>() && norm2(this->top - other.top) < glm::epsilon<float>();
 }
 
 bool Rectangle::equals(ScreenRectangle& other) const {
-	return this->bot == other.bot && this->top == other.top;
+	return norm2(this->bot - other.bot) < 0.001f && norm2(this->top - other.top) < 0.001f;
 }
 
 bool Rectangle::contains(glm::vec2 p) const {
