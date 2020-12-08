@@ -17,6 +17,7 @@
 #include "UIOBinds.h"
 #include "UIOConstructActivityBuilder.h"
 #include "UIOAnchoredProxy.h"
+#include "BufferWrappers.h"
 
 UIOList* UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
@@ -63,10 +64,14 @@ UIOList* UIO2::constructDebugInfo() {
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	auto renderThread = UIO2::textButton("Toggle Seperate Render Thread");
 
+	// -----------------------------
+	// Button for opening Builder UI
+	// -----------------------------
+
 	UIO2::constrainHeight({ UIO::SIZETYPE::ABSOLUTE_HEIGHT, 0.0f });
 	auto proxy = UIO2::makeEnd<UIOAnchoredProxy>();
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-	auto builderTest = UIO2::textButton("Builder2");
+	auto builderTest = UIO2::textButton("Builder");
 
 	// ----------------------------------
 	// Button for opening Item Spawner UI
@@ -74,6 +79,35 @@ UIOList* UIO2::constructDebugInfo() {
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	auto spawnItem = UIO2::textButton("Spawn Item");
+
+	// ------------------------------------------------
+	// Button for opening different information windows
+	// ------------------------------------------------
+
+	//UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	//auto info = UIO2::textButton("Info");
+
+
+	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+	UIO2::menu("Info", std::nullopt, []()
+	{
+		UIO2::startList(UIO::DIR::DOWN);
+		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+		UIO2::menu("Info", { { UIO::SIZETYPE::FH, 20.0f } }, []()
+		{
+			//UIO2::constrainHeight({ UIO::SIZETYPE::FH, 20.0f });
+			UIO2::startList(UIO::DIR::DOWN);
+
+			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 10.0f });
+			UIO2::textDisplayMulti(bwo::Program::listAll());
+
+			//UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
+			//UIO2::textButton("test");
+			UIO2::endList();
+		});
+		UIO2::endList();
+	});
+
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::STATIC_PX, 4 });
 	UIO2::makeEnd<UIOEmpty>();

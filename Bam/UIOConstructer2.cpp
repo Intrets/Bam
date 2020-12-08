@@ -17,6 +17,7 @@
 #include "UIOEmpty.h"
 #include "StringHelpers.h"
 #include "UIODestructible.h"
+#include "UIOAnchoredProxy.h"
 
 std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
 
@@ -495,6 +496,40 @@ UIOGrid* UIO2::startGrid(int32_t x, int32_t y) {
 	UIO2::Global::getState()->addMulti(std::move(ref));
 
 	return ptr;
+}
+
+UIOList* UIO2::menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f) {
+	auto list = UIO2::startList(UIO::DIR::RIGHT);
+
+	auto button = UIO2::textButton(text);
+	if (width.has_value()) {
+		UIO2::constrainWidth(width.value());
+	}
+	else {
+		UIO2::constrainWidth({ UIO::SIZETYPE::FH, 10.0f });
+	}
+
+	auto proxy = UIO2::makeEnd<UIOAnchoredProxy>();
+
+	UIO2::endList();
+
+	button->setOnPress([proxy, f](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	{
+		UIO2::Global::push();
+
+		UIO2::padTop({ UIO::SIZETYPE::PX, 3 });
+		UIO2::padRight({ UIO::SIZETYPE::PX, 3 });
+		UIO2::padLeft({ UIO::SIZETYPE::PX, 3 });
+		UIO2::background(COLORS::DARKEN2(COLORS::UI::BACKGROUND));
+
+		f();
+
+		proxy->setProxy(UIO2::Global::pop(), params.uiState);
+
+		return BIND::RESULT::CONTINUE;
+	});
+
+	return list;
 }
 
 UIOButton* UIO2::textButton(std::string const& text) {

@@ -5,6 +5,7 @@
 #include "UIOBase.h"
 #include "UIOList.h"
 #include "Enums.h"
+#include "UIOSizeType.h"
 
 struct UIOSizeType;
 class UIOTextDisplay;
@@ -89,6 +90,7 @@ namespace UIO2
 
 	UIOList* startList(UIO::DIR dir);
 	UIOGrid* startGrid(int32_t x, int32_t y);
+	UIOList* menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f);
 
 	UIOButton* textButton(std::string const& text);
 	std::pair<UIOButton*, UIOTextDisplay*> textButton2(std::string const& text);

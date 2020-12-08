@@ -21,7 +21,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 	this->proxyBase.set(this->destructible->getSelfHandle());
 
 	auto ptr = UIO2::makeEnd(std::move(ref));
-	ptr->addGlobalBind({ CONTROL::KEY::ANYTHING_KEY }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 			return BIND::RESULT::CLOSE;
