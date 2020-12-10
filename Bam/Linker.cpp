@@ -42,15 +42,15 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 			childAnchor.get()->fillTracesLocalForced(gameState);
 			childAnchor.get()->addChild(r1.get()->popChild());
 
-			auto childAnchorHandle = childAnchor.handle;
+			WeakReference<Activity, Anchor> ref = childAnchor;
 
 			r1.get()->addChild(std::move(childAnchor));
-			r1.handle = childAnchorHandle;
+
+			return linkAnchor(gameState, ref, r2);
 		}
 		else {
-			r1 = child;
+			return linkAnchor(gameState, child.as<Anchor>(), r2);
 		}
-		return linkAnchor(gameState, r1, r2);
 	}
 	else {
 		for (auto& member : r1.get()->getRootPtr()->getTreeMembers()) {
@@ -78,7 +78,7 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 	auto p2 = r2.get();
 
 	if (p2->getType() == ACTIVITY::TYPE::ANCHOR) {
-		return mergeAnchors(gameState, r1, r2);
+		return mergeAnchors(gameState, r1, r2.as<Anchor>());
 	}
 	else {
 		for (auto& member : r1.get()->getRootPtr()->getTreeMembers()) {
@@ -108,10 +108,10 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 	auto parent = r1.get()->parentRef;
 	if (parent.isNotNull()) {
 		if (parent.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
-			return linkAnchor(gameState, parent, r2);
+			return linkAnchor(gameState, parent.as<Anchor>(), r2);
 		}
 		else {
-			return linkSingleGrouper(gameState, parent, r2);
+			return linkSingleGrouper(gameState, parent.as<SingleGrouper>(), r2);
 		}
 	}
 	else {
@@ -140,11 +140,11 @@ bool Linker::link(GameState& gameState, WeakReference<Activity, Activity> r1, We
 
 	switch (p1->getType()) {
 		case ACTIVITY::TYPE::ANCHOR:
-			return linkAnchor(gameState, r1, r2);
+			return linkAnchor(gameState, r1.as<Anchor>(), r2);
 			break;
 		case ACTIVITY::TYPE::PISTON:
 		case ACTIVITY::TYPE::RAILCRANE:
-			return linkSingleGrouper(gameState, r1, r2);
+			return linkSingleGrouper(gameState, r1.as<SingleGrouper>(), r2);
 			break;
 		default:
 			return linkNonGrouper(gameState, r1, r2);

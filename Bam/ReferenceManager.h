@@ -10,6 +10,12 @@
 #include <optional>
 #include <iostream>
 
+#define RTTI_CHECKS
+
+#ifdef RTTI_CHECKS
+#include <typeinfo>
+#endif
+
 typedef int32_t Handle;
 
 template <class B, class T> class ManagedReference;
@@ -45,9 +51,21 @@ public:
 	R* getAs() const;
 
 	template<typename N>
+	WeakReference<B, N> as() const {
+#ifdef RTTI_CHECKS
+		if (N* ptr = dynamic_cast<N*>(this->get())) {
+		}
+		else {
+			assert(0);
+		}
+#endif
+		return WeakReference<B, N>(this->handle);
+	};
+
+	template<typename N>
 	operator WeakReference<B, N>() const {
-		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
-		return WeakReference<B, N>(handle);
+		static_assert(std::is_base_of<N, T>::value, "WeakReference implicit cast: not a super class.");
+		return WeakReference<B, N>(this->handle);
 	};
 
 	void deleteObject();
@@ -55,7 +73,7 @@ public:
 	WeakReference() = default;
 
 	WeakReference(Handle h) {
-		handle = h;
+		this->handle = h;
 	};
 	virtual ~WeakReference() = default;
 };
@@ -65,8 +83,7 @@ class UniqueReference : public WeakReference<B, T>
 {
 public:
 	operator WeakReference<B, T>() const {
-		//static_assert(std::is_base_of<T, N>::value, "WeakReference implicit cast: not a super class.");
-		return WeakReference<B, T>(WeakReference<B, T>::handle);
+		return WeakReference<B, T>(this->handle);
 	};
 
 	UniqueReference() = default;
@@ -433,6 +450,13 @@ inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(ManagedReferenc
 template<class B, class T>
 template<class R>
 inline R* WeakReference<B, T>::getAs() const {
-	auto& t = Locator<ReferenceManager<B>>::get()->data;
-	return static_cast<R*>(t[this->handle].get());
+#ifdef RTTI_CHECKS
+	if (R* ptr = dynamic_cast<R*>(this->get())) {
+		return ptr;
+	}
+	else {
+		assert(0);
+	}
+#endif
+	return static_cast<R*>(this->get());
 }

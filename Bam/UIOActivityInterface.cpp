@@ -162,7 +162,7 @@ UIO::USER_ACTION_TYPE UIOActivityInterface::getType() {
 void UIOActivityInterface::updateCursorPos(glm::vec2 pos) {
 	if (this->type == UIO::USER_ACTION_TYPE::HOVERING && this->cursor.isNotNull()) {
 		if (this->cursor.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
-			WeakReference<Activity, Anchor> c = this->cursor;
+			WeakReference<Activity, Anchor> c = this->cursor.as<Anchor>();
 			if (c.get()->hasChild()) {
 				glm::ivec2 refVec2 = glm::ivec2(0, 0);
 				for (auto& child : c.get()->getChildren()) {

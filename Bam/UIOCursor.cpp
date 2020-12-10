@@ -14,6 +14,7 @@
 #include "UIOWindow.h"
 #include "UIOFreeSize.h"
 #include "UIOConstructActivityInfo.h"
+#include "LUAActivity.h"
 
 Inventory& UIOCursor::getInventory() {
 	return Locator<Inventory>::ref();
@@ -162,7 +163,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 						 UIOWindow::TYPE::RESIZE |
 						 UIOWindow::TYPE::MOVE |
 						 UIOWindow::TYPE::CLOSE);
-			UIO2::constructLuaInterface(activity);
+			UIO2::constructLuaInterface(activity.as<LuaActivity>());
 
 			return UIO2::Global::pop();
 		});
