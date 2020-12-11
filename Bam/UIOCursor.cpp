@@ -119,14 +119,10 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 	if (maybeActivity.has_value()) {
 		WeakReference<Activity, Activity> activity{ *maybeActivity.value() };
 
-		if (this->target.isValid()) {
-			WeakReference<Activity, Activity> linkTarget = this->target;
-
-			if (sameGroup(linkTarget, activity)) {
-				return;
-			}
-			else {
-				assert(Linker::link(gameState, linkTarget, activity));
+		if (auto linkTarget = this->target.getRef()) {
+			if (!sameGroup(linkTarget, activity)) {
+				auto b = Linker::link(gameState, linkTarget, activity);
+				assert(b);
 			}
 		}
 	}
@@ -207,16 +203,16 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 		this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
 	}
 
-	if (this->target.isValid()) {
+	if (auto targetRef = this->target.getRef()) {
 		if (periodic(gameState.tick, 80, 40, -this->selectionTick)) {
-			for (auto member : this->target.get()->getRootPtr()->getTreeMembers()) {
+			for (auto member : targetRef.get()->getRootPtr()->getTreeMembers()) {
 				if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
 					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
 				}
 			}
 		}
 		if (periodic(gameState.tick, 40, 20, -this->selectionTick)) {
-			this->target.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+			targetRef.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
 		}
 	}
 

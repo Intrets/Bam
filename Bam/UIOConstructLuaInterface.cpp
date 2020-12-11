@@ -28,8 +28,8 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIO2::startGrid(3, 1);
 
 	std::vector<std::string> w = { "" };
-	if (uioLua->getWatched().isValid()) {
-		w = uioLua->getWatched().get()->getWatchedVars();
+	if (auto watched = uioLua->getWatched().getRef()) {
+		w = watched.get()->getWatchedVars();
 		if (w.empty()) {
 			w = { "" };
 		}
@@ -89,14 +89,14 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
-		if (uioLua->getWatched().isValid()) {
+		if (auto watched = uioLua->getWatched().getRef()) {
 			std::vector<std::string> result;
 			for (auto const& line : self->text.getLines()) {
 				if (line.size() > 1) {
 					result.push_back(line.substr(0, line.size() - 1));
 				}
 			}
-			uioLua->getWatched().get()->setWatchedVars(result);
+			watched.get()->setWatchedVars(result);
 		}
 		return BIND::CONTINUE;
 	});
@@ -105,11 +105,10 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
-		if (uioLua->getWatched().isValid()) {
-			auto lua = uioLua->getWatched().get();
+		if (auto watched = uioLua->getWatched().getRef()) {
 			self->text.empty();
-			for (auto& line : lua->getWatchedVars()) {
-				sol::object object = lua->getLuaObject(line);
+			for (auto& line : watched.get()->getWatchedVars()) {
+				sol::object object = watched.get()->getLuaObject(line);
 				auto type = object.get_type();
 				std::string out = "invalid";
 
@@ -150,17 +149,17 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	pushButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (uioLua->getWatched().isValid()) {
-			uioLua->getWatched().get()->setScript(join(luaText->text.getLines()), params.gameState);
+		if (auto watched = uioLua->getWatched().getRef()) {
+			watched.get()->setScript(join(luaText->text.getLines()), params.gameState);
 		}
 		return BIND::RESULT::CONTINUE;
 	});
 
 	pullButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (uioLua->getWatched().isValid()) {
+		if (auto watched = uioLua->getWatched().getRef()) {
 			luaText->text.getLinesMutable().clear();
-			split(0, uioLua->getWatched().get()->getScript(), luaText->text.getLinesMutable(), '\n', true, true);
+			split(0, watched.get()->getScript(), luaText->text.getLinesMutable(), '\n', true, true);
 			luaText->text.invalidateCache();
 		}
 		return BIND::RESULT::CONTINUE;
@@ -168,8 +167,8 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	runButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (uioLua->getWatched().isValid()) {
-			uioLua->getWatched().get()->start();
+		if (auto watched = uioLua->getWatched().getRef()) {
+			watched.get()->start();
 		}
 
 		return BIND::RESULT::CONTINUE;
@@ -177,8 +176,8 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 
 	interruptButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		if (uioLua->getWatched().isValid()) {
-			uioLua->getWatched().get()->stop();
+		if (auto watched = uioLua->getWatched().getRef()) {
+			watched.get()->stop();
 		}
 		return BIND::RESULT::CONTINUE;
 	});
@@ -219,16 +218,16 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	uioLua->getWatched().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(*outputText)](std::string text)
+	uioLua->getWatched().getRef().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(*outputText)](std::string text)
 	{
-		if (display.isValid()) {
+		if (auto ref = display.getRef()) {
 			std::vector<std::string> lines;
 			split(0, text, lines, '\n', true);
 			for (auto& line : lines) {
-				display.get()->text.addLine(line);
+				ref.get()->text.addLine(line);
 			}
 
-			display.get()->text.moveCursor(glm::ivec2(0, lines.size()));
+			ref.get()->text.moveCursor(glm::ivec2(0, lines.size()));
 		}
 
 		return BIND::RESULT::CONTINUE;

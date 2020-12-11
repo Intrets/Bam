@@ -73,8 +73,8 @@ inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
 			auto button = UIO2::textButton(this->display(element));
 			button->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(*this)](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 			{
-				if (ref.isValid()) {
-					ref.get()->select(index);
+				if (auto r = ref.getRef()) {
+					r.get()->select(index);
 				}
 				return BIND::RESULT::CLOSE;
 			});

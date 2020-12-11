@@ -211,13 +211,13 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
-		auto const& ui = namedUI->second;
-
-		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
-			if (it->handle == ui.getHandle()) {
-				this->UIsBuffer.push_back(std::move(*it));
-				this->UIs.erase(it);
-				break;
+		if (auto ui = namedUI->second.getRef()) {
+			for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+				if (it->handle == ui.getHandle()) {
+					this->UIsBuffer.push_back(std::move(*it));
+					this->UIs.erase(it);
+					break;
+				}
 			}
 		}
 		return false;
@@ -252,11 +252,13 @@ void UIState::closeNamedUI(std::string const& name) {
 	auto namedUI = this->namedUIs.find(name);
 
 	if (namedUI != this->namedUIs.end()) {
-		for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
-			if (it->handle == namedUI->second.getHandle()) {
-				this->closedBuffer.push_back(std::move(*it));
-				this->UIs.erase(it);
-				break;
+		if (auto ui = namedUI->second.getRef()) {
+			for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
+				if (it->handle == ui.getHandle()) {
+					this->closedBuffer.push_back(std::move(*it));
+					this->UIs.erase(it);
+					break;
+				}
 			}
 		}
 		this->namedUIs.erase(namedUI);

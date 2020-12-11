@@ -16,9 +16,9 @@ void UIO2::constructActivityInfo(UIOCursor* cursor) {
 	auto listSelection = UIO2::makeEnd<UIOListSelection<PairType>>(
 		[](PairType const& e)
 	{
-		if (e.second.isValid()) {
+		if (auto select = e.second.getRef()) {
 			std::stringstream out;
-			out << std::string(e.first, ' ') << "id " << e.second.get()->selfHandle << " type: " << e.second.get()->getTypeName() << " label: " << e.second.get()->getLabel();
+			out << std::string(e.first, ' ') << "id " << select.get()->selfHandle << " type: " << select.get()->getTypeName() << " label: " << select.get()->getLabel();
 			return out.str();
 		}
 		else {
@@ -26,23 +26,24 @@ void UIO2::constructActivityInfo(UIOCursor* cursor) {
 		}
 	});
 
-	std::vector<PairType> membersManaged;
-	std::vector<std::pair<int32_t, Activity*>> members;
+	if (auto target = cursor->getTarget().getRef()) {
+		std::vector<PairType> membersManaged;
+		std::vector<std::pair<int32_t, Activity*>> members;
 
-	cursor->getTarget().get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
-
-	int32_t i = 0;
-	int32_t index = 0;
-	for (auto [depth, activity] : members) {
-		if (activity->selfHandle == cursor->getTarget().getHandle()) {
-			index = i;
+		target.get()->getRootPtr()->impl_getTreeMembersDepths(members, 0);
+		int32_t i = 0;
+		int32_t index = 0;
+		for (auto [depth, activity] : members) {
+			if (activity->selfHandle == target.getHandle()) {
+				index = i;
+			}
+			membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(*activity) });
+			i++;
 		}
-		membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(*activity) });
-		i++;
-	}
 
-	listSelection->setList(membersManaged);
-	listSelection->setSelected(index);
+		listSelection->setList(membersManaged);
+		listSelection->setSelected(index);
+	}
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	UIO2::startList(UIO::DIR::LEFT);
@@ -55,8 +56,12 @@ void UIO2::constructActivityInfo(UIOCursor* cursor) {
 	{
 		auto name = labelName->text.getLines()[0];
 		name = name.substr(0, name.size() - 1);
-		listSelection->getSelected().value()->second.get()->setLabel(name);
-		listSelection->invalidateView();
+		if (auto selected = listSelection->getSelected()) {
+			if (auto selection = listSelection->getSelected().value()->second.getRef()) {
+				selection.get()->setLabel(name);
+				listSelection->invalidateView();
+			}
+		}
 		return BIND::RESULT::CONTINUE;
 	});
 

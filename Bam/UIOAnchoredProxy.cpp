@@ -49,7 +49,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 
 ScreenRectangle UIOAnchoredProxy::updateSize(ScreenRectangle newScreenRectangle) {
 	this->screenRectangle = newScreenRectangle;
-	if (this->proxyBase.isValid()) {
+	if (auto proxyBaseRef = this->proxyBase.getRef()) {
 		const float scale = 10.0f;
 		switch (this->alignment) {
 			case UIO::ALIGNMENT::TOP:
@@ -79,7 +79,7 @@ ScreenRectangle UIOAnchoredProxy::updateSize(ScreenRectangle newScreenRectangle)
 			default:
 				break;
 		}
-		this->proxyBase.get()->updateSize(newScreenRectangle);
+		proxyBaseRef.get()->updateSize(newScreenRectangle);
 	}
 	return this->screenRectangle;
 }
