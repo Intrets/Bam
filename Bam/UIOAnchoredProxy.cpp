@@ -26,7 +26,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 
 	UIO2::free();
 	this->destructible = UIO2::destructible();
-	this->proxyBase.set(this->destructible->getSelfHandle());
+	this->proxyBase.set(*(this->destructible));
 
 	auto ptr = UIO2::makeEnd(std::move(ref));
 	ptr->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult

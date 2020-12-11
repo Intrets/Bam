@@ -37,7 +37,7 @@ void UIO2::constructActivityInfo(UIOCursor* cursor) {
 		if (activity->selfHandle == cursor->getTarget().getHandle()) {
 			index = i;
 		}
-		membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(activity->selfHandle) });
+		membersManaged.push_back({ depth, ManagedReference<Activity, Activity>(*activity) });
 		i++;
 	}
 

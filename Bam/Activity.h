@@ -87,7 +87,7 @@ public:
 
 	// Invalid state, needs to set member variables selfHandle, origin and parentRef
 	Activity() = default;
-	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p), parentRef(0) {
+	Activity(Handle self, glm::ivec2 p) : selfHandle(self), origin(p) {
 	};
 	virtual ~Activity() = default;
 

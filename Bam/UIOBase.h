@@ -39,7 +39,6 @@ class UIState;
 class UIOBase
 {
 protected:
-	Handle selfHandle;
 	bool active = false;
 
 	using Bind = std::pair<BindControl, CallBack>;
@@ -51,6 +50,8 @@ protected:
 	std::vector<Bind> gameWorldBinds;
 
 public:
+	Handle selfHandle;
+
 	Handle getSelfHandle();
 
 	ScreenRectangle screenRectangle;

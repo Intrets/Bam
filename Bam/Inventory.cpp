@@ -217,9 +217,9 @@ void Inventory::pickupWorld(GameState& gameState, glm::vec2 pos) {
 	}
 	auto& target = gameState.staticWorld.getBlockRef(pos);
 	if (target.isActivity()) {
-		auto root = target.getActivity().get()->getRootPtr();
-		if (root->removeTracesUp(gameState)) {
-			this->cursor = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(UniqueReference<Activity, Activity>(root->getHandle()));
+		auto root = target.getActivity().get()->getRootRef();
+		if (root.get()->removeTracesUp(gameState)) {
+			this->cursor = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(UniqueReference<Activity, Activity>(root));
 		}
 	}
 	else if (target.isNonAirBlock()) {
