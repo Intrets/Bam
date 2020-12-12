@@ -146,8 +146,6 @@ public:
 
 	std::vector<bool> usedHandle;
 
-	std::optional<WeakReference<B, B>> getRef(Handle h);
-
 	template<class T>
 	T* getPtr(Handle h);
 
@@ -368,14 +366,6 @@ inline void ReferenceManager<B>::unsubscribe(ManagedReference<B, T>& managedRefe
 			break;
 		}
 	}
-}
-
-template<class B>
-inline std::optional<WeakReference<B, B>> ReferenceManager<B>::getRef(Handle h) {
-	if (indexInVector(h, usedHandle) && usedHandle[h]) {
-		return WeakReference<B, B>(h, this->getPtr(h));
-	}
-	return {};
 }
 
 template<class B>
