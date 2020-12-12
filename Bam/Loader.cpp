@@ -94,27 +94,19 @@ bool Loader::loadGame() {
 	Locator<ReferenceManager<InventoryItem>>::destroy();
 	Locator<ReferenceManager<Activity>>::destroy();
 
-	{
-		auto manager = new ReferenceManager<Activity>(1024);
-		load(*this, *manager);
-		Locator<ReferenceManager<Activity>>::provide(manager);
-	}
-	auto man = Locator<ReferenceManager<Activity>>::get();
-	{
-		auto manager = new ReferenceManager<InventoryItem>(1024);
-		INVENTORYSERIALIZER::load(*this, *manager);
-		Locator<ReferenceManager<InventoryItem>>::provide(manager);
-	}
+	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>(1024));
+	Locator<ReferenceManager<InventoryItem>>::provide(new ReferenceManager<InventoryItem>(1024));
+	Locator<Inventory>::provide(new Inventory());
 
-	man = Locator<ReferenceManager<Activity>>::get();
-	{
-		auto inventory = new Inventory();
-		inventory->load(*this);
-		Locator<Inventory>::provide(inventory);
-	}
-
+	load(*this, Locator<ReferenceManager<Activity>>::ref());
+	INVENTORYSERIALIZER::load(*this, Locator<ReferenceManager<InventoryItem>>::ref());
+	Locator<Inventory>::get()->load(*this);
 
 	this->gameStateRef.load(*this);
+
+	Locator<ReferenceManager<Activity>>::ref().completeReferences();
+	Locator<ReferenceManager<InventoryItem>>::ref().completeReferences();
+
 	return true;
 }
 

@@ -317,20 +317,21 @@ bool Inventory::hasSpace() const {
 void Inventory::save(Saver& saver) {
 	saver.store(this->items.size());
 	for (auto& item : items) {
-		saver.store(item.handle);
+		saver.store(item);
 	}
+
 
 	bool hasCursor = this->cursor.has_value();
 	saver.store(hasCursor);
 	if (hasCursor) {
-		saver.store(this->cursor.value().handle);
+		saver.store(this->cursor.value());
 	}
 
 	saver.store(this->hotbar.size());
 	for (auto& item : hotbar) {
 		saver.store(item.has_value());
 		if (item.has_value()) {
-			saver.store(item.value().handle);
+			saver.store(item.value());
 		}
 	}
 }

@@ -249,7 +249,7 @@ std::string Activity::getTypeName() {
 
 void Activity::save(Saver& saver) {
 	saver.store(this->getType());
-	saver.store(this->parentRef.handle);
+	saver.store(this->parentRef);
 	saver.store(this->selfHandle);
 	saver.store(this->activityPace);
 	saver.store(this->activityTickStart);
@@ -267,7 +267,7 @@ void Activity::save(Saver& saver) {
 }
 
 bool Activity::load(Loader& loader) {
-	loader.retrieve(this->parentRef.handle);
+	loader.retrieve(this->parentRef);
 	loader.retrieve(this->selfHandle);
 	loader.retrieve(this->activityPace);
 	loader.retrieve(this->activityTickStart);

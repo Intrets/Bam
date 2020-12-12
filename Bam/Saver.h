@@ -9,10 +9,9 @@
 
 #include "Enums.h"
 
-class GameState;
+#include "ReferenceManager.h"
 
-template<class, class>
-class WeakReference;
+class GameState;
 
 class Saver
 {
@@ -21,12 +20,18 @@ private:
 
 	GameState& gameStateRef;
 
+	template<class A, class B>
+	bool store(ManagedReference<A, B> const& t);
+
 public:
 	template<class T>
 	bool store(T t);
 
 	template<class A, class B>
-	bool store(WeakReference<A, B> t);
+	bool store(WeakReference<A, B> const& t);
+
+	template<class A, class B>
+	bool store(UniqueReference<A, B> const& t);
 
 	template<class T>
 	bool store(std::optional<T>& maybe);
@@ -184,15 +189,26 @@ inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved)
 
 template<class T>
 inline bool Saver::store(T t) {
-	assert(false);
-	//this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
+	assert(0);
 	return true;
 }
 
 template<class A, class B>
-inline bool Saver::store(WeakReference<A, B> t) {
+inline bool Saver::store(WeakReference<A, B> const& t) {
 	store(t.handle);
 	return true;
+}
+
+template<class A, class B>
+inline bool Saver::store(UniqueReference<A, B> const& t) {
+	store(t.handle);
+	return true;
+}
+
+template<class A, class B>
+inline bool Saver::store(ManagedReference<A, B> const& t) {
+	assert(0);
+	return false;
 }
 
 template<class T>

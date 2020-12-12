@@ -75,7 +75,7 @@ void MovementPaceHandler::save(Saver& saver) {
 	for (auto& v : activities) {
 		saver.store(v.size());
 		for (auto& ref : v) {
-			saver.store(ref.handle);
+			saver.store(ref);
 		}
 	}
 }

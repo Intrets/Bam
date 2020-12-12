@@ -61,7 +61,7 @@ void Anchor::save(Saver& saver) {
 	size_t s = this->children.size();
 	saver.store<size_t>(s);
 	for (auto& child : this->children) {
-		saver.store(child.handle);
+		saver.store(child);
 	}
 }
 

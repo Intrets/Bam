@@ -130,7 +130,12 @@ private:
 	void freeData(Handle h);
 	Handle getFreeHandle();
 
+	std::vector<Reference*> incomplete;
+
 public:
+	void addIncomplete(Reference* ptr);
+	void completeReferences();
+
 	int32_t size;
 	typedef std::unordered_multimap<Handle, Reference*> ManagedReferencesType;
 
@@ -142,6 +147,9 @@ public:
 	std::vector<bool> usedHandle;
 
 	std::optional<WeakReference<B, B>> getRef(Handle h);
+
+	template<class T>
+	T* getPtr(Handle h);
 
 	template <class T, class... Args>
 	WeakReference<B, T> makeRef(Args&&... args);
@@ -290,6 +298,12 @@ inline ManagedReference<B, T>::~ManagedReference() {
 }
 
 template<class B>
+template<class T>
+inline T* ReferenceManager<B>::getPtr(Handle h) {
+	return static_cast<T*>(data[h].get());
+}
+
+template<class B>
 template<class T, class ...Args>
 inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args&& ...args) {
 	Handle h = getFreeHandle();
@@ -359,7 +373,7 @@ inline void ReferenceManager<B>::unsubscribe(ManagedReference<B, T>& managedRefe
 template<class B>
 inline std::optional<WeakReference<B, B>> ReferenceManager<B>::getRef(Handle h) {
 	if (indexInVector(h, usedHandle) && usedHandle[h]) {
-		return WeakReference<B, B>(h);
+		return WeakReference<B, B>(h, this->getPtr(h));
 	}
 	return {};
 }
@@ -415,6 +429,20 @@ inline Handle ReferenceManager<B>::getFreeHandle() {
 	Handle h = *it;
 	freeHandles.erase(it);
 	return h;
+}
+
+template<class B>
+inline void ReferenceManager<B>::addIncomplete(Reference* ptr) {
+	this->incomplete.push_back(ptr);
+}
+
+template<class B>
+inline void ReferenceManager<B>::completeReferences() {
+	for (auto ptr : this->incomplete) {
+		assert(ptr->handle != 0);
+		ptr->ptr = this->data[ptr->handle].get();
+	}
+	this->incomplete.clear();
 }
 
 template<class B, class T>

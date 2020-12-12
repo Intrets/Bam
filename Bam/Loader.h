@@ -6,10 +6,9 @@
 
 #include "Enums.h"
 
-class GameState;
+#include "ReferenceManager.h"
 
-template<class, class>
-class WeakReference;
+class GameState;
 
 class Loader
 {
@@ -27,8 +26,14 @@ public:
 	template<class T>
 	bool retrieve(std::optional<T>& m);
 
-	template<class A, class B>
-	bool retrieve(WeakReference<A, B>& m);
+	template<class B, class T>
+	bool retrieve(WeakReference<B, T>& m);
+
+	template<class B, class T>
+	bool retrieve(UniqueReference<B, T>& m);
+
+	template<class B, class T>
+	bool retrieve(ManagedReference<B, T>& m);
 
 	sol::object retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache);
 
@@ -80,9 +85,31 @@ inline bool Loader::retrieve(size_t& t) {
 	return true;
 }
 
-template<class A, class B>
-inline bool Loader::retrieve(WeakReference<A, B>& m) {
-	return this->retrieve(m.handle);
+template<class B, class T>
+inline bool Loader::retrieve(WeakReference<B, T>& m) {
+	this->retrieve(m.handle);
+	if (m.handle != 0) {
+		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
+	}
+	return true;
+}
+
+template<class B, class T>
+inline bool Loader::retrieve(UniqueReference<B, T>& m) {
+	this->retrieve(m.handle);
+	if (m.handle != 0) {
+		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
+	}
+	return true;
+}
+
+template<class B, class T>
+inline bool Loader::retrieve(ManagedReference<B, T>& m) {
+	this->retrieve(m.handle);
+	if (m.handle != 0) {
+		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
+	}
+	return true;
 }
 
 template<>

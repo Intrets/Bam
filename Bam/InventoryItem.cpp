@@ -151,12 +151,12 @@ void InventoryActivity::addWorldRenderInfo(GameState& gameState, RenderInfo& ren
 
 void InventoryActivity::save(Saver& saver) {
 	this->InventoryItem::save(saver);
-	saver.store(this->activity.handle);
+	saver.store(this->activity);
 }
 
 void InventoryActivity::load(Loader& loader) {
 	this->InventoryItem::load(loader);
-	loader.retrieve(this->activity.handle);
+	loader.retrieve(this->activity);
 }
 
 void InventoryItem::save(Saver& saver) {
