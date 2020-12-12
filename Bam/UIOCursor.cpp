@@ -122,6 +122,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 		if (auto linkTarget = this->target.getRef()) {
 			if (!sameGroup(linkTarget, activity)) {
 				auto b = Linker::link(gameState, linkTarget, activity);
+				(void) b;
 				assert(b);
 			}
 		}
