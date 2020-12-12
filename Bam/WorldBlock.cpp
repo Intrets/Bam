@@ -32,17 +32,17 @@ void WorldBlock::setBlock(ShapedBlock block) {
 	this->shapedBlock = block;
 }
 
-void WorldBlock::setTrace(Handle h) {
-	this->m.handle = h;
+void WorldBlock::setTrace(WeakReference<Activity, Activity> h) {
+	this->m = h;
 }
 
 void WorldBlock::removeTrace() {
-	this->m.handle = 0;
+	this->m.clear();
 }
 
-void WorldBlock::removeTrace(Handle h) {
-	if (this->m.handle == h) {
-		this->m.handle = 0;
+void WorldBlock::removeTrace(WeakReference<Activity, Activity> h) {
+	if (this->m == h) {
+		this->m.clear();
 	}
 }
 
@@ -71,7 +71,7 @@ WorldBlock::WorldBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rotation)
 }
 bool WorldBlock::isOccupied(ActivityIgnoringGroup const& ignore) {
 	if (this->m.isNotNull()) {
-		return !ignore.contains(this->m.handle);
+		return !ignore.contains(this->m.getHandle());
 	}
 	return this->isSolid();
 }

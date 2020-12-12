@@ -31,14 +31,14 @@ bool SingleGrouper::addChild(UniqueReference<Activity, Activity> ref) {
 		return false;
 	}
 	else {
-		ref.get()->parentRef.handle = this->selfHandle;
+		ref.get()->parentRef = this;
 		this->child = std::move(ref);
 		return true;
 	}
 }
 
 std::optional<UniqueReference<Activity, Activity>> SingleGrouper::removeChild(WeakReference<Activity, Activity> ref) {
-	if (this->child.handle == ref.handle) {
+	if (this->child == ref) {
 		return std::move(this->child);
 	}
 	else {

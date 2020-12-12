@@ -17,9 +17,16 @@ namespace Linker
 	// (r1) -> (Activity) r1 has to be no SingleGrouper and no Anchor
 	bool linkNonGrouper(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2);
 
-	// (Activity) -> (Activity) General purpose link 
+	// (Activity) -> (Activity) General purpose link
 	bool link(GameState& gameState, WeakReference<Activity, Activity> r1, WeakReference<Activity, Activity> r2);
 
-	// (Anchor) -> (Anchor)
+	/// <summary>
+	/// (Anchor) -> (Anchor)
+	/// Merges a2 into a1
+	/// </summary>
+	/// <param name="gameState">- GameState</param>
+	/// <param name="a1">- Merges a2 into this</param>
+	/// <param name="a2">- Invalidated</param>
+	/// <returns>True if merge is succesful and a2 is invalidated</returns>
 	bool mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> a1, WeakReference<Activity, Anchor> a2);
 }

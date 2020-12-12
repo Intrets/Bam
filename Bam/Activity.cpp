@@ -132,7 +132,7 @@ void Activity::disconnectFromParent() {
 			auto anchor = this->parentRef.get();
 
 			if (auto removed = anchor->removeChild(this->selfHandle)) {
-				removed.value().handle = 0;
+				removed.value().clear();
 
 				if (!anchor->hasChild()) {
 					anchor->disconnectFromParent();
@@ -145,14 +145,14 @@ void Activity::disconnectFromParent() {
 		}
 		else {
 			if (auto removed = this->parentRef.get()->removeChild(this->getHandle())) {
-				removed.value().handle = 0;
+				removed.value().clear();
 			}
 			else {
 				assert(0);
 			}
 		}
 
-		this->parentRef.handle = 0;
+		this->parentRef.clear();
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "UIOList.h"
 #include "Enums.h"
 #include "UIOSizeType.h"
+#include "UIOProxy.h"
 
 struct UIOSizeType;
 class UIOTextDisplay;
@@ -13,7 +14,6 @@ class UIOButton;
 class UIOConstrainSize;
 class UIOWindow;
 class UIOHideable;
-class UIOProxy;
 class UIOGrid;
 class UIOColoredBackground;
 class UIOFreeSize;

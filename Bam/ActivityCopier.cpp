@@ -27,7 +27,7 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 	target->inWorld = false;
 	target->origin = source->origin;
 
-	target->parentRef.handle = handleMap[source->parentRef.handle];
+	Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->getHandle()], &target->parentRef);
 	target->selfHandle = handleMap[source->selfHandle];
 	target->activityRotation = source->activityRotation;
 
@@ -37,7 +37,7 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 }
 
 void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper* source, SingleGrouper* target, HandleMap& handleMap) {
-	target->child.handle = handleMap[source->child.handle];
+	Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->child.getHandle()], &target->child);
 
 	ACTIVITYCOPIER::copyGrouperBase(source, target, handleMap);
 }
@@ -65,8 +65,10 @@ Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
 Activity* ACTIVITYCOPIER::copyAnchor(Anchor* source, HandleMap& handleMap) {
 	Anchor* target = new Anchor();
 
-	for (auto& child : source->children) {
-		target->children.emplace_back(handleMap[child.handle]);
+	target->children.resize(source->children.size());
+
+	for (size_t i = 0; i < source->children.size(); i++) {
+		Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->children[i].getHandle()], &target->children[i]);
 	}
 
 	ACTIVITYCOPIER::copyGrouperBase(source, target, handleMap);

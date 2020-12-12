@@ -39,9 +39,9 @@ public:
 	ShapedBlock const& getShapedBlock() const;
 
 	void setBlock(ShapedBlock block);
-	void setTrace(Handle h);
+	void setTrace(WeakReference<Activity, Activity> h);
 	void removeTrace();
-	void removeTrace(Handle h);
+	void removeTrace(WeakReference<Activity, Activity> h);
 
 	WorldBlock(std::string block, std::string shape);
 	WorldBlock(int32_t blockID);

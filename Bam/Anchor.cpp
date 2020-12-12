@@ -15,10 +15,10 @@ std::vector<UniqueReference<Activity, Activity>>& Anchor::getChildren() {
 
 bool Anchor::addChild(UniqueReference<Activity, Activity> ref) {
 	// TODO: check if not creating loops?
-	if (ref.handle == this->selfHandle) {
+	if (ref == this) {
 		return false;
 	}
-	ref.get()->parentRef.handle = this->selfHandle;
+	ref.get()->parentRef = this;
 	this->children.push_back(std::move(ref));
 	return true;
 }
@@ -109,8 +109,9 @@ UniqueReference<Activity, Activity> Anchor::popChild() {
 }
 
 std::optional<UniqueReference<Activity, Activity>> Anchor::removeChild(WeakReference<Activity, Activity> ref) {
-	auto newEnd = std::find_if(this->children.begin(), this->children.end(), [h = ref.handle](UniqueReference<Activity, Activity> const& t) -> bool{
-		return t.handle == h;
+	auto newEnd = std::find_if(this->children.begin(), this->children.end(), [ref](UniqueReference<Activity, Activity> const& t) -> bool
+	{
+		return t == ref;
 	});
 
 	if (newEnd == this->children.end()) {

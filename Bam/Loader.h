@@ -87,28 +87,28 @@ inline bool Loader::retrieve(size_t& t) {
 
 template<class B, class T>
 inline bool Loader::retrieve(WeakReference<B, T>& m) {
-	this->retrieve(m.handle);
-	if (m.handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
-	}
+	Handle handle;
+	this->retrieve(handle);
+	assert(handle != 0);
+	Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
 	return true;
 }
 
 template<class B, class T>
 inline bool Loader::retrieve(UniqueReference<B, T>& m) {
-	this->retrieve(m.handle);
-	if (m.handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
-	}
+	Handle handle;
+	this->retrieve(handle);
+	assert(handle != 0);
+	Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
 	return true;
 }
 
 template<class B, class T>
 inline bool Loader::retrieve(ManagedReference<B, T>& m) {
-	this->retrieve(m.handle);
-	if (m.handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(&m);
-	}
+	Handle handle;
+	this->retrieve(handle);
+	assert(handle != 0);
+	Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
 	return true;
 }
 

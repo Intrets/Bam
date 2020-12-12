@@ -217,7 +217,7 @@ void UIOActivityInterface::pickUp(GameState& gameState, glm::vec2 pos) {
 					}
 
 					if (pick.get()->removeTracesUp(gameState)) {
-						this->cursor.handle = pick.handle;
+						this->cursor = pick;
 						this->type = UIO::USER_ACTION_TYPE::HOVERING;
 					}
 				}

@@ -195,13 +195,13 @@ inline bool Saver::store(T t) {
 
 template<class A, class B>
 inline bool Saver::store(WeakReference<A, B> const& t) {
-	store(t.handle);
+	store(t.getHandle());
 	return true;
 }
 
 template<class A, class B>
 inline bool Saver::store(UniqueReference<A, B> const& t) {
-	store(t.handle);
+	store(t.getHandle());
 	return true;
 }
 

@@ -145,7 +145,7 @@ void UIState::run(State& state) {
 	this->UIsBuffer.clear();
 
 	for (auto& [name, ui] : this->namedUIsBuffer) {
-		this->namedUIs.emplace(std::make_pair(name, ui.handle));
+		this->namedUIs.emplace(std::make_pair(name, ManagedReference<UIOBase, UIOBase>(ui)));
 		this->UIs.push_front(std::move(ui));
 	}
 	this->namedUIsBuffer.clear();
@@ -213,7 +213,7 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 	if (namedUI != this->namedUIs.end() && namedUI->second.isValid()) {
 		if (auto ui = namedUI->second.getRef()) {
 			for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
-				if (it->handle == ui.getHandle()) {
+				if (*it == ui) {
 					this->UIsBuffer.push_back(std::move(*it));
 					this->UIs.erase(it);
 					break;
@@ -254,7 +254,7 @@ void UIState::closeNamedUI(std::string const& name) {
 	if (namedUI != this->namedUIs.end()) {
 		if (auto ui = namedUI->second.getRef()) {
 			for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
-				if (it->handle == ui.getHandle()) {
+				if (*it == ui) {
 					this->closedBuffer.push_back(std::move(*it));
 					this->UIs.erase(it);
 					break;
@@ -273,12 +273,8 @@ void UIState::closeNamedUI(std::string const& name) {
 }
 
 void UIState::closeUI(WeakReference<UIOBase, UIOBase> ref) {
-	this->closeUI(ref.handle);
-}
-
-void UIState::closeUI(Handle handle) {
 	for (auto it = this->UIs.begin(); it != this->UIs.end(); it++) {
-		if (it->handle == handle) {
+		if (*it == ref) {
 			this->closedBuffer.push_back(std::move(*it));
 			this->UIs.erase(it);
 			break;

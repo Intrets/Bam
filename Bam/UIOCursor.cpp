@@ -144,7 +144,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 	if (activity.get()->getType() == ACTIVITY::TYPE::LUA) {
 		static int32_t j = 0;
 		glm::vec2 offset = glm::vec2(0.05f, -0.05f);
-		std::string uiName = "LUA " + std::to_string(activity.handle);
+		std::string uiName = "LUA " + std::to_string(activity.getHandle());
 
 		bool newUI =
 			params.uiState.addNamedUI(

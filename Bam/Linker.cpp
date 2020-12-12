@@ -4,7 +4,7 @@
 #include "Anchor.h"
 
 bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> r1, WeakReference<Activity, Anchor> r2) {
-	if (r2.handle == r1.handle) {
+	if (r2 == r1) {
 		return false;
 	}
 
@@ -22,7 +22,7 @@ bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> 
 		r1.get()->addChild(std::move(r));
 	}
 
-	Locator<ReferenceManager<Activity>>::get()->deleteReference(toDelete.handle);
+	Locator<ReferenceManager<Activity>>::get()->deleteReference(toDelete);
 	return true;
 }
 
@@ -57,7 +57,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 			member->memberCache.invalidateMembers();
 		}
 
-		r1.get()->addChild(UniqueReference<Activity, Activity>(r2.handle));
+		r1.get()->addChild(UniqueReference<Activity, Activity>(r2));
 
 		for (auto& member : r2.get()->getTreeMembers()) {
 			member->memberCache.invalidateRoot();
@@ -85,7 +85,7 @@ bool Linker::linkAnchor(GameState& gameState, WeakReference<Activity, Anchor> r1
 			member->memberCache.invalidateMembers();
 		}
 
-		p1->addChild(UniqueReference<Activity, Activity>(r2.handle));
+		p1->addChild(UniqueReference<Activity, Activity>(r2));
 
 		for (auto& member : r2.get()->getTreeMembers()) {
 			member->memberCache.invalidateRoot();
@@ -121,7 +121,7 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 
 		auto r1Anchor = refMan.makeRef<Anchor>();
 		r1Anchor.get()->fillTracesLocalForced(gameState);
-		r1Anchor.get()->addChild(UniqueReference<Activity, Activity>(r1.handle));
+		r1Anchor.get()->addChild(UniqueReference<Activity, Activity>(r1));
 
 		return linkAnchor(gameState, r1Anchor, r2);
 	}
