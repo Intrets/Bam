@@ -291,11 +291,6 @@ bool UIState::shouldReset() {
 }
 
 void UIState::init() {
-	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
-
-	ScreenRectangle r;
-	r.set({ -1.0f, -1.0f }, { 1.0f, 1.0f });
-
 	// Inventory
 	{
 		UIO2::Global::push();
@@ -349,7 +344,7 @@ void UIState::init() {
 
 	// wasd movement in world
 	{
-		UniqueReference<UIOBase, UIOInvisible> movement = refMan->makeUniqueRef<UIOInvisible>();
+		UniqueReference<UIOBase, UIOInvisible> movement = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOInvisible>();
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
