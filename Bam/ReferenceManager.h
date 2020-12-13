@@ -68,7 +68,7 @@ public:
 
 	WeakReference(Handle h);
 	WeakReference(void* p);
-	WeakReference(T const& o);
+	WeakReference(T& o);
 
 	virtual ~WeakReference() = default;
 };
@@ -115,7 +115,7 @@ public:
 	ManagedReference() = default;
 
 	ManagedReference(WeakReference<B, T> r);
-	ManagedReference(T const&);
+	ManagedReference(T&);
 
 	ManagedReference(ManagedReference&& other) noexcept;
 	ManagedReference<B, T>& operator= (ManagedReference&& other) noexcept;
@@ -220,8 +220,8 @@ inline WeakReference<B, T>::WeakReference(void* p) {
 }
 
 template<class B, class T>
-inline WeakReference<B, T>::WeakReference(T const& o) {
-	this->ptr = &ptr;
+inline WeakReference<B, T>::WeakReference(T& o) {
+	this->ptr = &o;
 }
 
 template<class B, class T>
@@ -257,7 +257,7 @@ inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T> r) {
 }
 
 template<class B, class T>
-inline ManagedReference<B, T>::ManagedReference(T const& o) {
+inline ManagedReference<B, T>::ManagedReference(T& o) {
 	this->set(o);
 }
 
