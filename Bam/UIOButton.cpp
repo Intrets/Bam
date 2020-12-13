@@ -88,8 +88,6 @@ UIOButton::UIOButton(Handle self) {
 			return BIND::RESULT::CONTINUE;
 		}
 	});
-
-	this->main = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOEmpty>();
 }
 
 ScreenRectangle UIOButton::updateSize(ScreenRectangle newScreenRectangle) {

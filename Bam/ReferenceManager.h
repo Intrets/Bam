@@ -29,16 +29,12 @@ public:
 	bool operator==(Reference const& other) const;
 	bool operator==(void* other) const;
 
-	void clear() {
-		this->ptr = nullptr;
-	};
+	void clear();
 
-	bool isNotNull() const {
-		return this->ptr != nullptr;
-	};
-	bool isNull() const {
-		return this->ptr == nullptr;
-	};
+	bool isNotNull() const;
+	bool isNull() const;
+
+	operator bool() const;
 
 	virtual ~Reference() = default;
 };
@@ -56,8 +52,6 @@ public:
 
 	template<typename N>
 	WeakReference<B, N> as() const;
-
-	operator bool() const;
 
 	template<typename N>
 	operator WeakReference<B, N>() const;
@@ -193,11 +187,11 @@ inline T* WeakReference<B, T>::get() const {
 
 template<class B, class T>
 inline Handle WeakReference<B, T>::getHandle() const {
+	assert(this->isNotNull());
 	return this->get()->selfHandle;
 }
 
-template<class B, class T>
-inline WeakReference<B, T>::operator bool() const {
+inline Reference::operator bool() const {
 	return this->isNotNull();
 }
 
@@ -474,6 +468,7 @@ inline UniqueReference<B, T>::~UniqueReference() {
 template<class B, class T>
 template<class N>
 inline UniqueReference<B, T>::UniqueReference(UniqueReference<B, N>&& other) {
+	assert(other.isNotNull());
 	this->ptr = other.ptr;
 	other.ptr = nullptr;
 }
@@ -487,7 +482,8 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B
 		}
 	}
 	assert(this->ptr != other.ptr);
-	this->deleteObject();
+	assert(other.isNotNull());
+	assert(this->isNull());
 	this->ptr = other.ptr;
 	other.ptr = nullptr;
 	return *this;
@@ -552,4 +548,16 @@ inline bool Reference::operator==(Reference const& other) const {
 
 inline bool Reference::operator==(void* other) const {
 	return this->ptr == other;
+}
+
+inline void Reference::clear() {
+	this->ptr = nullptr;
+}
+
+inline bool Reference::isNotNull() const {
+	return this->ptr != nullptr;
+}
+
+inline bool Reference::isNull() const {
+	return this->ptr == nullptr;
 }

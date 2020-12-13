@@ -262,18 +262,18 @@ int32_t UIOBaseMulti::addRenderInfo(GameState& gameState, RenderInfo& renderInfo
 }
 
 void UIOBaseSingle::addElement(UniqueReference<UIOBase, UIOBase> element) {
-	//assert(main.isNull());
+	assert(main.isNull());
 	this->main = std::move(element);
 }
 
 void UIOBaseSingle::translate(glm::vec2 p) {
-	//assert(this->main.isNotNull());
+	assert(this->main.isNotNull());
 	this->screenRectangle.translate(p);
 	this->main.get()->translate(p);
 }
 
 void UIOBaseSingle::setScreenPixels(glm::ivec2 px) {
-	//assert(this->main.isNotNull());
+	assert(this->main.isNotNull());
 	this->screenRectangle.setPixelSize(px);
 	this->main.get()->setScreenPixels(px);
 }
