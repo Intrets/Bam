@@ -117,7 +117,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 
 	auto [placed, maybeActivity] = this->getInventory().clickWorld(gameState, glm::floor(pos));
 	if (maybeActivity.has_value()) {
-		WeakReference<Activity, Activity> activity{ *maybeActivity.value() };
+		WeakReference<Activity, Activity> activity{ maybeActivity.value() };
 
 		if (auto linkTarget = this->target.getRef()) {
 			if (!sameGroup(linkTarget, activity)) {

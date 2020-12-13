@@ -218,7 +218,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	uioLua->getWatched().getRef().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(*outputText)](std::string text)
+	uioLua->getWatched().getRef().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(outputText)](std::string text)
 	{
 		if (auto ref = display.getRef()) {
 			std::vector<std::string> lines;
