@@ -28,7 +28,7 @@ bool Rectangle::equals(Rectangle& other) const {
 }
 
 bool Rectangle::equals(ScreenRectangle& other) const {
-	return norm2(this->bot - other.bot) < 0.001f && norm2(this->top - other.top) < 0.001f;
+	return norm2(this->bot - other.bot) < glm::epsilon<float>() && norm2(this->top - other.top) < glm::epsilon<float>();
 }
 
 bool Rectangle::contains(glm::vec2 p) const {

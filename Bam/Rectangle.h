@@ -20,8 +20,6 @@ public:
 	void set(ScreenRectangle rec);
 	void set(Rectangle rec);
 
-	// WARNING: perfect equality check, no epsilon used
-	// used to detect change in cached values
 	bool equals(Rectangle& other) const;
 	bool equals(ScreenRectangle& other) const;
 
