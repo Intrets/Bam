@@ -223,7 +223,7 @@ std::vector<Activity*> const& Activity::getTreeMembers() {
 }
 
 WeakReference<Activity, Activity> Activity::getRootRef() {
-	return WeakReference<Activity, Activity>(this->memberCache.getRoot()->getHandle());
+	return WeakReference<Activity, Activity>(this->memberCache.getRoot());
 }
 
 Handle Activity::getRootHandle() {
