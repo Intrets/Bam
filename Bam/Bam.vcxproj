@@ -170,7 +170,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>RTTI_CHECKS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26495;4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Intrets\LUA\;C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;C:\Users\Intrets\LUA\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -193,7 +193,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>RTTI_CHECKS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26495;4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Intrets\LUA\;C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;C:\Users\Intrets\LUA\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -244,7 +244,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>26495;4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Intrets\LUA\;C:\Users\Intrets\OpenGL64\;C:\Users\Intrets\OpenGL64\GLM\;C:\Users\Intrets\OpenGL64\GLFW\include;C:\Users\Intrets\OpenGL64\GLI\;C:\Users\Intrets\OpenGL64\GLEW\include;C:\Users\Intrets\LUA\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -285,6 +285,7 @@
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
+    <ClCompile Include="FunctionHelpers.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
     <ClCompile Include="UIOConstructActivityInfo.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="FunctionHelpers.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />
     <ClInclude Include="UIOConstructActivityInfo.h" />

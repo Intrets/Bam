@@ -583,6 +583,11 @@ UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text, bool l
 	UIOBinds::TextEdit::left(ptr);
 	UIOBinds::TextEdit::right(ptr);
 
+	UIOBinds::TextEdit::normalbinds(ptr);
+
+	UIOBinds::TextEdit::normal(ptr);
+	UIOBinds::TextEdit::insert(ptr);
+
 	UIOBinds::TextEdit::input(ptr);
 
 	UIOBinds::TextEdit::backspace(ptr);

@@ -49,6 +49,17 @@ namespace CONTROL
 		TOOL_7,
 		TOOL_8,
 		TOOL_9,
+		H,
+		J,
+		K,
+		L,
+		I,
+		W,
+		B,
+		E,
+		X,
+		Y,
+		P,
 		SCROLL_UP,
 		SCROLL_DOWN,
 		BACKSPACE,
@@ -96,6 +107,9 @@ public:
 	int32_t scrollDistance = 0;
 	bool blockUserInput = false;
 
+	std::string getClipboard();
+	void setClipboard(std::string const& s);
+
 	void setBlockWorldBinds(bool b);
 	bool worldBindsBlocked();
 
@@ -111,11 +125,13 @@ public:
 	void scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
 
 private:
-	std::array<CONTROL::KEY, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
+	std::array<std::vector<CONTROL::KEY>, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
 	std::array<int32_t, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> controlState;
 
 	std::array<bool, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> consumed;
 	std::array<bool, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> consumedBuffer;
+
+	std::string clipboard = "";
 
 	int32_t modifiers = 0;
 

@@ -433,6 +433,7 @@
     <ClCompile Include="UIODropDownList.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIODestructible.cpp" />
+    <ClCompile Include="FunctionHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -780,6 +781,7 @@
     <ClInclude Include="UIODropDownList.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIODestructible.h" />
+    <ClInclude Include="FunctionHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

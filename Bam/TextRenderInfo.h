@@ -2,6 +2,8 @@
 
 #include "Rectangle.h"
 #include "Fonts.h"
+#include "Enums.h"
+
 #include <optional>
 #include <map>
 #include "UpdatedCache.h"
@@ -78,7 +80,7 @@ class Text
 {
 private:
 	std::vector<std::string> lines = { "" };
-	//glm::ivec2 cursor;
+
 	UpdatedCache<glm::ivec2> cursorCache{ glm::ivec2(0,0) };
 	UpdatedCache<glm::vec2> viewCache{ glm::vec2(0.0f, 0.0f) };
 	int32_t cursorIndex = 0;
@@ -100,6 +102,7 @@ public:
 	glm::vec2 getView();
 	glm::ivec2 getCursor();
 
+	std::string getSelectedLine();
 	std::vector<std::string> const& getLines() const;
 	std::vector<std::string>& getLinesMutable();
 	std::optional<Rectangle> getCursorQuadScreen();
@@ -107,7 +110,7 @@ public:
 	void invalidateCache();
 	void makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport);
 
-	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport);
+	int32_t addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport, CURSOR::TYPE cursorType);
 
 	bool deleteChar();
 	bool backspaceChar();
@@ -116,8 +119,17 @@ public:
 
 	void hideCursor();
 	void moveCursor(glm::ivec2 p);
+	void moveCursor(int32_t p);
 	void setCursor(glm::ivec2 p);
 	void moveView(glm::ivec2 p);
+
+	void moveStartWordForward();
+	void moveStartWordBackward();
+
+	void moveEndWord();
+
+	std::optional<glm::ivec2> findNext(glm::ivec2 p, std::function<bool(char c)> f);
+	std::optional<glm::ivec2> findPrevious(glm::ivec2 p, std::function<bool(char c)> f);
 
 	// (!) leaves in invalid state (!) need to move the cursor after using this
 	void zeroCursor();

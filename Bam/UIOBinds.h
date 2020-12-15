@@ -31,6 +31,11 @@ namespace UIOBinds
 		void viewDown(UIOTextDisplay* ptr);
 		void wrap(UIOTextDisplay* ptr);
 		void nowrap(UIOTextDisplay* ptr);
+
+		void normalbinds(UIOTextDisplay* ptr);
+
+		void normal(UIOTextDisplay* ptr);
+		void insert(UIOTextDisplay* ptr);
 	}
 
 	namespace Button

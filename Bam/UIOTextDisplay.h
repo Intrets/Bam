@@ -3,6 +3,8 @@
 #include "UIOBase.h"
 #include "TextRenderInfo.h"
 
+#include "Enums.h"
+
 class UIOTextDisplay : public UIOBaseEnd
 {
 private:
@@ -12,6 +14,8 @@ private:
 	bool shrinkToFit = false;
 
 public:
+	UIOTEXTDISPLAY::MODE mode = UIOTEXTDISPLAY::MODE::INSERT;
+
 	Text text;
 
 	UIOTextDisplay(Handle self);
@@ -23,16 +27,26 @@ public:
 
 	virtual	CallBackBindResult runActiveBinds(State& state) override;
 
+	void setMode(UIOTEXTDISPLAY::MODE mode_);
+
 	void setShrinkToFit(bool b);
 	void setClickSupport(bool b);
 
 	void setWrap(bool b);
 
-	void setText(std::string text_);
-	void setText(std::vector<std::string> text_);
+	void setText(std::string const& text_);
+	void setText(std::vector<std::string> const& text_);
 
 	void moveCursor(glm::ivec2 p);
 	void setCursor(glm::ivec2 p);
+
+	void moveStartWordForward();
+	void moveStartWordBackward();
+
+	void moveEndWord();
+
+	bool yank(ControlState& controlState);
+	bool paste(ControlState& controlState);
 
 	void insertText(std::string text_);
 
