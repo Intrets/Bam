@@ -7,42 +7,55 @@
 ControlState::ControlState() {
 	this->controlState.fill(0);
 
-	this->keyToControl[GLFW_KEY_A] = CONTROL::KEY::LEFT;
-	this->keyToControl[GLFW_KEY_D] = CONTROL::KEY::RIGHT;
-	this->keyToControl[GLFW_KEY_W] = CONTROL::KEY::UP;
-	this->keyToControl[GLFW_KEY_S] = CONTROL::KEY::DOWN;
-	this->keyToControl[GLFW_KEY_Q] = CONTROL::KEY::ACTION_PICK;
-	this->keyToControl[GLFW_KEY_F] = CONTROL::KEY::ACTION_DELETE;
-	this->keyToControl[GLFW_KEY_E] = CONTROL::KEY::ACTION_USE;
-	this->keyToControl[GLFW_KEY_R] = CONTROL::KEY::ROTATER;
-	this->keyToControl[GLFW_KEY_Z] = CONTROL::KEY::ACTION_ACTIVATE;
-	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1] = CONTROL::KEY::ACTION0;
-	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2] = CONTROL::KEY::ACTION1;
-	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_3] = CONTROL::KEY::ACTION2;
-	this->keyToControl[GLFW_KEY_F7] = CONTROL::KEY::TEST_SAVE;
-	this->keyToControl[GLFW_KEY_F8] = CONTROL::KEY::TEST_LOAD;
-	this->keyToControl[GLFW_KEY_F9] = CONTROL::KEY::TOGGLE_DEBUG;
-	this->keyToControl[GLFW_KEY_ESCAPE] = CONTROL::KEY::CANCEL;
+	this->keyToControl[GLFW_KEY_A].push_back(CONTROL::KEY::LEFT);
+	this->keyToControl[GLFW_KEY_D].push_back(CONTROL::KEY::RIGHT);
+	this->keyToControl[GLFW_KEY_W].push_back(CONTROL::KEY::UP);
+	this->keyToControl[GLFW_KEY_S].push_back(CONTROL::KEY::DOWN);
+	this->keyToControl[GLFW_KEY_Q].push_back(CONTROL::KEY::ACTION_PICK);
+	this->keyToControl[GLFW_KEY_F].push_back(CONTROL::KEY::ACTION_DELETE);
+	this->keyToControl[GLFW_KEY_E].push_back(CONTROL::KEY::ACTION_USE);
+	this->keyToControl[GLFW_KEY_R].push_back(CONTROL::KEY::ROTATER);
+	this->keyToControl[GLFW_KEY_Z].push_back(CONTROL::KEY::ACTION_ACTIVATE);
+	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_1].push_back(CONTROL::KEY::ACTION0);
+	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_2].push_back(CONTROL::KEY::ACTION1);
+	this->keyToControl[GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_3].push_back(CONTROL::KEY::ACTION2);
+	this->keyToControl[GLFW_KEY_F7].push_back(CONTROL::KEY::TEST_SAVE);
+	this->keyToControl[GLFW_KEY_F8].push_back(CONTROL::KEY::TEST_LOAD);
+	this->keyToControl[GLFW_KEY_F9].push_back(CONTROL::KEY::TOGGLE_DEBUG);
+	this->keyToControl[GLFW_KEY_ESCAPE].push_back(CONTROL::KEY::CANCEL);
 
-	this->keyToControl[GLFW_KEY_UP] = CONTROL::KEY::TEXT_UP;
-	this->keyToControl[GLFW_KEY_DOWN] = CONTROL::KEY::TEXT_DOWN;
-	this->keyToControl[GLFW_KEY_LEFT] = CONTROL::KEY::TEXT_LEFT;
-	this->keyToControl[GLFW_KEY_RIGHT] = CONTROL::KEY::TEXT_RIGHT;
+	this->keyToControl[GLFW_KEY_UP].push_back(CONTROL::KEY::TEXT_UP);
+	this->keyToControl[GLFW_KEY_DOWN].push_back(CONTROL::KEY::TEXT_DOWN);
+	this->keyToControl[GLFW_KEY_LEFT].push_back(CONTROL::KEY::TEXT_LEFT);
+	this->keyToControl[GLFW_KEY_RIGHT].push_back(CONTROL::KEY::TEXT_RIGHT);
 
-	this->keyToControl[GLFW_KEY_1] = CONTROL::KEY::TOOL_1;
-	this->keyToControl[GLFW_KEY_2] = CONTROL::KEY::TOOL_2;
-	this->keyToControl[GLFW_KEY_3] = CONTROL::KEY::TOOL_3;
-	this->keyToControl[GLFW_KEY_4] = CONTROL::KEY::TOOL_4;
-	this->keyToControl[GLFW_KEY_5] = CONTROL::KEY::TOOL_5;
-	this->keyToControl[GLFW_KEY_6] = CONTROL::KEY::TOOL_6;
-	this->keyToControl[GLFW_KEY_7] = CONTROL::KEY::TOOL_7;
-	this->keyToControl[GLFW_KEY_8] = CONTROL::KEY::TOOL_8;
-	this->keyToControl[GLFW_KEY_9] = CONTROL::KEY::TOOL_9;
-	this->keyToControl[GLFW_KEY_0] = CONTROL::KEY::TOOL_0;
+	this->keyToControl[GLFW_KEY_1].push_back(CONTROL::KEY::TOOL_1);
+	this->keyToControl[GLFW_KEY_2].push_back(CONTROL::KEY::TOOL_2);
+	this->keyToControl[GLFW_KEY_3].push_back(CONTROL::KEY::TOOL_3);
+	this->keyToControl[GLFW_KEY_4].push_back(CONTROL::KEY::TOOL_4);
+	this->keyToControl[GLFW_KEY_5].push_back(CONTROL::KEY::TOOL_5);
+	this->keyToControl[GLFW_KEY_6].push_back(CONTROL::KEY::TOOL_6);
+	this->keyToControl[GLFW_KEY_7].push_back(CONTROL::KEY::TOOL_7);
+	this->keyToControl[GLFW_KEY_8].push_back(CONTROL::KEY::TOOL_8);
+	this->keyToControl[GLFW_KEY_9].push_back(CONTROL::KEY::TOOL_9);
+	this->keyToControl[GLFW_KEY_0].push_back(CONTROL::KEY::TOOL_0);
 
-	this->keyToControl[GLFW_KEY_BACKSPACE] = CONTROL::KEY::BACKSPACE;
-	this->keyToControl[GLFW_KEY_DELETE] = CONTROL::KEY::DELETE;
-	this->keyToControl[GLFW_KEY_TAB] = CONTROL::KEY::TAB;
+	this->keyToControl[GLFW_KEY_BACKSPACE].push_back(CONTROL::KEY::BACKSPACE);
+	this->keyToControl[GLFW_KEY_DELETE].push_back(CONTROL::KEY::DELETE);
+	this->keyToControl[GLFW_KEY_TAB].push_back(CONTROL::KEY::TAB);
+
+	this->keyToControl[GLFW_KEY_H].push_back(CONTROL::KEY::H);
+	this->keyToControl[GLFW_KEY_J].push_back(CONTROL::KEY::J);
+	this->keyToControl[GLFW_KEY_K].push_back(CONTROL::KEY::K);
+	this->keyToControl[GLFW_KEY_L].push_back(CONTROL::KEY::L);
+	this->keyToControl[GLFW_KEY_I].push_back(CONTROL::KEY::I);
+
+	this->keyToControl[GLFW_KEY_W].push_back(CONTROL::KEY::W);
+	this->keyToControl[GLFW_KEY_B].push_back(CONTROL::KEY::B);
+	this->keyToControl[GLFW_KEY_E].push_back(CONTROL::KEY::E);
+	this->keyToControl[GLFW_KEY_X].push_back(CONTROL::KEY::X);
+	this->keyToControl[GLFW_KEY_Y].push_back(CONTROL::KEY::Y);
+	this->keyToControl[GLFW_KEY_P].push_back(CONTROL::KEY::P);
 }
 
 void ControlState::cycleStates() {
@@ -66,6 +79,14 @@ void ControlState::cycleStates() {
 
 std::string ControlState::getCharBuffer() {
 	return this->charBuffer;
+}
+
+std::string ControlState::getClipboard() {
+	return this->clipboard;
+}
+
+void ControlState::setClipboard(std::string const& s) {
+	this->clipboard = s;
 }
 
 void ControlState::setBlockWorldBinds(bool b) {
@@ -176,15 +197,21 @@ void ControlState::key_callback(GLFWwindow* w, int32_t key, int32_t scancode, in
 
 	switch (action) {
 		case GLFW_REPEAT:
-			this->controlState[static_cast<size_t>(keyToControl[key])] |= CONTROL::STATE::REPEAT;
+			for (auto control : this->keyToControl[key]) {
+				this->controlState[static_cast<size_t>(control)] |= CONTROL::STATE::REPEAT;
+			}
 			break;
 		case GLFW_PRESS:
-			this->controlState[static_cast<size_t>(keyToControl[key])] |= CONTROL::STATE::DOWN;
-			this->controlState[static_cast<size_t>(keyToControl[key])] |= CONTROL::STATE::PRESSED;
+			for (auto control : this->keyToControl[key]) {
+				this->controlState[static_cast<size_t>(control)] |= CONTROL::STATE::DOWN;
+				this->controlState[static_cast<size_t>(control)] |= CONTROL::STATE::PRESSED;
+			}
 			break;
 		case GLFW_RELEASE:
-			this->controlState[static_cast<size_t>(keyToControl[key])] &= ~CONTROL::STATE::DOWN;
-			this->controlState[static_cast<size_t>(keyToControl[key])] |= CONTROL::STATE::RELEASED;
+			for (auto control : this->keyToControl[key]) {
+				this->controlState[static_cast<size_t>(control)] &= ~CONTROL::STATE::DOWN;
+				this->controlState[static_cast<size_t>(control)] |= CONTROL::STATE::RELEASED;
+			}
 			break;
 		default:
 			break;

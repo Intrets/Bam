@@ -190,6 +190,139 @@ namespace UIOBinds
 		void nowrap(UIOTextDisplay* ptr) {
 			ptr->setWrap(false);
 		}
+
+		void normalbinds(UIOTextDisplay* ptr) {
+			ptr->addActiveBind({ CONTROL::KEY::J, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveCursor({ 0,1 });
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::K, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveCursor({ 0,-1 });
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::L, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveCursor({ 1,0 });
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::H, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveCursor({ -1,0 });
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::W, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveStartWordForward();
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				else {
+					return BIND::RESULT::CONTINUE;
+				}
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::B, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveStartWordBackward();
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::E, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->moveEndWord();
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::X, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->deleteChar();
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::P, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->paste(params.controlState)) {
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+
+			ptr->addActiveBind({ CONTROL::KEY::Y, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->yank(params.controlState)) {
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
+		}
+
+		void normal(UIOTextDisplay* ptr) {
+			ptr->addActiveBind({ CONTROL::KEY::CANCEL, CONTROL::STATE::PRESSED },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				ptr->setMode(UIOTEXTDISPLAY::MODE::NORMAL);
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+			});
+		}
+
+		void insert(UIOTextDisplay* ptr) {
+			ptr->addActiveBind({ CONTROL::KEY::I, CONTROL::STATE::PRESSED },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
+				params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
+				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+			});
+		}
 	}
 }
 

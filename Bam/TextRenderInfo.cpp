@@ -7,6 +7,9 @@
 #include "RenderInfo.h"
 #include "Rectangle.h"
 #include "Colors.h"
+#include "FunctionHelpers.h"
+
+#include <cctype>
 
 WindowTextRenderInfo::WindowTextRenderInfo(ScreenRectangle rect, bool lineWrap_, bool clickSupport_) :
 	screenRectangle(rect),
@@ -150,6 +153,10 @@ glm::vec2 Text::getView() {
 	return this->viewCache.getVal();
 }
 
+std::string Text::getSelectedLine() {
+	return this->lines[this->getCursor().y];
+}
+
 std::vector<std::string> const& Text::getLines() const {
 	return this->lines;
 }
@@ -202,7 +209,7 @@ void Text::makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, boo
 	this->cachedRenderInfo = std::move(textInfo);
 }
 
-int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport) {
+int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderInfo, FONTS::FONT font, int32_t depth, bool wrap, int32_t tick, bool renderCursor, bool clickSupport, CURSOR::TYPE cursorType) {
 	if (!this->cachedRenderInfo.has_value()) {
 		this->makeRenderInfo(screenRectangle, font, wrap, clickSupport);
 	}
@@ -216,8 +223,26 @@ int32_t Text::addRenderInfo(ScreenRectangle screenRectangle, RenderInfo& renderI
 	if (renderCursor && periodic(tick, 30, 30)) {
 		if (auto const& maybeQuad = this->getCursorQuadScreen()) {
 			auto quad = maybeQuad.value();
+
+			switch (cursorType) {
+				case CURSOR::TYPE::BLOCK:
+					break;
+				case CURSOR::TYPE::LINE:
+					{
+						auto width = quad.getWidth();
+						quad.setWidth(quad.getWidth() * 0.4f);
+						quad.translate({ -width * 0.2f, 0 });
+						break;
+					}
+				default:
+					assert(0);
+					break;
+			}
+
 			glm::vec2 bottomLeft = glm::max(screenRectangle.getBottomLeft(), glm::min(screenRectangle.getTopRight(), quad.getBottomLeft()));
 			glm::vec2 topRight = glm::max(screenRectangle.getBottomLeft(), glm::min(screenRectangle.getTopRight(), quad.getTopRight()));
+
+
 			renderInfo.uiRenderInfo.addRectangle(bottomLeft, topRight, COLORS::UI::CURSOR, depth++);
 		}
 	}
@@ -297,6 +322,62 @@ void Text::insertString(std::string text) {
 	this->invalidateCache();
 }
 
+std::optional<glm::ivec2> Text::findPrevious(glm::ivec2 p, std::function<bool(char c)> f) {
+	for (int32_t x = p.x; x >= 0; x--) {
+		if (f(this->lines[p.y][x])) {
+			return { { x, p.y } };
+		}
+	}
+
+	for (int32_t line = p.y - 1; line >= 0; line--) {
+		for (int32_t x = static_cast<int32_t>(this->lines[line].size() - 1); x >= 0; x--) {
+			if (f(this->lines[line][x])) {
+				return { { x, line } };
+			}
+		}
+	}
+
+	return std::nullopt;
+}
+
+std::optional<glm::ivec2> Text::findNext(glm::ivec2 p, std::function<bool(char c)> f) {
+	for (int32_t x = p.x; x < this->lines[p.y].size(); x++) {
+		if (f(this->lines[p.y][x])) {
+			return { { x, p.y } };
+		}
+	}
+
+	for (int32_t line = p.y + 1; line < this->lines.size(); line++) {
+		for (int32_t x = 0; x < this->lines[line].size(); x++) {
+			if (f(this->lines[line][x])) {
+				return { { x, line } };
+			}
+		}
+	}
+
+	return std::nullopt;
+}
+
+void Text::moveStartWordBackward() {
+	this->moveCursor(-1);
+	if (auto new1 = this->findPrevious(this->getCursor(), std::isalnum)) {
+		if (auto new2 = this->findPrevious(new1.value(), FUNC_NOT(std::isalnum))) {
+			this->setCursor(new2.value());
+		}
+	}
+	this->moveCursor(1);
+}
+
+void Text::moveEndWord() {
+	this->moveCursor(1);
+	if (auto new1 = this->findNext(this->getCursor(), std::isalnum)) {
+		if (auto new2 = this->findNext(new1.value(), FUNC_NOT(std::isalnum))) {
+			this->setCursor(new2.value());
+		}
+	}
+	this->moveCursor(-1);
+}
+
 void Text::hideCursor() {
 	this->cursorIndex = -1;
 }
@@ -323,6 +404,59 @@ void Text::moveCursor(glm::ivec2 p) {
 	cursorIndex += cursor.x;
 
 	if (this->cursorCache.getVal() != cursor) {
+		this->cursorCache = cursor;
+		this->viewCache.invalidate();
+	}
+}
+
+void Text::moveCursor(int32_t p) {
+	auto cursor = this->cursorCache.getVal();
+
+	while (p < 0) {
+		if (-p <= cursor.x) {
+			cursor.x += p;
+			p = 0;
+		}
+		else {
+			p += cursor.x;
+			cursor.y--;
+
+			if (cursor.y < 0) {
+				cursor.x = 0;
+				cursor.y = 0;
+				break;
+			}
+
+			cursor.x = static_cast<int32_t>(this->lines[cursor.y].size()) - 1;
+		}
+	}
+
+	while (p > 0) {
+		if (p <= static_cast<int32_t>(this->lines[cursor.y].size()) - cursor.x) {
+			cursor.x += p;
+			p = 0;
+		}
+		else {
+			p -= cursor.x;
+			cursor.y++;
+
+			if (cursor.y >= this->lines.size()) {
+				cursor.y = static_cast<int32_t>(this->lines.size()) - 1;
+				cursor.x = static_cast<int32_t>(this->lines[cursor.y].size()) - 1;
+				break;
+			}
+
+			cursor.x = 0;
+		}
+	}
+
+	if (this->cursorCache.getVal() != cursor) {
+		this->cursorIndex = 0;
+		for (int32_t line = 0; line < cursor.y; line++) {
+			this->cursorIndex += static_cast<int32_t>(this->lines[line].size());
+		}
+		this->cursorIndex += cursor.x;
+
 		this->cursorCache = cursor;
 		this->viewCache.invalidate();
 	}
@@ -365,6 +499,14 @@ void Text::moveView(glm::ivec2 p) {
 		}
 	}
 	this->viewCache.validate();
+}
+
+void Text::moveStartWordForward() {
+	if (auto new1 = this->findNext(this->getCursor(), FUNC_NOT(std::isalnum))) {
+		if (auto new2 = this->findNext(new1.value(), std::isalnum)) {
+			this->setCursor(new2.value());
+		}
+	}
 }
 
 void Text::zeroCursor() {

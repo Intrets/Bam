@@ -1,5 +1,14 @@
 #pragma once
 
+namespace CURSOR
+{
+	enum class TYPE
+	{
+		BLOCK,
+		LINE,
+	};
+}
+
 namespace UIOPAD
 {
 	enum class TYPE
@@ -7,6 +16,16 @@ namespace UIOPAD
 		SHRINK,
 		FREE,
 		SIZETYPE,
+	};
+}
+
+namespace UIOTEXTDISPLAY
+{
+	enum class MODE
+	{
+		INSERT,
+		NORMAL,
+		VISUAL,
 	};
 }
 

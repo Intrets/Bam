@@ -8,6 +8,7 @@
 #include "UIOCallBackParams.h"
 #include "TextRenderInfo.h"
 #include "Colors.h"
+#include "Enums.h"
 
 UIOTextDisplay::UIOTextDisplay(Handle self) {
 	this->selfHandle = self;
@@ -27,12 +28,12 @@ void UIOTextDisplay::translate(glm::vec2 p) {
 	}
 }
 
-void UIOTextDisplay::setText(std::string text_) {
+void UIOTextDisplay::setText(std::string const& text_) {
 	this->text.setString(text_);
 	this->moveCursor(glm::ivec2(0));
 }
 
-void UIOTextDisplay::setText(std::vector<std::string> text_) {
+void UIOTextDisplay::setText(std::vector<std::string> const& text_) {
 	this->text.setLines(text_);
 	this->moveCursor(glm::ivec2(0));
 }
@@ -47,10 +48,43 @@ void UIOTextDisplay::setCursor(glm::ivec2 p) {
 	this->ticksSelected = 0;
 }
 
+void UIOTextDisplay::moveStartWordForward() {
+	this->text.moveStartWordForward();
+	this->ticksSelected = 0;
+}
+
+void UIOTextDisplay::moveStartWordBackward() {
+	this->text.moveStartWordBackward();
+	this->ticksSelected = 0;
+}
+
+void UIOTextDisplay::moveEndWord() {
+	this->text.moveEndWord();
+	this->ticksSelected = 0;
+}
+
+bool UIOTextDisplay::yank(ControlState& controlState) {
+	if (this->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+		controlState.setClipboard(this->text.getSelectedLine());
+		return true;
+	}
+	return false;
+}
+
+bool UIOTextDisplay::paste(ControlState& controlState) {
+	if (this->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+		this->text.insertString(controlState.getClipboard());
+		return true;
+	}
+	return false;
+}
+
 void UIOTextDisplay::insertText(std::string text_) {
-	this->text.insertString(text_);
-	this->text.invalidateCache();
-	this->moveCursor(glm::ivec2(0));
+	if (this->mode == UIOTEXTDISPLAY::MODE::INSERT) {
+		this->text.insertString(text_);
+		this->text.invalidateCache();
+		this->moveCursor(glm::ivec2(0));
+	}
 }
 
 void UIOTextDisplay::backspaceChar() {
@@ -73,6 +107,11 @@ CallBackBindResult UIOTextDisplay::runActiveBinds(State& state) {
 		state.controlState.blockUserInput = true;
 	}
 	return result;
+}
+
+void UIOTextDisplay::setMode(UIOTEXTDISPLAY::MODE mode_) {
+	this->mode = mode_;
+	this->ticksSelected = 0;
 }
 
 void UIOTextDisplay::setShrinkToFit(bool b) {
@@ -117,7 +156,24 @@ int32_t UIOTextDisplay::addRenderInfo(GameState& gameState, RenderInfo& renderIn
 		ticks = 0;
 	}
 
-	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, FONTS::FONT::ROBOTO_12, depth, this->lineWrap, ticks, this->active, this->clickSupport);
+	CURSOR::TYPE cursorType = CURSOR::TYPE::BLOCK;
+
+	switch (this->mode) {
+		case UIOTEXTDISPLAY::MODE::INSERT:
+			cursorType = CURSOR::TYPE::LINE;
+			break;
+		case UIOTEXTDISPLAY::MODE::NORMAL:
+			cursorType = CURSOR::TYPE::BLOCK;
+			break;
+		case UIOTEXTDISPLAY::MODE::VISUAL:
+			cursorType = CURSOR::TYPE::BLOCK;
+			break;
+		default:
+			assert(0);
+			break;
+	}
+
+	depth = this->text.addRenderInfo(this->screenRectangle, renderInfo, FONTS::FONT::ROBOTO_12, depth, this->lineWrap, ticks, this->active, this->clickSupport, cursorType);
 
 	if (this->active) {
 		renderInfo.uiRenderInfo.addRectangle(this->screenRectangle.getBottomLeft(), this->screenRectangle.getTopRight(), COLORS::UI::FOCUSSED, depth++);
