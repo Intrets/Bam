@@ -14,7 +14,7 @@ private:
 	bool shrinkToFit = false;
 
 public:
-	UIOTEXTDISPLAY::MODE mode = UIOTEXTDISPLAY::MODE::INSERT;
+	UIOTEXTDISPLAY::MODE mode = UIOTEXTDISPLAY::MODE::NORMAL;
 
 	Text text;
 

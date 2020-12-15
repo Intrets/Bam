@@ -44,18 +44,32 @@ ControlState::ControlState() {
 	this->keyToControl[GLFW_KEY_DELETE].push_back(CONTROL::KEY::DELETE);
 	this->keyToControl[GLFW_KEY_TAB].push_back(CONTROL::KEY::TAB);
 
+	this->keyToControl[GLFW_KEY_A].push_back(CONTROL::KEY::A);
+	this->keyToControl[GLFW_KEY_B].push_back(CONTROL::KEY::B);
+	this->keyToControl[GLFW_KEY_C].push_back(CONTROL::KEY::C);
+	this->keyToControl[GLFW_KEY_D].push_back(CONTROL::KEY::D);
+	this->keyToControl[GLFW_KEY_E].push_back(CONTROL::KEY::E);
+	this->keyToControl[GLFW_KEY_F].push_back(CONTROL::KEY::F);
+	this->keyToControl[GLFW_KEY_G].push_back(CONTROL::KEY::G);
 	this->keyToControl[GLFW_KEY_H].push_back(CONTROL::KEY::H);
+	this->keyToControl[GLFW_KEY_I].push_back(CONTROL::KEY::I);
 	this->keyToControl[GLFW_KEY_J].push_back(CONTROL::KEY::J);
 	this->keyToControl[GLFW_KEY_K].push_back(CONTROL::KEY::K);
 	this->keyToControl[GLFW_KEY_L].push_back(CONTROL::KEY::L);
-	this->keyToControl[GLFW_KEY_I].push_back(CONTROL::KEY::I);
-
+	this->keyToControl[GLFW_KEY_M].push_back(CONTROL::KEY::M);
+	this->keyToControl[GLFW_KEY_N].push_back(CONTROL::KEY::N);
+	this->keyToControl[GLFW_KEY_O].push_back(CONTROL::KEY::O);
+	this->keyToControl[GLFW_KEY_P].push_back(CONTROL::KEY::P);
+	this->keyToControl[GLFW_KEY_Q].push_back(CONTROL::KEY::Q);
+	this->keyToControl[GLFW_KEY_R].push_back(CONTROL::KEY::R);
+	this->keyToControl[GLFW_KEY_S].push_back(CONTROL::KEY::S);
+	this->keyToControl[GLFW_KEY_T].push_back(CONTROL::KEY::T);
+	this->keyToControl[GLFW_KEY_U].push_back(CONTROL::KEY::U);
+	this->keyToControl[GLFW_KEY_V].push_back(CONTROL::KEY::V);
 	this->keyToControl[GLFW_KEY_W].push_back(CONTROL::KEY::W);
-	this->keyToControl[GLFW_KEY_B].push_back(CONTROL::KEY::B);
-	this->keyToControl[GLFW_KEY_E].push_back(CONTROL::KEY::E);
 	this->keyToControl[GLFW_KEY_X].push_back(CONTROL::KEY::X);
 	this->keyToControl[GLFW_KEY_Y].push_back(CONTROL::KEY::Y);
-	this->keyToControl[GLFW_KEY_P].push_back(CONTROL::KEY::P);
+	this->keyToControl[GLFW_KEY_Z].push_back(CONTROL::KEY::Z);
 }
 
 void ControlState::cycleStates() {
@@ -107,7 +121,7 @@ void ControlState::consumeBufferControl(CONTROL::KEY control) {
 
 void ControlState::writeConsumedBuffer() {
 	for (int32_t i = 0; i < static_cast<int32_t>(CONTROL::KEY::CONTROLS_MAX); i++) {
-		this->consumed[i] = this->consumed[i] | this->consumedBuffer[i];
+		this->consumed[i] = this->consumed[i] || this->consumedBuffer[i];
 	}
 	this->consumedBuffer.fill(false);
 }
