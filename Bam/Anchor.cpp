@@ -69,10 +69,9 @@ bool Anchor::load(Loader& loader) {
 	Activity::load(loader);
 	size_t count;
 	loader.retrieve<size_t>(count);
+	this->children.resize(count);
 	for (int32_t i = 0; i < count; i++) {
-		int32_t handle;
-		loader.retrieve(handle);
-		this->children.emplace_back(handle);
+		loader.retrieve(this->children[i]);
 	}
 	return true;
 }
