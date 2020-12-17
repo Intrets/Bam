@@ -7,31 +7,40 @@ void split(size_t n, std::string const& in, std::vector<std::string>& out, char 
 	if (n <= 0) {
 		n = in.size() + 1;
 	}
-	size_t i = 0;
-	while (i < in.size()) {
-		while (i < in.size() && in[i] == c) {
-			i++;
-			if (emptySegments) {
-				break;
+
+	auto it = in.begin();
+
+	while (it != in.end()) {
+		auto prev = it;
+		it = std::find(it, in.end(), c);
+
+		if (it == in.end()) {
+			out.emplace_back(prev, it);
+			break;
+		}
+
+		if (prev != it || emptySegments) {
+			if (keepSplitChars) {
+				out.emplace_back(prev, it + 1);
 			}
+			else {
+				out.emplace_back(prev, it);
+			}
+
 		}
-		auto first = i;
-		while (i < in.size() && in[i] != c) {
-			i++;
-		}
-		auto second = i;
+		++it;
+
 		if (out.size() == n) {
-			out.push_back(in.substr(first, in.size() - 1));
+			out.emplace_back(it, in.end());
 			return;
 		}
-		else {
-			size_t limit = second;
-			if (keepSplitChars) {
-				limit = limit == in.size() - 1 ? limit : limit + 1;
-			}
-			out.push_back(in.substr(first, limit - first));
-		}
 	}
+}
+
+std::vector<std::string> split(size_t n, std::string const& in, char c, bool emptySegments, bool keepSplitChars) {
+	std::vector<std::string> out;
+	split(n, in, out, c, emptySegments, keepSplitChars);
+	return out;
 }
 
 std::string join(std::vector<std::string> const& in, std::optional<char> c) {
