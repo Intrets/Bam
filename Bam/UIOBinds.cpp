@@ -314,6 +314,18 @@ namespace UIOBinds
 				}
 				return BIND::RESULT::CONTINUE;
 			});
+
+			ptr->addActiveBind({ CONTROL::KEY::O, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
+							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			{
+				auto ptr = static_cast<UIOTextDisplay*>(self_);
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL && ptr->insertLineAfter()) {
+					params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
+					ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
+			});
 		}
 
 		void normal(UIOTextDisplay* ptr) {
