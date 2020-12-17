@@ -329,8 +329,11 @@ namespace UIOBinds
 		}
 
 		void normal(UIOTextDisplay* ptr) {
-			ptr->addActiveBind({ CONTROL::KEY::CANCEL, CONTROL::STATE::PRESSED },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addActiveBinds(
+				{ { CONTROL::KEY::CANCEL },
+				  { CONTROL::KEY::C, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::CONTROL }
+				},
+				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->setMode(UIOTEXTDISPLAY::MODE::NORMAL);

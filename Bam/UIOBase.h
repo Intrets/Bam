@@ -73,6 +73,12 @@ public:
 	void addActiveBind(BindControl bindControl, CallBack callBack);
 	void addGameWorldBind(BindControl bindControl, CallBack callBack);
 
+	void addGlobalBinds(std::vector<BindControl> const& bindControls, CallBack callBack);
+	void addFocussedBinds(std::vector<BindControl> const& bindControls, CallBack callBack);
+	void addOnHoverBinds(std::vector<BindControl> const& bindControls, CallBack callBack);
+	void addActiveBinds(std::vector<BindControl> const& bindControls, CallBack callBack);
+	void addGameWorldBinds(std::vector<BindControl> const& bindControls, CallBack callBack);
+
 	virtual CallBackBindResult runGlobalBinds(State& state);
 	virtual CallBackBindResult runFocussedBinds(State& state);
 	virtual CallBackBindResult runOnHoverBinds(State& state);

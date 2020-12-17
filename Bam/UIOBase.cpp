@@ -83,6 +83,36 @@ void UIOBase::addGameWorldBind(BindControl bindControl, CallBack callBack) {
 	this->gameWorldBinds.push_back(std::make_pair(bindControl, callBack));
 }
 
+void UIOBase::addGlobalBinds(std::vector<BindControl> const& bindControls, CallBack callBack) {
+	for (auto const& control : bindControls) {
+		this->addGlobalBind(control, callBack);
+	}
+}
+
+void UIOBase::addFocussedBinds(std::vector<BindControl> const& bindControls, CallBack callBack) {
+	for (auto const& control : bindControls) {
+		this->addFocussedBind(control, callBack);
+	}
+}
+
+void UIOBase::addOnHoverBinds(std::vector<BindControl> const& bindControls, CallBack callBack) {
+	for (auto const& control : bindControls) {
+		this->addOnHoverBind(control, callBack);
+	}
+}
+
+void UIOBase::addActiveBinds(std::vector<BindControl> const& bindControls, CallBack callBack) {
+	for (auto const& control : bindControls) {
+		this->addActiveBind(control, callBack);
+	}
+}
+
+void UIOBase::addGameWorldBinds(std::vector<BindControl> const& bindControls, CallBack callBack) {
+	for (auto const& control : bindControls) {
+		this->addGameWorldBind(control, callBack);
+	}
+}
+
 CallBackBindResult UIOBase::runGlobalBinds(State& state) {
 	CallBackBindResult sumResult = 0;
 
