@@ -48,6 +48,8 @@ public:
 	bool yank(ControlState& controlState);
 	bool paste(ControlState& controlState);
 
+	bool insertLineAfter();
+
 	void insertText(std::string text_);
 
 	void backspaceChar();

@@ -79,6 +79,14 @@ bool UIOTextDisplay::paste(ControlState& controlState) {
 	return false;
 }
 
+bool UIOTextDisplay::insertLineAfter() {
+	if (this->text.insertLineAfter()) {
+		this->ticksSelected = 0;
+		return true;
+	}
+	return false;
+}
+
 void UIOTextDisplay::insertText(std::string text_) {
 	if (this->mode == UIOTEXTDISPLAY::MODE::INSERT) {
 		this->text.insertString(text_);

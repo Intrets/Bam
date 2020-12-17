@@ -118,15 +118,20 @@ public:
 	void insertString(std::string text);
 
 	void hideCursor();
-	void moveCursor(glm::ivec2 p);
-	void moveCursor(int32_t p);
+	bool moveCursor(glm::ivec2 p);
+	bool moveCursor(int32_t p);
 	void setCursor(glm::ivec2 p);
 	void moveView(glm::ivec2 p);
+	void startOfLine();
 
 	void moveStartWordForward();
 	void moveStartWordBackward();
 
 	void moveEndWord();
+
+	bool insertLineAfter();
+
+	void matchWhiteSpace();
 
 	std::optional<glm::ivec2> findNext(glm::ivec2 p, std::function<bool(char c)> f);
 	std::optional<glm::ivec2> findPrevious(glm::ivec2 p, std::function<bool(char c)> f);

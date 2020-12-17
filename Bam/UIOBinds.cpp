@@ -5,6 +5,7 @@
 #include "UIOCallBackParams.h"
 #include "UIOTextDisplay.h"
 #include "UIOButton.h"
+#include "StringHelpers.h"
 
 namespace UIOBinds
 {
@@ -73,8 +74,20 @@ namespace UIOBinds
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				ptr->insertText(params.controlState.getCharBuffer());
-				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::INSERT) {
+					auto lines = split(0, params.controlState.getCharBuffer(), '\n', true, true);
+					for (size_t i = 0; i < lines.size() - 1; i++) {
+						ptr->insertText(lines[i]);
+						ptr->text.matchWhiteSpace();
+					}
+
+					ptr->insertText(lines.back());
+					if (params.controlState.getCharBuffer().back() == '\n') {
+						ptr->text.matchWhiteSpace();
+					}
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
 			});
 		}
 

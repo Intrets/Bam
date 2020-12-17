@@ -378,11 +378,51 @@ void Text::moveEndWord() {
 	this->moveCursor(-1);
 }
 
+bool Text::insertLineAfter() {
+	auto const oldPos = this->getCursor();
+
+	auto cursor = this->getCursor();
+	cursor.x = 0;
+
+	if (auto spaces = this->findNext(cursor, FUNC_NOT(std::isspace))) {
+		auto spacesSize = spaces.value().x;
+		if (this->moveCursor({ 0,1 })) {
+			this->startOfLine();
+			std::string line(spacesSize, ' ');
+			this->insertString(line + "\n");
+			this->moveCursor(-1);
+			return true;
+		}
+	}
+
+	this->setCursor(cursor);
+	return false;
+}
+
+void Text::matchWhiteSpace() {
+	auto cursor = this->getCursor();
+
+	if (cursor.y > 0) {
+		if (auto l1size = this->findNext({ 0, cursor.y - 1 }, FUNC_NOT(std::isblank))) {
+			if (auto l2size = this->findNext({ 0, cursor.y }, FUNC_NOT(std::isblank))) {
+				if (l2size.value().x < l1size.value().x) {
+					auto size = l1size.value().x - l2size.value().x;
+
+					std::string spaces(size, ' ');
+					this->startOfLine();
+					this->insertString(spaces);
+					this->setCursor({ cursor.x + size, cursor.y });
+				}
+			}
+		}
+	}
+}
+
 void Text::hideCursor() {
 	this->cursorIndex = -1;
 }
 
-void Text::moveCursor(glm::ivec2 p) {
+bool Text::moveCursor(glm::ivec2 p) {
 	auto cursor = this->cursorCache.getVal();
 
 	cursor += p;
@@ -406,10 +446,14 @@ void Text::moveCursor(glm::ivec2 p) {
 	if (this->cursorCache.getVal() != cursor) {
 		this->cursorCache = cursor;
 		this->viewCache.invalidate();
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
-void Text::moveCursor(int32_t p) {
+bool Text::moveCursor(int32_t p) {
 	auto cursor = this->cursorCache.getVal();
 
 	while (p < 0) {
@@ -427,7 +471,7 @@ void Text::moveCursor(int32_t p) {
 				break;
 			}
 
-			cursor.x = static_cast<int32_t>(this->lines[cursor.y].size()) - 1;
+			cursor.x = static_cast<int32_t>(this->lines[cursor.y].size());
 		}
 	}
 
@@ -459,6 +503,10 @@ void Text::moveCursor(int32_t p) {
 
 		this->cursorCache = cursor;
 		this->viewCache.invalidate();
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
@@ -499,6 +547,12 @@ void Text::moveView(glm::ivec2 p) {
 		}
 	}
 	this->viewCache.validate();
+}
+
+void Text::startOfLine() {
+	auto cursor = this->getCursor();
+	cursor.x = 0;
+	this->setCursor(cursor);
 }
 
 void Text::moveStartWordForward() {
