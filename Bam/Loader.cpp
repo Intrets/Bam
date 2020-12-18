@@ -90,8 +90,24 @@ bool Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame() {
+	auto inventory = Locator<Inventory>::get();
+	auto items = Locator<ReferenceManager<InventoryItem>>::get();
+	auto activities = Locator<ReferenceManager<Activity>>::get();
+
+
 	Locator<Inventory>::destroy();
 	Locator<ReferenceManager<InventoryItem>>::destroy();
+
+	{
+		auto ref = Locator<ReferenceManager<Activity>>::get();
+
+		while (!ref->data.empty()) {
+			auto& [handle, begin] = *ref->data.begin();
+
+			begin.get()->getRootRef().deleteObject();
+		}
+	}
+
 	Locator<ReferenceManager<Activity>>::destroy();
 
 	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>(1024));
@@ -106,6 +122,15 @@ bool Loader::loadGame() {
 
 	Locator<ReferenceManager<Activity>>::ref().completeReferences();
 	Locator<ReferenceManager<InventoryItem>>::ref().completeReferences();
+
+	for (auto& [h, ref] : Locator<ReferenceManager<Activity>>::ref().data) {
+		assert(h == ref.get()->getHandle());
+	}
+
+	for (auto& [h, ref] : Locator<ReferenceManager<InventoryItem>>::ref().data) {
+		assert(h == ref.get()->selfHandle);
+	}
+
 
 	return true;
 }

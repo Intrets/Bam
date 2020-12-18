@@ -11,7 +11,6 @@
 std::vector<InventoryActivity const*> Inventory::listActivities() {
 	std::vector<InventoryActivity const*> res;
 
-
 	for (auto& item : this->items) {
 		if (item.get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
 			res.push_back(item.getAs<InventoryActivity>());
@@ -340,18 +339,16 @@ void Inventory::load(Loader& loader) {
 	size_t size;
 	loader.retrieve(size);
 	this->items.clear();
+	this->items.resize(size);
 	for (size_t i = 0; i < size; i++) {
-		Handle handle;
-		loader.retrieve(handle);
-		this->items.emplace_back(handle);
+		loader.retrieve(this->items[i]);
 	}
 
 	bool hasCursor;
 	loader.retrieve(hasCursor);
 	if (hasCursor) {
-		Handle handle;
-		loader.retrieve(handle);
-		this->cursor.emplace(handle);
+		this->cursor = UniqueReference<InventoryItem, InventoryItem>();
+		loader.retrieve(cursor.value());
 	}
 	else {
 		this->cursor = std::nullopt;
@@ -359,16 +356,16 @@ void Inventory::load(Loader& loader) {
 
 	this->hotbar.clear();
 	loader.retrieve(size);
+	this->hotbar.resize(size);
 	for (size_t i = 0; i < size; i++) {
 		bool hasValue;
 		loader.retrieve(hasValue);
 		if (hasValue) {
-			Handle handle;
-			loader.retrieve(handle);
-			this->hotbar.emplace_back(handle);
+			this->hotbar[i] = UniqueReference<InventoryItem, InventoryItem>();
+			loader.retrieve(this->hotbar[i].value());
 		}
 		else {
-			this->hotbar.push_back(std::nullopt);
+			this->hotbar[i] = std::nullopt;
 		}
 	}
 }

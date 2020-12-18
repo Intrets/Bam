@@ -89,10 +89,9 @@ void MovementPaceHandler::load(Loader& loader) {
 	for (size_t i = 0; i < size; i++) {
 		size_t size2;
 		loader.retrieve(size2);
+		this->activities[i].resize(size2);
 		for (size_t j = 0; j < size2; j++) {
-			WeakReference<Activity, Activity> ref;
-			loader.retrieve(ref);
-			this->activities[i].push_back(ref);
+			loader.retrieve(this->activities[i][j]);
 		}
 	}
 }

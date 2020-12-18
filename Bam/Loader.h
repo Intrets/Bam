@@ -196,7 +196,6 @@ inline bool Loader::retrieve(std::string& t) {
 template<class T>
 inline bool Loader::retrieve(T& t) {
 	assert(false);
-	//in.read(reinterpret_cast<char*>(&t), sizeof(t));
 	return false;
 }
 
@@ -205,7 +204,7 @@ inline bool Loader::retrieve(std::optional<T>& m) {
 	bool hasValue;
 	retrieve(hasValue);
 	if (hasValue) {
-		m = {};
+		m = T();
 		m.value().load(*this);
 	}
 	return true;
