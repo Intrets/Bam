@@ -550,6 +550,8 @@ UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {
 	auto ptr = res.get();
 	ptr->text.addLine(text);
 
+	ptr->mode = UIOTEXTDISPLAY::MODE::INSERT;
+
 	UIOBinds::TextEdit::clickSelect(ptr);
 	UIOBinds::Base::activatable(ptr);
 

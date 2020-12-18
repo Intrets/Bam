@@ -170,15 +170,28 @@ void Inventory::clickHotbar(int32_t index) {
 std::pair<bool, std::optional<Activity*>> Inventory::clickWorld(GameState& gameState, glm::vec2 pos) {
 	std::pair<bool, std::optional<Activity*>> res = { false, std::nullopt };
 	if (this->cursor.has_value()) {
-		if (this->cursor.value().get()->place(gameState, pos)) {
-			if (this->cursor.value().get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
-				res = { true, static_cast<InventoryActivity*>(this->cursor.value().get())->getActivityPtr() };
+		if (this->cursor.value().get()->getType() == INVENTORYITEM::TYPE::ACTIVITY) {
+			auto inventoryActivity = this->cursor.value().getAs<InventoryActivity>();
+			auto activity = inventoryActivity->getActivityPtr();
+
+			if (inventoryActivity->place(gameState, pos)) {
+				res = { true, activity };
+				this->cursor = std::nullopt;
 			}
 			else {
-				res = { true, std::nullopt };
+				res = { false, std::nullopt };
 			}
-			this->cursor.value().clear();
-			this->cursor = std::nullopt;
+		}
+		else {
+			auto block = this->cursor.value().getAs<InventoryBlock>();
+
+			if (block->place(gameState, pos)) {
+				res = { true, std::nullopt };
+				this->cursor = std::nullopt;
+			}
+			else {
+				res = { false, std::nullopt };
+			}
 		}
 	}
 	return res;
@@ -293,6 +306,7 @@ bool Inventory::addItemCursor(UniqueReference<InventoryItem, InventoryItem>& ite
 			return false;
 		}
 	}
+	this->cursor = std::nullopt;
 	this->cursor = std::move(item);
 	return true;
 }
@@ -315,7 +329,7 @@ bool Inventory::hasSpace() const {
 
 void Inventory::save(Saver& saver) {
 	saver.store(this->items.size());
-	for (auto& item : items) {
+	for (auto& item : this->items) {
 		saver.store(item);
 	}
 

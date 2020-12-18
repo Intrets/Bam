@@ -346,9 +346,12 @@ namespace UIOBinds
 							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
-				params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
-				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
+					ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
+					params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
+					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
+				}
+				return BIND::RESULT::CONTINUE;
 			});
 		}
 	}

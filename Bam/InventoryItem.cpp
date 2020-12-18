@@ -111,6 +111,7 @@ bool InventoryActivity::place(GameState& gameState, glm::ivec2 pos) {
 	}
 	else {
 		a->fillTracesUpForced(gameState);
+		this->activity.clear();
 		return true;
 	}
 }
