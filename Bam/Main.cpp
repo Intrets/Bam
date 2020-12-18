@@ -79,7 +79,6 @@ void mainLoop(GLFWwindow* window) {
 
 		bool rendering = false;
 		if (stateChanged && tickLimiterRender.ready()) {
-
 			tickLimiterRender.advance();
 			stateChanged = false;
 			rendering = true;
