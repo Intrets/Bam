@@ -11,22 +11,11 @@ class Saver;
 
 #define MAXBLOCKS 1000
 
-struct Element
+struct BlockData
 {
-	ELEMENT::TYPE type;
-	int32_t quantity;
-
-	Element() = default;
-	Element(ELEMENT::TYPE t, int32_t q);
-	Element(Loader& loader);
-
-	void save(Saver& saver);
-	void load(Loader& loader);
-};
-
-struct Material
-{
-	std::vector<Element> elements;
+	std::string name = "air";
+	bool solid = false;
+	int32_t texture = 0;
 
 	int32_t min = 10;
 	int32_t max = 15;
@@ -35,21 +24,6 @@ struct Material
 
 	int32_t getSmallRand(GameState& gameState) const;
 	int32_t getVal() const;
-
-	Material() = default;
-	Material(Loader& loader);
-
-	void save(Saver& saver);
-	void load(Loader& loader);
-};
-
-struct BlockData
-{
-	std::string name = "air";
-	bool solid = false;
-	int32_t texture = 0;
-
-	Material material;
 };
 
 class ShapedBlock

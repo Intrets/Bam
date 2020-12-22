@@ -2,7 +2,6 @@
 
 #include "SingleBlockActivity.h"
 #include "LuaStore.h"
-#include "ActivityMaterial.h"
 
 class Forwarder : public SingleBlockActivity
 {

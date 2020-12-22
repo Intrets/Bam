@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Activity.h"
-#include "ActivityMaterial.h"
 
 class GameState;
 

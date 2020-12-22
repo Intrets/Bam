@@ -386,9 +386,6 @@
     <ClCompile Include="BlockRenderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityMaterial.cpp">
-      <Filter>Game\StaticWorld</Filter>
-    </ClCompile>
     <ClCompile Include="DataFront.cpp">
       <Filter>Memory\Data\Stores</Filter>
     </ClCompile>
@@ -733,9 +730,6 @@
     </ClInclude>
     <ClInclude Include="BlockRenderer.h">
       <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivityMaterial.h">
-      <Filter>Game\StaticWorld</Filter>
     </ClInclude>
     <ClInclude Include="DataFront.h">
       <Filter>Memory\Data\Stores</Filter>

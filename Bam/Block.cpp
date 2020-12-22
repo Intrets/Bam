@@ -18,7 +18,7 @@ void loadBlocks() {
 	int32_t i = 0;
 	while (!file.eof()) {
 		std::unordered_map<std::string, std::string> pairs;
-		for (int32_t j = 0; j < 4; j++) {
+		for (int32_t j = 0; j < 5; j++) {
 			std::vector<std::string> buffer;
 			std::getline(file, line);
 			if (line.size() == 0) {
@@ -27,21 +27,20 @@ void loadBlocks() {
 			split(1, line, buffer, '=');
 			pairs[buffer[0]] = buffer[1];
 		}
+		std::getline(file, line);
+		assert(line == "");
 
 		DataFront<BlockData>::data[i].name = pairs["name"];
 		DataFront<BlockData>::names[i] = pairs["name"];
+
 		DataFront<BlockData>::data[i].solid = pairs["solid"] == "true";
 		DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
 
+		DataFront<BlockData>::data[i].min = std::stoi(pairs["min"]);
+		DataFront<BlockData>::data[i].max = std::stoi(pairs["max"]);
+		DataFront<BlockData>::data[i].average = (DataFront<BlockData>::data[i].max + DataFront<BlockData>::data[i].min) / 2;
+
 		std::vector<std::string> elementPairs;
-
-		split(0, pairs["elements"], elementPairs, ',');
-
-		for (auto& elementPair : elementPairs) {
-			std::vector<std::string> e;
-			split(0, elementPair, e, ':');
-			DataFront<BlockData>::data[i].material.elements.push_back({ ELEMENT::getType(e[0]), std::stoi(e[1].c_str()) });
-		}
 
 		DataFront<BlockData>::nameMap[pairs["name"]] = i;
 
@@ -50,47 +49,12 @@ void loadBlocks() {
 	}
 }
 
-int32_t Material::getSmallRand(GameState& gameState) const {
+int32_t BlockData::getSmallRand(GameState& gameState) const {
 	return gameState.smallRandom.randRange(this->min, this->max);
 }
 
-int32_t Material::getVal() const {
+int32_t BlockData::getVal() const {
 	return this->average;
-}
-
-Material::Material(Loader& loader) {
-	this->load(loader);
-}
-
-void Material::save(Saver& saver) {
-	saver.store(this->elements.size());
-	for (auto& e : elements) {
-		e.save(saver);
-	}
-}
-
-void Material::load(Loader& loader) {
-	size_t size;
-	loader.retrieve(size);
-	for (size_t i = 0; i < size; i++) {
-		this->elements.emplace_back(loader);
-	}
-}
-
-Element::Element(ELEMENT::TYPE t, int32_t q) : type(t), quantity(q) {
-}
-
-Element::Element(Loader& loader) {
-	this->load(loader);
-}
-
-void Element::save(Saver& saver) {
-	saver.store(this->type);
-	saver.store(quantity);
-}
-
-void Element::load(Loader& loader) {
-	loader.retrieve(this->type);
 }
 
 BlockData const& ShapedBlock::getBlock() const {

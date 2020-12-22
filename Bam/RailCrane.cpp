@@ -12,11 +12,11 @@
 #include "Loader.h"
 
 int32_t RailCrane::generateActivityPace(GameState& gameState) const {
-	return this->headBlock.getBlock().material.getSmallRand(gameState);
+	return this->headBlock.getBlock().getSmallRand(gameState);
 }
 
 int32_t RailCrane::getMaxLength() const {
-	return this->shaftBlock.getBlock().material.getVal();
+	return this->shaftBlock.getBlock().getVal();
 }
 
 RailCrane::RailCrane(Handle self, GameState& gameState, glm::ivec2 pos) :
@@ -80,7 +80,7 @@ bool RailCrane::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void RailCrane::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->headBlock.getBlock().material.getSmallRand(gameState);
+	pace = this->headBlock.getBlock().getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 

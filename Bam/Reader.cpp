@@ -13,7 +13,7 @@ bool Reader::canActivityLocal(GameState& gameState, int32_t type) {
 }
 
 void Reader::applyActivityLocalForced(GameState& gameState, int32_t type, int32_t pace) {
-	pace = this->baseBlock.getBlock().material.getSmallRand(gameState);
+	pace = this->baseBlock.getBlock().getSmallRand(gameState);
 
 	this->Activity::applyActivityLocalForced(gameState, type, pace);
 }

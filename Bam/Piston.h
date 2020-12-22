@@ -2,7 +2,6 @@
 
 #include "Grouper.h"
 #include "Activity.h"
-#include "ActivityMaterial.h"
 #include "Block.h"
 
 #include "Enums.h"
