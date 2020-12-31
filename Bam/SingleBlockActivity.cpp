@@ -40,7 +40,7 @@ bool SingleBlockActivity::canFillTracesLocal(GameState& gameState) {
 
 void SingleBlockActivity::fillTracesLocalForced(GameState& gameState) {
 	this->Activity::fillTracesLocalForced(gameState);
-	gameState.staticWorld.leaveTrace(this->origin, this->selfHandle);
+	gameState.staticWorld.leaveTrace(this->origin, this);
 }
 
 void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
@@ -49,11 +49,11 @@ void SingleBlockActivity::removeTracesLocalForced(GameState& gameState) {
 }
 
 void SingleBlockActivity::preMoveableStopLocal(GameState& gameState) {
-	gameState.staticWorld.removeTraceFilter(this->origin - ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.removeTraceFilter(this->origin - ACTIVITY::GETDIRECTION(this->movementDirection), this);
 }
 
 void SingleBlockActivity::postMoveableStartLocal(GameState& gameState) {
-	gameState.staticWorld.leaveTrace(this->origin + ACTIVITY::GETDIRECTION(this->movementDirection), this->selfHandle);
+	gameState.staticWorld.leaveTrace(this->origin + ACTIVITY::GETDIRECTION(this->movementDirection), this);
 }
 
 void SingleBlockActivity::impl_getTreeMembers(std::vector<Activity*>& members) {

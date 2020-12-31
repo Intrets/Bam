@@ -39,7 +39,7 @@ void StaticWorld::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	}
 }
 
-void StaticWorld::leaveTrace(glm::ivec2 pos, Handle m) {
+void StaticWorld::leaveTrace(glm::ivec2 pos, Activity* m) {
 	this->getBlockRef(pos).setTrace(m);
 }
 
@@ -47,7 +47,7 @@ void StaticWorld::removeTraceForced(glm::ivec2 pos) {
 	this->getBlockRef(pos).removeTrace();
 }
 
-void StaticWorld::removeTraceFilter(glm::ivec2 pos, Handle m) {	
+void StaticWorld::removeTraceFilter(glm::ivec2 pos, Activity* m) {
 	this->getBlockRef(pos).removeTrace(m);
 }
 

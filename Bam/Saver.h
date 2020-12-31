@@ -12,6 +12,7 @@
 #include "ReferenceManager.h"
 
 class GameState;
+class Activity;
 
 class Saver
 {
@@ -24,6 +25,8 @@ private:
 	bool store(ManagedReference<A, B> const& t);
 
 public:
+	bool storeActivityPointer(Activity* ptr);
+
 	template<class T>
 	bool store(T t);
 

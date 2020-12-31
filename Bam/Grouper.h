@@ -14,7 +14,6 @@ public:
 	virtual bool addChild(UniqueReference<Activity, Activity> ref) = 0;
 
 	virtual UniqueReference<Activity, Activity> popChild() = 0;
-	std::optional<UniqueReference<Activity, Activity>> removeChild(Handle h);
 	virtual std::optional<UniqueReference<Activity, Activity>> removeChild(WeakReference<Activity, Activity> ref) = 0;
 	virtual bool hasChild() const = 0;
 

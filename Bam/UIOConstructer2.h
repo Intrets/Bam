@@ -35,14 +35,16 @@ namespace UIO2
 		void addMulti(UniqueReference<UIOBase, UIOBase> ref);
 		void addEnd(UniqueReference<UIOBase, UIOBase> ref);
 
+		ReferenceManager<UIOBase>& getManager();
+
 		template<class T>
 		void pop();
 
 		template<class T>
-		T* addOrModifySingle();
+		WeakReference<UIOBase, T> addOrModifySingle();
 
 		template<class T>
-		T* addSingle();
+		WeakReference<UIOBase, T> addSingle();
 	};
 
 	class Global
@@ -57,63 +59,63 @@ namespace UIO2
 		static UniqueReference<UIOBase, UIOBase> pop();
 	};
 
-	UIOTextDisplay* text(std::string const& t, bool shrinkToFit = true);
-	UIOButton* button(bool shrinkToFit = false);
-	UIOWindow* window(std::string const& title, Rectangle size, int32_t types);
-	UIOHideable* hideable();
+	WeakReference<UIOBase, UIOTextDisplay> text(std::string const& t, bool shrinkToFit = true);
+	WeakReference<UIOBase, UIOButton> button(bool shrinkToFit = false);
+	WeakReference<UIOBase, UIOWindow> window(std::string const& title, Rectangle size, int32_t types);
+	WeakReference<UIOBase, UIOHideable> hideable();
 
-	UIOColoredBackground* background(glm::vec4 color);
+	WeakReference<UIOBase, UIOColoredBackground> background(glm::vec4 color);
 
-	UIOConstrainSize* constrainHeight(UIOSizeType height);
-	UIOConstrainSize* constrainWidth(UIOSizeType width);
-	UIOConstrainSize* constrainSize(UIOSizeType size);
-	UIOConstrainSize* align(UIO::ALIGNMENT alignment);
-	UIOConstrainSize* alignCenter();
-	UIOConstrainSize* alignTop();
-	UIOConstrainSize* alignBottom();
-	UIOConstrainSize* alignLeft();
-	UIOConstrainSize* alignRight();
-	UIOConstrainSize* alignBottomLeft();
-	UIOConstrainSize* alignBottomRight();
-	UIOConstrainSize* alignTopLeft();
-	UIOConstrainSize* alignTopRight();
+	WeakReference<UIOBase, UIOConstrainSize> constrainHeight(UIOSizeType height);
+	WeakReference<UIOBase, UIOConstrainSize> constrainWidth(UIOSizeType width);
+	WeakReference<UIOBase, UIOConstrainSize> constrainSize(UIOSizeType size);
+	WeakReference<UIOBase, UIOConstrainSize> align(UIO::ALIGNMENT alignment);
+	WeakReference<UIOBase, UIOConstrainSize> alignCenter();
+	WeakReference<UIOBase, UIOConstrainSize> alignTop();
+	WeakReference<UIOBase, UIOConstrainSize> alignBottom();
+	WeakReference<UIOBase, UIOConstrainSize> alignLeft();
+	WeakReference<UIOBase, UIOConstrainSize> alignRight();
+	WeakReference<UIOBase, UIOConstrainSize> alignBottomLeft();
+	WeakReference<UIOBase, UIOConstrainSize> alignBottomRight();
+	WeakReference<UIOBase, UIOConstrainSize> alignTopLeft();
+	WeakReference<UIOBase, UIOConstrainSize> alignTopRight();
 
-	UIOFreeSize* free();
+	WeakReference<UIOBase, UIOFreeSize> free();
 
-	UIODestructible* destructible();
+	WeakReference<UIOBase, UIODestructible> destructible();
 
-	UIOPad* pad(UIOSizeType padding);
-	UIOPad* padTop(UIOSizeType padding);
-	UIOPad* padBot(UIOSizeType padding);
-	UIOPad* padLeft(UIOSizeType padding);
-	UIOPad* padRight(UIOSizeType padding);
+	WeakReference<UIOBase, UIOPad> pad(UIOSizeType padding);
+	WeakReference<UIOBase, UIOPad> padTop(UIOSizeType padding);
+	WeakReference<UIOBase, UIOPad> padBot(UIOSizeType padding);
+	WeakReference<UIOBase, UIOPad> padLeft(UIOSizeType padding);
+	WeakReference<UIOBase, UIOPad> padRight(UIOSizeType padding);
 
-	UIOList* startList(UIO::DIR dir);
-	UIOGrid* startGrid(int32_t x, int32_t y);
-	UIOList* menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f);
+	WeakReference<UIOBase, UIOList> startList(UIO::DIR dir);
+	WeakReference<UIOBase, UIOGrid> startGrid(int32_t x, int32_t y);
+	WeakReference<UIOBase, UIOList> menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f);
 
-	UIOButton* textButton(std::string const& text);
-	std::pair<UIOButton*, UIOTextDisplay*> textButton2(std::string const& text);
+	WeakReference<UIOBase, UIOButton> textButton(std::string const& text);
+	std::pair<WeakReference<UIOBase, UIOButton>, WeakReference<UIOBase, UIOTextDisplay>> textButton2(std::string const& text);
 
-	UIOTextDisplay* textEditSingle(std::string const& text);
-	UIOTextDisplay* textEditMulti(std::vector<std::string> const& text, bool lineWrap = true);
-	UIOTextDisplay* textEditMulti(std::string const& text, bool lineWrap = true);
-	UIOTextDisplay* textDisplaySingle(std::string const& text, bool shrinkToFit = true);
-	UIOTextDisplay* textDisplayMulti(std::vector<std::string> const& text, bool lineWrap = true);
-	UIOTextDisplay* textDisplayMulti(std::string const& text, bool lineWrap = true);
+	WeakReference<UIOBase, UIOTextDisplay> textEditSingle(std::string const& text);
+	WeakReference<UIOBase, UIOTextDisplay> textEditMulti(std::vector<std::string> const& text, bool lineWrap = true);
+	WeakReference<UIOBase, UIOTextDisplay> textEditMulti(std::string const& text, bool lineWrap = true);
+	WeakReference<UIOBase, UIOTextDisplay> textDisplaySingle(std::string const& text, bool shrinkToFit = true);
+	WeakReference<UIOBase, UIOTextDisplay> textDisplayMulti(std::vector<std::string> const& text, bool lineWrap = true);
+	WeakReference<UIOBase, UIOTextDisplay> textDisplayMulti(std::string const& text, bool lineWrap = true);
 
 	void endList();
 	void endGrid();
 
-	template<class T, class... Args> T* makeSingle(Args&&... args);
+	template<class T, class... Args> WeakReference<UIOBase, T> makeSingle(Args&&... args);
 
-	template<class T> T* makeEnd(UniqueReference<UIOBase, T> ref);
+	template<class T> WeakReference<UIOBase, T> makeEnd(UniqueReference<UIOBase, T> ref);
 
-	template<class T, class... Args> T* makeEnd(Args&&... args);
+	template<class T, class... Args> WeakReference<UIOBase, T> makeEnd(Args&&... args);
 }
 
 template<class T, class... Args>
-T* UIO2::makeSingle(Args&&... args) {
+WeakReference<UIOBase, T> UIO2::makeSingle(Args&&... args) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
 	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
 	auto ptr = ref.get();
@@ -124,24 +126,24 @@ T* UIO2::makeSingle(Args&&... args) {
 }
 
 template<class T>
-T* UIO2::makeEnd(UniqueReference<UIOBase, T> ref) {
+WeakReference<UIOBase, T> UIO2::makeEnd(UniqueReference<UIOBase, T> ref) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
-	auto ptr = ref.get();
+	auto res = ref.as<T>();
 
 	UIO2::Global::getState()->addEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
 template<class T, class... Args>
-T* UIO2::makeEnd(Args&&... args) {
+WeakReference<UIOBase, T> UIO2::makeEnd(Args&&... args) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
-	auto ptr = ref.get();
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<T>(std::forward<Args>(args)...);
+	auto res = ref.as<T>();
 
 	UIO2::Global::getState()->addEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
 template<class T>
@@ -153,7 +155,7 @@ inline void UIO2::ConstructerState::pop() {
 }
 
 template<class T>
-T* UIO2::ConstructerState::addOrModifySingle() {
+WeakReference<UIOBase, T> UIO2::ConstructerState::addOrModifySingle() {
 	static_assert(UIO::GET_TYPE<T>() != UIO::TYPE::UNSPECIFIED);
 
 	WeakReference<UIOBase, UIOBase> leaf;
@@ -161,20 +163,20 @@ T* UIO2::ConstructerState::addOrModifySingle() {
 	if (this->singlesLeaf.isNull() ||
 		this->singlesLeaf.get()->getUIOType() != UIO::GET_TYPE<T>()) {
 
-		auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
-		this->addSingle(std::move(ref));
+		this->addSingle(std::move(UIO2::Global::getState()->getManager().makeUniqueRef<T>()));
 	}
 
-	return static_cast<T*>(this->singlesLeaf.get());
+	return this->singlesLeaf.as<T>();
 }
 
 template<class T>
-inline T* UIO2::ConstructerState::addSingle() {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>();
-	auto ptr = ref.get();
+inline WeakReference<UIOBase, T> UIO2::ConstructerState::addSingle() {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<T>();
+	auto res = ref.as<T>();
+
 	this->addSingle(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
 

@@ -19,8 +19,8 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 
 		auto [button, text] = UIO2::textButton2(std::to_string(i));
 
-		this->icons.push_back(text);
-		button->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		this->icons.push_back(text.get());
+		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;

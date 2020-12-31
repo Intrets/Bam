@@ -27,10 +27,10 @@ public:
 	bool isOccupied(glm::ivec2 pos);
 
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
-	void leaveTrace(glm::ivec2 pos, Handle m);
+	void leaveTrace(glm::ivec2 pos, Activity* m);
 
 	void removeTraceForced(glm::ivec2 pos);
-	void removeTraceFilter(glm::ivec2 pos, Handle m);
+	void removeTraceFilter(glm::ivec2 pos, Activity* m);
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);

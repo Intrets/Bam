@@ -19,7 +19,7 @@
 #include "UIOAnchoredProxy.h"
 #include "BufferWrappers.h"
 
-UIOList* UIO2::constructDebugInfo() {
+WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
 
 	// ---------
@@ -118,7 +118,7 @@ UIOList* UIO2::constructDebugInfo() {
 
 	UIO2::background(COLORS::UI::BACKGROUND);
 	auto logOutput = UIO2::textDisplayMulti("");
-	UIOBinds::Base::activatable(logOutput);
+	UIOBinds::Base::activatable(logOutput.get());
 
 	UIO2::endList();
 
@@ -130,7 +130,7 @@ UIOList* UIO2::constructDebugInfo() {
 	// Binds
 	// -----
 
-	builderTest->setOnPress([proxy](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	builderTest.get()->setOnPress([proxy](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		const ACTIVITY::TYPE types[] = {
 			ACTIVITY::TYPE::PISTON,
@@ -154,7 +154,7 @@ UIOList* UIO2::constructDebugInfo() {
 		for (auto type : types) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 			auto button = UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type));
-			button->setOnRelease([type = type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			button.get()->setOnRelease([type = type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 			{
 				UIO2::Global::push();
 
@@ -172,13 +172,13 @@ UIOList* UIO2::constructDebugInfo() {
 		}
 		UIO2::endList();
 
-		proxy->setProxy(UIO2::Global::pop(), params.uiState);
+		proxy.get()->setProxy(UIO2::Global::pop(), params.uiState);
 
 		return BIND::RESULT::CONTINUE;
 	});
 
-	saveButton->setOnRelease(
-		[saveName](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	saveButton.get()->setOnRelease(
+		[saveName = saveName.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -190,7 +190,7 @@ UIOList* UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	loadButton->setOnRelease([saveName](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	loadButton.get()->setOnRelease([saveName = saveName.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -203,7 +203,7 @@ UIOList* UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	tickInfo->addGlobalBind(
+	tickInfo.get()->addGlobalBind(
 		{ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) },
 		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
@@ -212,7 +212,7 @@ UIOList* UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	spawnItem->setOnRelease(
+	spawnItem.get()->setOnRelease(
 		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		params.uiState.addNamedUI("Item Spawner", []()
@@ -233,25 +233,25 @@ UIOList* UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	debugButton->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	debugButton.get()->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 		auto self = static_cast<UIOButton*>(self_);
 		self->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 		return BIND::RESULT::CONTINUE;
 	});
-	debugButton->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
+	debugButton.get()->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
-	renderThread->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	renderThread.get()->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 		auto self = static_cast<UIOButton*>(self_);
 		self->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 		return BIND::RESULT::CONTINUE;
 	});
-	renderThread->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
+	renderThread.get()->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
-	logOutput->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	logOutput.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 

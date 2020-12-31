@@ -24,9 +24,9 @@ private:
 	UIOCursor() = default;
 
 public:
-	UIOTextDisplay* hoveringText;
-	UIOFreeSize* hoveringFreeElement;
-	UIOBase* hoveringElement;
+	WeakReference<UIOBase, UIOTextDisplay> hoveringText;
+	WeakReference<UIOBase, UIOFreeSize> hoveringFreeElement;
+	WeakReference<UIOBase, UIOBase> hoveringElement;
 
 	Inventory& getInventory();
 	ManagedReference<Activity, Activity> const& getTarget() const;

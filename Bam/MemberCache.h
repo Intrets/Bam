@@ -14,7 +14,7 @@ private:
 	std::vector<Activity*> members;
 
 	bool validSortedHandles = false;
-	std::vector<Handle> sortedHandles;
+	std::vector<Activity*> sortedHandles;
 
 	bool validRoot = false;
 	int32_t rootTick = 0;
@@ -33,7 +33,7 @@ public:
 	int32_t getRootTick() const;
 
 	std::vector<Activity*> const& getMembers();
-	std::vector<Handle> const& getSortedHandles();
+	std::vector<Activity*> const& getSortedHandles();
 	Activity* getRoot();
 
 	MemberCache() = delete;

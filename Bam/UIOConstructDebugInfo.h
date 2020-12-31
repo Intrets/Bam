@@ -1,8 +1,12 @@
 #pragma once
 
+class UIOBase;
 class UIOList;
+
+template<class, class>
+class WeakReference;
 
 namespace UIO2
 {
-	UIOList* constructDebugInfo();
+	WeakReference<UIOBase, UIOList> constructDebugInfo();
 }

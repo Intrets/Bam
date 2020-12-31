@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <optional>
 #include <iostream>
+#include <algorithm>
 
 #ifdef RTTI_CHECKS
 #include <typeinfo>
@@ -19,18 +20,24 @@ typedef int32_t Handle;
 template <class B>
 class ReferenceManager;
 
+template<class B>
+struct HasSelfReference : std::false_type
+{
+};
+
 class Reference
 {
 public:
 	void* ptr = nullptr;
+	void* manager = nullptr;
 
 	bool operator==(Reference const& other) const;
 	bool operator==(void* other) const;
 
-	void clear();
-
 	bool isNotNull() const;
 	bool isNull() const;
+
+	void clearPtr();
 
 	operator bool() const;
 
@@ -41,6 +48,8 @@ template <class B, class T>
 class WeakReference : public Reference
 {
 public:
+	ReferenceManager<B>* getManager() const;
+
 	T* get() const;
 
 	Handle getHandle() const;
@@ -55,11 +64,12 @@ public:
 	operator WeakReference<B, N>() const;
 
 	void deleteObject();
+	void clear();
 
 	WeakReference() = default;
 
-	WeakReference(B* p);
-	WeakReference(Handle h);
+	WeakReference(ReferenceManager<B>& manager, B* p);
+	WeakReference(ReferenceManager<B>& manager, Handle h);
 
 	virtual ~WeakReference() = default;
 };
@@ -71,6 +81,8 @@ public:
 	UniqueReference() = default;
 
 	UniqueReference(WeakReference<B, T> ref);
+	UniqueReference(ReferenceManager<B>& manager, B* p);
+	UniqueReference(ReferenceManager<B>& manager, Handle h);
 
 	UniqueReference<B, T>& operator= (WeakReference<B, T> const& other);
 
@@ -102,6 +114,8 @@ public:
 	ManagedReference() = default;
 
 	ManagedReference(WeakReference<B, T> r);
+	ManagedReference(ReferenceManager<B>& manager, Handle h);
+	ManagedReference(ReferenceManager<B>& manager, B* p);
 
 	ManagedReference(ManagedReference&& other) noexcept;
 	ManagedReference<B, T>& operator= (ManagedReference&& other) noexcept;
@@ -120,9 +134,11 @@ private:
 	Handle getFreeHandle();
 
 	std::vector<std::pair<Handle, Reference*>> incomplete;
+	std::vector<std::pair<Handle, B**>> incompletePointers;
 
 public:
 	void addIncomplete(Handle h, Reference* ptr);
+	void addIncomplete(Handle h, B*& ptr);
 	void completeReferences();
 
 	int32_t size;
@@ -162,15 +178,20 @@ public:
 	template<class T>
 	void deleteReference(ManagedReference<B, T>& ref);
 
-	ReferenceManager(int32_t size_) : size(size_), usedHandle(size) {
-		for (int32_t i = 1; i < size; i++) {
-			freeHandles.insert(i);
-		}
-	};
+	void clear();
+
+	ReferenceManager(int32_t size_);
 	ReferenceManager() : ReferenceManager(10'000) {
 	};
 	~ReferenceManager();
+
+	NOCOPYMOVE(ReferenceManager);
 };
+
+template<class B, class T>
+inline ReferenceManager<B>* WeakReference<B, T>::getManager() const {
+	return static_cast<ReferenceManager<B>*>(this->manager);
+}
 
 template<class B, class T>
 inline T* WeakReference<B, T>::get() const {
@@ -190,19 +211,28 @@ inline Reference::operator bool() const {
 template<class B, class T>
 inline void WeakReference<B, T>::deleteObject() {
 	if (this->isNotNull()) {
-		Locator<ReferenceManager<B>>::get()->deleteReference(this->getHandle());
+		this->getManager()->deleteReference(this->getHandle());
 		this->ptr = nullptr;
+		this->manager = nullptr;
 	}
 }
 
 template<class B, class T>
-inline WeakReference<B, T>::WeakReference(B* p) {
-	this->ptr = p;
+inline void WeakReference<B, T>::clear() {
+	this->ptr = nullptr;
+	this->manager = nullptr;
 }
 
 template<class B, class T>
-inline WeakReference<B, T>::WeakReference(Handle h) {
-	this->ptr = Locator<ReferenceManager<B>>::get()->data[h].get();
+inline WeakReference<B, T>::WeakReference(ReferenceManager<B>& manager_, B* p) {
+	this->ptr = p;
+	this->manager = &manager_;
+}
+
+template<class B, class T>
+inline WeakReference<B, T>::WeakReference(ReferenceManager<B>& manager_, Handle h) {
+	this->ptr = manager_.data[h].get();
+	this->manager = &manager_;
 #ifdef RTTI_CHECKS
 	assert(dynamic_cast<T*>(this->get()));
 #endif
@@ -216,7 +246,7 @@ inline bool ManagedReference<B, T>::isValid() const {
 template<class B, class T>
 inline void ManagedReference<B, T>::unset() {
 	if (this->isValid()) {
-		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
+		this->getManager()->unsubscribe(*this);
 	}
 	this->clear();
 }
@@ -227,17 +257,36 @@ inline ManagedReference<B, T>::ManagedReference(WeakReference<B, T> r) {
 }
 
 template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(ReferenceManager<B>& manager, Handle h) {
+	auto ref = WeakReference<B, T>(manager, h);
+	this->set(ref);
+}
+
+template<class B, class T>
+inline ManagedReference<B, T>::ManagedReference(ReferenceManager<B>& manager, B* p) {
+	auto ref = WeakReference<B, T>(manager, p);
+	this->set(ref);
+}
+
+template<class B, class T>
 inline WeakReference<B, T> ManagedReference<B, T>::getRef() const {
 	return *this;
 }
 
 template<class B, class T>
 inline void ManagedReference<B, T>::set(WeakReference<B, T> r) {
+	assert(r.manager != nullptr);
+	assert(this->manager == nullptr || this->manager == r.manager);
+
 	if (this->isValid()) {
-		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
+		this->getManager()->unsubscribe(*this);
 	}
+	else {
+		this->manager = r.manager;
+	}
+
 	this->ptr = r.get();
-	Locator<ReferenceManager<B>>::get()->subscribe(*this);
+	this->getManager()->subscribe(*this);
 }
 
 template<class B, class T>
@@ -260,7 +309,7 @@ inline ManagedReference<B, T>& ManagedReference<B, T>::operator=(const ManagedRe
 template<class B, class T>
 inline ManagedReference<B, T>::~ManagedReference() {
 	if (this->isValid()) {
-		Locator<ReferenceManager<B>>::get()->unsubscribe(*this);
+		this->getManager()->unsubscribe(*this);
 	}
 }
 
@@ -276,7 +325,11 @@ inline WeakReference<B, T> ReferenceManager<B>::makeRef(Args&& ...args) {
 	Handle h = this->getFreeHandle();
 	this->data[h] = std::make_unique<T>(h, std::forward<Args>(args)...);
 	this->usedHandle[h] = true;
-	return WeakReference<B, T>(this->data[h].get());
+	auto ptr = this->data[h].get();
+	if constexpr (HasSelfReference<B>::value) {
+		ptr->selfReference = WeakReference<B, T>(*this, ptr);
+	}
+	return WeakReference<B, T>(*this, ptr);
 }
 
 template<class B>
@@ -285,7 +338,11 @@ inline UniqueReference<B, T> ReferenceManager<B>::makeUniqueRef(Args&& ...args) 
 	Handle h = this->getFreeHandle();
 	this->data[h] = std::make_unique<T>(h, std::forward<Args>(args)...);
 	this->usedHandle[h] = true;
-	return UniqueReference<B, T>(this->data[h].get());
+	auto ptr = this->data[h].get();
+	if constexpr (HasSelfReference<B>::value) {
+		ptr->selfReference = WeakReference<B, T>(*this, ptr);
+	}
+	return UniqueReference<B, T>(*this, ptr);
 }
 
 template<class B>
@@ -377,7 +434,7 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 	auto range = this->managedReferences.equal_range(h);
 	for_each(range.first, range.second, [](ManagedReferencesType::value_type& ref) -> void
 	{
-		ref.second->clear();
+		ref.second->clearPtr();
 	});
 
 	this->managedReferences.erase(range.first, range.second);
@@ -386,14 +443,39 @@ inline void ReferenceManager<B>::deleteReference(Handle h) {
 }
 
 template<class B>
-inline ReferenceManager<B>::~ReferenceManager() {
+inline void ReferenceManager<B>::clear() {
+	this->incomplete.resize(0);
+	this->incompletePointers.resize(0);
+
 	for (auto& [_, managed] : this->managedReferences) {
-		managed->clear();
+		managed->clearPtr();
 	}
+	this->managedReferences.clear();
 
 	while (!this->data.empty()) {
 		this->data.erase(this->data.begin());
 	}
+
+	this->freeHandles.clear();
+	for (int32_t i = 1; i < this->size; i++) {
+		this->freeHandles.insert(i);
+	}
+
+	std::fill(this->usedHandle.begin(), this->usedHandle.end(), false);
+}
+
+template<class B>
+inline ReferenceManager<B>::ReferenceManager(int32_t size_) :
+	size(size_),
+	usedHandle(size) {
+	for (int32_t i = 1; i < this->size; i++) {
+		this->freeHandles.insert(i);
+	}
+}
+
+template<class B>
+inline ReferenceManager<B>::~ReferenceManager() {
+	this->clear();
 }
 
 template<class B>
@@ -417,11 +499,21 @@ inline void ReferenceManager<B>::addIncomplete(Handle h, Reference* ptr) {
 }
 
 template<class B>
+inline void ReferenceManager<B>::addIncomplete(Handle h, B*& ptr) {
+	this->incompletePointers.push_back({ h, &ptr });
+}
+
+template<class B>
 inline void ReferenceManager<B>::completeReferences() {
 	for (auto& [h, ptr] : this->incomplete) {
 		ptr->ptr = this->data[h].get();
 	}
 	this->incomplete.clear();
+
+	for (auto& [h, ptr] : this->incompletePointers) {
+		*ptr = this->data[h].get();
+	}
+	this->incompletePointers.clear();
 }
 
 template<class B, class T>
@@ -429,9 +521,21 @@ inline UniqueReference<B, T>::UniqueReference(WeakReference<B, T> ref) : WeakRef
 }
 
 template<class B, class T>
+inline UniqueReference<B, T>::UniqueReference(ReferenceManager<B>& manager, B* p) : WeakReference<B, T>(manager, p) {
+}
+
+template<class B, class T>
+inline UniqueReference<B, T>::UniqueReference(ReferenceManager<B>& manager_, Handle h) : WeakReference<B, T>(manager_, h) {
+}
+
+template<class B, class T>
 inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(WeakReference<B, T> const& other) {
 	assert(this->isNull());
+	assert(this->manager == nullptr || this->manager == other.manager);
+
 	this->ptr = other.ptr;
+	this->manager = other.manager;
+
 	return *this;
 }
 
@@ -444,8 +548,13 @@ template<class B, class T>
 template<class N>
 inline UniqueReference<B, T>::UniqueReference(UniqueReference<B, N>&& other) {
 	assert(other.isNotNull());
+	assert(this->manager == nullptr || this->manager == other.manager);
+
 	this->ptr = other.ptr;
+	this->manager = other.manager;
+
 	other.ptr = nullptr;
+	other.manager = nullptr;
 }
 
 template<class B, class T>
@@ -457,10 +566,14 @@ inline UniqueReference<B, T>& UniqueReference<B, T>::operator=(UniqueReference<B
 		}
 	}
 	assert(this->ptr != other.ptr);
+	assert(this->manager == nullptr || this->manager == other.manager);
 	assert(other.isNotNull());
 	assert(this->isNull());
+
 	this->ptr = other.ptr;
+	this->manager = other.manager;
 	other.ptr = nullptr;
+	other.manager = nullptr;
 	return *this;
 }
 
@@ -498,14 +611,14 @@ inline WeakReference<B, N> WeakReference<B, T>::as() const {
 #ifdef RTTI_CHECKS
 	assert(dynamic_cast<N*>(this->get()));
 #endif
-	return WeakReference<B, N>(this->get());
+	return WeakReference<B, N>(*this->getManager(), this->get());
 }
 
 template<class B, class T>
 template<class N>
 inline WeakReference<B, T>::operator WeakReference<B, N>() const {
 	static_assert(std::is_base_of<N, T>::value, "WeakReference implicit cast: not a super class.");
-	return WeakReference<B, N>(this->get());
+	return WeakReference<B, N>(*this->getManager(), this->get());
 }
 
 inline bool Reference::operator==(Reference const& other) const {
@@ -516,14 +629,14 @@ inline bool Reference::operator==(void* other) const {
 	return this->ptr == other;
 }
 
-inline void Reference::clear() {
-	this->ptr = nullptr;
-}
-
 inline bool Reference::isNotNull() const {
 	return this->ptr != nullptr;
 }
 
 inline bool Reference::isNull() const {
 	return this->ptr == nullptr;
+}
+
+inline void Reference::clearPtr() {
+	this->ptr = nullptr;
 }

@@ -19,8 +19,8 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 
 		auto [button, text] = UIO2::textButton2(std::to_string(i));
 
-		this->icons.push_back(text);
-		button->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		this->icons.push_back(text.get());
+		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			static_cast<UIOInventory*>(self_)->getInventory().clickInventory(i);
 			return BIND::RESULT::CONTINUE;

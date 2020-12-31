@@ -15,8 +15,8 @@ UIOWindow::UIOWindow(Handle self) {
 int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	glm::vec2 px = glm::vec2(1.0f) / glm::vec2(this->screenRectangle.getPixelSize());
 	if (this->minimized) {
-		depth = topBar->addRenderInfo(gameState, renderInfo, depth++);
-		renderInfo.uiRenderInfo.addRectangle(this->topBar->getScreenRectangle().getBottomLeft() - px, this->topBar->getScreenRectangle().getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
+		depth = this->topBar.get()->addRenderInfo(gameState, renderInfo, depth++);
+		renderInfo.uiRenderInfo.addRectangle(this->topBar.get()->getScreenRectangle().getBottomLeft() - px, this->topBar.get()->getScreenRectangle().getTopRight() + 2.0f * px, COLORS::UI::WINDOWBACKGROUND, depth++);
 		return depth;
 	}
 	else {
@@ -28,7 +28,7 @@ int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 
 CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 	if (this->minimized) {
-		return this->topBar->runGlobalBinds(state);
+		return this->topBar.get()->runGlobalBinds(state);
 	}
 	else {
 		return this->UIOBaseMulti::runGlobalBinds(state);
@@ -37,7 +37,7 @@ CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 
 CallBackBindResult UIOWindow::runGameWorldBinds(State& state) {
 	if (this->minimized) {
-		return this->topBar->runGameWorldBinds(state);
+		return this->topBar.get()->runGameWorldBinds(state);
 	}
 	else {
 		return this->UIOBaseMulti::runGameWorldBinds(state);
@@ -46,7 +46,7 @@ CallBackBindResult UIOWindow::runGameWorldBinds(State& state) {
 
 void UIOWindow::addElement(UniqueReference<UIOBase, UIOBase> element) {
 	assert(this->main == nullptr);
-	this->main = element.get();
+	this->main = element;
 	this->addElementMulti(std::move(element));
 }
 
@@ -56,7 +56,7 @@ void UIOWindow::addElementMulti(UniqueReference<UIOBase, UIOBase> element) {
 
 CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 	if (this->minimized) {
-		return this->topBar->runFocussedBinds(state);
+		return this->topBar.get()->runFocussedBinds(state);
 	}
 	else {
 		return this->UIOBaseMulti::runFocussedBinds(state);
@@ -65,7 +65,7 @@ CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 
 CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
 	if (this->minimized) {
-		return this->topBar->runOnHoverBinds(state);
+		return this->topBar.get()->runOnHoverBinds(state);
 	}
 	else {
 		return  this->UIOBaseMulti::runOnHoverBinds(state);
@@ -74,7 +74,7 @@ CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
 
 CallBackBindResult UIOWindow::runActiveBinds(State& state) {
 	if (this->minimized) {
-		return this->topBar->runActiveBinds(state);
+		return this->topBar.get()->runActiveBinds(state);
 	}
 	else {
 		return this->UIOBaseMulti::runActiveBinds(state);

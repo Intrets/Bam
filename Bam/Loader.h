@@ -9,6 +9,8 @@
 #include "ReferenceManager.h"
 
 class GameState;
+class Activity;
+class InventoryItem;
 
 class Loader
 {
@@ -19,21 +21,35 @@ private:
 
 	GameState& gameStateRef;
 
+	void addIncompleteActivityRef(Handle handle, Reference* ref);
+	void addIncompleteInventoryRef(Handle handle, Reference* ref);
+
 public:
+	bool retrieveActivityPointer(Activity*& ptr);
+
 	template<class T>
 	bool retrieve(T& t);
 
 	template<class T>
 	bool retrieve(std::optional<T>& m);
 
-	template<class B, class T>
-	bool retrieve(WeakReference<B, T>& m);
+	template<class T>
+	bool retrieve(WeakReference<Activity, T>& m);
 
-	template<class B, class T>
-	bool retrieve(UniqueReference<B, T>& m);
+	template<class T>
+	bool retrieve(UniqueReference<Activity, T>& m);
 
-	template<class B, class T>
-	bool retrieve(ManagedReference<B, T>& m);
+	template<class T>
+	bool retrieve(ManagedReference<Activity, T>& m);
+
+	template<class T>
+	bool retrieve(WeakReference<InventoryItem, T>& m);
+
+	template<class T>
+	bool retrieve(UniqueReference<InventoryItem, T>& m);
+
+	template<class T>
+	bool retrieve(ManagedReference<InventoryItem, T>& m);
 
 	sol::object retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache);
 
@@ -85,12 +101,12 @@ inline bool Loader::retrieve(size_t& t) {
 	return true;
 }
 
-template<class B, class T>
-inline bool Loader::retrieve(WeakReference<B, T>& m) {
+template<class T>
+inline bool Loader::retrieve(WeakReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
+		this->addIncompleteActivityRef(handle, &m);
 	}
 	else {
 		m.clear();
@@ -98,12 +114,12 @@ inline bool Loader::retrieve(WeakReference<B, T>& m) {
 	return true;
 }
 
-template<class B, class T>
-inline bool Loader::retrieve(UniqueReference<B, T>& m) {
+template<class T>
+inline bool Loader::retrieve(UniqueReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
+		this->addIncompleteActivityRef(handle, &m);
 	}
 	else {
 		m.ptr = nullptr;
@@ -111,12 +127,51 @@ inline bool Loader::retrieve(UniqueReference<B, T>& m) {
 	return true;
 }
 
-template<class B, class T>
-inline bool Loader::retrieve(ManagedReference<B, T>& m) {
+template<class T>
+inline bool Loader::retrieve(ManagedReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
-		Locator<ReferenceManager<B>>::ref().addIncomplete(handle, &m);
+		this->addIncompleteActivityRef(handle, &m);
+	}
+	else {
+		m.ptr = nullptr;
+	}
+	return true;
+}
+
+template<class T>
+inline bool Loader::retrieve(WeakReference<InventoryItem, T>& m) {
+	Handle handle;
+	this->retrieve(handle);
+	if (handle != 0) {
+		this->addIncompleteInventoryRef(handle, &m);
+	}
+	else {
+		m.clear();
+	}
+	return true;
+}
+
+template<class T>
+inline bool Loader::retrieve(UniqueReference<InventoryItem, T>& m) {
+	Handle handle;
+	this->retrieve(handle);
+	if (handle != 0) {
+		this->addIncompleteInventoryRef(handle, &m);
+	}
+	else {
+		m.ptr = nullptr;
+	}
+	return true;
+}
+
+template<class T>
+inline bool Loader::retrieve(ManagedReference<InventoryItem, T>& m) {
+	Handle handle;
+	this->retrieve(handle);
+	if (handle != 0) {
+		this->addIncompleteInventoryRef(handle, &m);
 	}
 	else {
 		m.ptr = nullptr;

@@ -156,7 +156,7 @@ bool LuaActivity::applyMove(int32_t index, int32_t type) {
 	else {
 		bool res = true;
 		for (auto h : this->labelLists[index]) {
-			res |= WeakReference<Activity, Activity>(h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
+			res |= WeakReference<Activity, Activity>(gameStateRef->activityManager, h).get()->applyMoveRoot(*gameStateRef, static_cast<ACTIVITY::DIR>(type), 4);
 		}
 		return res;
 	}
@@ -169,7 +169,7 @@ bool LuaActivity::applyActivity(int32_t index, int32_t type) {
 	else {
 		bool res = true;
 		for (auto h : this->labelLists[index]) {
-			res |= WeakReference<Activity, Activity>(h).get()->applyActivityLocal(*gameStateRef, type);
+			res |= WeakReference<Activity, Activity>(gameStateRef->activityManager, h).get()->applyActivityLocal(*gameStateRef, type);
 		}
 		return res;
 	}
@@ -181,7 +181,7 @@ bool LuaActivity::sendMessage(int32_t index, sol::variadic_args& va) {
 	}
 	else {
 		for (auto h : this->labelLists[index]) {
-			Activity* activity = WeakReference<Activity, Activity>(h).get();
+			Activity* activity = WeakReference<Activity, Activity>(gameStateRef->activityManager, h).get();
 			switch (activity->getType()) {
 				case ACTIVITY::TYPE::LUA:
 					if (!static_cast<LuaActivity*>(activity)->canReceiveMessage()) {
@@ -197,7 +197,7 @@ bool LuaActivity::sendMessage(int32_t index, sol::variadic_args& va) {
 			}
 		}
 		for (auto h : this->labelLists[index]) {
-			Activity* activity = WeakReference<Activity, Activity>(h).get();
+			Activity* activity = WeakReference<Activity, Activity>(gameStateRef->activityManager, h).get();
 			switch (activity->getType()) {
 				case ACTIVITY::TYPE::LUA:
 					{

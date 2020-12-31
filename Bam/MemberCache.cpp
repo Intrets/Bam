@@ -50,12 +50,9 @@ std::vector<Activity*> const& MemberCache::getMembers() {
 	return this->members;
 }
 
-std::vector<Handle> const& MemberCache::getSortedHandles() {
+std::vector<Activity*> const& MemberCache::getSortedHandles() {
 	if (!this->validSortedHandles) {
-		this->sortedHandles.clear();
-		for (auto member : this->getMembers()) {
-			this->sortedHandles.push_back(member->getHandle());
-		}
+		this->sortedHandles = this->getMembers();
 		std::sort(this->sortedHandles.begin(), this->sortedHandles.end());
 		this->validSortedHandles = true;
 	}
@@ -64,7 +61,7 @@ std::vector<Handle> const& MemberCache::getSortedHandles() {
 
 Activity* MemberCache::getRoot() {
 	if (!this->validRoot) {
-		this->root = WeakReference<Activity, Activity>(this->self.impl_getRootHandle()).get();
+		this->root = this->self.impl_getRootHandle();
 		this->validRoot = true;
 	}
 	return this->root;

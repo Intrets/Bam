@@ -13,7 +13,7 @@
 #include "Incinerator.h"
 #include "Forwarder.h"
 
-void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap& handleMap) {
+void ACTIVITYCOPIER::copyActivity(ReferenceManager<Activity>& manager, Activity* source, Activity* target, HandleMap& handleMap) {
 	target->activityPace = 10;
 	target->activityTickStart = 0;
 	target->activityType = 0;
@@ -27,7 +27,7 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 	target->inWorld = false;
 	target->origin = source->origin;
 
-	Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->getHandle()], &target->parentRef);
+	manager.addIncomplete(handleMap[source->getHandle()], &target->parentRef);
 	target->selfHandle = handleMap[source->selfHandle];
 	target->activityRotation = source->activityRotation;
 
@@ -36,47 +36,47 @@ void ACTIVITYCOPIER::copyActivity(Activity* source, Activity* target, HandleMap&
 	target->baseBlock = source->baseBlock;
 }
 
-void ACTIVITYCOPIER::copySingleGrouper(SingleGrouper* source, SingleGrouper* target, HandleMap& handleMap) {
-	Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->child.getHandle()], &target->child);
+void ACTIVITYCOPIER::copySingleGrouper(ReferenceManager<Activity>& manager, SingleGrouper* source, SingleGrouper* target, HandleMap& handleMap) {
+	manager.addIncomplete(handleMap[source->child.getHandle()], &target->child);
 
-	ACTIVITYCOPIER::copyGrouperBase(source, target, handleMap);
+	ACTIVITYCOPIER::copyGrouperBase(manager, source, target, handleMap);
 }
 
-void ACTIVITYCOPIER::copyGrouperBase(GrouperBase* source, GrouperBase* target, HandleMap& handleMap) {
-	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
+void ACTIVITYCOPIER::copyGrouperBase(ReferenceManager<Activity>& manager, GrouperBase* source, GrouperBase* target, HandleMap& handleMap) {
+	ACTIVITYCOPIER::copyActivity(manager, source, target, handleMap);
 }
 
-void ACTIVITYCOPIER::copySingleBlockActivity(SingleBlockActivity* source, SingleBlockActivity* target, HandleMap& handleMap) {
-	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
+void ACTIVITYCOPIER::copySingleBlockActivity(ReferenceManager<Activity>& manager, SingleBlockActivity* source, SingleBlockActivity* target, HandleMap& handleMap) {
+	ACTIVITYCOPIER::copyActivity(manager, source, target, handleMap);
 }
 
-Activity* ACTIVITYCOPIER::copyPiston(Piston* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyPiston(ReferenceManager<Activity>& manager, Piston* source, HandleMap& handleMap) {
 	Piston* target = new Piston();
 
 	target->length = source->length;
 	target->headBlock = source->headBlock;
 	target->shaftBlock = source->shaftBlock;
 
-	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
+	ACTIVITYCOPIER::copySingleGrouper(manager, source, target, handleMap);
 
 	return target;
 }
 
-Activity* ACTIVITYCOPIER::copyAnchor(Anchor* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyAnchor(ReferenceManager<Activity>& manager, Anchor* source, HandleMap& handleMap) {
 	Anchor* target = new Anchor();
 
 	target->children.resize(source->children.size());
 
 	for (size_t i = 0; i < source->children.size(); i++) {
-		Locator<ReferenceManager<Activity>>::ref().addIncomplete(handleMap[source->children[i].getHandle()], &target->children[i]);
+		manager.addIncomplete(handleMap[source->children[i].getHandle()], &target->children[i]);
 	}
 
-	ACTIVITYCOPIER::copyGrouperBase(source, target, handleMap);
+	ACTIVITYCOPIER::copyGrouperBase(manager, source, target, handleMap);
 
 	return target;
 }
 
-Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyRailCrane(ReferenceManager<Activity>& manager, RailCrane* source, HandleMap& handleMap) {
 	RailCrane* target = new RailCrane();
 
 	target->anchorDirection = source->anchorDirection;
@@ -86,12 +86,12 @@ Activity* ACTIVITYCOPIER::copyRailCrane(RailCrane* source, HandleMap& handleMap)
 
 	target->anchorIndexPos = source->anchorIndexPos;
 
-	ACTIVITYCOPIER::copySingleGrouper(source, target, handleMap);
+	ACTIVITYCOPIER::copySingleGrouper(manager, source, target, handleMap);
 
 	return target;
 }
 
-Activity* ACTIVITYCOPIER::copyLuaActivity(LuaActivity* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyLuaActivity(ReferenceManager<Activity>& manager, LuaActivity* source, HandleMap& handleMap) {
 	LuaActivity* target = new LuaActivity();
 
 	target->interrupt = false;
@@ -100,61 +100,60 @@ Activity* ACTIVITYCOPIER::copyLuaActivity(LuaActivity* source, HandleMap& handle
 	target->setScript(source->script, *target->gameStateRef);
 	target->watchedVars = source->watchedVars;
 
-	ACTIVITYCOPIER::copySingleBlockActivity(source, target, handleMap);
+	ACTIVITYCOPIER::copySingleBlockActivity(manager, source, target, handleMap);
 
 	return target;
 }
 
-Activity* ACTIVITYCOPIER::copyGrabber(Grabber* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyGrabber(ReferenceManager<Activity>& manager, Grabber* source, HandleMap& handleMap) {
 	Grabber* target = new Grabber();
 
 	target->block = source->block;
 
-	ACTIVITYCOPIER::copyActivity(source, target, handleMap);
+	ACTIVITYCOPIER::copyActivity(manager, source, target, handleMap);
 
 	return target;
 }
 
-Activity* ACTIVITYCOPIER::copyReader(Reader* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyReader(ReferenceManager<Activity>& manager, Reader* source, HandleMap& handleMap) {
 	Reader* reader = new Reader();
 
-	ACTIVITYCOPIER::copySingleBlockActivity(source, reader, handleMap);
+	ACTIVITYCOPIER::copySingleBlockActivity(manager, source, reader, handleMap);
 
 	return reader;
 }
 
-Activity* ACTIVITYCOPIER::copyDetector(Detector* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyDetector(ReferenceManager<Activity>& manager, Detector* source, HandleMap& handleMap) {
 	Detector* detector = new Detector();
 
-	ACTIVITYCOPIER::copySingleBlockActivity(source, detector, handleMap);
+	ACTIVITYCOPIER::copySingleBlockActivity(manager, source, detector, handleMap);
 
 	return detector;
 }
 
-Activity* ACTIVITYCOPIER::copyIncinerator(Incinerator* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyIncinerator(ReferenceManager<Activity>& manager, Incinerator* source, HandleMap& handleMap) {
 	Incinerator* incinerator = new Incinerator();
 
-	ACTIVITYCOPIER::copySingleBlockActivity(source, incinerator, handleMap);
+	ACTIVITYCOPIER::copySingleBlockActivity(manager, source, incinerator, handleMap);
 
 	return incinerator;
 }
 
-Activity* ACTIVITYCOPIER::copyForwarder(Forwarder* source, HandleMap& handleMap) {
+Activity* ACTIVITYCOPIER::copyForwarder(ReferenceManager<Activity>& manager, Forwarder* source, HandleMap& handleMap) {
 	Forwarder* forwarder = new Forwarder();
 
-	ACTIVITYCOPIER::copySingleBlockActivity(source, forwarder, handleMap);
+	ACTIVITYCOPIER::copySingleBlockActivity(manager, source, forwarder, handleMap);
 
 	return forwarder;
 }
 
-UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity, Activity> ref) {
+UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(ReferenceManager<Activity>& manager, WeakReference<Activity, Activity> ref) {
 	HandleMap handleMap;
 
-	auto const& freeHandles = Locator<ReferenceManager<Activity>>::ref().freeHandles;
-	auto it = freeHandles.begin();
+	auto it = manager.freeHandles.begin();
 
 	for (auto member : ref.get()->getRootPtr()->getTreeMembers()) {
-		assert(it != freeHandles.end());
+		assert(it != manager.freeHandles.end());
 
 		handleMap[member->getHandle()] = *it;
 		it++;
@@ -164,37 +163,37 @@ UniqueReference<Activity, Activity> ACTIVITYCOPIER::copy(WeakReference<Activity,
 		Activity* target = nullptr;
 		switch (member->getType()) {
 			case ACTIVITY::TYPE::PISTON:
-				target = ACTIVITYCOPIER::copyPiston(static_cast<Piston*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyPiston(manager, static_cast<Piston*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::ANCHOR:
-				target = ACTIVITYCOPIER::copyAnchor(static_cast<Anchor*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyAnchor(manager, static_cast<Anchor*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::RAILCRANE:
-				target = ACTIVITYCOPIER::copyRailCrane(static_cast<RailCrane*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyRailCrane(manager, static_cast<RailCrane*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::GRABBER:
-				target = ACTIVITYCOPIER::copyGrabber(static_cast<Grabber*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyGrabber(manager, static_cast<Grabber*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::LUA:
-				target = ACTIVITYCOPIER::copyLuaActivity(static_cast<LuaActivity*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyLuaActivity(manager, static_cast<LuaActivity*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::READER:
-				target = ACTIVITYCOPIER::copyReader(static_cast<Reader*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyReader(manager, static_cast<Reader*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::DETECTOR:
-				target = ACTIVITYCOPIER::copyDetector(static_cast<Detector*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyDetector(manager, static_cast<Detector*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::INCINERATOR:
-				target = ACTIVITYCOPIER::copyIncinerator(static_cast<Incinerator*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyIncinerator(manager, static_cast<Incinerator*>(member), handleMap);
 				break;
 			case ACTIVITY::TYPE::FORWARDER:
-				target = ACTIVITYCOPIER::copyForwarder(static_cast<Forwarder*>(member), handleMap);
+				target = ACTIVITYCOPIER::copyForwarder(manager, static_cast<Forwarder*>(member), handleMap);
 				break;
 			default:
 				assert(0);
 				break;
 		}
-		Locator<ReferenceManager<Activity>>::ref().storeReference(target->selfHandle, target);
+		manager.storeReference(target->selfHandle, target);
 	}
-	return UniqueReference<Activity, Activity>(handleMap[ref.get()->getRootHandle()]);
+	return UniqueReference<Activity, Activity>(manager, handleMap[ref.get()->getRootHandle()]);
 }

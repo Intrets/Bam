@@ -6,10 +6,6 @@
 #include "Saver.h"
 #include "Loader.h"
 
-std::optional<UniqueReference<Activity, Activity>> GrouperBase::removeChild(Handle h) {
-	return this->removeChild(WeakReference<Activity, Activity>(h));
-}
-
 void GrouperBase::save(Saver& saver) {
 	this->Activity::save(saver);
 }
@@ -31,7 +27,7 @@ bool SingleGrouper::addChild(UniqueReference<Activity, Activity> ref) {
 		return false;
 	}
 	else {
-		ref.get()->parentRef = this;
+		ref.get()->parentRef = WeakReference<Activity, GrouperBase>(*ref.getManager(), this);
 		this->child = std::move(ref);
 		return true;
 	}

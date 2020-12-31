@@ -13,7 +13,7 @@ private:
 
 public:
 	ManagedReference<UIOBase, UIOBase> proxyBase;
-	UIODestructible* destructible;
+	WeakReference<UIOBase, UIODestructible> destructible;
 
 	void closeProxy();
 	bool hasProxy();

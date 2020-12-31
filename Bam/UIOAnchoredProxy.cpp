@@ -11,7 +11,7 @@
 
 void UIOAnchoredProxy::closeProxy() {
 	if (this->proxyBase.isValid()) {
-		this->destructible->destruct = true;
+		this->destructible.get()->destruct = true;
 	}
 }
 
@@ -29,7 +29,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 	this->proxyBase.set(this->destructible);
 
 	auto ptr = UIO2::makeEnd(std::move(ref));
-	ptr->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr.get()->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
 			return BIND::RESULT::CLOSE;
@@ -39,7 +39,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 		}
 	});
 
-	ptr->addOnHoverBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr.get()->addOnHoverBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONSUME;
 	});
@@ -94,7 +94,7 @@ UIOAnchoredProxy::UIOAnchoredProxy(Handle self) {
 
 UIOAnchoredProxy::~UIOAnchoredProxy() {
 	if (this->proxyBase.isValid()) {
-		this->destructible->destruct = true;
+		this->destructible.get()->destruct = true;
 	}
 }
 

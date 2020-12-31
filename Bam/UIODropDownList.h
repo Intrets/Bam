@@ -24,11 +24,11 @@ private:
 	std::optional<std::function<std::vector<T>(UIOCallBackParams&)>> listGenerator;
 
 public:
-	UIOAnchoredProxy* proxy;
+	WeakReference<UIOBase, UIOAnchoredProxy> proxy;
 	int32_t selected = -1;
 	std::vector<T> list;
 
-	UIOTextDisplay* buttonText;
+	WeakReference<UIOBase, UIOTextDisplay> buttonText;
 
 	UIODropDownList(Handle self, std::function<std::string(T const&)> f);
 	virtual ~UIODropDownList() = default;
@@ -60,8 +60,8 @@ inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
 	if (this->list.size() == 0) {
 		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 		auto button = UIO2::textButton("nothing");
-		button->setColor(COLORS::UI::RED);
-		button->setOnPress([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		button.get()->setColor(COLORS::UI::RED);
+		button.get()->setOnPress([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			return BIND::RESULT::CLOSE;
 		});
@@ -71,7 +71,8 @@ inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
 		for (auto& element : this->list) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 			auto button = UIO2::textButton(this->display(element));
-			button->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(this)](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			auto& manager = UIO2::Global::getState()->getManager();
+			button.get()->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(manager, this)](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 			{
 				if (auto r = ref.getRef()) {
 					r.get()->select(index);
@@ -84,7 +85,7 @@ inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
 	}
 	UIO2::endList();
 
-	this->proxy->setProxy(std::move(UIO2::Global::pop()), params.uiState);
+	this->proxy.get()->setProxy(std::move(UIO2::Global::pop()), params.uiState);
 }
 
 template<class T>
@@ -98,9 +99,8 @@ inline UIODropDownList<T>::UIODropDownList(Handle self, std::function<std::strin
 
 	auto [button, text] = UIO2::textButton2("");
 	this->buttonText = text;
-	button = button;
 
-	button->setOnRelease([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	button.get()->setOnRelease([this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		this->spawnPopUpList(params);
 		return BIND::RESULT::CONTINUE;
@@ -132,7 +132,7 @@ inline bool UIODropDownList<T>::select(int32_t index) {
 	}
 	else {
 		this->selected = index;
-		this->buttonText->setText(this->display(this->list[this->selected]));
+		this->buttonText.get()->setText(this->display(this->list[this->selected]));
 		return true;
 	}
 }

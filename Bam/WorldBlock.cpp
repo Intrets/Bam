@@ -8,8 +8,8 @@
 #include "ActivityIgnoringGroup.h"
 
 std::optional<WeakReference<Activity, Activity>> WorldBlock::getActivityMaybe() const {
-	if (this->m.isNotNull()) {
-		return this->m;
+	if (this->m != nullptr) {
+		return this->m->getSelfReference();
 	}
 	else {
 		return std::nullopt;
@@ -17,7 +17,7 @@ std::optional<WeakReference<Activity, Activity>> WorldBlock::getActivityMaybe() 
 }
 
 WeakReference<Activity, Activity> WorldBlock::getActivity() const {
-	return this->m;
+	return this->m->getSelfReference();
 }
 
 ACTIVITY::DIR WorldBlock::getRotation() const {
@@ -32,29 +32,29 @@ void WorldBlock::setBlock(ShapedBlock block) {
 	this->shapedBlock = block;
 }
 
-void WorldBlock::setTrace(WeakReference<Activity, Activity> h) {
+void WorldBlock::setTrace(Activity* h) {
 	this->m = h;
 }
 
 void WorldBlock::removeTrace() {
-	this->m.clear();
+	this->m = nullptr;
 }
 
-void WorldBlock::removeTrace(WeakReference<Activity, Activity> h) {
+void WorldBlock::removeTrace(Activity* h) {
 	if (this->m == h) {
-		this->m.clear();
+		this->m = nullptr;
 	}
 }
 
 bool WorldBlock::load(Loader& loader) {
 	this->shapedBlock.load(loader);
-	loader.retrieve(this->m);
+	loader.retrieveActivityPointer(this->m);
 	return true;
 }
 
 bool WorldBlock::save(Saver& saver) {
 	this->shapedBlock.save(saver);
-	saver.store(this->m);
+	saver.storeActivityPointer(this->m);
 	return true;
 }
 
@@ -70,8 +70,8 @@ WorldBlock::WorldBlock(int32_t blockID, int32_t shapeID) : shapedBlock(blockID, 
 WorldBlock::WorldBlock(int32_t blockID, int32_t shapeID, ACTIVITY::DIR rotation) : shapedBlock(blockID, shapeID, rotation) {
 }
 bool WorldBlock::isOccupied(ActivityIgnoringGroup const& ignore) {
-	if (this->m.isNotNull()) {
-		return !ignore.contains(this->m.getHandle());
+	if (this->m != nullptr) {
+		return !ignore.contains(this->m);
 	}
 	return this->isSolid();
 }
@@ -85,7 +85,7 @@ bool WorldBlock::isSolid() {
 }
 
 bool WorldBlock::isActivity() {
-	return this->m.isNotNull();
+	return this->m != nullptr;
 }
 
 bool WorldBlock::isNonAirBlock() {

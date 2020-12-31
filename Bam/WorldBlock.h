@@ -21,7 +21,8 @@ class WorldBlock
 private:
 	ShapedBlock shapedBlock;
 
-	WeakReference<Activity, Activity> m;
+	//WeakReference<Activity, Activity> m;
+	Activity* m = nullptr;
 
 public:
 	// returns if block is occupied by an activity or a solid block
@@ -39,9 +40,9 @@ public:
 	ShapedBlock const& getShapedBlock() const;
 
 	void setBlock(ShapedBlock block);
-	void setTrace(WeakReference<Activity, Activity> h);
+	void setTrace(Activity* h);
 	void removeTrace();
-	void removeTrace(WeakReference<Activity, Activity> h);
+	void removeTrace(Activity* h);
 
 	WorldBlock(std::string block, std::string shape);
 	WorldBlock(int32_t blockID);

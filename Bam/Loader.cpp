@@ -12,6 +12,30 @@
 #include "InventoryItem.h"
 #include "Inventory.h"
 
+void Loader::addIncompleteActivityRef(Handle handle, Reference* ref) {
+	ref->manager = &this->gameStateRef.activityManager;
+	this->gameStateRef.activityManager.addIncomplete(handle, ref);
+}
+
+void Loader::addIncompleteInventoryRef(Handle handle, Reference* ref) {
+	ref->manager = Locator<ReferenceManager<InventoryItem>>::get();
+	Locator<ReferenceManager<InventoryItem>>::get()->addIncomplete(handle, ref);
+}
+
+bool Loader::retrieveActivityPointer(Activity*& ptr) {
+	int32_t handle;
+	this->retrieve(handle);
+
+	if (handle == 0) {
+		ptr = nullptr;
+	}
+	else {
+		this->gameStateRef.activityManager.addIncomplete(handle, ptr);
+	}
+
+	return true;
+}
+
 sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache) {
 	sol::type type;
 	retrieve(type);
@@ -94,31 +118,27 @@ bool Loader::loadGame() {
 	Locator<ReferenceManager<InventoryItem>>::destroy();
 
 	{
-		auto ref = Locator<ReferenceManager<Activity>>::get();
-
-		while (!ref->data.empty()) {
-			auto& [handle, begin] = *ref->data.begin();
+		while (!gameStateRef.activityManager.data.empty()) {
+			auto& [handle, begin] = *gameStateRef.activityManager.data.begin();
 
 			begin.get()->getRootRef().deleteObject();
 		}
 	}
-	Locator<ReferenceManager<Activity>>::destroy();
 
-
-	Locator<ReferenceManager<Activity>>::provide(new ReferenceManager<Activity>(1024));
+	gameStateRef.activityManager.clear();
 	Locator<ReferenceManager<InventoryItem>>::provide(new ReferenceManager<InventoryItem>(1024));
 	Locator<Inventory>::provide(new Inventory());
 
-	load(*this, Locator<ReferenceManager<Activity>>::ref());
+	load(*this, gameStateRef.activityManager);
 	INVENTORYSERIALIZER::load(*this, Locator<ReferenceManager<InventoryItem>>::ref());
 	Locator<Inventory>::get()->load(*this);
 
 	this->gameStateRef.load(*this);
 
-	Locator<ReferenceManager<Activity>>::ref().completeReferences();
+	gameStateRef.activityManager.completeReferences();
 	Locator<ReferenceManager<InventoryItem>>::ref().completeReferences();
 
-	for (auto& [h, ref] : Locator<ReferenceManager<Activity>>::ref().data) {
+	for (auto& [h, ref] : gameStateRef.activityManager.data) {
 		assert(h == ref.get()->getHandle());
 	}
 

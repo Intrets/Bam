@@ -11,7 +11,7 @@ template<class T>
 class UIOListSelection : public UIOBaseSingle
 {
 private:
-	UIOTextDisplay* textDisplay;
+	WeakReference<UIOBase, UIOTextDisplay> textDisplay;
 
 	std::vector<T> list;
 
@@ -37,12 +37,12 @@ public:
 
 template<class T>
 inline void UIOListSelection<T>::setSelected(int32_t index) {
-	this->textDisplay->setCursor(glm::ivec2(0, index));
+	this->textDisplay.get()->setCursor(glm::ivec2(0, index));
 }
 
 template<class T>
 std::optional<T const*> UIOListSelection<T>::getSelected() {
-	auto selection = this->textDisplay->text.getCursor().y;
+	auto selection = this->textDisplay.get()->text.getCursor().y;
 	if (indexInVector(selection, this->list)) {
 		return &this->list[selection];
 	}
@@ -80,7 +80,7 @@ UIOListSelection<T>::UIOListSelection(Handle self) {
 
 	auto text = UIO2::textDisplayMulti("", false);
 	this->textDisplay = text;
-	UIOBinds::TextEdit::clickSelect(this->textDisplay);
+	UIOBinds::TextEdit::clickSelect(this->textDisplay.get());
 
 	this->addElement(UIO2::Global::pop());
 }
@@ -93,7 +93,7 @@ UIOListSelection<T>::UIOListSelection(Handle self, std::function<std::string(T c
 
 template<class T>
 ScreenRectangle UIOListSelection<T>::updateSize(ScreenRectangle newScreenRectangle) {
-	this->textDisplay->updateSize(newScreenRectangle);
+	this->textDisplay.get()->updateSize(newScreenRectangle);
 	this->screenRectangle = newScreenRectangle;
 	return this->screenRectangle;
 }
@@ -101,16 +101,16 @@ ScreenRectangle UIOListSelection<T>::updateSize(ScreenRectangle newScreenRectang
 template<class T>
 inline int32_t UIOListSelection<T>::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
 	if (!this->validView) {
-		this->textDisplay->text.empty();
+		this->textDisplay.get()->text.empty();
 		for (const auto& e : this->list) {
-			this->textDisplay->text.addLine(this->display(e));
+			this->textDisplay.get()->text.addLine(this->display(e));
 		}
 		this->validView = true;
 	}
 
 	depth = UIOBaseSingle::addRenderInfo(gameState, renderInfo, depth);
 
-	if (auto const& maybeCursorQuad = this->textDisplay->text.getCursorQuadScreen()) {
+	if (auto const& maybeCursorQuad = this->textDisplay.get()->text.getCursorQuadScreen()) {
 		auto const& cursorQuad = maybeCursorQuad.value();
 
 		float a = glm::max(this->screenRectangle.getBot(), cursorQuad.getBot());

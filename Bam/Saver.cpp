@@ -9,6 +9,7 @@
 #include "InventoryItem.h"
 #include "InventorySerializerHelper.h"
 #include "Inventory.h"
+#include "Activity.h"
 
 bool Saver::storeString(std::string s) {
 	size_t ss = s.size();
@@ -17,10 +18,19 @@ bool Saver::storeString(std::string s) {
 	return false;
 }
 
+bool Saver::storeActivityPointer(Activity* ptr) {
+	if (ptr == nullptr) {
+		this->store<int32_t>(0);
+	}
+	else {
+		this->store(ptr->selfHandle);
+	}
+	return true;
+}
+
 bool Saver::saveGame() {
 	{
-		auto manager = Locator<ReferenceManager<Activity>>::get();
-		save(*this, *manager);
+		save(*this, gameStateRef.activityManager);
 	}
 
 	{

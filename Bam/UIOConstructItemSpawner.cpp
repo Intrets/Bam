@@ -33,7 +33,7 @@ UIOList* UIO2::constructItemSpawner() {
 
 	for (auto type : activities) {
 		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-		UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type))->setOnRelease(
+		UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type)).get()->setOnRelease(
 			[type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
 			if (auto maybeItem = ACTIVITYSPAWNER::spawn(params.gameState, { 0,0 }, type)) {
@@ -61,7 +61,7 @@ UIOList* UIO2::constructItemSpawner() {
 	{
 		return e.getName();
 	});
-	blockSelection->setList(blocksList);
+	blockSelection.get()->setList(blocksList);
 
 	auto shapesList = DataFront<ShapeData>::listAll();
 
@@ -71,12 +71,12 @@ UIOList* UIO2::constructItemSpawner() {
 	{
 		return e.getName();
 	});
-	shapeSelection->setList(shapesList);
+	shapeSelection.get()->setList(shapesList);
 
 	UIO2::endGrid();
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-	UIO2::textButton("Spawn Block")->setOnRelease([shapeSelection, blockSelection](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	UIO2::textButton("Spawn Block").get()->setOnRelease([shapeSelection = shapeSelection.get(), blockSelection = blockSelection.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		auto block = blockSelection->getSelected();
 		auto shape = shapeSelection->getSelected();

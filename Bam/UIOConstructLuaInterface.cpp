@@ -12,7 +12,7 @@
 #include "UIOTextDisplay.h"
 #include "UIOButton.h"
 
-UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
+WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	auto list = UIO2::startList(UIO::DIR::DOWN_REVERSE);
 
 	auto uioLua = UIO2::makeEnd<UIOLua>(ref);
@@ -28,7 +28,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	UIO2::startGrid(3, 1);
 
 	std::vector<std::string> w = { "" };
-	if (auto watched = uioLua->getWatched().getRef()) {
+	if (auto watched = uioLua.get()->getWatched().getRef()) {
 		w = watched.get()->getWatchedVars();
 		if (w.empty()) {
 			w = { "" };
@@ -85,7 +85,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	// Binds
 	// -----
 
-	watchText->addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	watchText.get()->addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
@@ -101,7 +101,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::CONTINUE;
 	});
 
-	displayWatchText->addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLua, watchText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	displayWatchText.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
@@ -147,7 +147,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::CONTINUE;
 	});
 
-	pushButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	pushButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->setScript(join(luaText->text.getLines()), params.gameState);
@@ -155,7 +155,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	pullButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	pullButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			luaText->text.getLinesMutable().clear();
@@ -165,7 +165,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	runButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	runButton.get()->setOnRelease([uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->start();
@@ -174,7 +174,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	interruptButton->setOnRelease([luaText, uioLua](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	interruptButton.get()->setOnRelease([uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->stop();
@@ -183,7 +183,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	});
 
 
-	loadButton->setOnRelease([saveFileName, luaText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	loadButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		std::string name = saveFileName->text.getLines().front();
 		name.resize(name.size() - 1);
@@ -200,7 +200,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	saveButton->setOnRelease([saveFileName, luaText](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	saveButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 	{
 		std::string name = saveFileName->text.getLines().front();
 		name.resize(name.size() - 1);
@@ -218,7 +218,7 @@ UIOList* UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	uioLua->getWatched().getRef().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(outputText)](std::string text)
+	uioLua.get()->getWatched().getRef().get()->setPrintFunction([display = ManagedReference<UIOBase, UIOTextDisplay>(outputText)](std::string text)
 	{
 		if (auto ref = display.getRef()) {
 			std::vector<std::string> lines;

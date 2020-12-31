@@ -6,12 +6,12 @@ class Activity;
 class ActivityIgnoringGroup
 {
 private:
-	std::vector<Handle> const& sortedHandles;
+	std::vector<Activity*> const& sortedHandles;
 
 public:
-	bool contains(Handle h) const;
+	bool contains(Activity* h) const;
 
-	ActivityIgnoringGroup(std::vector<Handle> const& handles);
+	ActivityIgnoringGroup(std::vector<Activity*> const& handles);
 	ActivityIgnoringGroup() = delete;
 	~ActivityIgnoringGroup();
 };

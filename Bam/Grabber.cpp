@@ -77,7 +77,7 @@ void Grabber::applyActivityLocalForced(GameState& gameState, int32_t type, int32
 		auto& b = gameState.staticWorld.getBlockRef(this->getGrabbedPos());
 		this->block = b.getShapedBlock();
 		b.setBlock(ShapedBlock());
-		b.setTrace(this->getHandle());
+		b.setTrace(this);
 	}
 }
 
@@ -89,9 +89,9 @@ void Grabber::removeTracesLocalForced(GameState& gameState) {
 }
 
 void Grabber::fillTracesLocalForced(GameState& gameState) {
-	gameState.staticWorld.leaveTrace(this->getOrigin(), this->getHandle());
+	gameState.staticWorld.leaveTrace(this->getOrigin(), this);
 	if (this->block.has_value()) {
-		gameState.staticWorld.leaveTrace(this->getGrabbedPos(), this->getHandle());
+		gameState.staticWorld.leaveTrace(this->getGrabbedPos(), this);
 	}
 }
 
@@ -166,21 +166,21 @@ void Grabber::preMoveableStopLocal(GameState& gameState) {
 
 		switch (d) {
 			case -1:
-				gameState.staticWorld.removeTraceFilter(this->getOrigin() + moveDir, this->getHandle());
+				gameState.staticWorld.removeTraceFilter(this->getOrigin() + moveDir, this);
 				break;
 			case 0:
-				gameState.staticWorld.removeTraceFilter(this->getOrigin() + moveDir, this->getHandle());
-				gameState.staticWorld.removeTraceFilter(this->getGrabbedPos() + moveDir, this->getHandle());
+				gameState.staticWorld.removeTraceFilter(this->getOrigin() + moveDir, this);
+				gameState.staticWorld.removeTraceFilter(this->getGrabbedPos() + moveDir, this);
 				break;
 			case 1:
-				gameState.staticWorld.removeTraceFilter(this->getGrabbedPos() + moveDir, this->getHandle());
+				gameState.staticWorld.removeTraceFilter(this->getGrabbedPos() + moveDir, this);
 				break;
 			default:
 				break;
 		}
 	}
 	else {
-		gameState.staticWorld.removeTraceFilter(this->getOrigin() + ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection)), this->getHandle());
+		gameState.staticWorld.removeTraceFilter(this->getOrigin() + ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection)), this);
 	}
 }
 
@@ -193,21 +193,21 @@ void Grabber::postMoveableStartLocal(GameState& gameState) {
 
 		switch (d) {
 			case -1:
-				gameState.staticWorld.leaveTrace(this->getOrigin() + moveDir, this->getHandle());
+				gameState.staticWorld.leaveTrace(this->getOrigin() + moveDir, this);
 				break;
 			case 0:
-				gameState.staticWorld.leaveTrace(this->getOrigin() + moveDir, this->getHandle());
-				gameState.staticWorld.leaveTrace(this->getGrabbedPos() + moveDir, this->getHandle());
+				gameState.staticWorld.leaveTrace(this->getOrigin() + moveDir, this);
+				gameState.staticWorld.leaveTrace(this->getGrabbedPos() + moveDir, this);
 				break;
 			case 1:
-				gameState.staticWorld.leaveTrace(this->getGrabbedPos() + moveDir, this->getHandle());
+				gameState.staticWorld.leaveTrace(this->getGrabbedPos() + moveDir, this);
 				break;
 			default:
 				break;
 		}
 	}
 	else {
-		gameState.staticWorld.leaveTrace(this->getOrigin() + ACTIVITY::GETDIRECTION(this->movementDirection), this->getHandle());
+		gameState.staticWorld.leaveTrace(this->getOrigin() + ACTIVITY::GETDIRECTION(this->movementDirection), this);
 	}
 }
 

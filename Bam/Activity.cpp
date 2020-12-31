@@ -13,7 +13,7 @@ void Activity::applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int
 	this->moving = true;
 	this->movementDirection = dir;
 	this->movingTickStart = gameState.tick;
-	gameState.movementPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
+	gameState.movementPaceHandler.add(this->getSelfReference(), pace);
 	this->postMoveableStartLocal(gameState);
 }
 
@@ -37,6 +37,10 @@ bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir, ActivityIgnori
 		}
 	}
 	return true;
+}
+
+WeakReference<Activity, Activity> Activity::getSelfReference() {
+	return this->selfReference;
 }
 
 glm::vec2 Activity::getMovingOrigin(GameState const& gameState) const {
@@ -131,7 +135,7 @@ void Activity::disconnectFromParent() {
 		if (this->parentRef.get()->getType() == ACTIVITY::TYPE::ANCHOR) {
 			auto anchor = this->parentRef.get();
 
-			if (auto removed = anchor->removeChild(this->selfHandle)) {
+			if (auto removed = anchor->removeChild(this->getSelfReference())) {
 				removed.value().clear();
 
 				if (!anchor->hasChild()) {
@@ -144,7 +148,7 @@ void Activity::disconnectFromParent() {
 			}
 		}
 		else {
-			if (auto removed = this->parentRef.get()->removeChild(this->getHandle())) {
+			if (auto removed = this->parentRef.get()->removeChild(this->getSelfReference())) {
 				removed.value().clear();
 			}
 			else {
@@ -161,7 +165,7 @@ void Activity::applyActivityLocalForced(GameState& gameState, int32_t type, int3
 	this->active = true;
 	this->activityTickStart = gameState.tick;
 	this->activityType = type;
-	gameState.activityPaceHandler.add(WeakReference<Activity, Activity>(this->selfHandle), pace);
+	gameState.activityPaceHandler.add(this->getSelfReference(), pace);
 }
 
 bool Activity::applyActivityLocal(GameState& gameState, int32_t useType) {
@@ -214,7 +218,7 @@ void Activity::stopMovement(GameState& gameState) {
 	this->moving = false;
 }
 
-std::vector<Handle> const& Activity::getSortedHandles() {
+std::vector<Activity*> const& Activity::getSortedHandles() {
 	return this->memberCache.getSortedHandles();
 }
 
@@ -223,7 +227,7 @@ std::vector<Activity*> const& Activity::getTreeMembers() {
 }
 
 WeakReference<Activity, Activity> Activity::getRootRef() {
-	return WeakReference<Activity, Activity>(this->memberCache.getRoot());
+	return this->memberCache.getRoot()->getSelfReference();
 }
 
 Handle Activity::getRootHandle() {
@@ -234,12 +238,12 @@ Activity* Activity::getRootPtr() {
 	return this->memberCache.getRoot();
 }
 
-Handle Activity::impl_getRootHandle() const {
+Activity* Activity::impl_getRootHandle() {
 	if (this->parentRef.isNotNull()) {
 		return this->parentRef.get()->impl_getRootHandle();
 	}
 	else {
-		return this->selfHandle;
+		return this;
 	}
 }
 
@@ -251,6 +255,7 @@ void Activity::save(Saver& saver) {
 	saver.store(this->getType());
 	saver.store(this->parentRef);
 	saver.store(this->selfHandle);
+	saver.store(this->selfReference);
 	saver.store(this->activityPace);
 	saver.store(this->activityTickStart);
 	saver.store(this->activityType);
@@ -269,6 +274,7 @@ void Activity::save(Saver& saver) {
 bool Activity::load(Loader& loader) {
 	loader.retrieve(this->parentRef);
 	loader.retrieve(this->selfHandle);
+	loader.retrieve(this->selfReference);
 	loader.retrieve(this->activityPace);
 	loader.retrieve(this->activityTickStart);
 	loader.retrieve(this->activityType);

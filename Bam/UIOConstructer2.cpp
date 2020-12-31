@@ -72,6 +72,10 @@ void UIO2::ConstructerState::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
 	}
 }
 
+ReferenceManager<UIOBase>& UIO2::ConstructerState::getManager() {
+	return Locator<ReferenceManager<UIOBase>>::ref();
+}
+
 UIO2::ConstructerState* UIO2::Global::getState() {
 	return UIO2::Global::states.back().get();
 }
@@ -103,48 +107,49 @@ UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
 	return res;
 }
 
-UIOTextDisplay* UIO2::text(std::string const& t, bool shrinkToFit) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
-	auto ptr = ref.get();
-	ptr->setText(t);
-	ptr->text.hideCursor();
-	ptr->setShrinkToFit(shrinkToFit);
+WeakReference<UIOBase, UIOTextDisplay> UIO2::text(std::string const& t, bool shrinkToFit) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>();
+	auto res = ref.as<UIOTextDisplay>();
+
+	ref.get()->setText(t);
+	ref.get()->text.hideCursor();
+	ref.get()->setShrinkToFit(shrinkToFit);
 
 	UIO2::Global::getState()->addEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOConstrainSize* UIO2::constrainHeight(UIOSizeType height) {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::constrainHeight(UIOSizeType height) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
-	ptr->setHeight(height);
+	ptr.get()->setHeight(height);
 	return ptr;
 }
 
-UIOConstrainSize* UIO2::constrainWidth(UIOSizeType width) {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::constrainWidth(UIOSizeType width) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
-	ptr->setWidth(width);
+	ptr.get()->setWidth(width);
 	return ptr;
 }
 
-UIOConstrainSize* UIO2::constrainSize(UIOSizeType size) {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::constrainSize(UIOSizeType size) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
-	ptr->setWidth(size);
-	ptr->setHeight(size);
+	ptr.get()->setWidth(size);
+	ptr.get()->setHeight(size);
 	return ptr;
 }
 
-UIOButton* UIO2::button(bool shrinkToFit) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOButton>();
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIOButton> UIO2::button(bool shrinkToFit) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOButton>();
+	auto res = ref.as<UIOButton>();
 
-	ptr->setShrinkToFit(shrinkToFit);
+	ref.get()->setShrinkToFit(shrinkToFit);
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
-	return ptr;
+	return res;
 }
 
-UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types) {
+WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectangle size, int32_t types) {
 	const int32_t resizeSliverSize = 7;
 
 	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
@@ -172,10 +177,10 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 
 	UIO2::free();
 	auto windowPtr = UIO2::makeEnd<UIOWindow>();
-	windowPtr->addElement(std::move(mainPad));
-	UIOBinds::Base::focusable(windowPtr);
-	UIOBinds::Base::blockWorldBinds(windowPtr);
-	windowPtr->screenRectangle.set(size);
+	windowPtr.get()->addElement(std::move(mainPad));
+	UIOBinds::Base::focusable(windowPtr.get());
+	UIOBinds::Base::blockWorldBinds(windowPtr.get());
+	windowPtr.get()->screenRectangle.set(size);
 
 	UniqueReference<UIOBase, UIOBase> windowRef = UIO2::Global::pop();
 
@@ -188,8 +193,8 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	UIO2::alignTop();
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 	auto topBar = UIO2::startList(UIO::DIR::RIGHT_REVERSE);
-	UIOBinds::Base::focusable(topBar);
-	UIOBinds::Base::blockWorldBinds(topBar);
+	UIOBinds::Base::focusable(topBar.get());
+	UIOBinds::Base::blockWorldBinds(topBar.get());
 
 	// ----------------------
 	// Top Bar Elements setup
@@ -203,9 +208,9 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 
 	if (types & UIOWindow::TYPE::MOVE) {
 		auto button = UIO2::textButton(title);
-		button->addFocussedBind(
+		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -219,7 +224,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		UIO2::textDisplaySingle(title);
 	}
 
-	topBar->addElement(UIO2::Global::pop());
+	topBar.get()->addElement(UIO2::Global::pop());
 
 	// --------
 	// Minimise
@@ -230,13 +235,13 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 
 		UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
 		auto button = UIO2::textButton(" _");
-		button->setOnRelease([windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		button.get()->setOnRelease([windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 		{
 			windowPtr->minimized = !windowPtr->minimized;
 			return BIND::RESULT::CONTINUE;
 		});
 
-		topBar->addElement(UIO2::Global::pop());
+		topBar.get()->addElement(UIO2::Global::pop());
 	}
 
 	// ----------
@@ -250,19 +255,19 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		auto button = UIO2::textButton(" x");
 
 		if (types & UIOWindow::TYPE::CLOSE) {
-			UIOBinds::Button::close(button);
+			UIOBinds::Button::close(button.get());
 		}
 		else if (types & UIOWindow::TYPE::HIDE) {
-			UIOBinds::Button::hide(button);
+			UIOBinds::Button::hide(button.get());
 
 		}
 
-		topBar->addElement(UIO2::Global::pop());
+		topBar.get()->addElement(UIO2::Global::pop());
 	}
 
 	UIO2::endList();
-	windowPtr->addElementMulti(UIO2::Global::pop());
-	windowPtr->topBar = topBar;
+	windowPtr.get()->addElementMulti(UIO2::Global::pop());
+	windowPtr.get()->topBar = topBar;
 
 	// --------------------
 	// Resize Buttons setup
@@ -279,9 +284,9 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		auto button = UIO2::button();
 		UIO2::makeEnd<UIOEmpty>();
 
-		button->addFocussedBind(
+		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -298,7 +303,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 			return BIND::RESULT::CONTINUE;
 		});
 
-		windowPtr->addElementMulti(UIO2::Global::pop());
+		windowPtr.get()->addElementMulti(UIO2::Global::pop());
 	}
 
 	if (types & UIOWindow::TYPE::RESIZEHORIZONTAL) {
@@ -312,9 +317,9 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		auto button = UIO2::button();
 		UIO2::makeEnd<UIOEmpty>();
 
-		button->addFocussedBind(
+		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -331,7 +336,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 			return BIND::RESULT::CONTINUE;
 		});
 
-		windowPtr->addElementMulti(UIO2::Global::pop());
+		windowPtr.get()->addElementMulti(UIO2::Global::pop());
 	}
 
 	if (types & UIOWindow::TYPE::RESIZE) {
@@ -343,9 +348,9 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 		auto button = UIO2::button();
 		UIO2::makeEnd<UIOEmpty>();
 
-		button->addFocussedBind(
+		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
@@ -364,7 +369,7 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 			return BIND::RESULT::CONTINUE;
 		});
 
-		windowPtr->addElementMulti(UIO2::Global::pop());
+		windowPtr.get()->addElementMulti(UIO2::Global::pop());
 	}
 
 	UIO2::Global::getState()->addSingle(std::move(windowRef), leaf);
@@ -372,133 +377,133 @@ UIOWindow* UIO2::window(std::string const& title, Rectangle size, int32_t types)
 	return windowPtr;
 }
 
-UIOHideable* UIO2::hideable() {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOHideable>();
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIOHideable> UIO2::hideable() {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOHideable>();
+	auto res = ref.as<UIOHideable>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOColoredBackground* UIO2::background(glm::vec4 color) {
+WeakReference<UIOBase, UIOColoredBackground> UIO2::background(glm::vec4 color) {
 	auto ptr = UIO2::Global::getState()->addSingle<UIOColoredBackground>();
-	ptr->color = color;
+	ptr.get()->color = color;
 	return ptr;
 }
 
-UIOConstrainSize* UIO2::align(UIO::ALIGNMENT alignment) {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::align(UIO::ALIGNMENT alignment) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOConstrainSize>();
-	ptr->setAlignment(alignment);
+	ptr.get()->setAlignment(alignment);
 	return ptr;
 }
 
-UIOConstrainSize* UIO2::alignCenter() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignCenter() {
 	return UIO2::align(UIO::ALIGNMENT::CENTER);
 }
 
-UIOConstrainSize* UIO2::alignTop() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignTop() {
 	return UIO2::align(UIO::ALIGNMENT::TOP);
 }
 
-UIOConstrainSize* UIO2::alignBottom() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignBottom() {
 	return UIO2::align(UIO::ALIGNMENT::BOTTOM);
 }
 
-UIOConstrainSize* UIO2::alignLeft() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignLeft() {
 	return UIO2::align(UIO::ALIGNMENT::LEFT);
 }
 
-UIOConstrainSize* UIO2::alignRight() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignRight() {
 	return UIO2::align(UIO::ALIGNMENT::RIGHT);
 }
 
-UIOConstrainSize* UIO2::alignBottomLeft() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignBottomLeft() {
 	return UIO2::align(UIO::ALIGNMENT::BOTTOMLEFT);
 }
 
-UIOConstrainSize* UIO2::alignBottomRight() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignBottomRight() {
 	return UIO2::align(UIO::ALIGNMENT::BOTTOMRIGHT);
 }
 
-UIOConstrainSize* UIO2::alignTopLeft() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignTopLeft() {
 	return UIO2::align(UIO::ALIGNMENT::TOPLEFT);
 }
 
-UIOConstrainSize* UIO2::alignTopRight() {
+WeakReference<UIOBase, UIOConstrainSize> UIO2::alignTopRight() {
 	return UIO2::align(UIO::ALIGNMENT::TOPRIGHT);
 }
 
-UIOFreeSize* UIO2::free() {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOFreeSize>();
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIOFreeSize> UIO2::free() {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOFreeSize>();
+	auto res = ref.as<UIOFreeSize>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIODestructible* UIO2::destructible() {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIODestructible>();
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIODestructible> UIO2::destructible() {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIODestructible>();
+	auto res = ref.as<UIODestructible>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOPad* UIO2::pad(UIOSizeType padding) {
+WeakReference<UIOBase, UIOPad> UIO2::pad(UIOSizeType padding) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
-	ptr->left = padding;
-	ptr->right = padding;
-	ptr->top = padding;
-	ptr->bottom = padding;
+	ptr.get()->left = padding;
+	ptr.get()->right = padding;
+	ptr.get()->top = padding;
+	ptr.get()->bottom = padding;
 	return ptr;
 }
 
-UIOPad* UIO2::padTop(UIOSizeType padding) {
+WeakReference<UIOBase, UIOPad> UIO2::padTop(UIOSizeType padding) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
-	ptr->top = padding;
+	ptr.get()->top = padding;
 	return ptr;
 }
 
-UIOPad* UIO2::padBot(UIOSizeType padding) {
+WeakReference<UIOBase, UIOPad> UIO2::padBot(UIOSizeType padding) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
-	ptr->bottom = padding;
+	ptr.get()->bottom = padding;
 	return ptr;
 }
 
-UIOPad* UIO2::padLeft(UIOSizeType padding) {
+WeakReference<UIOBase, UIOPad> UIO2::padLeft(UIOSizeType padding) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
-	ptr->left = padding;
+	ptr.get()->left = padding;
 	return ptr;
 }
 
-UIOPad* UIO2::padRight(UIOSizeType padding) {
+WeakReference<UIOBase, UIOPad> UIO2::padRight(UIOSizeType padding) {
 	auto ptr = UIO2::Global::getState()->addOrModifySingle<UIOPad>();
-	ptr->right = padding;
+	ptr.get()->right = padding;
 	return ptr;
 }
 
-UIOList* UIO2::startList(UIO::DIR dir) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOList>(dir);
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIOList> UIO2::startList(UIO::DIR dir) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOList>(dir);
+	auto res = ref.as<UIOList>();
 
 	UIO2::Global::getState()->addMulti(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOGrid* UIO2::startGrid(int32_t x, int32_t y) {
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
-	auto ptr = ref.get();
+WeakReference<UIOBase, UIOGrid> UIO2::startGrid(int32_t x, int32_t y) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
+	auto res = ref.as<UIOGrid>();
 
 	UIO2::Global::getState()->addMulti(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOList* UIO2::menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f) {
+WeakReference<UIOBase, UIOList> UIO2::menu(std::string const& text, std::optional<UIOSizeType> width, std::function<void()> f) {
 	auto list = UIO2::startList(UIO::DIR::RIGHT);
 
 	auto button = UIO2::textButton(text);
@@ -513,7 +518,7 @@ UIOList* UIO2::menu(std::string const& text, std::optional<UIOSizeType> width, s
 
 	UIO2::endList();
 
-	button->setOnPress([proxy, f](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	button.get()->setOnPress([proxy = proxy.get(), f](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		UIO2::Global::push();
 
@@ -532,11 +537,11 @@ UIOList* UIO2::menu(std::string const& text, std::optional<UIOSizeType> width, s
 	return list;
 }
 
-UIOButton* UIO2::textButton(std::string const& text) {
+WeakReference<UIOBase, UIOButton> UIO2::textButton(std::string const& text) {
 	return UIO2::textButton2(text).first;
 }
 
-std::pair<UIOButton*, UIOTextDisplay*> UIO2::textButton2(std::string const& text_) {
+std::pair<WeakReference<UIOBase, UIOButton>, WeakReference<UIOBase, UIOTextDisplay>> UIO2::textButton2(std::string const& text_) {
 	UIO2::pad({ UIO::SIZETYPE::PX, 1 });
 	auto button = UIO2::button();
 	UIO2::alignCenter();
@@ -545,9 +550,11 @@ std::pair<UIOButton*, UIOTextDisplay*> UIO2::textButton2(std::string const& text
 	return { button, text };
 }
 
-UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>();
-	auto ptr = res.get();
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditSingle(std::string const& text) {
+	auto res = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>();
+	auto ref = res.as<UIOTextDisplay>();
+	auto ptr = ref.get();
+
 	ptr->text.addLine(text);
 
 	ptr->mode = UIOTEXTDISPLAY::MODE::INSERT;
@@ -565,12 +572,13 @@ UIOTextDisplay* UIO2::textEditSingle(std::string const& text) {
 	UIOBinds::TextEdit::tab(ptr);
 
 	UIO2::makeEnd(std::move(res));
-	return ptr;
+	return ref;
 }
 
-UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text, bool lineWrap) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(lineWrap);
-	auto ptr = res.get();
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditMulti(std::vector<std::string> const& text, bool lineWrap) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
+	auto res = ref.as<UIOTextDisplay>();
+	auto ptr = ref.get();
 
 	ptr->text.empty();
 	for (auto& line : text) {
@@ -599,43 +607,47 @@ UIOTextDisplay* UIO2::textEditMulti(std::vector<std::string> const& text, bool l
 	UIOBinds::TextEdit::viewDown(ptr);
 	UIOBinds::TextEdit::viewUp(ptr);
 
-	UIO2::makeEnd(std::move(res));
+	UIO2::makeEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOTextDisplay* UIO2::textEditMulti(std::string const& text, bool lineWrap) {
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditMulti(std::string const& text, bool lineWrap) {
 	std::vector<std::string> lines;
 	split(0, text, lines, '\n', true);
 	return UIO2::textEditMulti(lines, lineWrap);
 }
 
-UIOTextDisplay* UIO2::textDisplaySingle(std::string const& text, bool shrinkToFit) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(true);
-	auto ptr = res.get();
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplaySingle(std::string const& text, bool shrinkToFit) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(true);
+	auto res = ref.as<UIOTextDisplay>();
+
+	auto ptr = ref.get();
 	ptr->text.setString(text);
 	ptr->text.hideCursor();
 	ptr->setShrinkToFit(shrinkToFit);
 
-	UIO2::makeEnd(std::move(res));
+	UIO2::makeEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOTextDisplay* UIO2::textDisplayMulti(std::vector<std::string> const& text, bool lineWrap) {
-	auto res = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOTextDisplay>(lineWrap);
-	auto ptr = res.get();
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplayMulti(std::vector<std::string> const& text, bool lineWrap) {
+	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
+	auto res = ref.as<UIOTextDisplay>();
+
+	auto ptr = ref.get();
 	ptr->text.setLines(text);
 
 	UIOBinds::TextEdit::viewDown(ptr);
 	UIOBinds::TextEdit::viewUp(ptr);
 
-	UIO2::makeEnd(std::move(res));
+	UIO2::makeEnd(std::move(ref));
 
-	return ptr;
+	return res;
 }
 
-UIOTextDisplay* UIO2::textDisplayMulti(std::string const& text, bool lineWrap) {
+WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplayMulti(std::string const& text, bool lineWrap) {
 	std::vector<std::string> temp{ text };
 	return UIO2::textDisplayMulti(temp, lineWrap);
 }

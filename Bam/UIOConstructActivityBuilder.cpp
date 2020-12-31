@@ -104,9 +104,9 @@ bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 			return e.getBlock().name;
 		});
 
-		selections.push_back(list);
+		selections.push_back(list.get());
 
-		list->setList([type = type](UIOCallBackParams& params)
+		list.get()->setList([type = type](UIOCallBackParams& params)
 		{
 			std::vector<ShapedBlock> items;
 
@@ -126,7 +126,7 @@ bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 
 	auto button = UIO2::textButton("Spawn Activity");
 
-	button->setOnRelease([shapes, selections, activityType](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	button.get()->setOnRelease([shapes, selections = std::move(selections), activityType](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
 		if (!params.player.getInventory().hasSpace()) {
 			Locator<Log>::ref().putLine("No space in inventory");

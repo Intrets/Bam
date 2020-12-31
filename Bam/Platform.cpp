@@ -170,13 +170,13 @@ bool Platform::canMoveLocal(GameState& gameState, ACTIVITY::DIR dir, ActivityIgn
 
 void Platform::preMoveableStopLocal(GameState& gameState) {
 	for (auto& dir : this->blockedDirections[ACTIVITY::FLIP(movementDirection)]) {
-		gameState.staticWorld.removeTraceFilter(origin + dir, selfHandle);
+		gameState.staticWorld.removeTraceFilter(origin + dir, this);
 	}
 }
 
 void Platform::postMoveableStartLocal(GameState& gameState) {
 	for (auto& dir : this->blockedDirections[movementDirection]) {
-		gameState.staticWorld.leaveTrace(origin + dir, selfHandle);
+		gameState.staticWorld.leaveTrace(origin + dir, this);
 	}
 }
 
@@ -228,7 +228,7 @@ void Platform::fillTracesLocalForced(GameState& gameState) {
 	for (int32_t i = 0; i < this->size.x; i++) {
 		for (int32_t j = 0; j < this->size.y; j++) {
 			auto p = origin + glm::ivec2(i, j);
-			gameState.staticWorld.leaveTrace(p, selfHandle);
+			gameState.staticWorld.leaveTrace(p, this);
 		}
 	}
 }

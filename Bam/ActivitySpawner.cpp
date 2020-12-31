@@ -10,6 +10,7 @@
 #include "Detector.h"
 #include "Incinerator.h"
 #include "Forwarder.h"
+#include "GameState.h"
 
 const char* initialLuaScript =
 R"rawstring(
@@ -94,39 +95,39 @@ std::optional<UniqueReference<Activity, Activity>> ACTIVITYSPAWNER::spawn(GameSt
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::piston(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Piston>(pos, ACTIVITY::DIR::DOWN);
+	return gameState.activityManager.makeUniqueRef<Piston>(pos, ACTIVITY::DIR::DOWN);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::railcrane(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<RailCrane>(gameState, pos);
+	return gameState.activityManager.makeUniqueRef<RailCrane>(gameState, pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::platform(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos);
+	return gameState.activityManager.makeUniqueRef<Platform>(gameState, glm::ivec2(6, 5), pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::lua(GameState& gameState, glm::ivec2 pos) {
-	auto ref = Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<LuaActivity>(gameState, pos);
+	auto ref = gameState.activityManager.makeUniqueRef<LuaActivity>(gameState, pos);
 	ref.get()->setScript(initialLuaScript, gameState);
 	return std::move(ref);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::grabber(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Grabber>(pos);
+	return gameState.activityManager.makeUniqueRef<Grabber>(pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::reader(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Reader>(pos);
+	return gameState.activityManager.makeUniqueRef<Reader>(pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::detector(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Detector>(pos);
+	return gameState.activityManager.makeUniqueRef<Detector>(pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::incinerator(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Incinerator>(pos);
+	return gameState.activityManager.makeUniqueRef<Incinerator>(pos);
 }
 
 UniqueReference<Activity, Activity> ACTIVITYSPAWNER::forwarder(GameState& gameState, glm::ivec2 pos) {
-	return Locator<ReferenceManager<Activity>>::get()->makeUniqueRef<Forwarder>(pos);
+	return gameState.activityManager.makeUniqueRef<Forwarder>(pos);
 }

@@ -18,7 +18,7 @@ bool Anchor::addChild(UniqueReference<Activity, Activity> ref) {
 	if (ref == this) {
 		return false;
 	}
-	ref.get()->parentRef = this;
+	ref.get()->parentRef = WeakReference<Activity, GrouperBase>(*ref.getManager(), this);
 	this->children.push_back(std::move(ref));
 	return true;
 }

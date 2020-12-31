@@ -8,6 +8,8 @@
 #include "Enums.h"
 #include "Block.h"
 
+#include <type_traits>
+
 class ActivityIgnoringGroup;
 class GrouperBase;
 class Loader;
@@ -17,12 +19,18 @@ struct StaticWorldRenderInfo;
 struct RenderInfo;
 
 class Anchor;
+class Activity;
+
+template<>
+struct HasSelfReference<Activity> : std::true_type
+{
+};
 
 class Activity
 {
 private:
 	// non-cached base implementation
-	Handle impl_getRootHandle() const;
+	Activity* impl_getRootHandle();
 
 	friend class MemberCache;
 
@@ -56,6 +64,9 @@ public:
 
 	// Get's set by non default constructor, and should be set after default constructor
 	Handle selfHandle = -1;
+	WeakReference<Activity, Activity> selfReference;
+
+	WeakReference<Activity, Activity> getSelfReference();
 
 	glm::vec2 getMovingOrigin(GameState const& gameState) const;
 
@@ -148,7 +159,7 @@ public:
 	virtual void impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
 
 	// cached through MemberCache member object
-	std::vector<Handle> const& getSortedHandles();
+	std::vector<Activity*> const& getSortedHandles();
 	// cached through MemberCache member object
 	std::vector<Activity*> const& getTreeMembers();
 	// cached through MemberCache member object

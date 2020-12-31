@@ -4,6 +4,8 @@
 
 #include "ActivityPaceHandler.h"
 #include "Random.h"
+#include "ReferenceManager.h"
+#include "Activity.h"
 
 class Saver;
 class Loader;
@@ -26,6 +28,8 @@ public:
 	MovementPaceHandler movementPaceHandler;
 
 	SmallRandom smallRandom;
+
+	ReferenceManager<Activity> activityManager;
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);

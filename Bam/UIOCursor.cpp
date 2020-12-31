@@ -108,7 +108,7 @@ void UIOCursor::setCursorWorldPosition(glm::vec2 p) {
 }
 
 void UIOCursor::setCursorScreenPosition(glm::vec2 p) {
-	this->hoveringElement->translate(p - this->hoveringElement->getScreenRectangle().getBottomLeft());
+	this->hoveringElement.get()->translate(p - this->hoveringElement.get()->getScreenRectangle().getBottomLeft());
 }
 
 void UIOCursor::clickWorld(UIOCallBackParams& params) {
@@ -117,7 +117,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 
 	auto [placed, maybeActivity] = this->getInventory().clickWorld(gameState, glm::floor(pos));
 	if (maybeActivity.has_value()) {
-		WeakReference<Activity, Activity> activity{ maybeActivity.value() };
+		auto activity = maybeActivity.value()->getSelfReference();
 
 		if (auto linkTarget = this->target.getRef()) {
 			if (!sameGroup(linkTarget, activity)) {
@@ -200,8 +200,8 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 			this->renderInWorld = false;
 			cursorItem.value().get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
 		}
-		this->hoveringText->setText(cursorItem.value().get()->getName());
-		this->hoveringElement->addRenderInfo(gameState, renderInfo, 0);
+		this->hoveringText.get()->setText(cursorItem.value().get()->getName());
+		this->hoveringElement.get()->addRenderInfo(gameState, renderInfo, 0);
 	}
 
 	if (auto targetRef = this->target.getRef()) {
@@ -221,6 +221,6 @@ int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 }
 
 ScreenRectangle UIOCursor::updateSize(ScreenRectangle newScreenRectangle) {
-	this->hoveringFreeElement->updateSize(newScreenRectangle);
+	this->hoveringFreeElement.get()->updateSize(newScreenRectangle);
 	return newScreenRectangle;
 }

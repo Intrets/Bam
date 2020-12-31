@@ -1,6 +1,7 @@
 #pragma once
 
 class UIOList;
+class UIOBase;
 
 template<class, class>
 class WeakReference;
@@ -10,6 +11,6 @@ class Activity;
 
 namespace UIO2
 {
-	UIOList* constructLuaInterface(WeakReference<Activity, LuaActivity> ref);
+	WeakReference<UIOBase, UIOList> constructLuaInterface(WeakReference<Activity, LuaActivity> ref);
 }
 

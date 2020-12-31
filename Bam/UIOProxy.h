@@ -8,6 +8,7 @@ public:
 	UIOProxy(Handle self);
 	virtual ~UIOProxy() = default;
 
+	[[nodiscard]]
 	UniqueReference<UIOBase, UIOBase> getMain();
 };
 

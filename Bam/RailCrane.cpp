@@ -137,8 +137,8 @@ void RailCrane::fillTracesLocalForced(GameState& gameState) {
 	this->Activity::fillTracesLocalForced(gameState);
 	auto dir = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
-	gameState.staticWorld.leaveTrace(pos, this->selfHandle);
-	gameState.staticWorld.leaveTrace(pos + dir * (this->getMaxLength() - 1), this->selfHandle);
+	gameState.staticWorld.leaveTrace(pos, this);
+	gameState.staticWorld.leaveTrace(pos + dir * (this->getMaxLength() - 1), this);
 }
 
 void RailCrane::removeTracesLocalForced(GameState& gameState) {
@@ -152,15 +152,15 @@ void RailCrane::removeTracesLocalForced(GameState& gameState) {
 void RailCrane::preMoveableStopLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(ACTIVITY::FLIP(this->movementDirection)) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
-	gameState.staticWorld.removeTraceFilter(pos, this->selfHandle);
-	gameState.staticWorld.removeTraceFilter(pos + d * (this->getMaxLength() - 1), this->selfHandle);
+	gameState.staticWorld.removeTraceFilter(pos, this);
+	gameState.staticWorld.removeTraceFilter(pos + d * (this->getMaxLength() - 1), this);
 }
 
 void RailCrane::postMoveableStartLocal(GameState& gameState) {
 	auto d = ACTIVITY::GETDIRECTION(this->activityRotation);
 	auto pos = this->origin + ACTIVITY::GETDIRECTION(this->movementDirection) + ACTIVITY::GETDIRECTION(ACTIVITY::COUNTERWISEROT(this->activityRotation));
-	gameState.staticWorld.leaveTrace(pos, this->selfHandle);
-	gameState.staticWorld.leaveTrace(pos + d * (this->getMaxLength() - 1), this->selfHandle);
+	gameState.staticWorld.leaveTrace(pos, this);
+	gameState.staticWorld.leaveTrace(pos + d * (this->getMaxLength() - 1), this);
 }
 
 ACTIVITY::TYPE RailCrane::getType() {

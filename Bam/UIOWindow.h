@@ -17,8 +17,8 @@ public:
 		HIDE = 1 << 6,
 	};
 
-	UIOBase* main;
-	UIOBase* topBar;
+	WeakReference<UIOBase, UIOBase> main;
+	WeakReference<UIOBase, UIOBase> topBar;
 
 	bool minimized = false;
 
