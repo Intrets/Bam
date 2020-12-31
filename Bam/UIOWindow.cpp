@@ -4,7 +4,7 @@
 #include "UIOConstrainSize.h"
 #include "UIOPad.h"
 #include "GameState.h"
-#include "State.h"
+#include "PlayerState.h"
 #include "UIOList.h"
 #include "RenderInfo.h"
 
@@ -26,7 +26,7 @@ int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	}
 }
 
-CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
+CallBackBindResult UIOWindow::runGlobalBinds(PlayerState& state) {
 	if (this->minimized) {
 		return this->topBar.get()->runGlobalBinds(state);
 	}
@@ -35,7 +35,7 @@ CallBackBindResult UIOWindow::runGlobalBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOWindow::runGameWorldBinds(State& state) {
+CallBackBindResult UIOWindow::runGameWorldBinds(PlayerState& state) {
 	if (this->minimized) {
 		return this->topBar.get()->runGameWorldBinds(state);
 	}
@@ -54,7 +54,7 @@ void UIOWindow::addElementMulti(UniqueReference<UIOBase, UIOBase> element) {
 	this->UIOBaseMulti::addElement(std::move(element));
 }
 
-CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
+CallBackBindResult UIOWindow::runFocussedBinds(PlayerState& state) {
 	if (this->minimized) {
 		return this->topBar.get()->runFocussedBinds(state);
 	}
@@ -63,7 +63,7 @@ CallBackBindResult UIOWindow::runFocussedBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
+CallBackBindResult UIOWindow::runOnHoverBinds(PlayerState& state) {
 	if (this->minimized) {
 		return this->topBar.get()->runOnHoverBinds(state);
 	}
@@ -72,7 +72,7 @@ CallBackBindResult UIOWindow::runOnHoverBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOWindow::runActiveBinds(State& state) {
+CallBackBindResult UIOWindow::runActiveBinds(PlayerState& state) {
 	if (this->minimized) {
 		return this->topBar.get()->runActiveBinds(state);
 	}

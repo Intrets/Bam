@@ -6,7 +6,7 @@
 #include "SelectionHighlightRenderer.h"
 #include "BlockRenderer.h"
 
-struct State;
+struct PlayerState;
 struct RenderInfo;
 class FPSLimiter;
 class WindowManager;
@@ -22,7 +22,7 @@ private:
 	SelectionHighlightRenderer selectionRenderer;
 
 public:
-	void prepareRender(GLFWwindow* window, RenderInfo& target, State& state);
+	void prepareRender(GLFWwindow* window, RenderInfo& target, PlayerState& state);
 
 	void render(GLFWwindow* window, RenderInfo const& renderInfo);
 

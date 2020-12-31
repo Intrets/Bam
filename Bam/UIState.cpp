@@ -6,7 +6,7 @@
 #include "UIOInvisible.h"
 #include "ControlState.h"
 #include "GameState.h"
-#include "State.h"
+#include "PlayerState.h"
 #include "Option.h"
 #include "UIOEmpty.h"
 #include "Timer.h"
@@ -18,7 +18,7 @@
 #include "UIOConstructActivityBuilder.h"
 #include "UIODropDownList.h"
 
-CallBackBindResult UIState::runFrontBinds(State& state) {
+CallBackBindResult UIState::runFrontBinds(PlayerState& state) {
 	if (this->UIs.size() == 0) {
 		return BIND::RESULT::CONTINUE;
 	}
@@ -60,7 +60,7 @@ glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
 	return glm::clamp(this->getCursorPositionScreen(), -c, c);
 }
 
-void UIState::runUIBinds(State& state) {
+void UIState::runUIBinds(PlayerState& state) {
 	auto front = this->runFrontBinds(state);
 
 	if (front & BIND::RESULT::STOP) {
@@ -127,7 +127,7 @@ void UIState::runUIBinds(State& state) {
 	}
 }
 
-void UIState::run(State& state) {
+void UIState::run(PlayerState& state) {
 	this->runUIBinds(state);
 
 	for (auto it = this->namedUIs.begin(), last = this->namedUIs.end(); it != last;) {
@@ -348,25 +348,25 @@ void UIState::init() {
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
-			state.player.pos.x -= 1.0f;
+			state.getPlayer().pos.x -= 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
-			state.player.pos.x += 1.0f;
+			state.getPlayer().pos.x += 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
-			state.player.pos.y -= 1.0f;
+			state.getPlayer().pos.y -= 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::UP, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
-			state.player.pos.y += 1.0f;
+			state.getPlayer().pos.y += 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 

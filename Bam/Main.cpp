@@ -9,7 +9,7 @@
 #include "ControlState.h"
 #include <thread>
 #include "UIState.h"
-#include "State.h"
+#include "PlayerState.h"
 #include "Timer.h"
 #include "Option.h"
 #include "TickLimiter.h"
@@ -41,7 +41,12 @@ void mainLoop(GLFWwindow* window) {
 	glfwSetMouseButtonCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	State state(controlState);
+	GameState gameState;
+	gameState.players.push_back(std::make_unique<Player>());
+
+	UIState uiState;
+
+	PlayerState state = { *gameState.players.front().get(), gameState, controlState, uiState };
 	state.uiState.updateSize(window);
 
 	GameLogic gameLogic;
@@ -101,7 +106,7 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Timer>::ref().endTiming("Polling");
 
 			Locator<Timer>::ref().newTiming("UI Logic");
-			state.uiState.updateCursor(window, state.player.getCameraPosition());
+			state.uiState.updateCursor(window, state.getPlayer().getCameraPosition());
 
 			state.uiState.run(state);
 			Locator<Timer>::ref().endTiming("UI Logic");

@@ -8,5 +8,5 @@ glm::vec2 Player::getCameraPosition() {
 }
 
 Inventory& Player::getInventory() {
-	return Locator<Inventory>::ref();
+	return this->inventory;
 }

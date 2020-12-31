@@ -17,7 +17,7 @@ void UIOHideable::show() {
 	}
 }
 
-CallBackBindResult UIOHideable::runGlobalBinds(State& state) {
+CallBackBindResult UIOHideable::runGlobalBinds(PlayerState& state) {
 	int32_t res = 0;
 	if (this->shouldFocus) {
 		res |= BIND::RESULT::FOCUS;
@@ -37,7 +37,7 @@ CallBackBindResult UIOHideable::runGlobalBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOHideable::runFocussedBinds(State& state) {
+CallBackBindResult UIOHideable::runFocussedBinds(PlayerState& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBaseSingle::runFocussedBinds(state);
 		if (res & BIND::RESULT::HIDE) {
@@ -51,7 +51,7 @@ CallBackBindResult UIOHideable::runFocussedBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOHideable::runOnHoverBinds(State& state) {
+CallBackBindResult UIOHideable::runOnHoverBinds(PlayerState& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBaseSingle::runOnHoverBinds(state);
 		if (res & BIND::RESULT::HIDE) {
@@ -65,7 +65,7 @@ CallBackBindResult UIOHideable::runOnHoverBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOHideable::runActiveBinds(State& state) {
+CallBackBindResult UIOHideable::runActiveBinds(PlayerState& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBaseSingle::runActiveBinds(state);
 		if (res & BIND::RESULT::HIDE) {
@@ -79,7 +79,7 @@ CallBackBindResult UIOHideable::runActiveBinds(State& state) {
 	}
 }
 
-CallBackBindResult UIOHideable::runGameWorldBinds(State& state) {
+CallBackBindResult UIOHideable::runGameWorldBinds(PlayerState& state) {
 	if (!this->hidden) {
 		int32_t res = this->UIOBaseSingle::runGameWorldBinds(state);
 		if (res & BIND::RESULT::HIDE) {

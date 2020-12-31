@@ -239,9 +239,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>States</Filter>
-    </ClCompile>
     <ClCompile Include="UIState.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -431,6 +428,9 @@
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIODestructible.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -585,9 +585,6 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="UIState.h">
-      <Filter>States</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
@@ -776,6 +773,9 @@
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIODestructible.h" />
     <ClInclude Include="FunctionHelpers.h" />
+    <ClInclude Include="PlayerState.h">
+      <Filter>States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -109,7 +109,7 @@ void UIOTextDisplay::deleteChar() {
 	}
 }
 
-CallBackBindResult UIOTextDisplay::runActiveBinds(State& state) {
+CallBackBindResult UIOTextDisplay::runActiveBinds(PlayerState& state) {
 	auto result = UIOBase::runActiveBinds(state);
 	if (this->active) {
 		state.controlState.blockUserInput = true;

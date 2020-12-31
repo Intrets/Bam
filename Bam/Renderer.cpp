@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "CameraInfo.h"
 #include "RenderInfo.h"
-#include "State.h"
+#include "PlayerState.h"
 #include "BlitRenderer.h"
 #include "Fonts.h"
 #include "Option.h"
@@ -14,7 +14,7 @@
 // TODO: remove import
 #include "ActivityGhost.h"
 
-void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& state) {
+void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, PlayerState& state) {
 	auto& gameState = state.gameState;
 	auto& uiState = state.uiState;
 
@@ -24,7 +24,7 @@ void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, State& 
 	glm::vec2 viewport(ratio, 1.0f);
 	viewport *= Option<OPTION::CL_VIEWPORTSCALE, float>::getVal();
 	renderInfo.frameSize = { frameSizeX, frameSizeY };
-	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.player.getCameraPosition(), glm::vec3(viewport, 200.0f) };
+	renderInfo.cameraInfo = { frameSizeX, frameSizeY, state.getPlayer().getCameraPosition(), glm::vec3(viewport, 200.0f) };
 
 	Locator<Timer>::ref().newTiming("Prepare Debug");
 	renderInfo.debugRenderInfo = *Locator<DebugRenderInfo>::get();

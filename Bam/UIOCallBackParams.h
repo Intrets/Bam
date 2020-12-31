@@ -1,6 +1,6 @@
 #pragma once
 
-#include "State.h"
+#include "PlayerState.h"
 
-typedef State UIOCallBackParams;
+typedef PlayerState UIOCallBackParams;
 

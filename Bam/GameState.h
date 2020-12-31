@@ -6,6 +6,7 @@
 #include "Random.h"
 #include "ReferenceManager.h"
 #include "Activity.h"
+#include "Player.h"
 
 class Saver;
 class Loader;
@@ -30,6 +31,8 @@ public:
 	SmallRandom smallRandom;
 
 	ReferenceManager<Activity> activityManager;
+
+	std::vector<std::unique_ptr<Player>> players;
 
 	bool load(Loader& loader);
 	bool save(Saver& saver);
