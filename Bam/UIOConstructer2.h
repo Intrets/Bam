@@ -35,8 +35,6 @@ namespace UIO2
 		void addMulti(UniqueReference<UIOBase, UIOBase> ref);
 		void addEnd(UniqueReference<UIOBase, UIOBase> ref);
 
-		ReferenceManager<UIOBase>& getManager();
-
 		template<class T>
 		void pop();
 
@@ -49,8 +47,13 @@ namespace UIO2
 
 	class Global
 	{
+	private:
+		static ReferenceManager<UIOBase> manager;
+
 	public:
 		static std::vector<std::unique_ptr<ConstructerState>> states;
+
+		static ReferenceManager<UIOBase>& getManager();
 
 		static ConstructerState* getState();
 
@@ -117,7 +120,7 @@ namespace UIO2
 template<class T, class... Args>
 WeakReference<UIOBase, T> UIO2::makeSingle(Args&&... args) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<T>(std::forward<Args>(args)...);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<T>(std::forward<Args>(args)...);
 	auto ptr = ref.get();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
@@ -138,7 +141,7 @@ WeakReference<UIOBase, T> UIO2::makeEnd(UniqueReference<UIOBase, T> ref) {
 template<class T, class... Args>
 WeakReference<UIOBase, T> UIO2::makeEnd(Args&&... args) {
 	static_assert(std::is_base_of<UIOBase, T>::value);
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<T>(std::forward<Args>(args)...);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<T>(std::forward<Args>(args)...);
 	auto res = ref.as<T>();
 
 	UIO2::Global::getState()->addEnd(std::move(ref));
@@ -163,7 +166,7 @@ WeakReference<UIOBase, T> UIO2::ConstructerState::addOrModifySingle() {
 	if (this->singlesLeaf.isNull() ||
 		this->singlesLeaf.get()->getUIOType() != UIO::GET_TYPE<T>()) {
 
-		this->addSingle(std::move(UIO2::Global::getState()->getManager().makeUniqueRef<T>()));
+		this->addSingle(std::move(UIO2::Global::getManager().makeUniqueRef<T>()));
 	}
 
 	return this->singlesLeaf.as<T>();
@@ -171,7 +174,7 @@ WeakReference<UIOBase, T> UIO2::ConstructerState::addOrModifySingle() {
 
 template<class T>
 inline WeakReference<UIOBase, T> UIO2::ConstructerState::addSingle() {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<T>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<T>();
 	auto res = ref.as<T>();
 
 	this->addSingle(std::move(ref));

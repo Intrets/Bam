@@ -20,6 +20,7 @@
 #include "UIOAnchoredProxy.h"
 
 std::vector<std::unique_ptr<UIO2::ConstructerState>> UIO2::Global::states;
+ReferenceManager<UIOBase> UIO2::Global::manager;
 
 void UIO2::ConstructerState::addSingle(UniqueReference<UIOBase, UIOBase> ref) {
 	WeakReference<UIOBase, UIOBase> weakRef = ref;
@@ -72,8 +73,8 @@ void UIO2::ConstructerState::addEnd(UniqueReference<UIOBase, UIOBase> ref) {
 	}
 }
 
-ReferenceManager<UIOBase>& UIO2::ConstructerState::getManager() {
-	return Locator<ReferenceManager<UIOBase>>::ref();
+ReferenceManager<UIOBase>& UIO2::Global::getManager() {
+	return UIO2::Global::manager;
 }
 
 UIO2::ConstructerState* UIO2::Global::getState() {
@@ -84,7 +85,7 @@ void UIO2::Global::push() {
 	UIO2::Global::states.push_back(std::make_unique<ConstructerState>());
 	auto& state = UIO2::Global::states.back();
 
-	auto ref = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOProxy>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOProxy>();
 	state->stack.push_back(ref);
 	state->root = std::move(ref);
 }
@@ -108,7 +109,7 @@ UniqueReference<UIOBase, UIOBase> UIO2::Global::pop() {
 }
 
 WeakReference<UIOBase, UIOTextDisplay> UIO2::text(std::string const& t, bool shrinkToFit) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOTextDisplay>();
 	auto res = ref.as<UIOTextDisplay>();
 
 	ref.get()->setText(t);
@@ -140,7 +141,7 @@ WeakReference<UIOBase, UIOConstrainSize> UIO2::constrainSize(UIOSizeType size) {
 }
 
 WeakReference<UIOBase, UIOButton> UIO2::button(bool shrinkToFit) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOButton>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOButton>();
 	auto res = ref.as<UIOButton>();
 
 	ref.get()->setShrinkToFit(shrinkToFit);
@@ -152,9 +153,7 @@ WeakReference<UIOBase, UIOButton> UIO2::button(bool shrinkToFit) {
 WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectangle size, int32_t types) {
 	const int32_t resizeSliverSize = 7;
 
-	auto refMan = Locator<ReferenceManager<UIOBase>>::get();
-
-	auto mainPad = refMan->makeUniqueRef<UIOPad>();
+	auto mainPad = UIO2::Global::getManager().makeUniqueRef<UIOPad>();
 	WeakReference<UIOBase, UIOBase> leaf = mainPad;
 
 	auto mainPadPtr = mainPad.get();
@@ -378,7 +377,7 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 }
 
 WeakReference<UIOBase, UIOHideable> UIO2::hideable() {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOHideable>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOHideable>();
 	auto res = ref.as<UIOHideable>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
@@ -435,7 +434,7 @@ WeakReference<UIOBase, UIOConstrainSize> UIO2::alignTopRight() {
 }
 
 WeakReference<UIOBase, UIOFreeSize> UIO2::free() {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOFreeSize>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOFreeSize>();
 	auto res = ref.as<UIOFreeSize>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
@@ -444,7 +443,7 @@ WeakReference<UIOBase, UIOFreeSize> UIO2::free() {
 }
 
 WeakReference<UIOBase, UIODestructible> UIO2::destructible() {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIODestructible>();
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIODestructible>();
 	auto res = ref.as<UIODestructible>();
 
 	UIO2::Global::getState()->addSingle(std::move(ref));
@@ -486,7 +485,7 @@ WeakReference<UIOBase, UIOPad> UIO2::padRight(UIOSizeType padding) {
 }
 
 WeakReference<UIOBase, UIOList> UIO2::startList(UIO::DIR dir) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOList>(dir);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOList>(dir);
 	auto res = ref.as<UIOList>();
 
 	UIO2::Global::getState()->addMulti(std::move(ref));
@@ -495,7 +494,7 @@ WeakReference<UIOBase, UIOList> UIO2::startList(UIO::DIR dir) {
 }
 
 WeakReference<UIOBase, UIOGrid> UIO2::startGrid(int32_t x, int32_t y) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOGrid>(glm::ivec2(x, y));
 	auto res = ref.as<UIOGrid>();
 
 	UIO2::Global::getState()->addMulti(std::move(ref));
@@ -551,7 +550,7 @@ std::pair<WeakReference<UIOBase, UIOButton>, WeakReference<UIOBase, UIOTextDispl
 }
 
 WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditSingle(std::string const& text) {
-	auto res = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>();
+	auto res = UIO2::Global::getManager().makeUniqueRef<UIOTextDisplay>();
 	auto ref = res.as<UIOTextDisplay>();
 	auto ptr = ref.get();
 
@@ -576,7 +575,7 @@ WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditSingle(std::string const& t
 }
 
 WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditMulti(std::vector<std::string> const& text, bool lineWrap) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
 	auto res = ref.as<UIOTextDisplay>();
 	auto ptr = ref.get();
 
@@ -619,7 +618,7 @@ WeakReference<UIOBase, UIOTextDisplay> UIO2::textEditMulti(std::string const& te
 }
 
 WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplaySingle(std::string const& text, bool shrinkToFit) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(true);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOTextDisplay>(true);
 	auto res = ref.as<UIOTextDisplay>();
 
 	auto ptr = ref.get();
@@ -633,7 +632,7 @@ WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplaySingle(std::string const
 }
 
 WeakReference<UIOBase, UIOTextDisplay> UIO2::textDisplayMulti(std::vector<std::string> const& text, bool lineWrap) {
-	auto ref = UIO2::Global::getState()->getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
+	auto ref = UIO2::Global::getManager().makeUniqueRef<UIOTextDisplay>(lineWrap);
 	auto res = ref.as<UIOTextDisplay>();
 
 	auto ptr = ref.get();

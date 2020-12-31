@@ -71,7 +71,7 @@ inline void UIODropDownList<T>::spawnPopUpList(UIOCallBackParams& params) {
 		for (auto& element : this->list) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 			auto button = UIO2::textButton(this->display(element));
-			auto& manager = UIO2::Global::getState()->getManager();
+			auto& manager = UIO2::Global::getManager();
 			button.get()->setOnPress([index, ref = ManagedReference<UIOBase, UIODropDownList<T>>(manager, this)](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
 			{
 				if (auto r = ref.getRef()) {

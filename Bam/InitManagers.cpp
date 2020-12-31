@@ -19,7 +19,7 @@
 #include "InventoryItem.h"
 
 void initManagers(GLFWwindow* window) {
-	Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
+	//Locator<ReferenceManager<UIOBase>>::provide(new ReferenceManager<UIOBase>());
 
 	Locator<PathManager>::provide(new PathManager());
 	Locator<OptionManager>::provide(new OptionManager());

@@ -344,7 +344,7 @@ void UIState::init() {
 
 	// wasd movement in world
 	{
-		UniqueReference<UIOBase, UIOInvisible> movement = Locator<ReferenceManager<UIOBase>>::ref().makeUniqueRef<UIOInvisible>();
+		UniqueReference<UIOBase, UIOInvisible> movement = UIO2::Global::getManager().makeUniqueRef<UIOInvisible>();
 
 		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
 		{
