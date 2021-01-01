@@ -9,12 +9,40 @@
 #include "Timer.h"
 #include "BlockIDTextures.h"
 
+ReferenceManager<Activity>& GameState::getActivityManager() {
+	return this->activityManager;
+}
+
+ReferenceManager<InventoryItem>& GameState::getInventoryItemManager() {
+	return this->inventoryItemManager;
+}
+
+std::optional<Player*> GameState::getPlayer(int32_t index) {
+	if (indexInVector(index, this->players)) {
+		return this->players[index].get();
+	}
+	return std::nullopt;
+}
+
+void GameState::makePlayer() {
+	this->players.push_back(std::make_unique<Player>());
+}
+
 bool GameState::load(Loader& loader) {
 	loader.retrieve(this->tick);
 	this->staticWorld.load(loader);
 	this->activityPaceHandler.load(loader);
 	this->movementPaceHandler.load(loader);
-	return false;
+
+	size_t size;
+	loader.retrieve(size);
+	this->players.clear();
+	for (size_t i = 0; i < size; i++) {
+		this->players.push_back(std::make_unique<Player>());
+		this->players.back().get()->load(loader);
+	}
+
+	return true;
 }
 
 bool GameState::save(Saver& saver) {
@@ -22,7 +50,13 @@ bool GameState::save(Saver& saver) {
 	this->staticWorld.save(saver);
 	this->activityPaceHandler.save(saver);
 	this->movementPaceHandler.save(saver);
-	return false;
+
+	saver.store(this->players.size());
+	for (auto& player : this->players) {
+		player.get()->save(saver);
+	}
+
+	return true;
 }
 
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {

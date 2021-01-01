@@ -8,7 +8,7 @@ class ControlState;
 
 struct PlayerState
 {
-	Player& player;
+	Player* player;
 	GameState& gameState;
 	ControlState& controlState;
 	UIState& uiState;

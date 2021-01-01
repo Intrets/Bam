@@ -8,8 +8,6 @@ class UIOTextDisplay;
 class UIOInventory : public UIOGrid
 {
 private:
-	Inventory& getInventory();
-
 	std::vector<UIOTextDisplay*> icons;
 
 public:

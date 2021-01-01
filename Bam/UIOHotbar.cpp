@@ -6,10 +6,9 @@
 #include "InventoryItem.h"
 #include "UIOConstructer2.h"
 #include "UIOButton.h"
-
-Inventory& UIOHotbar::getInventory() {
-	return Locator<Inventory>::ref();
-}
+#include "GameState.h"
+#include "RenderInfo.h"
+#include "UIOCallBackParams.h"
 
 UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	this->icons.reserve(10);
@@ -22,7 +21,7 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 		this->icons.push_back(text.get());
 		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
+			params.getPlayer().getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		});
 
@@ -45,27 +44,32 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	for (auto [i, key] : maps) {
 		this->addGameWorldBind({ key }, [i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			static_cast<UIOHotbar*>(self_)->getInventory().clickHotbar(i);
+			params.getPlayer().getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		});
 	}
 }
 
 int32_t UIOHotbar::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	int32_t i = 0;
-	for (auto const& item : this->getInventory().getHotbar()) {
-		if (i >= this->icons.size()) {
-			break;
+	if (auto player = gameState.getPlayer(renderInfo.playerIndex)) {
+		int32_t i = 0;
+		for (auto const& item : player.value()->getInventory().getHotbar()) {
+			if (i >= this->icons.size()) {
+				break;
+			}
+			if (item.has_value()) {
+				this->icons[i]->setText(item.value().get()->getName());
+			}
+			else {
+				this->icons[i]->setText("");
+			}
+			i++;
 		}
-		if (item.has_value()) {
-			this->icons[i]->setText(item.value().get()->getName());
-		}
-		else {
-			this->icons[i]->setText("");
-		}
-		i++;
+		return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);
 	}
-
-	return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);
+	else {
+		Locator<Log>::ref().putLine("UIOHotbar: did not find player specified in renderInfo");
+		return depth;
+	}
 }
 

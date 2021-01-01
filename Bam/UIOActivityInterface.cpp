@@ -188,7 +188,7 @@ void UIOActivityInterface::copy(GameState& gameState, glm::vec2 pos) {
 		case UIO::USER_ACTION_TYPE::NOTHING:
 			{
 				if (auto const& maybePick = gameState.staticWorld.getActivity(pos)) {
-					this->cursor = ACTIVITYCOPIER::copy(gameState.activityManager, maybePick.value());
+					this->cursor = ACTIVITYCOPIER::copy(gameState.getActivityManager(), maybePick.value());
 					this->type = UIO::USER_ACTION_TYPE::HOVERING;
 				}
 				break;

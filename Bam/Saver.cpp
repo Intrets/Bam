@@ -29,18 +29,8 @@ bool Saver::storeActivityPointer(Activity* ptr) {
 }
 
 bool Saver::saveGame() {
-	{
-		save(*this, gameStateRef.activityManager);
-	}
-
-	{
-		auto manager = Locator<ReferenceManager<InventoryItem>>::get();
-		INVENTORYSERIALIZER::save(*this, *manager);
-	}
-
-	{
-		Locator<Inventory>::ref().save(*this);
-	}
+	save(*this, gameStateRef.getActivityManager());
+	INVENTORYSERIALIZER::save(*this, gameStateRef.getInventoryItemManager());
 
 	this->gameStateRef.save(*this);
 	return true;

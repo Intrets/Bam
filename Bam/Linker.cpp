@@ -27,7 +27,7 @@ bool Linker::mergeAnchors(GameState& gameState, WeakReference<Activity, Anchor> 
 		r1.get()->addChild(std::move(r));
 	}
 
-	gameState.activityManager.deleteReference(toDelete);
+	gameState.getActivityManager().deleteReference(toDelete);
 	return true;
 }
 
@@ -41,7 +41,7 @@ bool Linker::linkSingleGrouper(GameState& gameState, WeakReference<Activity, Sin
 	if (r1.get()->hasChild()) {
 		auto& child = r1.get()->getChild();
 		if (child.get()->getType() != ACTIVITY::TYPE::ANCHOR) {
-			auto childAnchor = gameState.activityManager.makeUniqueRef<Anchor>();
+			auto childAnchor = gameState.getActivityManager().makeUniqueRef<Anchor>();
 			childAnchor.get()->fillTracesLocalForced(gameState);
 			childAnchor.get()->addChild(r1.get()->popChild());
 
@@ -140,7 +140,7 @@ bool Linker::linkNonGrouper(GameState& gameState, WeakReference<Activity, Activi
 	else {
 		r1.get()->memberCache.invalidateAll();
 
-		auto r1Anchor = gameState.activityManager.makeRef<Anchor>();
+		auto r1Anchor = gameState.getActivityManager().makeRef<Anchor>();
 		r1Anchor.get()->fillTracesLocalForced(gameState);
 		r1Anchor.get()->addChild(UniqueReference<Activity, Activity>(r1));
 

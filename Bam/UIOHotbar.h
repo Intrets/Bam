@@ -8,8 +8,6 @@ class UIOTextDisplay;
 class UIOHotbar : public UIOGrid
 {
 private:
-	Inventory& getInventory();
-
 	std::vector<UIOTextDisplay*> icons;
 
 public:

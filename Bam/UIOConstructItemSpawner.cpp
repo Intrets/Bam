@@ -39,7 +39,7 @@ UIOList* UIO2::constructItemSpawner() {
 			if (auto maybeItem = ACTIVITYSPAWNER::spawn(params.gameState, { 0,0 }, type)) {
 				auto& item = maybeItem.value();
 				UniqueReference<InventoryItem, InventoryItem> inventoryItem = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(item));
-				Locator<Inventory>::ref().addItemCursor(inventoryItem);
+				params.getPlayer().getInventory().addItemCursor(inventoryItem);
 			}
 			else {
 				Locator<Log>::ref().putLine("Spawning of activity " + ACTIVITY::GET_TYPE_NAME(type) + " failed or not implemented");
@@ -84,8 +84,8 @@ UIOList* UIO2::constructItemSpawner() {
 		if (block.has_value() && shape.has_value()) {
 			ShapedBlock shapedBlock{ *block.value(), *shape.value(), ACTIVITY::DIR::RIGHT };
 
-			UniqueReference<InventoryItem, InventoryItem> inventoryItem = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryBlock>(shapedBlock, 1);
-			Locator<Inventory>::ref().addItemCursor(inventoryItem);
+			UniqueReference<InventoryItem, InventoryItem> inventoryItem = params.gameState.getInventoryItemManager().makeUniqueRef<InventoryBlock>(shapedBlock, 1);
+			params.getPlayer().getInventory().addItemCursor(inventoryItem);
 		}
 		return BIND::RESULT::CONTINUE;
 	});

@@ -5,11 +5,9 @@
 #include "InventoryItem.h"
 #include "UIOTextDisplay.h"
 #include "UIOConstructer2.h"
+#include "UIOCallBackParams.h"
 #include "UIOButton.h"
-
-Inventory& UIOInventory::getInventory() {
-	return Locator<Inventory>::ref();
-}
+#include "RenderInfo.h"
 
 UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 	this->icons.reserve(16);
@@ -22,7 +20,7 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 		this->icons.push_back(text.get());
 		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 		{
-			static_cast<UIOInventory*>(self_)->getInventory().clickInventory(i);
+			params.getPlayer().getInventory().clickInventory(i);
 			return BIND::RESULT::CONTINUE;
 		});
 
@@ -31,18 +29,24 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 }
 
 int32_t UIOInventory::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	int32_t i = 0;
-	for (auto const& item : this->getInventory().getItems()) {
-		if (i >= this->icons.size()) {
-			break;
+	if (auto player = gameState.getPlayer(renderInfo.playerIndex)) {
+		int32_t i = 0;
+		for (auto const& item : player.value()->getInventory().getItems()) {
+			if (i >= this->icons.size()) {
+				break;
+			}
+			this->icons[i]->setText(item.get()->getName());
+			i++;
 		}
-		this->icons[i]->setText(item.get()->getName());
-		i++;
-	}
-	for (; i < this->icons.size(); i++) {
-		this->icons[i]->setText("");
-	}
+		for (; i < this->icons.size(); i++) {
+			this->icons[i]->setText("");
+		}
 
-	return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);
+		return this->UIOGrid::addRenderInfo(gameState, renderInfo, depth);
+	}
+	else {
+		Locator<Log>::ref().putLine("UIOInventory: did not find player specified in renderInfo");
+		return depth;
+	}
 }
 

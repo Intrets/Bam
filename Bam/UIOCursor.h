@@ -28,7 +28,6 @@ public:
 	WeakReference<UIOBase, UIOFreeSize> hoveringFreeElement;
 	WeakReference<UIOBase, UIOBase> hoveringElement;
 
-	Inventory& getInventory();
 	ManagedReference<Activity, Activity> const& getTarget() const;
 
 	UIOCursor(Handle self);

@@ -16,10 +16,6 @@
 #include "UIOConstructActivityInfo.h"
 #include "LUAActivity.h"
 
-Inventory& UIOCursor::getInventory() {
-	return Locator<Inventory>::ref();
-}
-
 ManagedReference<Activity, Activity> const& UIOCursor::getTarget() const {
 	return this->target;
 }
@@ -51,13 +47,13 @@ UIOCursor::UIOCursor(Handle self) {
 
 	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
+		params.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
 
 	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
+		params.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -67,7 +63,7 @@ UIOCursor::UIOCursor(Handle self) {
 
 	this->addGameWorldBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->getInventory().pickupWorld(params.gameState, params.uiState.getCursorPositionWorld());
+		params.getPlayer().getInventory().pickupWorld(params.gameState, params.uiState.getCursorPositionWorld());
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -87,7 +83,7 @@ UIOCursor::UIOCursor(Handle self) {
 
 	this->addGlobalBind({ CONTROL::KEY::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->getInventory().deselectCursor();
+		params.getPlayer().getInventory().deselectCursor();
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -115,7 +111,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 	auto pos = params.uiState.getCursorPositionWorld();
 	auto& gameState = params.gameState;
 
-	auto [placed, maybeActivity] = this->getInventory().clickWorld(gameState, glm::floor(pos));
+	auto [placed, maybeActivity] = params.getPlayer().getInventory().clickWorld(gameState, glm::floor(pos));
 	if (maybeActivity.has_value()) {
 		auto activity = maybeActivity.value()->getSelfReference();
 
@@ -195,26 +191,32 @@ void UIOCursor::setWorldRender() {
 }
 
 int32_t UIOCursor::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
-	if (auto const& cursorItem = this->getInventory().getCursor()) {
-		if (this->renderInWorld) {
-			this->renderInWorld = false;
-			cursorItem.value().get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
+	if (auto player = gameState.getPlayer(renderInfo.playerIndex)) {
+		if (auto const& cursorItem = player.value()->getInventory().getCursor()) {
+			if (this->renderInWorld) {
+				this->renderInWorld = false;
+				cursorItem.value().get()->addWorldRenderInfo(gameState, renderInfo, glm::floor(this->cursorWorldPosition));
+			}
+			this->hoveringText.get()->setText(cursorItem.value().get()->getName());
+			this->hoveringElement.get()->addRenderInfo(gameState, renderInfo, 0);
 		}
-		this->hoveringText.get()->setText(cursorItem.value().get()->getName());
-		this->hoveringElement.get()->addRenderInfo(gameState, renderInfo, 0);
-	}
 
-	if (auto targetRef = this->target.getRef()) {
-		if (periodic(gameState.tick, 80, 40, -this->selectionTick)) {
-			for (auto member : targetRef.get()->getRootPtr()->getTreeMembers()) {
-				if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
-					member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+		if (auto targetRef = this->target.getRef()) {
+			if (periodic(gameState.tick, 80, 40, -this->selectionTick)) {
+				for (auto member : targetRef.get()->getRootPtr()->getTreeMembers()) {
+					if (member->getType() != ACTIVITY::TYPE::ANCHOR) {
+						member->appendSelectionInfo(gameState, renderInfo, COLORS::GR::SELECTION);
+					}
 				}
 			}
+			if (periodic(gameState.tick, 40, 20, -this->selectionTick)) {
+				targetRef.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
+			}
 		}
-		if (periodic(gameState.tick, 40, 20, -this->selectionTick)) {
-			targetRef.get()->appendSelectionInfo(gameState, renderInfo, COLORS::GR::HIGHLIGHT);
-		}
+
+	}
+	else {
+		Locator<Log>::ref().putLine("UIOCursor: did not find player specified in renderInfo");
 	}
 
 	return depth;

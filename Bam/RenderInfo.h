@@ -11,6 +11,7 @@
 
 struct RenderInfo
 {
+	int32_t playerIndex;
 	glm::ivec2 frameSize;
 	CameraInfo cameraInfo;
 	StaticWorldRenderInfo staticWorldRenderInfo;

@@ -333,7 +333,6 @@ void Inventory::save(Saver& saver) {
 		saver.store(item);
 	}
 
-
 	bool hasCursor = this->cursor.has_value();
 	saver.store(hasCursor);
 	if (hasCursor) {

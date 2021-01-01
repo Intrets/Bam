@@ -2,6 +2,9 @@
 
 #include "Inventory.h"
 
+class Loader;
+class Saver;
+
 class Player
 {
 public:
@@ -11,5 +14,8 @@ public:
 
 	glm::vec2 getCameraPosition();
 	Inventory& getInventory();
+
+	bool load(Loader& loader);
+	bool save(Saver& saver);
 };
 

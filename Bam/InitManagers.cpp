@@ -38,6 +38,4 @@ void initManagers(GLFWwindow* window) {
 
 	loadBlocks();
 	loadShapes();
-
-	Locator<Inventory>::provide(new Inventory());
 }

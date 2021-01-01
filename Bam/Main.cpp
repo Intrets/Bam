@@ -42,11 +42,11 @@ void mainLoop(GLFWwindow* window) {
 	glfwSetScrollCallback(window, scroll_callback);
 
 	GameState gameState;
-	gameState.players.push_back(std::make_unique<Player>());
+	gameState.makePlayer();
 
 	UIState uiState;
 
-	PlayerState state = { *gameState.players.front().get(), gameState, controlState, uiState };
+	PlayerState state = { gameState.getPlayer(0).value(), gameState, controlState, uiState };
 	state.uiState.updateSize(window);
 
 	GameLogic gameLogic;
@@ -72,6 +72,8 @@ void mainLoop(GLFWwindow* window) {
 			Locator<Log>::ref().putLine("loading: " + name);
 
 			Loader(name, state.gameState).loadGame();
+
+			state.player = gameState.getPlayer(0).value();
 			state.gameState.loadFile = std::nullopt;
 		}
 		else if (state.gameState.saveFile.has_value()) {

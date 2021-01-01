@@ -51,6 +51,12 @@ public:
 };
 
 template<>
+inline bool Saver::store(double t) {
+	this->storeString(std::to_string(t));
+	return true;
+}
+
+template<>
 inline bool Saver::store(int64_t t) {
 	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
 	return true;
@@ -78,6 +84,13 @@ template<>
 inline bool Saver::store(glm::ivec2 t) {
 	store(static_cast<int32_t>(t.x));
 	store(static_cast<int32_t>(t.y));
+	return true;
+}
+
+template<>
+inline bool Saver::store(glm::vec2 t) {
+	store(static_cast<double>(t.x));
+	store(static_cast<double>(t.y));
 	return true;
 }
 
@@ -162,7 +175,7 @@ inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved)
 			}
 			else {
 				store<bool>(false);
-				storeString(std::to_string(t.as<double>()));
+				store(t.as<double>());
 			}
 		}
 		else if (type == sol::type::string) {

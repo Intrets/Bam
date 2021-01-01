@@ -3,5 +3,5 @@
 #include "PlayerState.h"
 
 Player& PlayerState::getPlayer() {
-	return this->player;
+	return *this->player;
 }

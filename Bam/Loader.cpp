@@ -13,8 +13,8 @@
 #include "Inventory.h"
 
 void Loader::addIncompleteActivityRef(Handle handle, Reference* ref) {
-	ref->manager = &this->gameStateRef.activityManager;
-	this->gameStateRef.activityManager.addIncomplete(handle, ref);
+	ref->manager = &this->gameStateRef.getActivityManager();
+	this->gameStateRef.getActivityManager().addIncomplete(handle, ref);
 }
 
 void Loader::addIncompleteInventoryRef(Handle handle, Reference* ref) {
@@ -30,7 +30,7 @@ bool Loader::retrieveActivityPointer(Activity*& ptr) {
 		ptr = nullptr;
 	}
 	else {
-		this->gameStateRef.activityManager.addIncomplete(handle, ptr);
+		this->gameStateRef.getActivityManager().addIncomplete(handle, ptr);
 	}
 
 	return true;
@@ -114,35 +114,31 @@ bool Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame() {
-	Locator<Inventory>::destroy();
-	Locator<ReferenceManager<InventoryItem>>::destroy();
+	gameStateRef.getInventoryItemManager().clear();
 
 	{
-		while (!gameStateRef.activityManager.data.empty()) {
-			auto& [handle, begin] = *gameStateRef.activityManager.data.begin();
+		while (!gameStateRef.getActivityManager().data.empty()) {
+			auto& [handle, begin] = *gameStateRef.getActivityManager().data.begin();
 
 			begin.get()->getRootRef().deleteObject();
 		}
 	}
 
-	gameStateRef.activityManager.clear();
-	Locator<ReferenceManager<InventoryItem>>::provide(new ReferenceManager<InventoryItem>(1024));
-	Locator<Inventory>::provide(new Inventory());
+	gameStateRef.getActivityManager().clear();
 
-	load(*this, gameStateRef.activityManager);
-	INVENTORYSERIALIZER::load(*this, Locator<ReferenceManager<InventoryItem>>::ref());
-	Locator<Inventory>::get()->load(*this);
+	load(*this, gameStateRef.getActivityManager());
+	INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());
 
 	this->gameStateRef.load(*this);
 
-	gameStateRef.activityManager.completeReferences();
-	Locator<ReferenceManager<InventoryItem>>::ref().completeReferences();
+	gameStateRef.getActivityManager().completeReferences();
+	gameStateRef.getInventoryItemManager().completeReferences();
 
-	for (auto& [h, ref] : gameStateRef.activityManager.data) {
+	for (auto& [h, ref] : gameStateRef.getActivityManager().data) {
 		assert(h == ref.get()->getHandle());
 	}
 
-	for (auto& [h, ref] : Locator<ReferenceManager<InventoryItem>>::ref().data) {
+	for (auto& [h, ref] : gameStateRef.getInventoryItemManager().data) {
 		assert(h == ref.get()->selfHandle);
 	}
 

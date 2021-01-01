@@ -244,6 +244,17 @@ inline bool Loader::retrieve(double& t) {
 }
 
 template<>
+inline bool Loader::retrieve(glm::vec2& t) {
+	double x;
+	this->retrieve(x);
+	double y;
+	this->retrieve(y);
+	t.x = static_cast<float>(x);
+	t.y = static_cast<float>(y);
+	return true;
+}
+
+template<>
 inline bool Loader::retrieve(std::string& t) {
 	return this->retrieveString(t);
 }
