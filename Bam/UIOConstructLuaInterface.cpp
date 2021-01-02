@@ -3,7 +3,7 @@
 #include "UIOConstructLuaInterface.h"
 #include "UIOLua.h"
 #include "UIOGrid.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include <fstream>
 #include "StringHelpers.h"
 #include "UIOConstructer2.h"
@@ -85,7 +85,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 	// Binds
 	// -----
 
-	watchText.get()->addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	watchText.get()->addActiveBind({ CONTROL::KEY::ANYTHING_TEXT }, [uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
@@ -101,7 +101,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		return BIND::CONTINUE;
 	});
 
-	displayWatchText.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	displayWatchText.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK }, [uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 
@@ -147,15 +147,15 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		return BIND::CONTINUE;
 	});
 
-	pushButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	pushButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
-			watched.get()->setScript(join(luaText->text.getLines()), params.gameState);
+			watched.get()->setScript(join(luaText->text.getLines()), playerState.gameState);
 		}
 		return BIND::RESULT::CONTINUE;
 	});
 
-	pullButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	pullButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			luaText->text.getLinesMutable().clear();
@@ -165,7 +165,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		return BIND::RESULT::CONTINUE;
 	});
 
-	runButton.get()->setOnRelease([uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	runButton.get()->setOnRelease([uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->start();
@@ -174,7 +174,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		return BIND::RESULT::CONTINUE;
 	});
 
-	interruptButton.get()->setOnRelease([uioLua = uioLua.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	interruptButton.get()->setOnRelease([uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->stop();
@@ -183,7 +183,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 	});
 
 
-	loadButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	loadButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		std::string name = saveFileName->text.getLines().front();
 		name.resize(name.size() - 1);
@@ -200,7 +200,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		return BIND::RESULT::CONTINUE;
 	});
 
-	saveButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+	saveButton.get()->setOnRelease([saveFileName = saveFileName.get(), luaText = luaText.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		std::string name = saveFileName->text.getLines().front();
 		name.resize(name.size() - 1);

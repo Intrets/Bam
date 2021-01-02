@@ -26,21 +26,21 @@ int32_t UIOWindow::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, i
 	}
 }
 
-CallBackBindResult UIOWindow::runGlobalBinds(PlayerState& state) {
+CallBackBindResult UIOWindow::runGlobalBinds(PlayerState& playerState) {
 	if (this->minimized) {
-		return this->topBar.get()->runGlobalBinds(state);
+		return this->topBar.get()->runGlobalBinds(playerState);
 	}
 	else {
-		return this->UIOBaseMulti::runGlobalBinds(state);
+		return this->UIOBaseMulti::runGlobalBinds(playerState);
 	}
 }
 
-CallBackBindResult UIOWindow::runGameWorldBinds(PlayerState& state) {
+CallBackBindResult UIOWindow::runGameWorldBinds(PlayerState& playerState) {
 	if (this->minimized) {
-		return this->topBar.get()->runGameWorldBinds(state);
+		return this->topBar.get()->runGameWorldBinds(playerState);
 	}
 	else {
-		return this->UIOBaseMulti::runGameWorldBinds(state);
+		return this->UIOBaseMulti::runGameWorldBinds(playerState);
 	}
 }
 
@@ -54,29 +54,29 @@ void UIOWindow::addElementMulti(UniqueReference<UIOBase, UIOBase> element) {
 	this->UIOBaseMulti::addElement(std::move(element));
 }
 
-CallBackBindResult UIOWindow::runFocussedBinds(PlayerState& state) {
+CallBackBindResult UIOWindow::runFocussedBinds(PlayerState& playerState) {
 	if (this->minimized) {
-		return this->topBar.get()->runFocussedBinds(state);
+		return this->topBar.get()->runFocussedBinds(playerState);
 	}
 	else {
-		return this->UIOBaseMulti::runFocussedBinds(state);
+		return this->UIOBaseMulti::runFocussedBinds(playerState);
 	}
 }
 
-CallBackBindResult UIOWindow::runOnHoverBinds(PlayerState& state) {
+CallBackBindResult UIOWindow::runOnHoverBinds(PlayerState& playerState) {
 	if (this->minimized) {
-		return this->topBar.get()->runOnHoverBinds(state);
+		return this->topBar.get()->runOnHoverBinds(playerState);
 	}
 	else {
-		return  this->UIOBaseMulti::runOnHoverBinds(state);
+		return  this->UIOBaseMulti::runOnHoverBinds(playerState);
 	}
 }
 
-CallBackBindResult UIOWindow::runActiveBinds(PlayerState& state) {
+CallBackBindResult UIOWindow::runActiveBinds(PlayerState& playerState) {
 	if (this->minimized) {
-		return this->topBar.get()->runActiveBinds(state);
+		return this->topBar.get()->runActiveBinds(playerState);
 	}
 	else {
-		return this->UIOBaseMulti::runActiveBinds(state);
+		return this->UIOBaseMulti::runActiveBinds(playerState);
 	}
 }

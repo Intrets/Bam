@@ -18,8 +18,8 @@ void Loader::addIncompleteActivityRef(Handle handle, Reference* ref) {
 }
 
 void Loader::addIncompleteInventoryRef(Handle handle, Reference* ref) {
-	ref->manager = Locator<ReferenceManager<InventoryItem>>::get();
-	Locator<ReferenceManager<InventoryItem>>::get()->addIncomplete(handle, ref);
+	ref->manager = &this->gameStateRef.getInventoryItemManager();
+	this->gameStateRef.getInventoryItemManager().addIncomplete(handle, ref);
 }
 
 bool Loader::retrieveActivityPointer(Activity*& ptr) {

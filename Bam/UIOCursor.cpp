@@ -23,10 +23,10 @@ ManagedReference<Activity, Activity> const& UIOCursor::getTarget() const {
 UIOCursor::UIOCursor(Handle self) {
 	this->selfHandle = self;
 
-	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->setCursorWorldPosition(params.uiState.getCursorPositionWorld());
-		static_cast<UIOCursor*>(self_)->setCursorScreenPosition(params.uiState.getCursorPositionScreen());
+		static_cast<UIOCursor*>(self_)->setCursorWorldPosition(playerState.uiState.getCursorPositionWorld());
+		static_cast<UIOCursor*>(self_)->setCursorScreenPosition(playerState.uiState.getCursorPositionScreen());
 
 		return BIND::CONTINUE;
 	});
@@ -35,7 +35,7 @@ UIOCursor::UIOCursor(Handle self) {
 	// Switch rendering in world or in UI
 	// -----------------------------------
 
-	this->addGameWorldBind({ CONTROL::KEY::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::EVERY_TICK }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		static_cast<UIOCursor*>(self_)->setWorldRender();
 		return BIND::RESULT::CONTINUE;
@@ -45,15 +45,15 @@ UIOCursor::UIOCursor(Handle self) {
 	// Cursor rotation
 	// -----------------------------------
 
-	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		params.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
+		playerState.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::COUNTERCLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		params.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
+		playerState.getPlayer().getInventory().rotateCursorItem(ACTIVITY::ROT::CLOCKWISE);
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -61,9 +61,9 @@ UIOCursor::UIOCursor(Handle self) {
 	// Pick up thing under cursor
 	// -----------------------------------
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION_PICK }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		params.getPlayer().getInventory().pickupWorld(params.gameState, params.uiState.getCursorPositionWorld());
+		playerState.getPlayer().getInventory().pickupWorld(playerState.gameState, playerState.uiState.getCursorPositionWorld());
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -71,9 +71,9 @@ UIOCursor::UIOCursor(Handle self) {
 	// Place/select item
 	// -----------------------------------
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION0 }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		static_cast<UIOCursor*>(self_)->clickWorld(params);
+		static_cast<UIOCursor*>(self_)->clickWorld(playerState);
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -81,9 +81,9 @@ UIOCursor::UIOCursor(Handle self) {
 	// Cancel cursor
 	// -----------------------------------
 
-	this->addGlobalBind({ CONTROL::KEY::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::CANCEL }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		params.getPlayer().getInventory().deselectCursor();
+		playerState.getPlayer().getInventory().deselectCursor();
 		return BIND::RESULT::CONTINUE;
 	});
 
@@ -107,11 +107,11 @@ void UIOCursor::setCursorScreenPosition(glm::vec2 p) {
 	this->hoveringElement.get()->translate(p - this->hoveringElement.get()->getScreenRectangle().getBottomLeft());
 }
 
-void UIOCursor::clickWorld(UIOCallBackParams& params) {
-	auto pos = params.uiState.getCursorPositionWorld();
-	auto& gameState = params.gameState;
+void UIOCursor::clickWorld(PlayerState& playerState) {
+	auto pos = playerState.uiState.getCursorPositionWorld();
+	auto& gameState = playerState.gameState;
 
-	auto [placed, maybeActivity] = params.getPlayer().getInventory().clickWorld(gameState, glm::floor(pos));
+	auto [placed, maybeActivity] = playerState.getPlayer().getInventory().clickWorld(gameState, glm::floor(pos));
 	if (maybeActivity.has_value()) {
 		auto activity = maybeActivity.value()->getSelfReference();
 
@@ -125,7 +125,7 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 	}
 	else {
 		if (auto maybeTarget = gameState.staticWorld.getActivity(pos)) {
-			this->select(params, maybeTarget.value());
+			this->select(playerState, maybeTarget.value());
 		}
 		else {
 			this->target.unset();
@@ -133,9 +133,9 @@ void UIOCursor::clickWorld(UIOCallBackParams& params) {
 	}
 }
 
-void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity) {
+void UIOCursor::select(PlayerState& playerState, WeakReference<Activity, Activity> activity) {
 	this->target.set(activity);
-	this->selectionTick = params.gameState.tick;
+	this->selectionTick = playerState.gameState.tick;
 
 	if (activity.get()->getType() == ACTIVITY::TYPE::LUA) {
 		static int32_t j = 0;
@@ -143,7 +143,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 		std::string uiName = "LUA " + std::to_string(activity.getHandle());
 
 		bool newUI =
-			params.uiState.addNamedUI(
+			playerState.uiState.addNamedUI(
 				uiName,
 				[activity, uiName, offset]()
 		{
@@ -180,7 +180,7 @@ void UIOCursor::select(UIOCallBackParams& params, WeakReference<Activity, Activi
 				 UIOWindow::TYPE::CLOSE);
 	UIO2::constructActivityInfo(this);
 
-	params.uiState.addNamedUIReplace(
+	playerState.uiState.addNamedUIReplace(
 		"ActivityInfo",
 		UIO2::Global::pop()
 	);

@@ -25,7 +25,7 @@ public:
 
 	virtual void translate(glm::vec2 p) override;
 
-	virtual	CallBackBindResult runActiveBinds(PlayerState& state) override;
+	virtual	CallBackBindResult runActiveBinds(PlayerState& playerState) override;
 
 	void setMode(UIOTEXTDISPLAY::MODE mode_);
 

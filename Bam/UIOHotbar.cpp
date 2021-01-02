@@ -8,7 +8,7 @@
 #include "UIOButton.h"
 #include "GameState.h"
 #include "RenderInfo.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 
 UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	this->icons.reserve(10);
@@ -19,9 +19,9 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 		auto [button, text] = UIO2::textButton2(std::to_string(i));
 
 		this->icons.push_back(text.get());
-		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		button.get()->setOnRelease([i, this](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			params.getPlayer().getInventory().clickHotbar(i);
+			playerState.getPlayer().getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		});
 
@@ -42,9 +42,9 @@ UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	};
 
 	for (auto [i, key] : maps) {
-		this->addGameWorldBind({ key }, [i = i](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		this->addGameWorldBind({ key }, [i = i](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			params.getPlayer().getInventory().clickHotbar(i);
+			playerState.getPlayer().getInventory().clickHotbar(i);
 			return BIND::RESULT::CONTINUE;
 		});
 	}

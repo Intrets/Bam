@@ -52,7 +52,7 @@ void UIO2::constructActivityInfo(UIOCursor* cursor) {
 	auto labelName = UIO2::textEditSingle("");
 
 	auto setLabel = UIO2::textButton("Set Label");
-	setLabel.get()->setOnRelease([labelName = labelName.get(), listSelection = listSelection.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	setLabel.get()->setOnRelease([labelName = labelName.get(), listSelection = listSelection.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto name = labelName->text.getLines()[0];
 		name = name.substr(0, name.size() - 1);

@@ -5,7 +5,7 @@
 #include "InventoryItem.h"
 #include "UIOTextDisplay.h"
 #include "UIOConstructer2.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "UIOButton.h"
 #include "RenderInfo.h"
 
@@ -18,9 +18,9 @@ UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 		auto [button, text] = UIO2::textButton2(std::to_string(i));
 
 		this->icons.push_back(text.get());
-		button.get()->setOnRelease([i, this](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		button.get()->setOnRelease([i, this](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			params.getPlayer().getInventory().clickInventory(i);
+			playerState.getPlayer().getInventory().clickInventory(i);
 			return BIND::RESULT::CONTINUE;
 		});
 

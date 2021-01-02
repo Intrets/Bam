@@ -113,15 +113,15 @@ void UIOBase::addGameWorldBinds(std::vector<BindControl> const& bindControls, Ca
 	}
 }
 
-CallBackBindResult UIOBase::runGlobalBinds(PlayerState& state) {
+CallBackBindResult UIOBase::runGlobalBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto [control, bind] : this->globalBinds) {
-		if (state.controlState.activated(control)) {
-			CallBackBindResult bindResult = bind(state, this);
+		if (playerState.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND::RESULT::CONSUME) {
-				state.controlState.consumeBufferControl(control.control);
+				playerState.controlState.consumeBufferControl(control.control);
 			}
 			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
@@ -132,14 +132,14 @@ CallBackBindResult UIOBase::runGlobalBinds(PlayerState& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runFocussedBinds(PlayerState& state) {
+CallBackBindResult UIOBase::runFocussedBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto [control, bind] : this->focussedBinds) {
-		if (state.controlState.activated(control)) {
-			CallBackBindResult bindResult = bind(state, this);
+		if (playerState.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(playerState, this);
 			if (bindResult & BIND::RESULT::CONSUME) {
-				state.controlState.consumeBufferControl(control.control);
+				playerState.controlState.consumeBufferControl(control.control);
 			}
 			sumResult |= bindResult;
 			if (sumResult & BIND::RESULT::STOP) {
@@ -151,15 +151,15 @@ CallBackBindResult UIOBase::runFocussedBinds(PlayerState& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runOnHoverBinds(PlayerState& state) {
+CallBackBindResult UIOBase::runOnHoverBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto [control, bind] : onHoverBinds) {
-		if (state.controlState.activated(control)) {
-			CallBackBindResult bindResult = bind(state, this);
+		if (playerState.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND::RESULT::CONSUME) {
-				state.controlState.consumeBufferControl(control.control);
+				playerState.controlState.consumeBufferControl(control.control);
 			}
 			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
@@ -170,16 +170,16 @@ CallBackBindResult UIOBase::runOnHoverBinds(PlayerState& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runActiveBinds(PlayerState& state) {
+CallBackBindResult UIOBase::runActiveBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	if (this->active) {
 		for (auto [control, bind] : activeBinds) {
-			if (state.controlState.activated(control)) {
-				CallBackBindResult bindResult = bind(state, this);
+			if (playerState.controlState.activated(control)) {
+				CallBackBindResult bindResult = bind(playerState, this);
 				sumResult |= bindResult;
 				if (bindResult & BIND::RESULT::CONSUME) {
-					state.controlState.consumeBufferControl(control.control);
+					playerState.controlState.consumeBufferControl(control.control);
 				}
 				if (sumResult & BIND::RESULT::STOP) {
 					return sumResult;
@@ -191,15 +191,15 @@ CallBackBindResult UIOBase::runActiveBinds(PlayerState& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBase::runGameWorldBinds(PlayerState& state) {
+CallBackBindResult UIOBase::runGameWorldBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto [control, bind] : this->gameWorldBinds) {
-		if (state.controlState.activated(control)) {
-			CallBackBindResult bindResult = bind(state, this);
+		if (playerState.controlState.activated(control)) {
+			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;
 			if (bindResult & BIND::RESULT::CONSUME) {
-				state.controlState.consumeBufferControl(control.control);
+				playerState.controlState.consumeBufferControl(control.control);
 			}
 			if (sumResult & BIND::RESULT::STOP) {
 				return sumResult;
@@ -210,77 +210,77 @@ CallBackBindResult UIOBase::runGameWorldBinds(PlayerState& state) {
 	return sumResult;
 }
 
-CallBackBindResult UIOBaseMulti::runGlobalBinds(PlayerState& state) {
+CallBackBindResult UIOBaseMulti::runGlobalBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runGlobalBinds(state);
+		CallBackBindResult elementResult = element.get()->runGlobalBinds(playerState);
 		sumResult |= elementResult;
 		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
 
-	return sumResult | this->UIOBase::runGlobalBinds(state);
+	return sumResult | this->UIOBase::runGlobalBinds(playerState);
 }
 
-CallBackBindResult UIOBaseMulti::runFocussedBinds(PlayerState& state) {
+CallBackBindResult UIOBaseMulti::runFocussedBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runFocussedBinds(state);
+		CallBackBindResult elementResult = element.get()->runFocussedBinds(playerState);
 		sumResult |= elementResult;
 		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
 
-	return sumResult | this->UIOBase::runFocussedBinds(state);
+	return sumResult | this->UIOBase::runFocussedBinds(playerState);
 }
 
-CallBackBindResult UIOBaseMulti::runOnHoverBinds(PlayerState& state) {
+CallBackBindResult UIOBaseMulti::runOnHoverBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
-	if (!this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
+	if (!this->screenRectangle.contains(playerState.uiState.getCursorPositionScreen())) {
 		return sumResult;
 	}
 
 	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runOnHoverBinds(state);
+		CallBackBindResult elementResult = element.get()->runOnHoverBinds(playerState);
 		sumResult |= elementResult;
 		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
 
-	return sumResult | this->UIOBase::runOnHoverBinds(state);
+	return sumResult | this->UIOBase::runOnHoverBinds(playerState);
 }
 
-CallBackBindResult UIOBaseMulti::runActiveBinds(PlayerState& state) {
+CallBackBindResult UIOBaseMulti::runActiveBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runActiveBinds(state);
+		CallBackBindResult elementResult = element.get()->runActiveBinds(playerState);
 		sumResult |= elementResult;
 		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
 
-	return sumResult | this->UIOBase::runActiveBinds(state);
+	return sumResult | this->UIOBase::runActiveBinds(playerState);
 }
 
-CallBackBindResult UIOBaseMulti::runGameWorldBinds(PlayerState& state) {
+CallBackBindResult UIOBaseMulti::runGameWorldBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	for (auto& element : this->elements) {
-		CallBackBindResult elementResult = element.get()->runGameWorldBinds(state);
+		CallBackBindResult elementResult = element.get()->runGameWorldBinds(playerState);
 		sumResult |= elementResult;
 		if (sumResult & BIND::RESULT::STOP) {
 			return sumResult;
 		}
 	}
 
-	return sumResult | this->UIOBase::runGameWorldBinds(state);
+	return sumResult | this->UIOBase::runGameWorldBinds(playerState);
 }
 
 int32_t UIOBaseMulti::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {
@@ -313,55 +313,55 @@ ScreenRectangle UIOBaseSingle::updateSize(ScreenRectangle newScreenRectangle) {
 	return this->screenRectangle;
 }
 
-CallBackBindResult UIOBaseSingle::runGlobalBinds(PlayerState& state) {
-	CallBackBindResult sumResult = this->main.get()->runGlobalBinds(state);
+CallBackBindResult UIOBaseSingle::runGlobalBinds(PlayerState& playerState) {
+	CallBackBindResult sumResult = this->main.get()->runGlobalBinds(playerState);
 	if (sumResult & BIND::RESULT::STOP) {
 		return sumResult;
 	}
 
-	return sumResult | this->UIOBase::runGlobalBinds(state);
+	return sumResult | this->UIOBase::runGlobalBinds(playerState);
 }
 
-CallBackBindResult UIOBaseSingle::runFocussedBinds(PlayerState& state) {
-	CallBackBindResult sumResult = this->main.get()->runFocussedBinds(state);
+CallBackBindResult UIOBaseSingle::runFocussedBinds(PlayerState& playerState) {
+	CallBackBindResult sumResult = this->main.get()->runFocussedBinds(playerState);
 	if (sumResult & BIND::RESULT::STOP) {
 		return sumResult;
 	}
 
-	return sumResult | this->UIOBase::runFocussedBinds(state);
+	return sumResult | this->UIOBase::runFocussedBinds(playerState);
 }
 
-CallBackBindResult UIOBaseSingle::runOnHoverBinds(PlayerState& state) {
+CallBackBindResult UIOBaseSingle::runOnHoverBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
-	if (!this->screenRectangle.contains(state.uiState.getCursorPositionScreen())) {
+	if (!this->screenRectangle.contains(playerState.uiState.getCursorPositionScreen())) {
 		return sumResult;
 	}
 
-	sumResult = this->main.get()->runOnHoverBinds(state);
+	sumResult = this->main.get()->runOnHoverBinds(playerState);
 
 	if (sumResult & BIND::RESULT::STOP) {
 		return sumResult;
 	}
 
-	return sumResult | this->UIOBase::runOnHoverBinds(state);
+	return sumResult | this->UIOBase::runOnHoverBinds(playerState);
 }
 
-CallBackBindResult UIOBaseSingle::runActiveBinds(PlayerState& state) {
-	CallBackBindResult sumResult = this->main.get()->runActiveBinds(state);
+CallBackBindResult UIOBaseSingle::runActiveBinds(PlayerState& playerState) {
+	CallBackBindResult sumResult = this->main.get()->runActiveBinds(playerState);
 	if (sumResult & BIND::RESULT::STOP) {
 		return sumResult;
 	}
 
-	return sumResult | this->UIOBase::runActiveBinds(state);
+	return sumResult | this->UIOBase::runActiveBinds(playerState);
 }
 
-CallBackBindResult UIOBaseSingle::runGameWorldBinds(PlayerState& state) {
-	CallBackBindResult sumResult = this->main.get()->runGameWorldBinds(state);
+CallBackBindResult UIOBaseSingle::runGameWorldBinds(PlayerState& playerState) {
+	CallBackBindResult sumResult = this->main.get()->runGameWorldBinds(playerState);
 	if (sumResult & BIND::RESULT::STOP) {
 		return sumResult;
 	}
 
-	return sumResult | this->UIOBase::runGameWorldBinds(state);
+	return sumResult | this->UIOBase::runGameWorldBinds(playerState);
 }
 
 int32_t UIOBaseSingle::addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) {

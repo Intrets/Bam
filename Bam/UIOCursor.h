@@ -3,7 +3,7 @@
 #include "ReferenceManager.h"
 #include "Activity.h"
 #include "UIOBase.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 
 class Inventory;
 class UIOFreeSize;
@@ -35,8 +35,8 @@ public:
 
 	void setCursorWorldPosition(glm::vec2 p);
 	void setCursorScreenPosition(glm::vec2 p);
-	void clickWorld(UIOCallBackParams& params);
-	void select(UIOCallBackParams& params, WeakReference<Activity, Activity> activity);
+	void clickWorld(PlayerState& playerState);
+	void select(PlayerState& playerState, WeakReference<Activity, Activity> activity);
 	void setWorldRender();
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;

@@ -5,7 +5,7 @@
 #include "RenderInfo.h"
 #include "GameState.h"
 #include "TextRenderer.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "TextRenderInfo.h"
 #include "Colors.h"
 #include "Enums.h"
@@ -109,10 +109,10 @@ void UIOTextDisplay::deleteChar() {
 	}
 }
 
-CallBackBindResult UIOTextDisplay::runActiveBinds(PlayerState& state) {
-	auto result = UIOBase::runActiveBinds(state);
+CallBackBindResult UIOTextDisplay::runActiveBinds(PlayerState& playerState) {
+	auto result = UIOBase::runActiveBinds(playerState);
 	if (this->active) {
-		state.controlState.blockUserInput = true;
+		playerState.controlState.blockUserInput = true;
 	}
 	return result;
 }

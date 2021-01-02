@@ -2,7 +2,7 @@
 
 #include "UIOBinds.h"
 #include "UIOBase.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "UIOTextDisplay.h"
 #include "UIOButton.h"
 #include "StringHelpers.h"
@@ -12,16 +12,16 @@ namespace UIOBinds
 	namespace Base
 	{
 		void activatable(UIOBase* ptr) {
-			ptr->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
-				if (!ptr->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
+				if (!ptr->getScreenRectangle().contains(playerState.uiState.getCursorPositionScreen())) {
 					ptr->deactivate();
 					return BIND::RESULT::CONTINUE;
 				}
 				return BIND::RESULT::CONTINUE;
 			});
 
-			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [ptr](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				ptr->activate();
 				return BIND::RESULT::CONTINUE | BIND::RESULT::FOCUS | BIND::RESULT::CONSUME;
@@ -29,15 +29,15 @@ namespace UIOBinds
 		}
 
 		void focusable(UIOBase* ptr) {
-			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME | BIND::RESULT::FOCUS;
 			});
 		}
 		void blockWorldBinds(UIOBase* ptr) {
-			ptr->addOnHoverBind({ CONTROL::KEY::EVERY_TICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			ptr->addOnHoverBind({ CONTROL::KEY::EVERY_TICK }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
-				params.controlState.setBlockWorldBinds(true);
+				playerState.controlState.setBlockWorldBinds(true);
 				return BIND::RESULT::CONTINUE;
 			});
 		}
@@ -48,11 +48,11 @@ namespace UIOBinds
 		void clickSelect(UIOTextDisplay* ptr) {
 			ptr->setClickSupport(true);
 			ptr->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED },
-								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+								[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 
-				glm::vec2 click = params.uiState.getCursorPositionScreen() - ptr->getScreenRectangle().getBottomLeft();
+				glm::vec2 click = playerState.uiState.getCursorPositionScreen() - ptr->getScreenRectangle().getBottomLeft();
 				click /= ptr->getScreenRectangle().getAbsSize();
 				click = click * 2.0f - 1.0f;
 				click += ptr->text.getView();
@@ -71,18 +71,18 @@ namespace UIOBinds
 
 		void input(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::CHAR_BUFFER_CHANGED, CONTROL::STATE::PRESSED },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::INSERT) {
-					auto lines = split(0, params.controlState.getCharBuffer(), '\n', true, true);
+					auto lines = split(0, playerState.controlState.getCharBuffer(), '\n', true, true);
 					for (size_t i = 0; i < lines.size() - 1; i++) {
 						ptr->insertText(lines[i]);
 						ptr->text.matchWhiteSpace();
 					}
 
 					ptr->insertText(lines.back());
-					if (params.controlState.getCharBuffer().back() == '\n') {
+					if (playerState.controlState.getCharBuffer().back() == '\n') {
 						ptr->text.matchWhiteSpace();
 					}
 					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
@@ -93,10 +93,10 @@ namespace UIOBinds
 
 		void inputNoLineBreaks(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::CHAR_BUFFER_CHANGED, CONTROL::STATE::PRESSED },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				auto text = params.controlState.getCharBuffer();
+				auto text = playerState.controlState.getCharBuffer();
 				text.erase(std::remove_if(text.begin(), text.end(), [](auto const c) -> bool
 				{
 					return c == '\n';
@@ -108,7 +108,7 @@ namespace UIOBinds
 
 		void backspace(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::BACKSPACE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->backspaceChar();
@@ -118,7 +118,7 @@ namespace UIOBinds
 
 		void tab(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::TAB, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->insertText("  ");
@@ -128,7 +128,7 @@ namespace UIOBinds
 
 		void del(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::DELETE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->deleteChar();
@@ -138,7 +138,7 @@ namespace UIOBinds
 
 		void down(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::TEXT_DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 0,1 });
@@ -148,7 +148,7 @@ namespace UIOBinds
 
 		void up(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::TEXT_UP, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 0,-1 });
@@ -158,7 +158,7 @@ namespace UIOBinds
 
 		void right(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::TEXT_RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ 1,0 });
@@ -168,7 +168,7 @@ namespace UIOBinds
 
 		void left(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::TEXT_LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->moveCursor({ -1,0 });
@@ -178,7 +178,7 @@ namespace UIOBinds
 
 		void viewUp(UIOTextDisplay* ptr) {
 			ptr->addOnHoverBind({ CONTROL::KEY::SCROLL_UP, CONTROL::STATE::PRESSED },
-								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+								[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->text.moveView({ 0,-1 });
@@ -188,7 +188,7 @@ namespace UIOBinds
 
 		void viewDown(UIOTextDisplay* ptr) {
 			ptr->addOnHoverBind({ CONTROL::KEY::SCROLL_DOWN, CONTROL::STATE::PRESSED },
-								[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+								[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->text.moveView({ 0,1 });
@@ -206,7 +206,7 @@ namespace UIOBinds
 
 		void normalbinds(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::J, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -217,7 +217,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::K, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -228,7 +228,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::L, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -239,7 +239,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::H, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -250,7 +250,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::W, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -263,7 +263,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::B, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -274,7 +274,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::E, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -285,7 +285,7 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::X, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
@@ -296,31 +296,31 @@ namespace UIOBinds
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::P, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				if (ptr->paste(params.controlState)) {
+				if (ptr->paste(playerState.controlState)) {
 					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 				}
 				return BIND::RESULT::CONTINUE;
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::Y, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
-				if (ptr->yank(params.controlState)) {
+				if (ptr->yank(playerState.controlState)) {
 					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 				}
 				return BIND::RESULT::CONTINUE;
 			});
 
 			ptr->addActiveBind({ CONTROL::KEY::O, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL && ptr->insertLineAfter()) {
-					params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
+					playerState.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
 					ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
 					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 				}
@@ -333,7 +333,7 @@ namespace UIOBinds
 				{ { CONTROL::KEY::CANCEL },
 				  { CONTROL::KEY::C, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::CONTROL }
 				},
-				[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+				[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				ptr->setMode(UIOTEXTDISPLAY::MODE::NORMAL);
@@ -343,12 +343,12 @@ namespace UIOBinds
 
 		void insert(UIOTextDisplay* ptr) {
 			ptr->addActiveBind({ CONTROL::KEY::I, CONTROL::STATE::PRESSED },
-							   [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+							   [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				auto ptr = static_cast<UIOTextDisplay*>(self_);
 				if (ptr->mode == UIOTEXTDISPLAY::MODE::NORMAL) {
 					ptr->setMode(UIOTEXTDISPLAY::MODE::INSERT);
-					params.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
+					playerState.controlState.consumeControl(CONTROL::KEY::CHAR_BUFFER_CHANGED);
 					return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 				}
 				return BIND::RESULT::CONTINUE;
@@ -358,14 +358,14 @@ namespace UIOBinds
 }
 
 void UIOBinds::Button::close(UIOButton* ptr) {
-	ptr->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr->setOnRelease([](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CLOSE;
 	});
 }
 
 void UIOBinds::Button::hide(UIOButton* ptr) {
-	ptr->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr->setOnRelease([](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::HIDE;
 	});

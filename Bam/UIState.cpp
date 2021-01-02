@@ -18,16 +18,16 @@
 #include "UIOConstructActivityBuilder.h"
 #include "UIODropDownList.h"
 
-CallBackBindResult UIState::runFrontBinds(PlayerState& state) {
+CallBackBindResult UIState::runFrontBinds(PlayerState& playerState) {
 	if (this->UIs.size() == 0) {
 		return BIND::RESULT::CONTINUE;
 	}
 
 	CallBackBindResult activeResult =
-		this->UIs.front().get()->runOnHoverBinds(state) |
-		this->UIs.front().get()->runFocussedBinds(state) |
-		this->UIs.front().get()->runActiveBinds(state) |
-		this->UIs.front().get()->runGlobalBinds(state);
+		this->UIs.front().get()->runOnHoverBinds(playerState) |
+		this->UIs.front().get()->runFocussedBinds(playerState) |
+		this->UIs.front().get()->runActiveBinds(playerState) |
+		this->UIs.front().get()->runGlobalBinds(playerState);
 	CallBackBindResult res = 0;
 
 	bool shouldExit = false;
@@ -60,8 +60,8 @@ glm::vec2 UIState::getCursorPositionScreenClamped(float c) {
 	return glm::clamp(this->getCursorPositionScreen(), -c, c);
 }
 
-void UIState::runUIBinds(PlayerState& state) {
-	auto front = this->runFrontBinds(state);
+void UIState::runUIBinds(PlayerState& playerState) {
+	auto front = this->runFrontBinds(playerState);
 
 	if (front & BIND::RESULT::STOP) {
 		return;
@@ -71,7 +71,7 @@ void UIState::runUIBinds(PlayerState& state) {
 		return;
 	}
 
-	state.controlState.writeConsumedBuffer();
+	playerState.controlState.writeConsumedBuffer();
 
 	if (this->UIs.size() > 1) {
 		auto it = this->UIs.begin(), last = this->UIs.end();
@@ -83,7 +83,7 @@ void UIState::runUIBinds(PlayerState& state) {
 		}
 		for (; it != last;) {
 			auto& UI = *it;
-			CallBackBindResult res = UI.get()->runOnHoverBinds(state) | UI.get()->runGlobalBinds(state);
+			CallBackBindResult res = UI.get()->runOnHoverBinds(playerState) | UI.get()->runGlobalBinds(playerState);
 
 			if (res & BIND::RESULT::CLOSE) {
 				it = this->UIs.erase(it);
@@ -99,14 +99,14 @@ void UIState::runUIBinds(PlayerState& state) {
 			if (res & BIND::RESULT::STOP) {
 				return;
 			}
-			state.controlState.writeConsumedBuffer();
+			playerState.controlState.writeConsumedBuffer();
 		}
 	}
 
-	if (!state.controlState.worldBindsBlocked()) {
+	if (!playerState.controlState.worldBindsBlocked()) {
 		for (auto it = this->UIs.begin(); it != this->UIs.end();) {
 			auto& UI = *it;
-			CallBackBindResult res = UI.get()->runGameWorldBinds(state);
+			CallBackBindResult res = UI.get()->runGameWorldBinds(playerState);
 
 			if (res & BIND::RESULT::CLOSE) {
 				it = this->UIs.erase(it);
@@ -122,13 +122,13 @@ void UIState::runUIBinds(PlayerState& state) {
 			if (res & BIND::RESULT::STOP) {
 				return;
 			}
-			state.controlState.writeConsumedBuffer();
+			playerState.controlState.writeConsumedBuffer();
 		}
 	}
 }
 
-void UIState::run(PlayerState& state) {
-	this->runUIBinds(state);
+void UIState::run(PlayerState& playerState) {
+	this->runUIBinds(playerState);
 
 	for (auto it = this->namedUIs.begin(), last = this->namedUIs.end(); it != last;) {
 		if (!it->second.isValid()) {
@@ -200,7 +200,7 @@ void UIState::appendRenderInfo(GameState& gameState, RenderInfo& renderInfo) {
 }
 
 void UIState::addUI(UniqueReference<UIOBase, UIOBase> ref) {
-	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONSUME;
 	});
@@ -230,7 +230,7 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 	}
 
 	this->namedUIsBuffer[name] = f();
-	this->namedUIsBuffer[name].get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->namedUIsBuffer[name].get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONSUME;
 	});
@@ -240,7 +240,7 @@ bool UIState::addNamedUI(std::string const& name, std::function<UniqueReference<
 void UIState::addNamedUIReplace(std::string const& name, UniqueReference<UIOBase, UIOBase> ref) {
 	this->closeNamedUI(name);
 
-	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ref.get()->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONSUME;
 	});
@@ -346,38 +346,38 @@ void UIState::init() {
 	{
 		UniqueReference<UIOBase, UIOInvisible> movement = UIO2::Global::getManager().makeUniqueRef<UIOInvisible>();
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::LEFT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			state.getPlayer().pos.x -= 1.0f;
+			playerState.getPlayer().pos.x -= 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::RIGHT, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			state.getPlayer().pos.x += 1.0f;
+			playerState.getPlayer().pos.x += 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::DOWN, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			state.getPlayer().pos.y -= 1.0f;
+			playerState.getPlayer().pos.y -= 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::UP, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::UP, CONTROL::STATE::PRESSED | CONTROL::STATE::DOWN }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			state.getPlayer().pos.y += 1.0f;
+			playerState.getPlayer().pos.y += 1.0f;
 			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_UP }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_UP }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() * 0.8f);
 			return BIND::RESULT::CONTINUE;
 		});
 
-		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_DOWN }, [&](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+		movement.get()->addGlobalBind({ CONTROL::KEY::SCROLL_DOWN }, [&](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
 			using viewport = Option<OPTION::CL_VIEWPORTSCALE, float>;
 			viewport::setVal(viewport::getVal() / 0.8f);

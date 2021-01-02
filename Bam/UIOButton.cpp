@@ -3,7 +3,7 @@
 #include "UIOButton.h"
 #include "GameState.h"
 #include "RenderInfo.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "Colors.h"
 #include "UIOEmpty.h"
 
@@ -36,12 +36,12 @@ glm::vec2 const& UIOButton::getMousePressOffset() const {
 }
 
 UIOButton::UIOButton(Handle self) {
-	this->onPress = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	this->onPress = [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONTINUE;
 	};
 
-	this->onRelease = [](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	this->onRelease = [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONTINUE;
 	};
@@ -49,36 +49,36 @@ UIOButton::UIOButton(Handle self) {
 	this->selfHandle = self;
 
 	this->addOnHoverBind({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL, CONTROL::STATE::PRESSED },
-						 [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+						 [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		self_->activate();
 		return BIND::RESULT::CONSUME;
 	});
 
-	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen()) ||
-			!params.controlState.activated({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL })) {
+		if (!self_->getScreenRectangle().contains(playerState.uiState.getCursorPositionScreen()) ||
+			!playerState.controlState.activated({ CONTROL::KEY::MOUSE_POS_CHANGED_TOPLEVEL })) {
 			self_->deactivate();
 		}
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addOnHoverBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::PRESSED }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOButton*>(self_);
 		self->down = true;
-		self->mousePressOffset = params.uiState.getCursorPositionScreen() - self->getScreenRectangle().getTopLeft();
-		return self->onPress(params, self_) | BIND::RESULT::FOCUS | BIND::RESULT::CONSUME;
+		self->mousePressOffset = playerState.uiState.getCursorPositionScreen() - self->getScreenRectangle().getTopLeft();
+		return self->onPress(playerState, self_) | BIND::RESULT::FOCUS | BIND::RESULT::CONSUME;
 	});
 
-	this->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::RELEASED }, [this](UIOCallBackParams& state, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::ACTION0, CONTROL::STATE::RELEASED }, [this](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		if (this->down) {
 			this->down = false;
 
-			if (self_->getScreenRectangle().contains(state.uiState.getCursorPositionScreen())) {
-				return this->onRelease(state, self_) | BIND::RESULT::CONTINUE;
+			if (self_->getScreenRectangle().contains(playerState.uiState.getCursorPositionScreen())) {
+				return this->onRelease(playerState, self_) | BIND::RESULT::CONTINUE;
 			}
 			else {
 				return BIND::RESULT::CONTINUE;

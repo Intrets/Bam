@@ -5,7 +5,7 @@
 #include "UIODestructible.h"
 #include "UIOConstructer2.h"
 #include "UIOSizeType.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "UIOConstrainSize.h"
 #include "RenderInfo.h"
 
@@ -29,9 +29,9 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 	this->proxyBase.set(this->destructible);
 
 	auto ptr = UIO2::makeEnd(std::move(ref));
-	ptr.get()->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr.get()->addGlobalBind({ CONTROL::KEY::ACTION0 }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		if (!self_->getScreenRectangle().contains(params.uiState.getCursorPositionScreen())) {
+		if (!self_->getScreenRectangle().contains(playerState.uiState.getCursorPositionScreen())) {
 			return BIND::RESULT::CLOSE;
 		}
 		else {
@@ -39,7 +39,7 @@ void UIOAnchoredProxy::setProxy(UniqueReference<UIOBase, UIOBase> ref, UIState& 
 		}
 	});
 
-	ptr.get()->addOnHoverBind({ CONTROL::KEY::ACTION0 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	ptr.get()->addOnHoverBind({ CONTROL::KEY::ACTION0 }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		return BIND::RESULT::CONSUME;
 	});

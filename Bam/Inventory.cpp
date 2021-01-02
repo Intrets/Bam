@@ -231,11 +231,11 @@ void Inventory::pickupWorld(GameState& gameState, glm::vec2 pos) {
 	if (target.isActivity()) {
 		auto root = target.getActivity().get()->getRootRef();
 		if (root.get()->removeTracesUp(gameState)) {
-			this->cursor = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(UniqueReference<Activity, Activity>(root));
+			this->cursor = gameState.getInventoryItemManager().makeUniqueRef<InventoryActivity>(UniqueReference<Activity, Activity>(root));
 		}
 	}
 	else if (target.isNonAirBlock()) {
-		this->cursor = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryBlock>(target.getShapedBlock(), 1);
+		this->cursor = gameState.getInventoryItemManager().makeUniqueRef<InventoryBlock>(target.getShapedBlock(), 1);
 		target.setBlock(ShapedBlock());
 	}
 }
@@ -309,18 +309,6 @@ bool Inventory::addItemCursor(UniqueReference<InventoryItem, InventoryItem>& ite
 	this->cursor = std::nullopt;
 	this->cursor = std::move(item);
 	return true;
-}
-
-bool Inventory::addItemCursor(UniqueReference<Activity, Activity>& activity) {
-	UniqueReference<InventoryItem, InventoryItem> res = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(activity));
-
-	if (this->addItemCursor(res)) {
-		return true;
-	}
-	else {
-		activity = std::move(res.getAs<InventoryActivity>()->extract());
-		return false;
-	}
 }
 
 bool Inventory::hasSpace() const {

@@ -12,7 +12,7 @@
 #include "Log.h"
 #include "ActivitySpawner.h"
 #include "Piston.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 
 bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 	std::vector<std::pair<SHAPE::TYPE, int32_t>> shapes;
@@ -106,11 +106,11 @@ bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 
 		selections.push_back(list.get());
 
-		list.get()->setList([type = type](UIOCallBackParams& params)
+		list.get()->setList([type = type](PlayerState& playerState)
 		{
 			std::vector<ShapedBlock> items;
 
-			for (auto const& item : params.getPlayer().getInventory().getItems()) {
+			for (auto const& item : playerState.getPlayer().getInventory().getItems()) {
 				if (item.get()->getType() == INVENTORYITEM::TYPE::BLOCK) {
 					auto block = static_cast<InventoryBlock*>(item.get());
 					if (block->getBlock().getShapeData() == type) {
@@ -126,9 +126,9 @@ bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 
 	auto button = UIO2::textButton("Spawn Activity");
 
-	button.get()->setOnRelease([shapes, selections = std::move(selections), activityType](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	button.get()->setOnRelease([shapes, selections = std::move(selections), activityType](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
-		if (!params.getPlayer().getInventory().hasSpace()) {
+		if (!playerState.getPlayer().getInventory().hasSpace()) {
 			Locator<Log>::ref().putLine("No space in inventory");
 			return BIND::RESULT::CONTINUE;
 		}
@@ -150,14 +150,16 @@ bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 			collection.push_back({ *block, count });
 		}
 
-		if (params.getPlayer().getInventory().extract(collection)) {
+		if (playerState.getPlayer().getInventory().extract(collection)) {
 			Locator<Log>::ref().putLine("ActivityBuilder: Successfully extracted blocks from inventory");
 
-			auto activity = ACTIVITYSPAWNER::spawn(params.gameState, { 0,0 }, activityType);
+			auto activity = ACTIVITYSPAWNER::spawn(playerState.gameState, { 0,0 }, activityType);
 
 			assert(activity.has_value());
 
-			auto success = params.getPlayer().getInventory().addItemCursor(activity.value());
+			UniqueReference<InventoryItem, InventoryItem> activityItem = playerState.gameState.getInventoryItemManager().makeUniqueRef<InventoryActivity>(std::move(activity.value()));
+
+			auto success = playerState.getPlayer().getInventory().addItemCursor(activityItem);
 
 			if (success) {
 				Locator<Log>::ref().putLine("ActivityBuilder: Successfully placed spawned activity in inventory");

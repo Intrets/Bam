@@ -2,5 +2,5 @@
 
 #include "PlayerState.h"
 
-typedef PlayerState UIOCallBackParams;
+typedef PlayerState PlayerState;
 

@@ -8,7 +8,7 @@
 #include "UIOSizeType.h"
 #include "Option.h"
 #include "UIOButton.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "UIOWindow.h"
 #include "UIOConstructItemSpawner.h"
 #include "UIOList.h"
@@ -130,7 +130,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	// Binds
 	// -----
 
-	builderTest.get()->setOnPress([proxy](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	builderTest.get()->setOnPress([proxy](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		const ACTIVITY::TYPE types[] = {
 			ACTIVITY::TYPE::PISTON,
@@ -154,7 +154,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		for (auto type : types) {
 			UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 			auto button = UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type));
-			button.get()->setOnRelease([type = type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			button.get()->setOnRelease([type = type](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 			{
 				UIO2::Global::push();
 
@@ -165,20 +165,20 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 							 UIOWindow::TYPE::CLOSE);
 				UIO2::constructActivityBuilder(type);
 
-				params.uiState.addNamedUIReplace("Builder", UIO2::Global::pop());
+				playerState.uiState.addNamedUIReplace("Builder", UIO2::Global::pop());
 
 				return BIND::RESULT::CLOSE;
 			});
 		}
 		UIO2::endList();
 
-		proxy.get()->setProxy(UIO2::Global::pop(), params.uiState);
+		proxy.get()->setProxy(UIO2::Global::pop(), playerState.uiState);
 
 		return BIND::RESULT::CONTINUE;
 	});
 
 	saveButton.get()->setOnRelease(
-		[saveName = saveName.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		[saveName = saveName.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -186,11 +186,11 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		auto name = saveName->text.getLines().front();
 		name.erase(name.end() - 1);
 
-		params.gameState.saveFile = name;
+		playerState.gameState.saveFile = name;
 		return BIND::RESULT::CONTINUE;
 	});
 
-	loadButton.get()->setOnRelease([saveName = saveName.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	loadButton.get()->setOnRelease([saveName = saveName.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -198,14 +198,14 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		auto name = saveName->text.getLines().front();
 		name.erase(name.end() - 1);
 
-		params.gameState.loadFile = name;
-		params.uiState.reset();
+		playerState.gameState.loadFile = name;
+		playerState.uiState.reset();
 		return BIND::RESULT::CONTINUE;
 	});
 
 	tickInfo.get()->addGlobalBind(
 		{ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) },
-		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 		self->setText(Locator<Timer>::ref().print());
@@ -213,9 +213,9 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	});
 
 	spawnItem.get()->setOnRelease(
-		[](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+		[](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
-		params.uiState.addNamedUI("Item Spawner", []()
+		playerState.uiState.addNamedUI("Item Spawner", []()
 		{
 			UIO2::Global::push();
 
@@ -233,7 +233,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	debugButton.get()->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	debugButton.get()->setOnRelease([](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		Option<OPTION::GR_DEBUG, bool>::setVal(!Option<OPTION::GR_DEBUG, bool>::getVal());
 		auto self = static_cast<UIOButton*>(self_);
@@ -242,7 +242,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	});
 	debugButton.get()->setColor(Option<OPTION::GR_DEBUG, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
-	renderThread.get()->setOnRelease([](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	renderThread.get()->setOnRelease([](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		Option<OPTION::GR_RENDERTHREAD, bool>::setVal(!Option<OPTION::GR_RENDERTHREAD, bool>::getVal());
 		auto self = static_cast<UIOButton*>(self_);
@@ -251,7 +251,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	});
 	renderThread.get()->setColor(Option<OPTION::GR_RENDERTHREAD, bool>::getVal() ? COLORS::UI::GREEN : COLORS::UI::RED);
 
-	logOutput.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	logOutput.get()->addGlobalBind({ CONTROL::KEY::EVERY_TICK, static_cast<int32_t>(CONTROL::STATE::PRESSED) }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOTextDisplay*>(self_);
 

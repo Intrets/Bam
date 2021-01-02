@@ -27,11 +27,11 @@ public:
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 
-	virtual CallBackBindResult runOnHoverBinds(PlayerState& state) override;
-	virtual CallBackBindResult runFocussedBinds(PlayerState& state) override;
-	virtual CallBackBindResult runActiveBinds(PlayerState& state) override;
-	virtual CallBackBindResult runGlobalBinds(PlayerState& state) override;
-	virtual CallBackBindResult runGameWorldBinds(PlayerState& state) override;
+	virtual CallBackBindResult runOnHoverBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runFocussedBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runActiveBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runGlobalBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runGameWorldBinds(PlayerState& playerState) override;
 
 	virtual void addElement(UniqueReference<UIOBase, UIOBase> element) override;
 	virtual void addElementMulti(UniqueReference<UIOBase, UIOBase> element);

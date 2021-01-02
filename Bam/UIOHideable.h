@@ -20,11 +20,11 @@ public:
 	void hide();
 	void show();
 
-	virtual CallBackBindResult runGlobalBinds(PlayerState& state) override;
-	virtual CallBackBindResult runFocussedBinds(PlayerState& state) override;
-	virtual CallBackBindResult runOnHoverBinds(PlayerState& state) override;
-	virtual CallBackBindResult runActiveBinds(PlayerState& state) override;
-	virtual CallBackBindResult runGameWorldBinds(PlayerState& state) override;
+	virtual CallBackBindResult runGlobalBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runFocussedBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runOnHoverBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runActiveBinds(PlayerState& playerState) override;
+	virtual CallBackBindResult runGameWorldBinds(PlayerState& playerState) override;
 
 	virtual int32_t addRenderInfo(GameState& gameState, RenderInfo& renderInfo, int32_t depth) override;
 };

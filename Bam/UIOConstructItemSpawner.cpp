@@ -6,7 +6,7 @@
 #include "Enums.h"
 #include "Inventory.h"
 #include "ActivitySpawner.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "DataFront.h"
 #include "Block.h"
 #include "Shape.h"
@@ -34,12 +34,12 @@ UIOList* UIO2::constructItemSpawner() {
 	for (auto type : activities) {
 		UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
 		UIO2::textButton(ACTIVITY::GET_TYPE_NAME(type)).get()->setOnRelease(
-			[type](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+			[type](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 		{
-			if (auto maybeItem = ACTIVITYSPAWNER::spawn(params.gameState, { 0,0 }, type)) {
+			if (auto maybeItem = ACTIVITYSPAWNER::spawn(playerState.gameState, { 0,0 }, type)) {
 				auto& item = maybeItem.value();
-				UniqueReference<InventoryItem, InventoryItem> inventoryItem = Locator<ReferenceManager<InventoryItem>>::ref().makeUniqueRef<InventoryActivity>(std::move(item));
-				params.getPlayer().getInventory().addItemCursor(inventoryItem);
+				UniqueReference<InventoryItem, InventoryItem> inventoryItem = playerState.gameState.getInventoryItemManager().makeUniqueRef<InventoryActivity>(std::move(item));
+				playerState.getPlayer().getInventory().addItemCursor(inventoryItem);
 			}
 			else {
 				Locator<Log>::ref().putLine("Spawning of activity " + ACTIVITY::GET_TYPE_NAME(type) + " failed or not implemented");
@@ -76,7 +76,7 @@ UIOList* UIO2::constructItemSpawner() {
 	UIO2::endGrid();
 
 	UIO2::constrainHeight({ UIO::SIZETYPE::FH, 1.2f });
-	UIO2::textButton("Spawn Block").get()->setOnRelease([shapeSelection = shapeSelection.get(), blockSelection = blockSelection.get()](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	UIO2::textButton("Spawn Block").get()->setOnRelease([shapeSelection = shapeSelection.get(), blockSelection = blockSelection.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto block = blockSelection->getSelected();
 		auto shape = shapeSelection->getSelected();
@@ -84,8 +84,8 @@ UIOList* UIO2::constructItemSpawner() {
 		if (block.has_value() && shape.has_value()) {
 			ShapedBlock shapedBlock{ *block.value(), *shape.value(), ACTIVITY::DIR::RIGHT };
 
-			UniqueReference<InventoryItem, InventoryItem> inventoryItem = params.gameState.getInventoryItemManager().makeUniqueRef<InventoryBlock>(shapedBlock, 1);
-			params.getPlayer().getInventory().addItemCursor(inventoryItem);
+			UniqueReference<InventoryItem, InventoryItem> inventoryItem = playerState.gameState.getInventoryItemManager().makeUniqueRef<InventoryBlock>(shapedBlock, 1);
+			playerState.getPlayer().getInventory().addItemCursor(inventoryItem);
 		}
 		return BIND::RESULT::CONTINUE;
 	});

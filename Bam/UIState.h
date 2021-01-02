@@ -13,7 +13,7 @@ private:
 	glm::vec2 cursorScreen;
 	glm::vec2 cursorWorld;
 
-	CallBackBindResult runFrontBinds(PlayerState& state);
+	CallBackBindResult runFrontBinds(PlayerState& playerState);
 
 	std::unordered_map<std::string, ManagedReference<UIOBase, UIOBase>> namedUIs;
 
@@ -29,8 +29,8 @@ public:
 	glm::vec2 getCursorPositionScreen();
 	glm::vec2 getCursorPositionScreenClamped(float c);
 
-	void runUIBinds(PlayerState& state);
-	void run(PlayerState& state);
+	void runUIBinds(PlayerState& playerState);
+	void run(PlayerState& playerState);
 
 	bool updateSize(GLFWwindow* window);
 	void updateCursor(GLFWwindow* window, glm::vec2 cam);

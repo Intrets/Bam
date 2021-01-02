@@ -22,7 +22,7 @@ private:
 	SelectionHighlightRenderer selectionRenderer;
 
 public:
-	void prepareRender(GLFWwindow* window, RenderInfo& target, PlayerState& state);
+	void prepareRender(GLFWwindow* window, RenderInfo& target, PlayerState& playerState);
 
 	void render(GLFWwindow* window, RenderInfo const& renderInfo);
 

@@ -26,7 +26,6 @@ void initManagers(GLFWwindow* window) {
 	Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
 	Locator<BlockIDTextures>::provide(new BlockIDTextures());
 	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
-	Locator<ReferenceManager<InventoryItem>>::provide(new ReferenceManager<InventoryItem>());
 
 	Locator<BlitRenderer>::provide(new BlitRenderer());
 	Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());

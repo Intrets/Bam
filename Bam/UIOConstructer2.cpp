@@ -6,7 +6,7 @@
 #include "UIOConstrainSize.h"
 #include "UIOButton.h"
 #include "UIOWindow.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "UIOGrid.h"
 #include "UIOHideable.h"
 #include "UIOProxy.h"
@@ -209,11 +209,11 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 		auto button = UIO2::textButton(title);
 		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			[windowPtr = windowPtr.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
-				windowPtr->moveTopLeftTo(params.uiState.getCursorPositionScreenClamped(0.99f) - self->getMousePressOffset());
+				windowPtr->moveTopLeftTo(playerState.uiState.getCursorPositionScreenClamped(0.99f) - self->getMousePressOffset());
 			}
 			return BIND::RESULT::CONTINUE;
 		});
@@ -234,7 +234,7 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 
 		UIO2::constrainSize({ UIO::SIZETYPE::FH, 1.2f });
 		auto button = UIO2::textButton(" _");
-		button.get()->setOnRelease([windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+		button.get()->setOnRelease([windowPtr = windowPtr.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 		{
 			windowPtr->minimized = !windowPtr->minimized;
 			return BIND::RESULT::CONTINUE;
@@ -285,13 +285,13 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 
 		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			[windowPtr = windowPtr.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
 				bottomRight.y =
-					params.uiState.getCursorPositionScreenClamped(0.99f).y
+					playerState.uiState.getCursorPositionScreenClamped(0.99f).y
 					- self->getMousePressOffset().y - self->screenRectangle.getAbsSize().y;
 				if (windowPtr->screenRectangle.getTop() - bottomRight.y < 0.2f) {
 					bottomRight.y = windowPtr->screenRectangle.getTop() - 0.2f;
@@ -318,13 +318,13 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 
 		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			[windowPtr = windowPtr.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
 				auto bottomRight = windowPtr->screenRectangle.getBottomRight();
 				bottomRight.x =
-					params.uiState.getCursorPositionScreenClamped(0.99f).x
+					playerState.uiState.getCursorPositionScreenClamped(0.99f).x
 					- self->getMousePressOffset().x + self->screenRectangle.getAbsSize().x;
 				if (bottomRight.x - windowPtr->screenRectangle.getLeft() < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.getLeft() + 0.2f;
@@ -349,12 +349,12 @@ WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectang
 
 		button.get()->addFocussedBind(
 			{ CONTROL::KEY::MOUSE_POS_CHANGED, CONTROL::STATE::PRESSED },
-			[windowPtr = windowPtr.get()](UIOCallBackParams& params, UIOBase* self_)->CallBackBindResult
+			[windowPtr = windowPtr.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 		{
 			auto self = static_cast<UIOButton*>(self_);
 			if (self->isDown()) {
 				auto bottomRight =
-					params.uiState.getCursorPositionScreenClamped(0.99f)
+					playerState.uiState.getCursorPositionScreenClamped(0.99f)
 					- self->getMousePressOffset() + glm::vec2(1.0f, -1.0f) * self->screenRectangle.getAbsSize();
 				if (bottomRight.x - windowPtr->screenRectangle.getLeft() < 0.2f) {
 					bottomRight.x = windowPtr->screenRectangle.getLeft() + 0.2f;
@@ -517,7 +517,7 @@ WeakReference<UIOBase, UIOList> UIO2::menu(std::string const& text, std::optiona
 
 	UIO2::endList();
 
-	button.get()->setOnPress([proxy = proxy.get(), f](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	button.get()->setOnPress([proxy = proxy.get(), f](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		UIO2::Global::push();
 
@@ -528,7 +528,7 @@ WeakReference<UIOBase, UIOList> UIO2::menu(std::string const& text, std::optiona
 
 		f();
 
-		proxy->setProxy(UIO2::Global::pop(), params.uiState);
+		proxy->setProxy(UIO2::Global::pop(), playerState.uiState);
 
 		return BIND::RESULT::CONTINUE;
 	});

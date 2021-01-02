@@ -6,10 +6,10 @@
 #include "GameState.h"
 #include "Platform.h"
 #include "Piston.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "Linker.h"
 #include "ActivityHelpers.h"
-#include "UIOCallBackParams.h"
+#include "PlayerState.h"
 #include "Anchor.h"
 #include "ActivitySpawner.h"
 #include "UIOConstructLuaInterface.h"
@@ -19,70 +19,70 @@
 UIOActivityInterface::UIOActivityInterface(Handle self) {
 	this->selfHandle = self;
 
-	this->addFocussedBind({ CONTROL::KEY::ACTION_PICK }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ CONTROL::KEY::ACTION_PICK }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->copy(params.gameState, params.uiState.getCursorPositionWorld());
+		self->copy(playerState.gameState, playerState.uiState.getCursorPositionWorld());
 		return BIND::CONTINUE;
 	});
 
-	this->addFocussedBind({ CONTROL::KEY::CANCEL }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ CONTROL::KEY::CANCEL }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->exit();
 		return BIND::RESULT::CONTINUE | BIND::RESULT::HIDE;
 	});
 
-	this->addFocussedBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::NONE }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(ACTIVITY::ROT::CLOCKWISE);
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addFocussedBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ CONTROL::KEY::ROTATER, CONTROL::STATE::PRESSED, CONTROL::MODIFIER::SHIFT }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->rotateHover(ACTIVITY::ROT::COUNTERCLOCKWISE);
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION1 }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION1 }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->cancel(false);
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION_USE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION_USE }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->pickUp(params.gameState, params.uiState.getCursorPositionWorld());
+		self->pickUp(playerState.gameState, playerState.uiState.getCursorPositionWorld());
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME | BIND::RESULT::FOCUS;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION_ACTIVATE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT, CONTROL::MODIFIER::NONE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION_ACTIVATE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT, CONTROL::MODIFIER::NONE }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->changeHoverActivityState(2);
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addGameWorldBind({ CONTROL::KEY::ACTION_ACTIVATE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT, CONTROL::MODIFIER::SHIFT }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGameWorldBind({ CONTROL::KEY::ACTION_ACTIVATE, CONTROL::STATE::PRESSED | CONTROL::STATE::REPEAT, CONTROL::MODIFIER::SHIFT }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->changeHoverActivityState(1);
 		return BIND::RESULT::CONTINUE | BIND::RESULT::CONSUME;
 	});
 
-	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addGlobalBind({ CONTROL::KEY::MOUSE_POS_CHANGED }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
-		self->updateCursorPos(params.uiState.getCursorPositionWorld());
+		self->updateCursorPos(playerState.uiState.getCursorPositionWorld());
 		return BIND::RESULT::CONTINUE;
 	});
 
-	this->addFocussedBind({ CONTROL::KEY::ACTION_DELETE }, [](UIOCallBackParams& params, UIOBase* self_) -> CallBackBindResult
+	this->addFocussedBind({ CONTROL::KEY::ACTION_DELETE }, [](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
 	{
 		auto self = static_cast<UIOActivityInterface*>(self_);
 		self->splitTarget();
