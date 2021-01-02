@@ -49,7 +49,7 @@ bool Piston::canActivityLocal(GameState& gameState, int32_t type) {
 				if (this->child.isNull()) {
 					return true;
 				}
-				ActivityIgnoringGroup ignoring{ this->getSortedHandles() };
+				ActivityIgnoringGroup ignoring{ this->getSortedMembers() };
 				return this->child.get()->canMoveUp(gameState, ACTIVITY::FLIP(this->activityRotation), ignoring);
 			}
 			break;

@@ -30,7 +30,7 @@ class Activity
 {
 private:
 	// non-cached base implementation
-	Activity* impl_getRootHandle();
+	Activity* impl_getRoot();
 
 	friend class MemberCache;
 
@@ -159,7 +159,7 @@ public:
 	virtual void impl_getTreeMembersDepths(std::vector<std::pair<int32_t, Activity*>>& members, int32_t depth) = 0;
 
 	// cached through MemberCache member object
-	std::vector<Activity*> const& getSortedHandles();
+	std::vector<Activity*> const& getSortedMembers();
 	// cached through MemberCache member object
 	std::vector<Activity*> const& getTreeMembers();
 	// cached through MemberCache member object

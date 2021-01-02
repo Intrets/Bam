@@ -4,10 +4,10 @@
 #include <algorithm>
 
 bool ActivityIgnoringGroup::contains(Activity* h) const {
-	return std::binary_search(this->sortedHandles.begin(), this->sortedHandles.end(), h);
+	return std::binary_search(this->sortedMembers.begin(), this->sortedMembers.end(), h);
 }
 
-ActivityIgnoringGroup::ActivityIgnoringGroup(std::vector<Activity*> const& handles) : sortedHandles(handles) {
+ActivityIgnoringGroup::ActivityIgnoringGroup(std::vector<Activity*> const& handles) : sortedMembers(handles) {
 }
 
 ActivityIgnoringGroup::~ActivityIgnoringGroup() {

@@ -6,7 +6,7 @@ class Activity;
 class ActivityIgnoringGroup
 {
 private:
-	std::vector<Activity*> const& sortedHandles;
+	std::vector<Activity*> const& sortedMembers;
 
 public:
 	bool contains(Activity* h) const;

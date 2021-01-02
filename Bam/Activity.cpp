@@ -18,7 +18,7 @@ void Activity::applyMoveLocalForced(GameState& gameState, ACTIVITY::DIR dir, int
 }
 
 bool Activity::canMoveUp(GameState& gameState, ACTIVITY::DIR dir) {
-	ActivityIgnoringGroup ignoring(this->getSortedHandles());
+	ActivityIgnoringGroup ignoring(this->getSortedMembers());
 	return this->canMoveUp(gameState, dir, ignoring);
 }
 
@@ -188,7 +188,7 @@ bool Activity::applyMoveUp(GameState& gameState, ACTIVITY::DIR dir, int32_t pace
 		}
 	}
 
-	ActivityIgnoringGroup ignoring(this->getSortedHandles());
+	ActivityIgnoringGroup ignoring(this->getSortedMembers());
 	for (auto member : members) {
 		if (!member->canMoveLocal(gameState, dir, ignoring)) {
 			return false;
@@ -218,8 +218,8 @@ void Activity::stopMovement(GameState& gameState) {
 	this->moving = false;
 }
 
-std::vector<Activity*> const& Activity::getSortedHandles() {
-	return this->memberCache.getSortedHandles();
+std::vector<Activity*> const& Activity::getSortedMembers() {
+	return this->memberCache.getSortedMembers();
 }
 
 std::vector<Activity*> const& Activity::getTreeMembers() {
@@ -238,9 +238,9 @@ Activity* Activity::getRootPtr() {
 	return this->memberCache.getRoot();
 }
 
-Activity* Activity::impl_getRootHandle() {
+Activity* Activity::impl_getRoot() {
 	if (this->parentRef.isNotNull()) {
-		return this->parentRef.get()->impl_getRootHandle();
+		return this->parentRef.get()->impl_getRoot();
 	}
 	else {
 		return this;

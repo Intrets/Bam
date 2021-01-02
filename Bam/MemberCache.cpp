@@ -12,7 +12,7 @@ void MemberCache::invalidateMembers() {
 	this->membersTick++;
 
 	this->validMembers = false;
-	this->validSortedHandles = false;
+	this->validSortedMembers = false;
 }
 
 void MemberCache::invalidateRoot() {
@@ -50,18 +50,18 @@ std::vector<Activity*> const& MemberCache::getMembers() {
 	return this->members;
 }
 
-std::vector<Activity*> const& MemberCache::getSortedHandles() {
-	if (!this->validSortedHandles) {
-		this->sortedHandles = this->getMembers();
-		std::sort(this->sortedHandles.begin(), this->sortedHandles.end());
-		this->validSortedHandles = true;
+std::vector<Activity*> const& MemberCache::getSortedMembers() {
+	if (!this->validSortedMembers) {
+		this->sortedMembers = this->getMembers();
+		std::sort(this->sortedMembers.begin(), this->sortedMembers.end());
+		this->validSortedMembers = true;
 	}
-	return this->sortedHandles;
+	return this->sortedMembers;
 }
 
 Activity* MemberCache::getRoot() {
 	if (!this->validRoot) {
-		this->root = this->self.impl_getRootHandle();
+		this->root = this->self.impl_getRoot();
 		this->validRoot = true;
 	}
 	return this->root;
