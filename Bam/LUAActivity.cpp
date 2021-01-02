@@ -284,16 +284,15 @@ void LuaActivity::updateLabels() {
 }
 
 void LuaActivity::run() {
-	if (this->args.has_value() && this->processMessage()) {
-		// functionality in the if statement above
-	}
-	else if (this->running) {
-		if (!this->interrupt) {
-			this->runLoop();
-		}
-		else {
-			this->interrupt = false;
-			this->running = false;
+	if (!this->args.has_value() || !this->processMessage()) {
+		if (this->running) {
+			if (!this->interrupt) {
+				this->runLoop();
+			}
+			else {
+				this->interrupt = false;
+				this->running = false;
+			}
 		}
 	}
 }
