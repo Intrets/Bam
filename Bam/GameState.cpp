@@ -59,6 +59,18 @@ bool GameState::save(Saver& saver) {
 	return true;
 }
 
+void GameState::clear() {
+	this->getInventoryItemManager().clear();
+
+	while (!this->getActivityManager().data.empty()) {
+		auto& [handle, begin] = *this->getActivityManager().data.begin();
+
+		begin.get()->getRootRef().deleteObject();
+	}
+
+	this->getActivityManager().clear();
+}
+
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 	Locator<Timer>::ref().newTiming("Prepare Static");
 	this->staticWorld.appendStaticRenderInfo(renderInfo);
@@ -85,4 +97,5 @@ GameState::GameState() {
 }
 
 GameState::~GameState() {
+	this->clear();
 }

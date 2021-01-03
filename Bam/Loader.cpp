@@ -114,17 +114,7 @@ bool Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame() {
-	gameStateRef.getInventoryItemManager().clear();
-
-	{
-		while (!gameStateRef.getActivityManager().data.empty()) {
-			auto& [handle, begin] = *gameStateRef.getActivityManager().data.begin();
-
-			begin.get()->getRootRef().deleteObject();
-		}
-	}
-
-	gameStateRef.getActivityManager().clear();
+	gameStateRef.clear();
 
 	load(*this, gameStateRef.getActivityManager());
 	INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());

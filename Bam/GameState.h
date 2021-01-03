@@ -46,6 +46,8 @@ public:
 	bool load(Loader& loader);
 	bool save(Saver& saver);
 
+	void clear();
+
 	void appendStaticRenderInfo(RenderInfo& renderInfo);
 
 	GameState();
