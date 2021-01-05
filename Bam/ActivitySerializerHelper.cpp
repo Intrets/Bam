@@ -1,6 +1,8 @@
 #include "common.h"
 
-#include "ActivityLoaderHelper.h"
+#include "ActivitySerializerHelper.h"
+
+#include "ReferenceManager.h"
 #include "Activity.h"
 #include "Piston.h"
 #include "Anchor.h"
@@ -19,7 +21,8 @@
 #define LOAD(TYPE) TYPE* p = new TYPE();\
 					p->load(loader);\
 					manager.storeReference(p->getHandle(), p);
-namespace ACTIVITYLOADER
+
+namespace ACTIVITYSERIALIZER
 {
 	void load(Loader& loader, ReferenceManager<Activity>& manager) {
 		size_t size;
@@ -84,4 +87,12 @@ namespace ACTIVITYLOADER
 			}
 		}
 	}
+
+	void save(Saver& saver, ReferenceManager<Activity>& manager) {
+		saver.store(manager.data.size());
+		for (auto& p : manager.data) {
+			p.second->save(saver);
+		}
+	}
 }
+

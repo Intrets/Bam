@@ -1,12 +1,14 @@
 #pragma once
 
-class Activity;
+class Saver;
 class Loader;
+class Activity;
 
 template<class>
 class ReferenceManager;
 
-namespace ACTIVITYLOADER
+namespace ACTIVITYSERIALIZER
 {
 	void load(Loader& loader, ReferenceManager<Activity>& manager);
+	void save(Saver& saver, ReferenceManager<Activity>& manager);
 }

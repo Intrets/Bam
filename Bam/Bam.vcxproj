@@ -271,9 +271,8 @@
     <ClCompile Include="ActivityGhost.cpp" />
     <ClCompile Include="ActivityHelpers.cpp" />
     <ClCompile Include="ActivityIgnoringGroup.cpp" />
-    <ClCompile Include="ActivityLoaderHelper.cpp" />
     <ClCompile Include="ActivityPaceHandler.cpp" />
-    <ClCompile Include="ActivitySaverHelper.cpp" />
+    <ClCompile Include="ActivitySerializerHelper.cpp" />
     <ClCompile Include="ActivitySpawner.cpp" />
     <ClCompile Include="Anchor.cpp" />
     <ClCompile Include="Bam.cpp" />
@@ -388,9 +387,8 @@
     <ClInclude Include="ActivityGhost.h" />
     <ClInclude Include="ActivityHelpers.h" />
     <ClInclude Include="ActivityIgnoringGroup.h" />
-    <ClInclude Include="ActivityLoaderHelper.h" />
     <ClInclude Include="ActivityPaceHandler.h" />
-    <ClInclude Include="ActivitySaverHelper.h" />
+    <ClInclude Include="ActivitySerializerHelper.h" />
     <ClInclude Include="ActivitySpawner.h" />
     <ClInclude Include="Anchor.h" />
     <ClInclude Include="BlitRendererArrayTexture.h" />

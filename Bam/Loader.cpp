@@ -7,7 +7,7 @@
 #include "Platform.h"
 #include "ReferenceManager.h"
 #include "StaticWorldChunk.h"
-#include "ActivityLoaderHelper.h"
+#include "ActivitySerializerHelper.h"
 #include "InventorySerializerHelper.h"
 #include "InventoryItem.h"
 #include "Inventory.h"
@@ -114,7 +114,7 @@ bool Loader::loadGame() {
 	gameStateRef.clear();
 
 	try {
-		ACTIVITYLOADER::load(*this, gameStateRef.getActivityManager());
+		ACTIVITYSERIALIZER::load(*this, gameStateRef.getActivityManager());
 		INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());
 
 		this->gameStateRef.load(*this);

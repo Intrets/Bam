@@ -5,7 +5,7 @@
 #include "ReferenceManager.h"
 #include "StaticWorldChunk.h"
 #include "GameState.h"
-#include "ActivitySaverHelper.h"
+#include "ActivitySerializerHelper.h"
 #include "InventoryItem.h"
 #include "InventorySerializerHelper.h"
 #include "Inventory.h"
@@ -27,7 +27,7 @@ void Saver::storeActivityPointer(Activity* ptr) {
 }
 
 bool Saver::saveGame() {
-	save(*this, gameStateRef.getActivityManager());
+	ACTIVITYSERIALIZER::save(*this, gameStateRef.getActivityManager());
 	INVENTORYSERIALIZER::save(*this, gameStateRef.getInventoryItemManager());
 
 	this->gameStateRef.save(*this);

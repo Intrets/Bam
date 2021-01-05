@@ -166,13 +166,7 @@
     <ClCompile Include="ActivityIgnoringGroup.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ActivityLoaderHelper.cpp">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="ActivityPaceHandler.cpp">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivitySaverHelper.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Saver.cpp">
@@ -431,6 +425,9 @@
     <ClCompile Include="PlayerState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="ActivitySerializerHelper.cpp">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -511,13 +508,7 @@
     <ClInclude Include="ActivityIgnoringGroup.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ActivityLoaderHelper.h">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="ActivityPaceHandler.h">
-      <Filter>Game\StaticWorld\Activities\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivitySaverHelper.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Saver.h">
@@ -775,6 +766,9 @@
     <ClInclude Include="FunctionHelpers.h" />
     <ClInclude Include="PlayerState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivitySerializerHelper.h">
+      <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
