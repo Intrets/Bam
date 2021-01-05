@@ -447,7 +447,7 @@ inline void ReferenceManager<B>::clear() {
 	this->incomplete.resize(0);
 	this->incompletePointers.resize(0);
 
-	for (auto& [_, managed] : this->managedReferences) {
+	for (auto [_, managed] : this->managedReferences) {
 		managed->clearPtr();
 	}
 	this->managedReferences.clear();
@@ -505,12 +505,12 @@ inline void ReferenceManager<B>::addIncomplete(Handle h, B*& ptr) {
 
 template<class B>
 inline void ReferenceManager<B>::completeReferences() {
-	for (auto& [h, ptr] : this->incomplete) {
+	for (auto [h, ptr] : this->incomplete) {
 		ptr->ptr = this->data[h].get();
 	}
 	this->incomplete.clear();
 
-	for (auto& [h, ptr] : this->incompletePointers) {
+	for (auto [h, ptr] : this->incompletePointers) {
 		*ptr = this->data[h].get();
 	}
 	this->incompletePointers.clear();

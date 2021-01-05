@@ -116,7 +116,7 @@ void UIOBase::addGameWorldBinds(std::vector<BindControl> const& bindControls, Ca
 CallBackBindResult UIOBase::runGlobalBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
-	for (auto [control, bind] : this->globalBinds) {
+	for (auto& [control, bind] : this->globalBinds) {
 		if (playerState.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;
@@ -135,7 +135,7 @@ CallBackBindResult UIOBase::runGlobalBinds(PlayerState& playerState) {
 CallBackBindResult UIOBase::runFocussedBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
-	for (auto [control, bind] : this->focussedBinds) {
+	for (auto& [control, bind] : this->focussedBinds) {
 		if (playerState.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(playerState, this);
 			if (bindResult & BIND::RESULT::CONSUME) {
@@ -154,7 +154,7 @@ CallBackBindResult UIOBase::runFocussedBinds(PlayerState& playerState) {
 CallBackBindResult UIOBase::runOnHoverBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
-	for (auto [control, bind] : onHoverBinds) {
+	for (auto& [control, bind] : onHoverBinds) {
 		if (playerState.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;
@@ -174,7 +174,7 @@ CallBackBindResult UIOBase::runActiveBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
 	if (this->active) {
-		for (auto [control, bind] : activeBinds) {
+		for (auto& [control, bind] : activeBinds) {
 			if (playerState.controlState.activated(control)) {
 				CallBackBindResult bindResult = bind(playerState, this);
 				sumResult |= bindResult;
@@ -194,7 +194,7 @@ CallBackBindResult UIOBase::runActiveBinds(PlayerState& playerState) {
 CallBackBindResult UIOBase::runGameWorldBinds(PlayerState& playerState) {
 	CallBackBindResult sumResult = 0;
 
-	for (auto [control, bind] : this->gameWorldBinds) {
+	for (auto& [control, bind] : this->gameWorldBinds) {
 		if (playerState.controlState.activated(control)) {
 			CallBackBindResult bindResult = bind(playerState, this);
 			sumResult |= bindResult;

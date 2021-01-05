@@ -16,7 +16,7 @@ bwo::Texture::~Texture() {
 std::string bwo::Program::listAll() {
 	std::stringstream out;
 
-	for (auto [index, program] : bwo::Program::refs) {
+	for (auto& [index, program] : bwo::Program::refs) {
 		out << program->description << ". ID: " << index << " Shaders: " << program->fragmentShaderName << " " << program->vertexShaderName << "\n\n";
 	}
 
