@@ -17,7 +17,7 @@ class Loader
 private:
 	int32_t loc = 0;
 
-	std::ifstream in;
+	std::istream& in;
 
 	GameState& gameStateRef;
 
@@ -25,84 +25,80 @@ private:
 	void addIncompleteInventoryRef(Handle handle, Reference* ref);
 
 public:
-	bool retrieveActivityPointer(Activity*& ptr);
+	void retrieveActivityPointer(Activity*& ptr);
 
 	template<class T>
-	bool retrieve(T& t);
+	void retrieve(T& t);
 
 	template<class T>
-	bool retrieve(std::optional<T>& m);
+	void retrieve(std::optional<T>& m);
 
 	template<class T>
-	bool retrieve(WeakReference<Activity, T>& m);
+	void retrieve(WeakReference<Activity, T>& m);
 
 	template<class T>
-	bool retrieve(UniqueReference<Activity, T>& m);
+	void retrieve(UniqueReference<Activity, T>& m);
 
 	template<class T>
-	bool retrieve(ManagedReference<Activity, T>& m);
+	void retrieve(ManagedReference<Activity, T>& m);
 
 	template<class T>
-	bool retrieve(WeakReference<InventoryItem, T>& m);
+	void retrieve(WeakReference<InventoryItem, T>& m);
 
 	template<class T>
-	bool retrieve(UniqueReference<InventoryItem, T>& m);
+	void retrieve(UniqueReference<InventoryItem, T>& m);
 
 	template<class T>
-	bool retrieve(ManagedReference<InventoryItem, T>& m);
+	void retrieve(ManagedReference<InventoryItem, T>& m);
 
 	sol::object retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache);
 
-	bool retrieveString(std::string& str);
+	void retrieveString(std::string& str);
 
 	bool loadGame();
 	GameState& getGameStateRef();
 
-	Loader(std::string file, GameState& gameState);
+	// sets flags so the stream will throw exceptions
+	Loader(std::istream& in_, GameState& gameState);
 
 	Loader() = delete;
 	~Loader();
 };
 
 template<>
-inline bool Loader::retrieve(int64_t& t) {
+inline void Loader::retrieve(int64_t& t) {
 	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(int32_t& t) {
+inline void Loader::retrieve(int32_t& t) {
 	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(int8_t& t) {
+inline void Loader::retrieve(int8_t& t) {
 	this->in.read(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(glm::ivec2& t) {
+inline void Loader::retrieve(glm::ivec2& t) {
 	int32_t x;
 	this->retrieve(x);
 	int32_t y;
 	this->retrieve(y);
 	t.x = static_cast<int>(x);
 	t.y = static_cast<int>(y);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(size_t& t) {
+inline void Loader::retrieve(size_t& t) {
 	int64_t s;
 	this->retrieve(s);
 	t = static_cast<size_t>(s);
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(WeakReference<Activity, T>& m) {
+inline void Loader::retrieve(WeakReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -111,11 +107,10 @@ inline bool Loader::retrieve(WeakReference<Activity, T>& m) {
 	else {
 		m.clear();
 	}
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(UniqueReference<Activity, T>& m) {
+inline void Loader::retrieve(UniqueReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -124,11 +119,10 @@ inline bool Loader::retrieve(UniqueReference<Activity, T>& m) {
 	else {
 		m.ptr = nullptr;
 	}
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(ManagedReference<Activity, T>& m) {
+inline void Loader::retrieve(ManagedReference<Activity, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -137,11 +131,10 @@ inline bool Loader::retrieve(ManagedReference<Activity, T>& m) {
 	else {
 		m.ptr = nullptr;
 	}
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(WeakReference<InventoryItem, T>& m) {
+inline void Loader::retrieve(WeakReference<InventoryItem, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -150,11 +143,10 @@ inline bool Loader::retrieve(WeakReference<InventoryItem, T>& m) {
 	else {
 		m.clear();
 	}
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(UniqueReference<InventoryItem, T>& m) {
+inline void Loader::retrieve(UniqueReference<InventoryItem, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -163,11 +155,10 @@ inline bool Loader::retrieve(UniqueReference<InventoryItem, T>& m) {
 	else {
 		m.ptr = nullptr;
 	}
-	return true;
 }
 
 template<class T>
-inline bool Loader::retrieve(ManagedReference<InventoryItem, T>& m) {
+inline void Loader::retrieve(ManagedReference<InventoryItem, T>& m) {
 	Handle handle;
 	this->retrieve(handle);
 	if (handle != 0) {
@@ -176,102 +167,90 @@ inline bool Loader::retrieve(ManagedReference<InventoryItem, T>& m) {
 	else {
 		m.ptr = nullptr;
 	}
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(bool& t) {
+inline void Loader::retrieve(bool& t) {
 	int8_t s;
 	this->retrieve(s);
 	t = static_cast<bool>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(ACTIVITY::TYPE& t) {
+inline void Loader::retrieve(ACTIVITY::TYPE& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<ACTIVITY::TYPE>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(ACTIVITY::DIR& t) {
+inline void Loader::retrieve(ACTIVITY::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<ACTIVITY::DIR>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(PISTON::DIR& t) {
+inline void Loader::retrieve(PISTON::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<PISTON::DIR>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(RAILCRANE::DIR& t) {
+inline void Loader::retrieve(RAILCRANE::DIR& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<RAILCRANE::DIR>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(INVENTORYITEM::TYPE& t) {
+inline void Loader::retrieve(INVENTORYITEM::TYPE& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<INVENTORYITEM::TYPE>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(sol::type& t) {
+inline void Loader::retrieve(sol::type& t) {
 	int32_t s;
 	this->retrieve(s);
 	t = static_cast<sol::type>(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(double& t) {
+inline void Loader::retrieve(double& t) {
 	std::string s;
 	this->retrieveString(s);
 	t = std::stod(s);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(glm::vec2& t) {
+inline void Loader::retrieve(glm::vec2& t) {
 	double x;
 	this->retrieve(x);
 	double y;
 	this->retrieve(y);
 	t.x = static_cast<float>(x);
 	t.y = static_cast<float>(y);
-	return true;
 }
 
 template<>
-inline bool Loader::retrieve(std::string& t) {
-	return this->retrieveString(t);
+inline void Loader::retrieve(std::string& t) {
+	this->retrieveString(t);
 }
 
 template<class T>
-inline bool Loader::retrieve(T& t) {
+inline void Loader::retrieve(T& t) {
 	assert(false);
-	return false;
 }
 
 template<class T>
-inline bool Loader::retrieve(std::optional<T>& m) {
+inline void Loader::retrieve(std::optional<T>& m) {
 	bool hasValue;
-	retrieve(hasValue);
+	this->retrieve(hasValue);
 	if (hasValue) {
 		m = T();
 		m.value().load(*this);
 	}
-	return true;
 }

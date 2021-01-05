@@ -6,4 +6,7 @@ class Loader;
 template<class>
 class ReferenceManager;
 
-bool load(Loader& loader, ReferenceManager<Activity>& manager);
+namespace ACTIVITYLOADER
+{
+	void load(Loader& loader, ReferenceManager<Activity>& manager);
+}

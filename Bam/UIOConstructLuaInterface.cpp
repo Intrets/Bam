@@ -179,6 +179,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		if (auto watched = uioLua->getWatched().getRef()) {
 			watched.get()->stop();
 		}
+
 		return BIND::RESULT::CONTINUE;
 	});
 

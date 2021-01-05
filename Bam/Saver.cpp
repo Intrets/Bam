@@ -11,21 +11,19 @@
 #include "Inventory.h"
 #include "Activity.h"
 
-bool Saver::storeString(std::string s) {
+void Saver::storeString(std::string s) {
 	size_t ss = s.size();
-	store<size_t>(ss);
+	this->store<size_t>(ss);
 	this->out.write(&s[0], s.size());
-	return false;
 }
 
-bool Saver::storeActivityPointer(Activity* ptr) {
+void Saver::storeActivityPointer(Activity* ptr) {
 	if (ptr == nullptr) {
 		this->store<int32_t>(0);
 	}
 	else {
 		this->store(ptr->selfHandle);
 	}
-	return true;
 }
 
 bool Saver::saveGame() {
@@ -36,11 +34,9 @@ bool Saver::saveGame() {
 	return true;
 }
 
-Saver::Saver(std::string file, GameState& gameState) : gameStateRef(gameState) {
-	Locator<PathManager>::get()->openSave(this->out, file);
+Saver::Saver(std::ostream& out_, GameState& gameState) : out(out_), gameStateRef(gameState) {
 }
 
 Saver::~Saver() {
-	this->out.close();
 }
 

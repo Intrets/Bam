@@ -10,16 +10,15 @@
 					p->load(loader);\
 					manager.storeReference(p->selfHandle, p);
 
-bool INVENTORYSERIALIZER::save(Saver& saver, ReferenceManager<InventoryItem>& manager) {
+void INVENTORYSERIALIZER::save(Saver& saver, ReferenceManager<InventoryItem>& manager) {
 	saver.store(manager.data.size());
 	for (auto& p : manager.data) {
 		saver.store(p.second.get()->getType());
 		p.second->save(saver);
 	}
-	return true;
 }
 
-bool INVENTORYSERIALIZER::load(Loader& loader, ReferenceManager<InventoryItem>& manager) {
+void INVENTORYSERIALIZER::load(Loader& loader, ReferenceManager<InventoryItem>& manager) {
 	size_t size;
 	loader.retrieve(size);
 	for (size_t i = 0; i < size; i++) {
@@ -41,5 +40,4 @@ bool INVENTORYSERIALIZER::load(Loader& loader, ReferenceManager<InventoryItem>& 
 				break;
 		}
 	}
-	return true;
 }

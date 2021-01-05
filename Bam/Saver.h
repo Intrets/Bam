@@ -17,165 +17,152 @@ class Activity;
 class Saver
 {
 private:
-	std::ofstream out;
+	std::ostream& out;
 
 	GameState& gameStateRef;
 
 	template<class A, class B>
-	bool store(ManagedReference<A, B> const& t);
+	void store(ManagedReference<A, B> const& t);
 
 public:
-	bool storeActivityPointer(Activity* ptr);
+	void storeActivityPointer(Activity* ptr);
 
 	template<class T>
-	bool store(T t);
+	void store(T t);
 
 	template<class A, class B>
-	bool store(WeakReference<A, B> const& t);
+	void store(WeakReference<A, B> const& t);
 
 	template<class A, class B>
-	bool store(UniqueReference<A, B> const& t);
+	void store(UniqueReference<A, B> const& t);
 
 	template<class T>
-	bool store(std::optional<T>& maybe);
+	void store(std::optional<T>& maybe);
 
-	bool storeObject(sol::object object, std::unordered_set<size_t>& saved);
+	void storeObject(sol::object object, std::unordered_set<size_t>& saved);
 
-	bool storeString(std::string s);
+	void storeString(std::string s);
 
 	bool saveGame();
 
-	Saver(std::string file, GameState& gameState);
+	Saver(std::ostream& out_, GameState& gameState);
 	Saver() = delete;
 	~Saver();
 };
 
 template<>
-inline bool Saver::store(double t) {
+inline void Saver::store(double t) {
 	this->storeString(std::to_string(t));
-	return true;
 }
 
 template<>
-inline bool Saver::store(int64_t t) {
+inline void Saver::store(int64_t t) {
 	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Saver::store(int32_t t) {
+inline void Saver::store(int32_t t) {
 	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Saver::store(int8_t t) {
+inline void Saver::store(int8_t t) {
 	this->out.write(reinterpret_cast<char*>(&t), sizeof(t));
-	return true;
 }
 
 template<>
-inline bool Saver::store(size_t t) {
-	store(static_cast<int64_t>(t));
-	return true;
+inline void Saver::store(size_t t) {
+	this->store(static_cast<int64_t>(t));
 }
 
 template<>
-inline bool Saver::store(glm::ivec2 t) {
-	store(static_cast<int32_t>(t.x));
-	store(static_cast<int32_t>(t.y));
-	return true;
+inline void Saver::store(glm::ivec2 t) {
+	this->store(static_cast<int32_t>(t.x));
+	this->store(static_cast<int32_t>(t.y));
 }
 
 template<>
-inline bool Saver::store(glm::vec2 t) {
-	store(static_cast<double>(t.x));
-	store(static_cast<double>(t.y));
-	return true;
+inline void Saver::store(glm::vec2 t) {
+	this->store(static_cast<double>(t.x));
+	this->store(static_cast<double>(t.y));
 }
 
 template<>
-inline bool Saver::store(bool t) {
+inline void Saver::store(bool t) {
 	int8_t s = static_cast<int8_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(ACTIVITY::TYPE t) {
+inline void Saver::store(ACTIVITY::TYPE t) {
 	int32_t s = static_cast<int32_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(ACTIVITY::DIR t) {
+inline void Saver::store(ACTIVITY::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(PISTON::DIR t) {
+inline void Saver::store(PISTON::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(RAILCRANE::DIR t) {
+inline void Saver::store(RAILCRANE::DIR t) {
 	int32_t s = static_cast<int32_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(INVENTORYITEM::TYPE t) {
+inline void Saver::store(INVENTORYITEM::TYPE t) {
 	int32_t s = static_cast<int32_t>(t);
-	store(s);
-	return true;
+	this->store(s);
 }
 
 template<>
-inline bool Saver::store(std::string t) {
-	return storeString(t);
+inline void Saver::store(std::string t) {
+	this->storeString(t);
 }
 
 template<>
-inline bool Saver::store(sol::type type) {
-	return store(static_cast<int32_t>(type));
+inline void Saver::store(sol::type type) {
+	this->store(static_cast<int32_t>(type));
 }
 
-inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved) {
+inline void Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved) {
 	auto type = t.get_type();
-	store(type);
+	this->store(type);
 
 	bool found = false;
 	// primitive
 	if (t.pointer() == nullptr) {
-		store<bool>(true);
+		this->store<bool>(true);
 	}
 	// reference
 	else {
-		store<bool>(false);
+		this->store<bool>(false);
 		size_t hash = hashVoidPtr{}(const_cast<void*>(t.pointer()));
-		store(hash);
+		this->store(hash);
 		found = saved.count(hash) != 0;
 		saved.insert(hash);
 	}
 
 	if (!found) {
 		if (type == sol::type::boolean) {
-			store(t.as<bool>());
+			this->store(t.as<bool>());
 		}
 		else if (type == sol::type::number) {
 			if (t.is<int>()) {
-				store<bool>(true);
-				store(t.as<int64_t>());
+				this->store<bool>(true);
+				this->store(t.as<int64_t>());
 			}
 			else {
-				store<bool>(false);
-				store(t.as<double>());
+				this->store<bool>(false);
+				this->store(t.as<double>());
 			}
 		}
 		else if (type == sol::type::string) {
@@ -184,7 +171,7 @@ inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved)
 		else if (type == sol::type::table) {
 			auto table = t.as<sol::table>();
 			int32_t count = static_cast<int32_t>(std::distance(table.begin(), table.end()));
-			store(count);
+			this->store(count);
 
 			std::vector<std::pair<sol::object, sol::object>> cache;
 			for (auto& e : table) {
@@ -200,52 +187,46 @@ inline bool Saver::storeObject(sol::object t, std::unordered_set<size_t>& saved)
 		}
 
 	}
-	return true;
 }
 
 template<class T>
-inline bool Saver::store(T t) {
+inline void Saver::store(T t) {
 	assert(0);
-	return true;
 }
 
 template<class A, class B>
-inline bool Saver::store(WeakReference<A, B> const& t) {
+inline void Saver::store(WeakReference<A, B> const& t) {
 	if (t) {
 		this->store(t.getHandle());
 	}
 	else {
 		this->store(0);
 	}
-	return true;
 }
 
 template<class A, class B>
-inline bool Saver::store(UniqueReference<A, B> const& t) {
+inline void Saver::store(UniqueReference<A, B> const& t) {
 	if (t) {
 		this->store(t.getHandle());
 	}
 	else {
 		this->store(0);
 	}
-	return true;
 }
 
 template<class A, class B>
-inline bool Saver::store(ManagedReference<A, B> const& t) {
+inline void Saver::store(ManagedReference<A, B> const& t) {
 	assert(0);
-	return false;
 }
 
 template<class T>
-inline bool Saver::store(std::optional<T>& maybe) {
+inline void Saver::store(std::optional<T>& maybe) {
 	if (maybe.has_value()) {
-		store(true);
+		this->store(true);
 		maybe.value().save(*this);
 	}
 	else {
-		store(false);
+		this->store(false);
 	}
 
-	return true;
 }

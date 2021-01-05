@@ -22,7 +22,7 @@ void Loader::addIncompleteInventoryRef(Handle handle, Reference* ref) {
 	this->gameStateRef.getInventoryItemManager().addIncomplete(handle, ref);
 }
 
-bool Loader::retrieveActivityPointer(Activity*& ptr) {
+void Loader::retrieveActivityPointer(Activity*& ptr) {
 	int32_t handle;
 	this->retrieve(handle);
 
@@ -32,21 +32,19 @@ bool Loader::retrieveActivityPointer(Activity*& ptr) {
 	else {
 		this->gameStateRef.getActivityManager().addIncomplete(handle, ptr);
 	}
-
-	return true;
 }
 
 sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t, sol::object>& cache) {
 	sol::type type;
-	retrieve(type);
+	this->retrieve(type);
 
 	bool primitive;
-	retrieve(primitive);
+	this->retrieve(primitive);
 
 	std::optional<size_t> maybeHash;
 	if (!primitive) {
 		size_t hash;
-		retrieve(hash);
+		this->retrieve(hash);
 		if (cache.count(hash) != 0) {
 			return cache[hash];
 		}
@@ -56,31 +54,31 @@ sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t,
 	sol::object object;
 	if (type == sol::type::boolean) {
 		bool value;
-		retrieve(value);
+		this->retrieve(value);
 		object = sol::make_object(state, value);
 	}
 	else if (type == sol::type::number) {
 		bool integer;
-		retrieve(integer);
+		this->retrieve(integer);
 		if (integer) {
 			int64_t value;
-			retrieve(value);
+			this->retrieve(value);
 			object = sol::make_object(state, value);
 		}
 		else {
 			double value;
-			retrieve(value);
+			this->retrieve(value);
 			object = sol::make_object(state, value);
 		}
 	}
 	else if (type == sol::type::string) {
 		std::string value;
-		retrieve(value);
+		this->retrieve(value);
 		object = sol::make_object(state, value);
 	}
 	else if (type == sol::type::table) {
 		int32_t count;
-		retrieve(count);
+		this->retrieve(count);
 
 		sol::table table = state.create_table();
 		object = table;
@@ -88,8 +86,8 @@ sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t,
 			cache[maybeHash.value()] = object;
 		}
 		for (int32_t i = 0; i < count; i++) {
-			sol::object key = retrieveObject(state, cache);
-			sol::object value = retrieveObject(state, cache);
+			sol::object key = this->retrieveObject(state, cache);
+			sol::object value = this->retrieveObject(state, cache);
 			table[key] = value;
 		}
 		object = table;
@@ -105,21 +103,26 @@ sol::object Loader::retrieveObject(sol::state& state, std::unordered_map<size_t,
 	return object;
 }
 
-bool Loader::retrieveString(std::string& str) {
+void Loader::retrieveString(std::string& str) {
 	size_t s;
-	retrieve<size_t>(s);
+	this->retrieve<size_t>(s);
 	str.resize(s);
-	in.read(&str[0], s);
-	return false;
+	this->in.read(&str[0], s);
 }
 
 bool Loader::loadGame() {
 	gameStateRef.clear();
 
-	load(*this, gameStateRef.getActivityManager());
-	INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());
+	try {
+		ACTIVITYLOADER::load(*this, gameStateRef.getActivityManager());
+		INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());
 
-	this->gameStateRef.load(*this);
+		this->gameStateRef.load(*this);
+	}
+	catch (...) {
+		gameStateRef.clear();
+		return false;
+	}
 
 	gameStateRef.getActivityManager().completeReferences();
 	gameStateRef.getInventoryItemManager().completeReferences();
@@ -139,10 +142,10 @@ GameState& Loader::getGameStateRef() {
 	return this->gameStateRef;
 }
 
-Loader::Loader(std::string file, GameState& gameState) : gameStateRef(gameState) {
-	Locator<PathManager>::get()->openSave(in, file);
+Loader::Loader(std::istream& in_, GameState& gameState) : in(in_), gameStateRef(gameState) {
+	this->in.exceptions(std::istream::badbit | std::istream::failbit | std::istream::eofbit);
 }
 
+
 Loader::~Loader() {
-	in.close();
 }

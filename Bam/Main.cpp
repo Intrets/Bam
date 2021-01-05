@@ -71,7 +71,10 @@ void mainLoop(GLFWwindow* window) {
 			auto const& name = state.gameState.loadFile.value();
 			Locator<Log>::ref().putLine("loading: " + name);
 
-			Loader(name, state.gameState).loadGame();
+			std::ifstream save;
+			Locator<PathManager>::ref().openSave(save, name);
+
+			Loader(save, state.gameState).loadGame();
 
 			state.player = gameState.getPlayer(0).value();
 			state.gameState.loadFile = std::nullopt;
@@ -80,7 +83,10 @@ void mainLoop(GLFWwindow* window) {
 			auto const& name = state.gameState.saveFile.value();
 			Locator<Log>::ref().putLine("saving: " + name);
 
-			Saver(name, state.gameState).saveGame();
+			std::ofstream save;
+			Locator<PathManager>::ref().openSave(save, name);
+ 
+			Saver(save, state.gameState).saveGame();
 			state.gameState.saveFile = std::nullopt;
 		}
 

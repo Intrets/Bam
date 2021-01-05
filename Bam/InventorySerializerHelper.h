@@ -9,6 +9,6 @@ class ReferenceManager;
 
 namespace INVENTORYSERIALIZER
 {
-	bool save(Saver& saver, ReferenceManager<InventoryItem>& manager);
-	bool load(Loader& loader, ReferenceManager<InventoryItem>& manager);
+	void save(Saver& saver, ReferenceManager<InventoryItem>& manager);
+	void load(Loader& loader, ReferenceManager<InventoryItem>& manager);
 }

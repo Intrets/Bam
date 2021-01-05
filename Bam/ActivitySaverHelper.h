@@ -6,4 +6,4 @@ class Activity;
 template<class>
 class ReferenceManager;
 
-bool save(Saver& saver, ReferenceManager<Activity>& manager);
+void save(Saver& saver, ReferenceManager<Activity>& manager);
