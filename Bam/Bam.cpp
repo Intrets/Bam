@@ -9,7 +9,7 @@
 #include "Main.h"
 #include "InitManagers.h"
 
-#include "InitializeClient.h"
+#include "NetworkLayer.h"
 
 // TODO: keep runtime option, get value from config/command line argument
 bool OPENGL_DEBUG = true;
