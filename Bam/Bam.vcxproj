@@ -284,7 +284,7 @@
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
-    <ClCompile Include="InitializeClient.cpp" />
+    <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
@@ -404,7 +404,7 @@
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="FunctionHelpers.h" />
-    <ClInclude Include="InitializeClient.h" />
+    <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkTypes.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
