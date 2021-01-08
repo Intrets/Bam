@@ -9,6 +9,8 @@
 #include "Main.h"
 #include "InitManagers.h"
 
+#include "InitializeClient.h"
+
 // TODO: keep runtime option, get value from config/command line argument
 bool OPENGL_DEBUG = true;
 
@@ -186,6 +188,12 @@ static int initGLFW() {
 }
 
 int main() {
+	CLIENT::initialize2();
+
+	if (rand() > 0.0) {
+		return 0;
+	}
+
 	initGLFW();
 	initManagers(window);
 	mainLoop(window);

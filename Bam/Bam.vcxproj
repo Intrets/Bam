@@ -180,7 +180,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;C:\Users\Intrets\source\Repos\Bam\x64\Release\Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\Intrets\OpenGL64\GLFW\glfw3.lib;C:\Users\Intrets\OpenGL64\GLEW\glew32.lib;opengl32.lib;C:\Users\Intrets\source\Repos\Bam\x64\Release\Lua.lib;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64\WS2_32.Lib;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64\MsWSock.Lib;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64\AdvAPI32.Lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
@@ -284,6 +284,7 @@
     <ClCompile Include="BufferWrappers.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
+    <ClCompile Include="InitializeClient.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
@@ -403,6 +404,7 @@
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="FunctionHelpers.h" />
+    <ClInclude Include="InitializeClient.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkTypes.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />

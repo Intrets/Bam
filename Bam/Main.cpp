@@ -1,3 +1,4 @@
+
 #include "common.h"
 
 #include "Main.h"
@@ -16,6 +17,7 @@
 #include "RenderLimiter.h"
 #include "Loader.h"
 #include "Saver.h"
+
 
 ControlState controlState;
 
@@ -85,7 +87,7 @@ void mainLoop(GLFWwindow* window) {
 
 			std::ofstream save;
 			Locator<PathManager>::ref().openSave(save, name);
- 
+
 			Saver(save, state.gameState).saveGame();
 			state.gameState.saveFile = std::nullopt;
 		}
