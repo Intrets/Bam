@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include <GLM/glm.hpp>
 
 struct CameraInfo
 {

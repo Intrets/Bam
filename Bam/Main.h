@@ -1,3 +1,5 @@
 #pragma once
 
-void mainLoop(GLFWwindow* window);
+#include "Enums.h"
+
+void mainLoop(GLFWwindow* window, PROGRAM::TYPE type);

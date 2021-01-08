@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include <GLM/glm.hpp>
 
 #include "WorldBlock.h"
 #include "Enums.h"

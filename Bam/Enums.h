@@ -1,5 +1,14 @@
 #pragma once
 
+namespace PROGRAM
+{
+	enum class TYPE
+	{
+		CLIENT,
+		SERVER,
+	};
+}
+
 namespace CURSOR
 {
 	enum class TYPE

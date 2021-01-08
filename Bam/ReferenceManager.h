@@ -1,7 +1,5 @@
 #pragma once
 
-#include "common.h"
-
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>

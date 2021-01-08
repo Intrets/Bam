@@ -1,6 +1,19 @@
 #pragma once
 
-#include "common.h"
+#define WIN32_LEAN_AND_MEAN
+
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+
+#pragma warning(push,0)
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <GLM/glm.hpp>
+#include <GLI/gli.hpp>
+#include <GLM/gtc/integer.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtx/transform.hpp>
+#pragma warning(pop)
 
 #include <iostream>
 #include <sstream>
@@ -9,7 +22,7 @@
 #include "Main.h"
 #include "InitManagers.h"
 
-#include "NetworkLayer.h"
+#include "Enums.h"
 
 // TODO: keep runtime option, get value from config/command line argument
 bool OPENGL_DEBUG = true;
@@ -188,15 +201,22 @@ static int initGLFW() {
 }
 
 int main() {
-	CLIENT::initialize2();
+	std::cout << "0: client, 1: server. \n";
+	int32_t type;
+	std::cin >> type;
 
-	if (rand() > 0.0) {
-		return 0;
+	PROGRAM::TYPE programType = static_cast<PROGRAM::TYPE>(type);
+
+	if (programType == PROGRAM::TYPE::CLIENT) {
+		std::cout << "starting client\n";
+		initGLFW();
+	}
+	else {
+		std::cout << "starting server\n";
 	}
 
-	initGLFW();
-	initManagers(window);
-	mainLoop(window);
+	initManagers(window, programType);
+	mainLoop(window, programType);
 
 	return 0;
 }

@@ -18,19 +18,22 @@
 #include "Inventory.h"
 #include "InventoryItem.h"
 
-void initManagers(GLFWwindow* window) {
+void initManagers(GLFWwindow* window, PROGRAM::TYPE type) {
 	Locator<PathManager>::provide(new PathManager());
 	Locator<OptionManager>::provide(new OptionManager());
-	Locator<DebugRenderer>::provide(new DebugRenderer());
 
-	Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
-	Locator<BlockIDTextures>::provide(new BlockIDTextures());
-	Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
+	if (type == PROGRAM::TYPE::CLIENT) {
+		Locator<DebugRenderer>::provide(new DebugRenderer());
+		Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
+		Locator<BlockIDTextures>::provide(new BlockIDTextures());
+		Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
-	Locator<BlitRenderer>::provide(new BlitRenderer());
-	Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
+		Locator<BlitRenderer>::provide(new BlitRenderer());
+		Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
 
-	Locator<Fonts>::provide(new Fonts());
+		Locator<Fonts>::provide(new Fonts());
+	}
+
 	Locator<Timer>::provide(new Timer());
 
 	Locator<Log>::provide(new Log());

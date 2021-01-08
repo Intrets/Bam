@@ -1,4 +1,3 @@
-
 #include "common.h"
 
 #include "Main.h"
@@ -18,6 +17,7 @@
 #include "Loader.h"
 #include "Saver.h"
 
+#include "NetworkLayer.h"
 
 ControlState controlState;
 
@@ -37,11 +37,17 @@ void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
 	controlState.scroll_callback(w, xoffset, yoffset);
 }
 
-void mainLoop(GLFWwindow* window) {
-	glfwSetCharCallback(window, char_callback);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetMouseButtonCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
+void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
+	if (type == PROGRAM::TYPE::CLIENT) {
+		glfwSetCharCallback(window, char_callback);
+		glfwSetKeyCallback(window, key_callback);
+		glfwSetMouseButtonCallback(window, mouse_callback);
+		glfwSetScrollCallback(window, scroll_callback);
+	}
+
+	NETWORK::Network network;
+
+
 
 	GameState gameState;
 	gameState.makePlayer();
