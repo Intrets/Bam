@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include "NetworkLayer.h"
 
 #include <stdio.h>

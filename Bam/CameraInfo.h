@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLM/glm.hpp>
+#include <GLM/gtx/transform.hpp>
 
 struct CameraInfo
 {

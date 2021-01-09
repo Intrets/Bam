@@ -9,6 +9,8 @@
 #include "GameState.h"
 #include "RenderInfo.h"
 #include "PlayerState.h"
+#include "Log.h"
+#include "Locator.h"
 
 UIOHotbar::UIOHotbar(Handle self) : UIOGrid(self, glm::ivec2(10, 1)) {
 	this->icons.reserve(10);

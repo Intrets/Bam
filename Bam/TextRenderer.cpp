@@ -11,6 +11,7 @@
 #include "BlitRenderer.h"
 #include "Fonts.h"
 #include "Colors.h"
+#include "Locator.h"
 
 #include <iostream>
 

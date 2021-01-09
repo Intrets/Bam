@@ -1,9 +1,12 @@
 #include "common.h"
 
 #include "Fonts.h"
+
 #include "BlitRenderer.h"
 #include "TextRenderInfo.h"
 #include "CameraInfo.h"
+#include "Locator.h"
+#include "PathManager.h"
 
 FontInfo Fonts::loadMonospacedFont(std::string name, glm::ivec2 charDim, glm::ivec2 gridDim) {
 	bwo::Texture tex;

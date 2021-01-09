@@ -4,8 +4,9 @@
 
 #include <GLFW/glfw3.h>
 
+#pragma warning(push,0)
 #include <GLI/gli.hpp>
-
+#pragma warning(pop)
 
 GLuint loadTexture(const std::string Filename) {
 	gli::texture Texture = gli::load(Filename);

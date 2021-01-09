@@ -1,11 +1,13 @@
 #include "common.h"
 
 #include "Option.h"
+
 #include <sstream>
 #include <fstream>
 
 #include "StringHelpers.h"
-
+#include "Locator.h"
+#include "PathManager.h"
 
 void OptionManager::defaultValues() {
 	initVal(OPTION::CL_VIEWPORTSCALE, 20.0f, "cl_viewportscale", "");

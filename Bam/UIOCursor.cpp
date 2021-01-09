@@ -15,6 +15,8 @@
 #include "UIOFreeSize.h"
 #include "UIOConstructActivityInfo.h"
 #include "LUAActivity.h"
+#include "Locator.h"
+#include "Log.h"
 
 ManagedReference<Activity, Activity> const& UIOCursor::getTarget() const {
 	return this->target;

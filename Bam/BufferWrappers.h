@@ -1,6 +1,11 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <optional>
+#include <functional>
+
+struct GLFWwindow;
 
 namespace bwo
 {

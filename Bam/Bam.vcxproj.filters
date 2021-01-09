@@ -430,7 +430,8 @@
     <ClCompile Include="ActivitySerializerHelper.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="InitializeClient.cpp" />
+    <ClCompile Include="NetworkLayer.cpp" />
+    <ClCompile Include="common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -775,7 +776,7 @@
     <ClInclude Include="ActivitySerializerHelper.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="InitializeClient.h" />
+    <ClInclude Include="NetworkLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

@@ -1,8 +1,16 @@
 #pragma once
 
+#include <optional>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <functional>
+
 #include "SingleBlockActivity.h"
 #include "sol/sol.hpp"
 #include "LuaStore.h"
+
+class GameState;
 
 class LuaActivity : public SingleBlockActivity
 {

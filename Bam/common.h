@@ -3,13 +3,7 @@
 #define SOL_SAFE_NUMERICS 1
 
 #pragma warning(push,0)
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <GLM/glm.hpp>
-#include <GLI/gli.hpp>
-#include <GLM/gtc/integer.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtx/transform.hpp>
 #pragma warning(pop)
 
 #define NOCOPY(T) T(const T&) = delete; T& operator=(const T&) = delete;
@@ -21,10 +15,24 @@
 
 #define CHUNKSIZE 32
 
-#include "Locator.h"
-#include "PathManager.h"
-#include "DebugRenderInfo.h"
-#include "Log.h"
+#include <string>
+#include <vector>
+#include <array>
+#include <map>
+#include <unordered_map>
+#include <list>
+#include <istream>
+#include <ostream>
+#include <algorithm>
+#include <optional>
+#include <optional>
+#include <memory>
+#include <sstream>
+
+//#include "Locator.h"
+//#include "PathManager.h"
+//#include "DebugRenderInfo.h"
+//#include "Log.h"
 
 inline int32_t floordiv(int32_t x, int32_t y) {
 	return (x + (x < 0)) / y - (x < 0);

@@ -1,8 +1,11 @@
 #include "common.h"
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "DebugRenderer.h"
 
 #include "ShaderLoader.h"
-
 #include "GLEnableWrapper.h"
 #include "RenderInfo.h"
 

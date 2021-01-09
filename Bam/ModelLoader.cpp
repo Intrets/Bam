@@ -1,5 +1,8 @@
 #include "common.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "ModelLoader.h"
 
 #include <string>

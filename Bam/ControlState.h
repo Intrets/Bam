@@ -1,6 +1,10 @@
 #pragma once
 
+#include <string>
+#include <array>
+
 struct BindControl;
+struct GLFWwindow;
 
 namespace CONTROL
 {
@@ -140,7 +144,9 @@ public:
 	void scroll_callback(GLFWwindow* w, double xoffset, double yoffset);
 
 private:
-	std::array<std::vector<CONTROL::KEY>, GLFW_KEY_LAST + GLFW_MOUSE_BUTTON_LAST> keyToControl;
+	// hard coded values from GLFW so header isnt included in this file
+	std::array<std::vector<CONTROL::KEY>, 348 + 7> keyToControl;
+
 	std::array<int32_t, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> controlState;
 
 	std::array<bool, static_cast<size_t>(CONTROL::KEY::CONTROLS_MAX)> consumed;

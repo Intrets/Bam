@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "Shape.h"
 #include "DataFront.h"
 

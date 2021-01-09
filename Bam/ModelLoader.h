@@ -1,5 +1,9 @@
 #pragma once
 
+#include <GLM/glm.hpp>
+#include <vector>
+#include <string>
+
 bool loadOBJ(
 	std::string &path,
 	std::vector<glm::vec3> & out_vertices,

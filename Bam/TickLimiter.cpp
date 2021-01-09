@@ -2,6 +2,9 @@
 
 #include "TickLimiter.h"
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "Option.h"
 
 TickLimiter::TickLimiter() {

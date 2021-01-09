@@ -5,8 +5,9 @@
 #include "TextureLoader.h"
 #include "ShaderLoader.h"
 #include "GLEnableWrapper.h"
-
 #include "PassThroughRenderer.h"
+#include "Locator.h"
+#include "PathManager.h"
 
 int32_t BlockIDTextures::getBlockTextureID(std::string name) {
 	auto search = this->textures.find(name);

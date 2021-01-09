@@ -1,6 +1,10 @@
 #include "common.h"
 
 #include "UIState.h"
+
+#include <GL/glew.h>
+#include <glfw/glfw3.h>
+
 #include "UIOConstrainSize.h"
 #include "UIOWindow.h"
 #include "UIOInvisible.h"

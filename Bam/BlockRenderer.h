@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BufferWrappers.h"
+
+#include <vector>
 #include <optional>
 
 struct StaticWorldRenderInfo;

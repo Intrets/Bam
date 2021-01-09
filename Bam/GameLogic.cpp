@@ -1,7 +1,11 @@
 #include "common.h"
+
 #include "GameLogic.h"
+
 #include "GameState.h"
 #include "Timer.h"
+#include "Locator.h"
+
 #include <iostream>
 
 int GameLogic::runStep(GameState& gameState) {

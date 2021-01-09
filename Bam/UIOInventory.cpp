@@ -8,6 +8,8 @@
 #include "PlayerState.h"
 #include "UIOButton.h"
 #include "RenderInfo.h"
+#include "Locator.h"
+#include "Log.h"
 
 UIOInventory::UIOInventory(Handle self) : UIOGrid(self, glm::ivec2(4, 4)) {
 	this->icons.reserve(16);

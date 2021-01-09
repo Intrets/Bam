@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "UIOGrid.h"
 
 class Inventory;

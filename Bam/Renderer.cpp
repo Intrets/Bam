@@ -1,5 +1,10 @@
 #include "common.h"
+
 #include "Renderer.h"
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include "CameraInfo.h"
 #include "RenderInfo.h"
 #include "PlayerState.h"
@@ -10,6 +15,7 @@
 #include "BlitRendererArrayTexture.h"
 #include "BlockIDTextures.h"
 #include "Inventory.h"
+#include "Locator.h"
 
 void Renderer::prepareRender(GLFWwindow* window, RenderInfo& renderInfo, PlayerState& playerState) {
 	auto& gameState = playerState.gameState;

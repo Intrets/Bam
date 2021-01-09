@@ -2,6 +2,9 @@
 
 #include "RenderLimiter.h"
 
+#include <GL/glew.h>
+#include <glfw/glfw3.h>
+
 #include "Option.h"
 
 RenderLimiter::RenderLimiter() {

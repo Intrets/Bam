@@ -3,6 +3,12 @@
 #include "ReferenceManager.h"
 #include "UIOBase.h"
 
+#include <GLM/glm.hpp>
+#include <list>
+#include <vector>
+#include <unordered_map>
+#include <string>
+
 struct PlayerState;
 
 class UIState

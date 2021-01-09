@@ -1,14 +1,17 @@
 #include "common.h"
-#include "Block.h"
-#include "ActivityIgnoringGroup.h"
 
-#include "Loader.h"
-#include "Saver.h"
+#include "Block.h"
 
 #include <fstream>
+
+#include "ActivityIgnoringGroup.h"
+#include "Loader.h"
+#include "Saver.h"
 #include "StringHelpers.h"
 #include "BlockIDTextures.h"
 #include "GameState.h"
+#include "Locator.h"
+#include "PathManager.h"
 
 void loadBlocks() {
 	std::ifstream file;

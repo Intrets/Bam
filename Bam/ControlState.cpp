@@ -1,7 +1,10 @@
 #include "common.h"
+
 #include "ControlState.h"
 
-#include <array>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 
 ControlState::ControlState() {

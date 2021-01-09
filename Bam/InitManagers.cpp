@@ -17,6 +17,8 @@
 #include "BlitRendererArrayTexture.h"
 #include "Inventory.h"
 #include "InventoryItem.h"
+#include "Locator.h"
+#include "PathManager.h"
 
 void initManagers(GLFWwindow* window, PROGRAM::TYPE type) {
 	Locator<PathManager>::provide(new PathManager());

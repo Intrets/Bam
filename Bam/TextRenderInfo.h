@@ -1,12 +1,16 @@
 #pragma once
 
+#include <GLM/glm.hpp>
+
 #include "Rectangle.h"
 #include "Fonts.h"
 #include "Enums.h"
+#include "UpdatedCache.h"
 
 #include <optional>
+#include <vector>
+#include <optional>
 #include <map>
-#include "UpdatedCache.h"
 
 class TextRenderer;
 struct CameraInfo;

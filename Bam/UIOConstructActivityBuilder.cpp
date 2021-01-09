@@ -13,6 +13,7 @@
 #include "ActivitySpawner.h"
 #include "Piston.h"
 #include "PlayerState.h"
+#include "Locator.h"
 
 bool UIO2::constructActivityBuilder(ACTIVITY::TYPE activityType) {
 	std::vector<std::pair<SHAPE::TYPE, int32_t>> shapes;

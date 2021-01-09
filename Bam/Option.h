@@ -4,9 +4,11 @@
 #include <iostream>
 #include <unordered_map>
 #include <sstream>
+#include <array>
+#include <optional>
 
 #include "IOwrapped.h"
-#include <optional>
+#include "Locator.h"
 
 class OptionManager;
 
@@ -62,7 +64,8 @@ public:
 		return "read only";
 	};
 
-	_OptionValueBase(std::string name_, std::string description_) : name(name_), description(description_) {};
+	_OptionValueBase(std::string name_, std::string description_) : name(name_), description(description_) {
+	};
 
 	virtual ~_OptionValueBase() = default;
 };
@@ -80,8 +83,12 @@ public:
 		val(val_) {
 	};
 
-	T getVal() { return this->val; };
-	void setVal(T val_) { this->val = val_; };
+	T getVal() {
+		return this->val;
+	};
+	void setVal(T val_) {
+		this->val = val_;
+	};
 
 	virtual std::string set(std::string) override;
 	std::string type();

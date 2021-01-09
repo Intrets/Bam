@@ -8,6 +8,8 @@
 #include "Rectangle.h"
 #include "Colors.h"
 #include "FunctionHelpers.h"
+#include "Locator.h"
+#include "Fonts.h"
 
 #include <cctype>
 

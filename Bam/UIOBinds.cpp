@@ -6,6 +6,8 @@
 #include "UIOTextDisplay.h"
 #include "UIOButton.h"
 #include "StringHelpers.h"
+#include "Locator.h"
+#include "Log.h"
 
 namespace UIOBinds
 {

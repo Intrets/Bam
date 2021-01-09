@@ -1,7 +1,13 @@
 #include "common.h"
+
 #include "BufferWrappers.h"
+#include <GLFW/glfw3.h>
 
 #include <sstream>
+#include <functional>
+
+#include "Locator.h"
+#include "PathManager.h"
 
 std::unordered_map<int32_t, bwo::Program*> bwo::Program::refs;
 

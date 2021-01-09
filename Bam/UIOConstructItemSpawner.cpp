@@ -14,6 +14,8 @@
 #include "UIOConstructer2.h"
 #include "UIOSizeType.h"
 #include "UIOButton.h"
+#include "Locator.h"
+#include "Log.h"
 
 UIOList* UIO2::constructItemSpawner() {
 	UIO2::startList(UIO::DIR::DOWN);

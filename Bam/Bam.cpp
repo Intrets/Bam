@@ -1,19 +1,7 @@
-#pragma once
+#include "common.h"
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-
-#pragma warning(push,0)
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <GLM/glm.hpp>
-#include <GLI/gli.hpp>
-#include <GLM/gtc/integer.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtx/transform.hpp>
-#pragma warning(pop)
 
 #include <iostream>
 #include <sstream>

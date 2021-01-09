@@ -1,11 +1,14 @@
 #include "common.h"
 
 #include "LuaActivity.h"
+
 #include "GameState.h"
 #include "StringHelpers.h"
 #include "Saver.h"
 #include "Loader.h"
 #include "Forwarder.h"
+#include "Locator.h"
+#include "Log.h"
 
 #include <initializer_list>
 

@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "UIOConstructDebugInfo.h"
+
 #include "UIOConstructer2.h"
 #include "Enums.h"
 #include "Colors.h"
@@ -18,6 +19,8 @@
 #include "UIOConstructActivityBuilder.h"
 #include "UIOAnchoredProxy.h"
 #include "BufferWrappers.h"
+#include "Locator.h"
+#include "Log.h"
 
 WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);

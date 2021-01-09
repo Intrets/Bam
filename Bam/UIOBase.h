@@ -2,6 +2,8 @@
 
 #include <optional>
 #include <variant>
+#include <functional>
+#include <vector>
 
 #include "Rectangle.h"
 #include "ReferenceManager.h"

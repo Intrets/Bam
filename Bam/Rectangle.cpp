@@ -1,5 +1,8 @@
 #include "common.h"
 
+#include <GLM/glm.hpp>
+#include <GLM/gtc/constants.hpp>
+
 #include "Rectangle.h"
 
 Rectangle::Rectangle(glm::vec2 b, glm::vec2 t) : bot(b), top(t) {

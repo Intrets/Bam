@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GLM/glm.hpp>
+
 #include "ReferenceManager.h"
 #include "Activity.h"
 #include "UIOBase.h"

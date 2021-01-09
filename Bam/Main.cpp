@@ -2,6 +2,17 @@
 
 #include "Main.h"
 
+#define WIN32_LEAN_AND_MEAN
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+//
+//#include <WinSock2.h>
+//#include <WS2tcpip.h>
+
+
+//#include "NetworkLayer.h"
+
 #include "GameLogic.h"
 #include "Renderer.h"
 #include "GameState.h"
@@ -16,8 +27,9 @@
 #include "RenderLimiter.h"
 #include "Loader.h"
 #include "Saver.h"
-
-#include "NetworkLayer.h"
+#include "Locator.h"
+#include "Log.h"
+#include "PathManager.h"
 
 ControlState controlState;
 
@@ -45,9 +57,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 		glfwSetScrollCallback(window, scroll_callback);
 	}
 
-	NETWORK::Network network;
-
-
+	//NETWORK::Network network;
 
 	GameState gameState;
 	gameState.makePlayer();

@@ -6,6 +6,7 @@
 #include "BlockIDTextures.h"
 #include "StaticWorldRenderInfo.h"
 #include "CameraInfo.h"
+#include "Locator.h"
 
 BlockRenderer::BlockRenderer() :
 	program("BlockShader", "BlockRenderer"),

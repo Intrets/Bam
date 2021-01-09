@@ -2,8 +2,12 @@
 
 #include "CircularArray.h"
 #include "PeriodAverage.h"
+
 #include <mutex>
 #include <optional>
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 struct Timing
 {

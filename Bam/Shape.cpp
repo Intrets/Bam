@@ -1,8 +1,10 @@
 #include "common.h"
 
 #include "Shape.h"
+
 #include "DataFront.h"
 #include "BlockIDTextures.h"
+#include "Locator.h"
 
 void loadShapes() {
 	int32_t i = 0;

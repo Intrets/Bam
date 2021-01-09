@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 struct ShapeData
 {
 	std::string name = "block";

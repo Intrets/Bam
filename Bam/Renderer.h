@@ -10,6 +10,7 @@ struct PlayerState;
 struct RenderInfo;
 class FPSLimiter;
 class WindowManager;
+struct GLFWwindow;
 
 class Renderer
 {
