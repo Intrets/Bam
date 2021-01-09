@@ -1,19 +1,10 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-
-// hints to link libs
-#pragma comment(lib, "WS2_32.Lib")
-#pragma comment(lib, "MsWSock.lib")
-#pragma comment(lib, "AdvApi32.lib")
-
 #include <sstream>
 #include <mutex>
 #include <vector>
 #include <queue>
+#include <memory>
 
 namespace NETWORK
 {
@@ -31,16 +22,15 @@ namespace NETWORK
 		std::stringstream buffer;
 	};
 
+	class ClientHidden;
 	class Client
 	{
 	public:
+		std::unique_ptr<ClientHidden> hidden;
+
 		std::mutex mutex;
 
 		bool closed = false;
-
-		SOCKET socket;
-		sockaddr address;
-		int addressLength = sizeof(sockaddr);
 
 		std::vector<Message> receivedMessages;
 
@@ -56,6 +46,7 @@ namespace NETWORK
 		void send(Message&& message);
 
 		Client();
+		~Client();
 	};
 
 	namespace RAWBYTES
@@ -64,22 +55,24 @@ namespace NETWORK
 		constexpr char CONTINUE = '\1';
 	}
 
-
+	class NetworkHidden;
 	class Network
 	{
 	public:
-		std::string PORT;
-		WSADATA wsaData;
+		std::unique_ptr<NetworkHidden> hidden;
+
+		std::string port;
+		std::string address;
 
 		std::mutex mutex;
 		std::vector<std::unique_ptr<Client>> clients;
 
-		SOCKET listenSocket = INVALID_SOCKET;
-
-		Network();
-
-		bool initialize(int32_t portNumber);
+		bool initializeServer(int32_t portNumber);
+		bool initializeClient(std::string address, int32_t portNumber);
 
 		bool run();
+
+		Network();
+		~Network();
 	};
 }

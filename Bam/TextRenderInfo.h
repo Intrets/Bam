@@ -109,7 +109,7 @@ public:
 	std::string getSelectedLine();
 	std::vector<std::string> const& getLines() const;
 	std::vector<std::string>& getLinesMutable();
-	std::optional<Rectangle> getCursorQuadScreen();
+	std::optional<Rect> getCursorQuadScreen();
 
 	void invalidateCache();
 	void makeRenderInfo(ScreenRectangle screenRectangle, FONTS::FONT font, bool wrap, bool clickSupport);

@@ -73,4 +73,4 @@ public:
 	bool save(Saver& saver);
 };
 
-void loadBlocks();
+void loadBlocks(bool graphics);

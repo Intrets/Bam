@@ -2,29 +2,29 @@
 
 class ScreenRectangle;
 
-class Rectangle
+class Rect
 {
 private:
-	friend class Rectangle;
+	friend class Rect;
 	friend class ScreenRectangle;
 
 	glm::vec2 bot;
 	glm::vec2 top;
 
 public:
-	Rectangle() = default;
-	Rectangle(glm::vec2 b, glm::vec2 t);
-	Rectangle(float botx, float boty, float topx, float topy);
+	Rect() = default;
+	Rect(glm::vec2 b, glm::vec2 t);
+	Rect(float botx, float boty, float topx, float topy);
 
 	void set(glm::vec2 p1, glm::vec2 p2);
 	void set(ScreenRectangle rec);
-	void set(Rectangle rec);
+	void set(Rect rec);
 
-	bool equals(Rectangle& other) const;
+	bool equals(Rect& other) const;
 	bool equals(ScreenRectangle& other) const;
 
 	bool contains(glm::vec2 p) const;
-	bool contains(Rectangle& rec) const;
+	bool contains(Rect& rec) const;
 	bool contains(ScreenRectangle& rec) const;
 
 	float getLeft() const;
@@ -62,7 +62,7 @@ public:
 	float getHeight() const;
 };
 
-class ScreenRectangle : public Rectangle
+class ScreenRectangle : public Rect
 {
 private:
 	glm::ivec2 screenPixels;

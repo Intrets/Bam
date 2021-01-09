@@ -18,8 +18,8 @@ private:
 
 	int32_t index;
 
-	friend void loadBlocks();
-	friend void loadShapes();
+	friend void loadBlocks(bool);
+	friend void loadShapes(bool);
 
 public:
 	static int32_t getDataID(std::string name);

@@ -8,4 +8,4 @@ struct ShapeData
 	int32_t texture;
 };
 
-void loadShapes();
+void loadShapes(bool graphics);

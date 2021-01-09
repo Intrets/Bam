@@ -2,16 +2,10 @@
 
 #include "Main.h"
 
-#define WIN32_LEAN_AND_MEAN
+#include "NetworkLayer.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-//
-//#include <WinSock2.h>
-//#include <WS2tcpip.h>
-
-
-//#include "NetworkLayer.h"
 
 #include "GameLogic.h"
 #include "Renderer.h"
@@ -49,30 +43,70 @@ void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
 	controlState.scroll_callback(w, xoffset, yoffset);
 }
 
+struct Client
+{
+	Renderer renderer;
+	UIState uiState;
+	RenderLimiter renderLimiter;
+	PlayerState state;
+
+	Client(GameState& gameState) :
+		state({ gameState.getPlayer(0).value(), gameState, controlState, uiState }) {
+	};
+};
+
 void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
-	if (type == PROGRAM::TYPE::CLIENT) {
-		glfwSetCharCallback(window, char_callback);
-		glfwSetKeyCallback(window, key_callback);
-		glfwSetMouseButtonCallback(window, mouse_callback);
-		glfwSetScrollCallback(window, scroll_callback);
+	NETWORK::Network network;
+
+	switch (type) {
+		case PROGRAM::TYPE::OFFLINE:
+		case PROGRAM::TYPE::CLIENT:
+			break;
+		case PROGRAM::TYPE::SERVER:
+			network.initializeServer(27015);
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			network.initializeServer(27015);
+			break;
+		default:
+			break;
 	}
 
-	//NETWORK::Network network;
+	switch (type) {
+		case PROGRAM::TYPE::OFFLINE:
+		case PROGRAM::TYPE::CLIENT:
+		case PROGRAM::TYPE::SERVER:
+			glfwSetCharCallback(window, char_callback);
+			glfwSetKeyCallback(window, key_callback);
+			glfwSetMouseButtonCallback(window, mouse_callback);
+			glfwSetScrollCallback(window, scroll_callback);
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			break;
+		default:
+			break;
+	}
 
 	GameState gameState;
 	gameState.makePlayer();
 
-	UIState uiState;
-
-	PlayerState state = { gameState.getPlayer(0).value(), gameState, controlState, uiState };
-	state.uiState.updateSize(window);
-
 	GameLogic gameLogic;
 
 	TickLimiter tickLimiterGameLogic;
-	RenderLimiter tickLimiterRender;
 
-	Renderer renderer;
+	std::unique_ptr<Client> client;
+	switch (type) {
+		case PROGRAM::TYPE::OFFLINE:
+		case PROGRAM::TYPE::CLIENT:
+		case PROGRAM::TYPE::SERVER:
+			client = std::make_unique<Client>(gameState);
+			client->uiState.updateSize(window);
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			break;
+		default:
+			break;
+	}
 
 	std::thread logicThread;
 
@@ -81,36 +115,37 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 	RenderInfo renderInfo;
 
 	while (!glfwWindowShouldClose(window)) {
-		if (state.uiState.shouldReset()) {
-			state.uiState.clear();
-			state.uiState.init();
+
+		if (client->state.uiState.shouldReset()) {
+			client->state.uiState.clear();
+			client->state.uiState.init();
 		}
-		if (state.gameState.loadFile.has_value()) {
-			auto const& name = state.gameState.loadFile.value();
+		if (client->state.gameState.loadFile.has_value()) {
+			auto const& name = client->state.gameState.loadFile.value();
 			Locator<Log>::ref().putLine("loading: " + name);
 
 			std::ifstream save;
 			Locator<PathManager>::ref().openSave(save, name);
 
-			Loader(save, state.gameState).loadGame();
+			Loader(save, client->state.gameState).loadGame();
 
-			state.player = gameState.getPlayer(0).value();
-			state.gameState.loadFile = std::nullopt;
+			client->state.player = gameState.getPlayer(0).value();
+			client->state.gameState.loadFile = std::nullopt;
 		}
-		else if (state.gameState.saveFile.has_value()) {
-			auto const& name = state.gameState.saveFile.value();
+		else if (client->state.gameState.saveFile.has_value()) {
+			auto const& name = client->state.gameState.saveFile.value();
 			Locator<Log>::ref().putLine("saving: " + name);
 
 			std::ofstream save;
 			Locator<PathManager>::ref().openSave(save, name);
 
-			Saver(save, state.gameState).saveGame();
-			state.gameState.saveFile = std::nullopt;
+			Saver(save, client->state.gameState).saveGame();
+			client->state.gameState.saveFile = std::nullopt;
 		}
 
 		bool rendering = false;
-		if (stateChanged && tickLimiterRender.ready()) {
-			tickLimiterRender.advance();
+		if (stateChanged && client->renderLimiter.ready()) {
+			client->renderLimiter.advance();
 			stateChanged = false;
 			rendering = true;
 
@@ -118,23 +153,23 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			Locator<Timer>::ref().newTiming("Render Loop");
 
 			Locator<Timer>::ref().newTiming("UI update size");
-			state.uiState.updateSize(window);
+			client->state.uiState.updateSize(window);
 			Locator<Timer>::ref().endTiming("UI update size");
 
 			Locator<Timer>::ref().newTiming("Prepare render");
 			renderInfo = RenderInfo();
-			renderer.prepareRender(window, renderInfo, state);
+			client->renderer.prepareRender(window, renderInfo, client->state);
 			Locator<Timer>::ref().endTiming("Prepare render");
 
 			Locator<Timer>::ref().newTiming("Polling");
-			state.controlState.cycleStates();
+			client->state.controlState.cycleStates();
 			glfwPollEvents();
 			Locator<Timer>::ref().endTiming("Polling");
 
 			Locator<Timer>::ref().newTiming("UI Logic");
-			state.uiState.updateCursor(window, state.getPlayer().getCameraPosition());
+			client->state.uiState.updateCursor(window, client->state.getPlayer().getCameraPosition());
 
-			state.uiState.run(state);
+			client->state.uiState.run(client->state);
 			Locator<Timer>::ref().endTiming("UI Logic");
 		}
 
@@ -145,7 +180,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 					break;
 				}
 				stateChanged = true;
-				gameLogic.runStep(state.gameState);
+				gameLogic.runStep(client->state.gameState);
 				tickLimiterGameLogic.advance();
 				Locator<Timer>::ref().endTiming("Game Loop");
 				Locator<Timer>::ref().newTiming("Game Loop");
@@ -161,7 +196,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 
 		if (rendering) {
 			rendering = false;
-			renderer.render(window, renderInfo);
+			client->renderer.render(window, renderInfo);
 
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR) {

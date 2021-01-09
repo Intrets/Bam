@@ -6,12 +6,14 @@
 #include "BlockIDTextures.h"
 #include "Locator.h"
 
-void loadShapes() {
+void loadShapes(bool graphics) {
 	int32_t i = 0;
 
-	auto set = [&i](SHAPE::TYPE type, std::string name)
+	auto set = [&i, graphics](SHAPE::TYPE type, std::string name)
 	{
-		DataFront<ShapeData>::data[type].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(name + ".dds");
+		if (graphics) {
+			DataFront<ShapeData>::data[type].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(name + ".dds");
+		}
 		DataFront<ShapeData>::data[type].name = name;
 		DataFront<ShapeData>::names[type] = name;
 		DataFront<ShapeData>::nameMap[name] = type;

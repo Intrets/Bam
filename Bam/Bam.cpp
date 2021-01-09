@@ -189,18 +189,31 @@ static int initGLFW() {
 }
 
 int main() {
-	std::cout << "0: client, 1: server. \n";
+	std::cout << "0: offline client\n1: client multiplayer\n2: server + client multiplayer\n3: headless server\n";
 	int32_t type;
 	std::cin >> type;
 
 	PROGRAM::TYPE programType = static_cast<PROGRAM::TYPE>(type);
 
-	if (programType == PROGRAM::TYPE::CLIENT) {
-		std::cout << "starting client\n";
-		initGLFW();
-	}
-	else {
-		std::cout << "starting server\n";
+	switch (programType) {
+		case PROGRAM::TYPE::OFFLINE:
+			std::cout << "starting offline singleplayer game";
+			initGLFW();
+			break;
+		case PROGRAM::TYPE::CLIENT:
+			std::cout << "starting client multiplayer game";
+			initGLFW();
+			break;
+		case PROGRAM::TYPE::SERVER:
+			std::cout << "starting server + client multiplayer game";
+			initGLFW();
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			std::cout << "starting headless server game";
+			break;
+		default:
+			assert(0);
+			break;
 	}
 
 	initManagers(window, programType);

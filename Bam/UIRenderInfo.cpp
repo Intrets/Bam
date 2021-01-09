@@ -15,7 +15,7 @@ void UIRenderInfo::addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec4 color,
 	this->colors.push_back(color);
 }
 
-void UIRenderInfo::addRectangle(Rectangle& rec, glm::vec4 color) {
+void UIRenderInfo::addRectangle(Rect& rec, glm::vec4 color) {
 	this->scales.push_back(rec.getTopRight() - rec.getBottomLeft());
 	this->positions.push_back(glm::vec3(rec.getBottomLeft(), 0));
 	this->colors.push_back(color);

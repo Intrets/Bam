@@ -24,22 +24,31 @@ void initManagers(GLFWwindow* window, PROGRAM::TYPE type) {
 	Locator<PathManager>::provide(new PathManager());
 	Locator<OptionManager>::provide(new OptionManager());
 
-	if (type == PROGRAM::TYPE::CLIENT) {
-		Locator<DebugRenderer>::provide(new DebugRenderer());
-		Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
-		Locator<BlockIDTextures>::provide(new BlockIDTextures());
-		Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
+	switch (type) {
+		case PROGRAM::TYPE::OFFLINE:
+		case PROGRAM::TYPE::CLIENT:
+		case PROGRAM::TYPE::SERVER:
+			Locator<DebugRenderer>::provide(new DebugRenderer());
+			Locator<PassThroughRenderer>::provide(new PassThroughRenderer());
+			Locator<BlockIDTextures>::provide(new BlockIDTextures());
+			Locator<DebugRenderInfo>::provide(new DebugRenderInfo());
 
-		Locator<BlitRenderer>::provide(new BlitRenderer());
-		Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
+			Locator<BlitRenderer>::provide(new BlitRenderer());
+			Locator<BlitRendererArrayTexture>::provide(new BlitRendererArrayTexture());
 
-		Locator<Fonts>::provide(new Fonts());
+			Locator<Fonts>::provide(new Fonts());
+
+			loadBlocks(true);
+			loadShapes(true);
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			loadBlocks(false);
+			loadShapes(false);
+			break;
+		default:
+			break;
 	}
 
 	Locator<Timer>::provide(new Timer());
-
 	Locator<Log>::provide(new Log());
-
-	loadBlocks();
-	loadShapes();
 }

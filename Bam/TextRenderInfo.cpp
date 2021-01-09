@@ -116,11 +116,11 @@ void Text::validateView() {
 		auto& view = this->viewCache.getVal();
 
 		glm::vec4 const& cursorQuad = maybeCursorQuad.value();
-		Rectangle cursorRect;
+		Rect cursorRect;
 		cursorRect.setBottomLeft(glm::vec2(cursorQuad[0], cursorQuad[1]));
 		cursorRect.setTopRight(cursorRect.getBottomLeft() + glm::vec2(cursorQuad[2], cursorQuad[3]));
 
-		Rectangle viewRect;
+		Rect viewRect;
 		viewRect.setBottomLeft(glm::vec2(-1.0f) + view);
 		viewRect.setTopRight(glm::vec2(1.0f) + view);
 
@@ -167,7 +167,7 @@ std::vector<std::string>& Text::getLinesMutable() {
 	return this->lines;
 }
 
-std::optional<Rectangle> Text::getCursorQuadScreen() {
+std::optional<Rect> Text::getCursorQuadScreen() {
 	if (!this->cachedRenderInfo.has_value()) {
 		return std::nullopt;
 	}
@@ -186,7 +186,7 @@ std::optional<Rectangle> Text::getCursorQuadScreen() {
 	a += this->lastScreenRectangle.getBottomLeft();
 	b += a;
 
-	return Rectangle{ a, b };
+	return Rect{ a, b };
 }
 
 void Text::invalidateCache() {

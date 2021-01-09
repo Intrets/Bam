@@ -7,8 +7,10 @@ namespace PROGRAM
 {
 	enum class TYPE
 	{
+		OFFLINE,
 		CLIENT,
 		SERVER,
+		HEADLESS_SERVER,
 	};
 }
 

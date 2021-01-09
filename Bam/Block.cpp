@@ -13,7 +13,7 @@
 #include "Locator.h"
 #include "PathManager.h"
 
-void loadBlocks() {
+void loadBlocks(bool graphics) {
 	std::ifstream file;
 	Locator<PathManager>::ref().openBlockData(file);
 
@@ -37,8 +37,9 @@ void loadBlocks() {
 		DataFront<BlockData>::names[i] = pairs["name"];
 
 		DataFront<BlockData>::data[i].solid = pairs["solid"] == "true";
-		DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
-
+		if (graphics) {
+			DataFront<BlockData>::data[i].texture = Locator<BlockIDTextures>::ref().getBlockTextureID(pairs["texture"]);
+		}
 		DataFront<BlockData>::data[i].min = std::stoi(pairs["min"]);
 		DataFront<BlockData>::data[i].max = std::stoi(pairs["max"]);
 		DataFront<BlockData>::data[i].average = (DataFront<BlockData>::data[i].max + DataFront<BlockData>::data[i].min) / 2;

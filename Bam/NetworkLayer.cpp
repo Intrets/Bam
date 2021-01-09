@@ -5,6 +5,16 @@
 #include <stdio.h>
 #include <cassert>
 
+#undef APIENTRY
+#define WIN32_LEAN_AND_MEAN
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+
+// hints to link libs
+#pragma comment(lib, "WS2_32.Lib")
+#pragma comment(lib, "MsWSock.lib")
+#pragma comment(lib, "AdvApi32.lib")
+
 constexpr auto BUFFER_SIZE = 1024;
 
 #include <string>
@@ -12,6 +22,19 @@ constexpr auto BUFFER_SIZE = 1024;
 
 namespace NETWORK
 {
+	class ClientHidden
+	{
+	public:
+		SOCKET socket;
+	};
+
+	class NetworkHidden
+	{
+	public:
+		WSADATA wsaData;
+		SOCKET listenSocket = INVALID_SOCKET;
+	};
+
 	bool Client::isClosed() {
 		std::lock_guard<std::mutex> lock(this->mutex);
 		return this->closed;
@@ -54,6 +77,10 @@ namespace NETWORK
 	}
 
 	Client::Client() {
+		//this->hidden = new ClientHidden();
+		this->hidden = std::make_unique<ClientHidden>();
+
+
 		this->sendMessages.emplace();
 		this->sendMessages.back().buffer << "1";
 		this->sendMessages.emplace();
@@ -66,23 +93,95 @@ namespace NETWORK
 		this->sendMessages.back().buffer << "5";
 	}
 
-	Network::Network() {
+	Client::~Client() {
 	}
 
-	bool Network::initialize(int32_t portNumber) {
+	Network::Network() {
+		this->hidden = std::make_unique<NetworkHidden>();
+	}
+
+	Network::~Network() {
+	}
+
+	//bool Network::initialize(int32_t portNumber) {
+	//	std::lock_guard<std::mutex> guard(this->mutex);
+	//	portNumber = portNumber > 0 ? portNumber : 27015;
+	//	portNumber = portNumber < 65536 ? portNumber : 27015;
+
+	//	this->port = std::to_string(portNumber);
+
+	//	std::cout << "opening server on port: " << this->port << '\n';
+
+	//	struct addrinfo* result = NULL;
+	//	struct addrinfo hints;
+
+	//	// Initialize Winsock
+	//	int iResult = WSAStartup(MAKEWORD(2, 2), &this->hidden->wsaData);
+	//	if (iResult != 0) {
+	//		printf("WSAStartup failed with error: %d\n", iResult);
+	//		return false;
+	//	}
+
+	//	ZeroMemory(&hints, sizeof(hints));
+	//	hints.ai_family = AF_INET;
+	//	hints.ai_socktype = SOCK_STREAM;
+	//	hints.ai_protocol = IPPROTO_TCP;
+	//	hints.ai_flags = AI_PASSIVE;
+
+	//	// Resolve the server address and port
+	//	iResult = getaddrinfo(NULL, port.c_str(), &hints, &result);
+	//	if (iResult != 0) {
+	//		printf("getaddrinfo failed with error: %d\n", iResult);
+	//		WSACleanup();
+	//		return false;
+	//	}
+
+	//	// Create a SOCKET for connecting to server
+	//	this->hidden->listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+	//	if (this->hidden->listenSocket == INVALID_SOCKET) {
+	//		printf("socket failed with error: %ld\n", WSAGetLastError());
+	//		freeaddrinfo(result);
+	//		WSACleanup();
+	//		return false;
+	//	}
+
+	//	// Setup the TCP listening socket
+	//	iResult = bind(this->hidden->listenSocket, result->ai_addr, (int) result->ai_addrlen);
+	//	if (iResult == SOCKET_ERROR) {
+	//		printf("bind failed with error: %d\n", WSAGetLastError());
+	//		freeaddrinfo(result);
+	//		closesocket(this->hidden->listenSocket);
+	//		WSACleanup();
+	//		return false;
+	//	}
+
+	//	freeaddrinfo(result);
+
+	//	iResult = listen(this->hidden->listenSocket, SOMAXCONN);
+	//	if (iResult == SOCKET_ERROR) {
+	//		printf("listen failed with error: %d\n", WSAGetLastError());
+	//		closesocket(this->hidden->listenSocket);
+	//		WSACleanup();
+	//		return false;
+	//	}
+
+	//	return true;
+	//}
+
+	bool Network::initializeServer(int32_t portNumber) {
 		std::lock_guard<std::mutex> guard(this->mutex);
 		portNumber = portNumber > 0 ? portNumber : 27015;
 		portNumber = portNumber < 65536 ? portNumber : 27015;
 
-		this->PORT = std::to_string(portNumber);
+		this->port = std::to_string(portNumber);
 
-		std::cout << "opening server on port: " << this->PORT << '\n';
+		std::cout << "opening server on port: " << this->port << '\n';
 
 		struct addrinfo* result = NULL;
 		struct addrinfo hints;
 
 		// Initialize Winsock
-		int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+		int iResult = WSAStartup(MAKEWORD(2, 2), &this->hidden->wsaData);
 		if (iResult != 0) {
 			printf("WSAStartup failed with error: %d\n", iResult);
 			return false;
@@ -95,7 +194,7 @@ namespace NETWORK
 		hints.ai_flags = AI_PASSIVE;
 
 		// Resolve the server address and port
-		iResult = getaddrinfo(NULL, PORT.c_str(), &hints, &result);
+		iResult = getaddrinfo(NULL, port.c_str(), &hints, &result);
 		if (iResult != 0) {
 			printf("getaddrinfo failed with error: %d\n", iResult);
 			WSACleanup();
@@ -103,8 +202,8 @@ namespace NETWORK
 		}
 
 		// Create a SOCKET for connecting to server
-		this->listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-		if (this->listenSocket == INVALID_SOCKET) {
+		this->hidden->listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+		if (this->hidden->listenSocket == INVALID_SOCKET) {
 			printf("socket failed with error: %ld\n", WSAGetLastError());
 			freeaddrinfo(result);
 			WSACleanup();
@@ -112,24 +211,97 @@ namespace NETWORK
 		}
 
 		// Setup the TCP listening socket
-		iResult = bind(this->listenSocket, result->ai_addr, (int) result->ai_addrlen);
+		iResult = bind(this->hidden->listenSocket, result->ai_addr, (int) result->ai_addrlen);
 		if (iResult == SOCKET_ERROR) {
 			printf("bind failed with error: %d\n", WSAGetLastError());
 			freeaddrinfo(result);
-			closesocket(this->listenSocket);
+			closesocket(this->hidden->listenSocket);
 			WSACleanup();
 			return false;
 		}
 
 		freeaddrinfo(result);
 
-		iResult = listen(this->listenSocket, SOMAXCONN);
+		iResult = listen(this->hidden->listenSocket, SOMAXCONN);
 		if (iResult == SOCKET_ERROR) {
 			printf("listen failed with error: %d\n", WSAGetLastError());
-			closesocket(this->listenSocket);
+			closesocket(this->hidden->listenSocket);
 			WSACleanup();
 			return false;
 		}
+
+		return true;
+	}
+
+	bool Network::initializeClient(std::string address_, int32_t portNumber) {
+		std::lock_guard<std::mutex> guard(this->mutex);
+
+		portNumber = portNumber > 0 ? portNumber : 27015;
+		portNumber = portNumber < 65536 ? portNumber : 27015;
+
+		this->port = std::to_string(portNumber);
+		this->address = address_;
+
+		std::cout << "connecting to server at:" << address_ << ":" << port << '\n';
+
+		struct addrinfo* result = NULL;
+		struct addrinfo hints;
+
+		// Initialize Winsock
+		int iResult = WSAStartup(MAKEWORD(2, 2), &this->hidden->wsaData);
+		if (iResult != 0) {
+			printf("WSAStartup failed with error: %d\n", iResult);
+			return false;
+		}
+
+		ZeroMemory(&hints, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
+
+		// Resolve the server address and port
+		iResult = getaddrinfo(this->address.c_str(), port.c_str(), &hints, &result);
+		if (iResult != 0) {
+			printf("getaddrinfo failed with error: %d\n", iResult);
+			WSACleanup();
+			return false;
+		}
+
+		auto serverClient = std::make_unique<Client>();
+		serverClient->hidden->socket = INVALID_SOCKET;
+
+		// Attempt to connect to an address until one succeeds
+		for (auto ptr = result; ptr != NULL; ptr = ptr->ai_next) {
+			// Create a SOCKET for connecting to server
+			serverClient->hidden->socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+
+			if (serverClient->hidden->socket == INVALID_SOCKET) {
+				printf("socket failed with error: %ld\n", WSAGetLastError());
+				WSACleanup();
+				return false;
+			}
+
+			// Connect to server.
+			iResult = connect(serverClient->hidden->socket, ptr->ai_addr, (int) ptr->ai_addrlen);
+			if (iResult == SOCKET_ERROR) {
+				closesocket(serverClient->hidden->socket);
+				serverClient->hidden->socket = INVALID_SOCKET;
+				continue;
+			}
+			break;
+		}
+
+		freeaddrinfo(result);
+
+		if (serverClient->hidden->socket == INVALID_SOCKET) {
+			printf("Unable to connect to server!\n");
+			WSACleanup();
+			return false;
+		}
+
+		this->clients.push_back(std::move(serverClient));
+
+		printf("Successfully connected to server\n");
 
 		return true;
 	}
@@ -144,17 +316,17 @@ namespace NETWORK
 			FD_ZERO(&writeFDs);
 			FD_ZERO(&exceptFDs);
 
-			if (this->listenSocket != INVALID_SOCKET) {
-				FD_SET(this->listenSocket, &readFDs);
-				FD_SET(this->listenSocket, &exceptFDs);
+			if (this->hidden->listenSocket != INVALID_SOCKET) {
+				FD_SET(this->hidden->listenSocket, &readFDs);
+				FD_SET(this->hidden->listenSocket, &exceptFDs);
 			}
 
 			{
 				std::lock_guard<std::mutex> guard(this->mutex);
-				for (auto& client : clients) {
-					FD_SET(client->socket, &readFDs);
+				for (auto& client : this->clients) {
+					FD_SET(client->hidden->socket, &readFDs);
 					if (!client->sendMessages.empty()) {
-						FD_SET(client->socket, &writeFDs);
+						FD_SET(client->hidden->socket, &writeFDs);
 					}
 				}
 			}
@@ -165,32 +337,29 @@ namespace NETWORK
 				std::lock_guard<std::mutex> guard(this->mutex);
 				printf("something happen\n");
 
-				if (FD_ISSET(this->listenSocket, &readFDs)) {
+				if (FD_ISSET(this->hidden->listenSocket, &readFDs)) {
 					printf("listen socket read\n");
 					sockaddr newClientAdress;
 					int newClientAddressLength = sizeof(sockaddr);
-					auto newClientSocket = accept(this->listenSocket, &newClientAdress, &newClientAddressLength);
+					auto newClientSocket = accept(this->hidden->listenSocket, &newClientAdress, &newClientAddressLength);
 
 					if (newClientSocket != INVALID_SOCKET) {
-						clients.emplace_back(std::make_unique<Client>());
-						clients.back()->socket = newClientSocket;
-						clients.back()->address = newClientAdress;
-						clients.back()->addressLength = newClientAddressLength;
-
+						this->clients.emplace_back(std::make_unique<Client>());
+						this->clients.back()->hidden->socket = newClientSocket;
 						printf("new client\n");
 					}
 				}
 
-				for (auto& client : clients) {
-					if (FD_ISSET(client->socket, &exceptFDs)) {
+				for (auto& client : this->clients) {
+					if (FD_ISSET(client->hidden->socket, &exceptFDs)) {
 						client->close();
 					}
 					else {
-						if (FD_ISSET(client->socket, &readFDs)) {
+						if (FD_ISSET(client->hidden->socket, &readFDs)) {
 							printf("client socket read\n");
 							// TODO: handle closing of connection (0 bytes received) or an error (bytes == SOCKET_ERROR)
 							char buffer[BUFFER_SIZE];
-							int bytesReceived = recv(client->socket, buffer, BUFFER_SIZE, 0);
+							int bytesReceived = recv(client->hidden->socket, buffer, BUFFER_SIZE, 0);
 							// connection closed
 							if (bytesReceived == 0) {
 								client->close();
@@ -221,7 +390,7 @@ namespace NETWORK
 							}
 						}
 
-						if (FD_ISSET(client->socket, &writeFDs)) {
+						if (FD_ISSET(client->hidden->socket, &writeFDs)) {
 							printf("client socket write\n");
 							std::lock_guard<std::mutex> lock(client->mutex);
 							if (!client->sendMessages.empty()) {
@@ -256,12 +425,12 @@ namespace NETWORK
 
 									message.buffer.read(sendBuffer + headerLength, sendLength - headerLength);
 
-									int32_t bytesSend = send(client->socket, sendBuffer, sendLength, 0);
+									int32_t bytesSend = send(client->hidden->socket, sendBuffer, sendLength, 0);
 
 									if (bytesSend == SOCKET_ERROR) {
 										int32_t error;
 										int32_t errorLength = sizeof(error);
-										getsockopt(client->socket, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&error), &errorLength);
+										getsockopt(client->hidden->socket, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&error), &errorLength);
 
 										if (error != WSAEWOULDBLOCK) {
 											client->closed = true;
@@ -286,7 +455,6 @@ namespace NETWORK
 							}
 						}
 					}
-
 				}
 			}
 			else {

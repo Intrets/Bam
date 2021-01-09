@@ -64,7 +64,7 @@ namespace UIO2
 
 	WeakReference<UIOBase, UIOTextDisplay> text(std::string const& t, bool shrinkToFit = true);
 	WeakReference<UIOBase, UIOButton> button(bool shrinkToFit = false);
-	WeakReference<UIOBase, UIOWindow> window(std::string const& title, Rectangle size, int32_t types);
+	WeakReference<UIOBase, UIOWindow> window(std::string const& title, Rect size, int32_t types);
 	WeakReference<UIOBase, UIOHideable> hideable();
 
 	WeakReference<UIOBase, UIOColoredBackground> background(glm::vec4 color);

@@ -1,6 +1,6 @@
 #pragma once
 
-class Rectangle;
+class Rect;
 
 struct UIRenderInfo
 {
@@ -10,7 +10,7 @@ struct UIRenderInfo
 
 	void addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec4 color);
 	void addRectangle(glm::vec2 pos1, glm::vec2 pos2, glm::vec4 color, int32_t depth_);
-	void addRectangle(Rectangle& rec, glm::vec4 color);
+	void addRectangle(Rect& rec, glm::vec4 color);
 };
 
 

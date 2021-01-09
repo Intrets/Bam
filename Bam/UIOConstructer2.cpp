@@ -150,7 +150,7 @@ WeakReference<UIOBase, UIOButton> UIO2::button(bool shrinkToFit) {
 	return res;
 }
 
-WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rectangle size, int32_t types) {
+WeakReference<UIOBase, UIOWindow> UIO2::window(std::string const& title, Rect size, int32_t types) {
 	const int32_t resizeSliverSize = 7;
 
 	auto mainPad = UIO2::Global::getManager().makeUniqueRef<UIOPad>();
