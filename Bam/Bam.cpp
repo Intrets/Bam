@@ -197,19 +197,19 @@ int main() {
 
 	switch (programType) {
 		case PROGRAM::TYPE::OFFLINE:
-			std::cout << "starting offline singleplayer game";
+			std::cout << "starting offline singleplayer game\n";
 			initGLFW();
 			break;
 		case PROGRAM::TYPE::CLIENT:
-			std::cout << "starting client multiplayer game";
+			std::cout << "starting client multiplayer game\n";
 			initGLFW();
 			break;
 		case PROGRAM::TYPE::SERVER:
-			std::cout << "starting server + client multiplayer game";
+			std::cout << "starting server + client multiplayer game\n";
 			initGLFW();
 			break;
 		case PROGRAM::TYPE::HEADLESS_SERVER:
-			std::cout << "starting headless server game";
+			std::cout << "starting headless server game\n";
 			break;
 		default:
 			assert(0);

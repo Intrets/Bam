@@ -56,17 +56,41 @@ struct Client
 };
 
 void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
+	printf("exiting set up\n\n");
 	NETWORK::Network network;
+	std::thread networkThread;
 
 	switch (type) {
 		case PROGRAM::TYPE::OFFLINE:
-		case PROGRAM::TYPE::CLIENT:
 			break;
+		case PROGRAM::TYPE::CLIENT:
+			{
+				network.initializeClient("localhost", 27015);
+
+				NETWORK::Message message;
+				message.type = NETWORK::MESSAGE::TYPE::TEST;
+				message.buffer << "hello server!";
+				network.clients.front()->send(std::move(message));
+
+				networkThread = std::thread([&network]()
+				{
+					network.run();
+				});
+				break;
+			}
 		case PROGRAM::TYPE::SERVER:
 			network.initializeServer(27015);
+			networkThread = std::thread([&network]()
+			{
+				network.run();
+			});
 			break;
 		case PROGRAM::TYPE::HEADLESS_SERVER:
 			network.initializeServer(27015);
+			networkThread = std::thread([&network]()
+			{
+				network.run();
+			});
 			break;
 		default:
 			break;
@@ -114,63 +138,84 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 
 	RenderInfo renderInfo;
 
-	while (!glfwWindowShouldClose(window)) {
+	bool graphics = false;
+	switch (type) {
+		case PROGRAM::TYPE::OFFLINE:
+		case PROGRAM::TYPE::CLIENT:
+		case PROGRAM::TYPE::SERVER:
+			graphics = true;
+			break;
+		case PROGRAM::TYPE::HEADLESS_SERVER:
+			graphics = false;
+			break;
+		default:
+			assert(0);
+			break;
+	}
 
-		if (client->state.uiState.shouldReset()) {
-			client->state.uiState.clear();
-			client->state.uiState.init();
-		}
-		if (client->state.gameState.loadFile.has_value()) {
-			auto const& name = client->state.gameState.loadFile.value();
-			Locator<Log>::ref().putLine("loading: " + name);
-
-			std::ifstream save;
-			Locator<PathManager>::ref().openSave(save, name);
-
-			Loader(save, client->state.gameState).loadGame();
-
-			client->state.player = gameState.getPlayer(0).value();
-			client->state.gameState.loadFile = std::nullopt;
-		}
-		else if (client->state.gameState.saveFile.has_value()) {
-			auto const& name = client->state.gameState.saveFile.value();
-			Locator<Log>::ref().putLine("saving: " + name);
-
-			std::ofstream save;
-			Locator<PathManager>::ref().openSave(save, name);
-
-			Saver(save, client->state.gameState).saveGame();
-			client->state.gameState.saveFile = std::nullopt;
-		}
-
+	while (true) {
 		bool rendering = false;
-		if (stateChanged && client->renderLimiter.ready()) {
-			client->renderLimiter.advance();
-			stateChanged = false;
-			rendering = true;
+		if (graphics) {
+			if (glfwWindowShouldClose(window)) {
+				break;
+			}
 
-			Locator<Timer>::ref().endTiming("Render Loop");
-			Locator<Timer>::ref().newTiming("Render Loop");
+			if (client->state.uiState.shouldReset()) {
+				client->state.uiState.clear();
+				client->state.uiState.init();
+			}
 
-			Locator<Timer>::ref().newTiming("UI update size");
-			client->state.uiState.updateSize(window);
-			Locator<Timer>::ref().endTiming("UI update size");
+			if (client->state.gameState.loadFile.has_value()) {
+				auto const& name = client->state.gameState.loadFile.value();
+				Locator<Log>::ref().putLine("loading: " + name);
 
-			Locator<Timer>::ref().newTiming("Prepare render");
-			renderInfo = RenderInfo();
-			client->renderer.prepareRender(window, renderInfo, client->state);
-			Locator<Timer>::ref().endTiming("Prepare render");
+				std::ifstream save;
+				Locator<PathManager>::ref().openSave(save, name);
 
-			Locator<Timer>::ref().newTiming("Polling");
-			client->state.controlState.cycleStates();
-			glfwPollEvents();
-			Locator<Timer>::ref().endTiming("Polling");
+				Loader(save, client->state.gameState).loadGame();
 
-			Locator<Timer>::ref().newTiming("UI Logic");
-			client->state.uiState.updateCursor(window, client->state.getPlayer().getCameraPosition());
+				client->state.player = gameState.getPlayer(0).value();
+				client->state.gameState.loadFile = std::nullopt;
+			}
+			else if (client->state.gameState.saveFile.has_value()) {
+				auto const& name = client->state.gameState.saveFile.value();
+				Locator<Log>::ref().putLine("saving: " + name);
 
-			client->state.uiState.run(client->state);
-			Locator<Timer>::ref().endTiming("UI Logic");
+				std::ofstream save;
+				Locator<PathManager>::ref().openSave(save, name);
+
+				Saver(save, client->state.gameState).saveGame();
+				client->state.gameState.saveFile = std::nullopt;
+			}
+
+			if (stateChanged && client->renderLimiter.ready()) {
+				client->renderLimiter.advance();
+				stateChanged = false;
+				rendering = true;
+
+				Locator<Timer>::ref().endTiming("Render Loop");
+				Locator<Timer>::ref().newTiming("Render Loop");
+
+				Locator<Timer>::ref().newTiming("UI update size");
+				client->state.uiState.updateSize(window);
+				Locator<Timer>::ref().endTiming("UI update size");
+
+				Locator<Timer>::ref().newTiming("Prepare render");
+				renderInfo = RenderInfo();
+				client->renderer.prepareRender(window, renderInfo, client->state);
+				Locator<Timer>::ref().endTiming("Prepare render");
+
+				Locator<Timer>::ref().newTiming("Polling");
+				client->state.controlState.cycleStates();
+				glfwPollEvents();
+				Locator<Timer>::ref().endTiming("Polling");
+
+				Locator<Timer>::ref().newTiming("UI Logic");
+				client->state.uiState.updateCursor(window, client->state.getPlayer().getCameraPosition());
+
+				client->state.uiState.run(client->state);
+				Locator<Timer>::ref().endTiming("UI Logic");
+			}
 		}
 
 		const static auto gameTick = [&]()
@@ -187,7 +232,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			}
 		};
 
-		if (Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
+		if (graphics && Option<OPTION::GR_RENDERTHREAD, bool>::getVal()) {
 			logicThread = std::thread(gameTick);
 		}
 		else {
@@ -210,3 +255,5 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 		}
 	}
 }
+
+

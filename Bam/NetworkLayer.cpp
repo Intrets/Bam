@@ -56,9 +56,7 @@ namespace NETWORK
 
 		int32_t receivedBufferSize = static_cast<int32_t>(this->receivedBuffer.tellp()) - static_cast<int32_t>(this->receivedBuffer.tellg());
 
-		assert(receivedBufferSize > 4);
-
-		if (receivedBufferSize > 4) {
+		if (receivedBufferSize >= 4) {
 			int32_t type;
 			this->receivedBuffer >> type;
 
@@ -77,20 +75,7 @@ namespace NETWORK
 	}
 
 	Client::Client() {
-		//this->hidden = new ClientHidden();
 		this->hidden = std::make_unique<ClientHidden>();
-
-
-		this->sendMessages.emplace();
-		this->sendMessages.back().buffer << "1";
-		this->sendMessages.emplace();
-		this->sendMessages.back().buffer << "2";
-		this->sendMessages.emplace();
-		this->sendMessages.back().buffer << "3";
-		this->sendMessages.emplace();
-		this->sendMessages.back().buffer << "4";
-		this->sendMessages.emplace();
-		this->sendMessages.back().buffer << "5";
 	}
 
 	Client::~Client() {
@@ -102,71 +87,6 @@ namespace NETWORK
 
 	Network::~Network() {
 	}
-
-	//bool Network::initialize(int32_t portNumber) {
-	//	std::lock_guard<std::mutex> guard(this->mutex);
-	//	portNumber = portNumber > 0 ? portNumber : 27015;
-	//	portNumber = portNumber < 65536 ? portNumber : 27015;
-
-	//	this->port = std::to_string(portNumber);
-
-	//	std::cout << "opening server on port: " << this->port << '\n';
-
-	//	struct addrinfo* result = NULL;
-	//	struct addrinfo hints;
-
-	//	// Initialize Winsock
-	//	int iResult = WSAStartup(MAKEWORD(2, 2), &this->hidden->wsaData);
-	//	if (iResult != 0) {
-	//		printf("WSAStartup failed with error: %d\n", iResult);
-	//		return false;
-	//	}
-
-	//	ZeroMemory(&hints, sizeof(hints));
-	//	hints.ai_family = AF_INET;
-	//	hints.ai_socktype = SOCK_STREAM;
-	//	hints.ai_protocol = IPPROTO_TCP;
-	//	hints.ai_flags = AI_PASSIVE;
-
-	//	// Resolve the server address and port
-	//	iResult = getaddrinfo(NULL, port.c_str(), &hints, &result);
-	//	if (iResult != 0) {
-	//		printf("getaddrinfo failed with error: %d\n", iResult);
-	//		WSACleanup();
-	//		return false;
-	//	}
-
-	//	// Create a SOCKET for connecting to server
-	//	this->hidden->listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	//	if (this->hidden->listenSocket == INVALID_SOCKET) {
-	//		printf("socket failed with error: %ld\n", WSAGetLastError());
-	//		freeaddrinfo(result);
-	//		WSACleanup();
-	//		return false;
-	//	}
-
-	//	// Setup the TCP listening socket
-	//	iResult = bind(this->hidden->listenSocket, result->ai_addr, (int) result->ai_addrlen);
-	//	if (iResult == SOCKET_ERROR) {
-	//		printf("bind failed with error: %d\n", WSAGetLastError());
-	//		freeaddrinfo(result);
-	//		closesocket(this->hidden->listenSocket);
-	//		WSACleanup();
-	//		return false;
-	//	}
-
-	//	freeaddrinfo(result);
-
-	//	iResult = listen(this->hidden->listenSocket, SOMAXCONN);
-	//	if (iResult == SOCKET_ERROR) {
-	//		printf("listen failed with error: %d\n", WSAGetLastError());
-	//		closesocket(this->hidden->listenSocket);
-	//		WSACleanup();
-	//		return false;
-	//	}
-
-	//	return true;
-	//}
 
 	bool Network::initializeServer(int32_t portNumber) {
 		std::lock_guard<std::mutex> guard(this->mutex);
@@ -229,6 +149,8 @@ namespace NETWORK
 			WSACleanup();
 			return false;
 		}
+
+		printf("Successfully opened server!\n\n\n");
 
 		return true;
 	}
@@ -301,7 +223,7 @@ namespace NETWORK
 
 		this->clients.push_back(std::move(serverClient));
 
-		printf("Successfully connected to server\n");
+		printf("Successfully connected to server\n\n\n");
 
 		return true;
 	}
@@ -324,9 +246,11 @@ namespace NETWORK
 			{
 				std::lock_guard<std::mutex> guard(this->mutex);
 				for (auto& client : this->clients) {
-					FD_SET(client->hidden->socket, &readFDs);
-					if (!client->sendMessages.empty()) {
-						FD_SET(client->hidden->socket, &writeFDs);
+					if (!client->closed) {
+						FD_SET(client->hidden->socket, &readFDs);
+						if (!client->sendMessages.empty()) {
+							FD_SET(client->hidden->socket, &writeFDs);
+						}
 					}
 				}
 			}
@@ -335,7 +259,7 @@ namespace NETWORK
 			// last parameter: timeout duration, 0 for blocking
 			if (select(0, &readFDs, &writeFDs, &exceptFDs, 0) > 0) {
 				std::lock_guard<std::mutex> guard(this->mutex);
-				printf("something happen\n");
+				printf("\nsomething happen\n");
 
 				if (FD_ISSET(this->hidden->listenSocket, &readFDs)) {
 					printf("listen socket read\n");
@@ -357,7 +281,6 @@ namespace NETWORK
 					else {
 						if (FD_ISSET(client->hidden->socket, &readFDs)) {
 							printf("client socket read\n");
-							// TODO: handle closing of connection (0 bytes received) or an error (bytes == SOCKET_ERROR)
 							char buffer[BUFFER_SIZE];
 							int bytesReceived = recv(client->hidden->socket, buffer, BUFFER_SIZE, 0);
 							// connection closed
@@ -368,6 +291,9 @@ namespace NETWORK
 								client->close();
 							}
 							else if (bytesReceived > 0) {
+								std::string m(buffer + 1, bytesReceived - 1);
+								printf("some message: %s\n", m.c_str());
+
 								switch (buffer[0]) {
 									case RAWBYTES::START:
 										client->receiveNewMessage();
@@ -377,10 +303,8 @@ namespace NETWORK
 										client->receive(buffer + 1, bytesReceived - 1);
 										break;
 									default:
-										std::string m(buffer + 1, bytesReceived - 1);
-										printf("some message: %s\n", m.c_str());
-										//client->close();
-										//assert(0);
+										client->close();
+										assert(0);
 										break;
 								}
 							}
@@ -426,6 +350,9 @@ namespace NETWORK
 									message.buffer.read(sendBuffer + headerLength, sendLength - headerLength);
 
 									int32_t bytesSend = send(client->hidden->socket, sendBuffer, sendLength, 0);
+
+									std::string m(sendBuffer + 1, bytesSend - 1);
+									printf("some message: %s\n", m.c_str());
 
 									if (bytesSend == SOCKET_ERROR) {
 										int32_t error;

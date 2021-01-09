@@ -5,6 +5,7 @@
 #include <vector>
 #include <queue>
 #include <memory>
+#include <list>
 
 namespace NETWORK
 {
@@ -12,7 +13,7 @@ namespace NETWORK
 	{
 		enum class TYPE
 		{
-
+			TEST,
 		};
 	}
 
@@ -65,7 +66,7 @@ namespace NETWORK
 		std::string address;
 
 		std::mutex mutex;
-		std::vector<std::unique_ptr<Client>> clients;
+		std::list<std::unique_ptr<Client>> clients;
 
 		bool initializeServer(int32_t portNumber);
 		bool initializeClient(std::string address, int32_t portNumber);
