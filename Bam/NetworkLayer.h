@@ -19,7 +19,6 @@ namespace NETWORK
 
 	struct Message
 	{
-		MESSAGE::TYPE type;
 		std::stringstream buffer{};
 	};
 
@@ -29,13 +28,12 @@ namespace NETWORK
 	public:
 		std::unique_ptr<ClientHidden> hidden;
 
-		std::mutex mutex;
-
 		bool closed = false;
 
 		std::vector<Message> receivedMessages;
 
 		std::stringstream receivedBuffer;
+		int32_t messageSizeRemaining = 0;
 
 		std::queue<Message> sendMessages;
 
@@ -43,19 +41,13 @@ namespace NETWORK
 		void close();
 		void receive(const char* bytes, int32_t count);
 		void receiveNewMessage();
+		void cycleMessage();
 
 		void send(Message&& message);
-		void sendUnlocked(Message&& message);
 
 		Client();
 		~Client();
 	};
-
-	namespace RAWBYTES
-	{
-		constexpr char START = '\0';
-		constexpr char CONTINUE = '\1';
-	}
 
 	class NetworkHidden;
 	class Network

@@ -221,14 +221,12 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 					std::scoped_lock<std::mutex> lock(network.mutex);
 					if (!network.clients.empty()) {
 						auto& p = network.clients.front();
-						std::scoped_lock<std::mutex> lock2(p->mutex);
 						if (!client->state.playerActions.operations.empty()) {
 
 							NETWORK::Message m;
-							m.type = NETWORK::MESSAGE::TYPE::TEST;
 							Saver s(m.buffer, gameState);
 							client->state.playerActions.save(s);
-							p->sendUnlocked(std::move(m));
+							p->send(std::move(m));
 
 							client->state.playerActions.operations.clear();
 						}
@@ -246,13 +244,10 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 					std::scoped_lock<std::mutex> lock(network.mutex);
 					if (!network.clients.empty()) {
 						auto& p = network.clients.front();
-						std::scoped_lock<std::mutex> lock2(p->mutex);
 
 						for (auto& message : p->receivedMessages) {
 							std::cout << "echoing message " << message.buffer.str() << "\n";
-							int32_t startPos = static_cast<int32_t>(message.buffer.tellg());
-							int32_t endPos = static_cast<int32_t>(message.buffer.tellp());
-							p->sendUnlocked(std::move(message));
+							p->send(std::move(message));
 						}
 						p->receivedMessages.clear();
 					}

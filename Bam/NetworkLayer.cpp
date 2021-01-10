@@ -36,33 +36,23 @@ namespace NETWORK
 	};
 
 	bool Client::isClosed() {
-		std::lock_guard<std::mutex> lock(this->mutex);
 		return this->closed;
 	}
 
 	void Client::close() {
-		std::lock_guard<std::mutex> lock(this->mutex);
 		this->closed = true;
 	}
 
 	void Client::receive(const char* bytes, int32_t count) {
-		std::lock_guard<std::mutex> lock(this->mutex);
-
+		printf("successfully received part of message of size %d", count);
 		this->receivedBuffer.write(bytes, count);
+		this->messageSizeRemaining -= count;
 	}
 
 	void Client::receiveNewMessage() {
-		std::lock_guard<std::mutex> lock(this->mutex);
-
 		int32_t receivedBufferSize = static_cast<int32_t>(this->receivedBuffer.tellp()) - static_cast<int32_t>(this->receivedBuffer.tellg());
 
-		int32_t startPos1 = static_cast<int32_t>(this->receivedBuffer.tellg());
-		int32_t endPos1 = static_cast<int32_t>(this->receivedBuffer.tellp());
-
 		if (receivedBufferSize >= 4) {
-			int32_t startPos = static_cast<int32_t>(this->receivedBuffer.tellg());
-			int32_t endPos = static_cast<int32_t>(this->receivedBuffer.tellp());
-
 			this->receivedMessages.emplace_back();
 			//this->receivedMessages.back().type = ;
 			this->receivedMessages.back().buffer = std::move(this->receivedBuffer);
@@ -72,12 +62,17 @@ namespace NETWORK
 		}
 	}
 
-	void Client::send(Message&& message) {
-		std::lock_guard<std::mutex> lock(this->mutex);
-		this->sendUnlocked(std::move(message));
+	void Client::cycleMessage() {
+		if (this->messageSizeRemaining == 0) {
+			this->receivedMessages.emplace_back();
+			this->receivedMessages.back().buffer = std::move(this->receivedBuffer);
+		}
+		else {
+			printf("trying to cycle message when not received the whole message\n");
+		}
 	}
 
-	void Client::sendUnlocked(Message&& message) {
+	void Client::send(Message&& message) {
 		this->sendMessages.push(std::move(message));
 	}
 
@@ -237,8 +232,8 @@ namespace NETWORK
 
 	bool Network::run() {
 		timeval interval;
-		interval.tv_sec = 1;
-		interval.tv_usec = 1;
+		interval.tv_sec = 0;
+		interval.tv_usec = 10000;
 
 		while (true) {
 			fd_set readFDs;
@@ -268,7 +263,8 @@ namespace NETWORK
 
 			// first parameter compatibility with Berkeley sockets
 			// last parameter: timeout duration, 0 for blocking
-			if (select(0, &readFDs, &writeFDs, &exceptFDs, &interval) >= 0) {
+			int selectReturn = select(0, &readFDs, &writeFDs, &exceptFDs, &interval);
+			if (selectReturn > 0) {
 				std::lock_guard<std::mutex> guard(this->mutex);
 				printf("\nsomething happen\n");
 
@@ -302,22 +298,40 @@ namespace NETWORK
 								client->close();
 							}
 							else if (bytesReceived > 0) {
-								std::string m(buffer + 1, bytesReceived - 1);
-								printf("some message: %s\n", m.c_str());
-
-								switch (buffer[0]) {
-									case RAWBYTES::START:
-										client->receiveNewMessage();
-										client->receive(buffer + 1, bytesReceived - 1);
-										break;
-									case RAWBYTES::CONTINUE:
-										client->receive(buffer + 1, bytesReceived - 1);
-										break;
-									default:
+								int32_t consumed = 0;
+								if (client->messageSizeRemaining == 0) {
+									if (bytesReceived < 4) {
+										printf("expected new message with first 4 bytes specifying the length\n");
 										client->close();
-										assert(0);
-										break;
+									}
+									else {
+										int32_t size = *reinterpret_cast<int32_t*>(buffer);
+										client->messageSizeRemaining = size;
+										consumed = 4;
+									}
 								}
+
+								if (client->messageSizeRemaining >= bytesReceived - consumed) {
+									client->receive(buffer + consumed, bytesReceived - consumed);
+								}
+								else if (client->messageSizeRemaining < 0) {
+									printf("waiting for negative length message.\n");
+									client->close();
+									assert(0);
+								}
+								else {
+									printf("received too many bytes from client.\n");
+									client->close();
+									assert(0);
+								}
+
+								if (client->messageSizeRemaining == 0) {
+									printf("received whole message\n");
+									client->cycleMessage();
+								}
+
+								//std::string m(buffer + 1, bytesReceived - 1);
+								//printf("some message: %s\n", m.c_str());
 							}
 							else {
 								client->close();
@@ -327,7 +341,6 @@ namespace NETWORK
 
 						if (FD_ISSET(client->hidden->socket, &writeFDs)) {
 							printf("client socket write\n");
-							std::lock_guard<std::mutex> lock(client->mutex);
 							if (!client->sendMessages.empty()) {
 								auto& message = client->sendMessages.front();
 
@@ -341,15 +354,15 @@ namespace NETWORK
 								}
 								else {
 									char sendBuffer[BUFFER_SIZE];
+									int32_t sendLength;
+									int32_t headerLength;
 									if (startPos == 0) {
-										sendBuffer[0] = RAWBYTES::START;
+										headerLength = 4;
+										*reinterpret_cast<int32_t*>(sendBuffer) = size;
 									}
 									else {
-										sendBuffer[1] = RAWBYTES::CONTINUE;
+										headerLength = 0;
 									}
-
-									int32_t sendLength;
-									int32_t headerLength = sizeof(RAWBYTES::CONTINUE);
 
 									if (size + headerLength <= BUFFER_SIZE) {
 										sendLength = size + headerLength;
@@ -362,8 +375,8 @@ namespace NETWORK
 
 									int32_t bytesSend = send(client->hidden->socket, sendBuffer, sendLength, 0);
 
-									std::string m(sendBuffer + 1, bytesSend - 1);
-									printf("some message: %s\n", m.c_str());
+									std::string m(sendBuffer + headerLength, bytesSend - headerLength);
+									printf("some message sent: %s\n", m.c_str());
 
 									if (bytesSend == SOCKET_ERROR) {
 										int32_t error;
@@ -371,14 +384,14 @@ namespace NETWORK
 										getsockopt(client->hidden->socket, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&error), &errorLength);
 
 										if (error != WSAEWOULDBLOCK) {
-											client->closed = true;
+											client->close();
 										}
 									}
 									else {
 										if (bytesSend != sendLength) {
 											int32_t bufferBytesSend = bytesSend - headerLength;
 											if (bufferBytesSend < 0) {
-												client->closed = true;
+												client->close();
 											}
 											else {
 												message.buffer.seekg(startPos + bufferBytesSend);
@@ -395,7 +408,7 @@ namespace NETWORK
 					}
 				}
 			}
-			else {
+			else if (selectReturn != 0) {
 				printf("select failed with error: %ld\n", WSAGetLastError());
 				return false;
 			}
