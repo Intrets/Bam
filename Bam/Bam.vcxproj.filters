@@ -432,6 +432,7 @@
     </ClCompile>
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="common.cpp" />
+    <ClCompile Include="PlayerActions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -777,6 +778,7 @@
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="NetworkLayer.h" />
+    <ClInclude Include="PlayerActions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

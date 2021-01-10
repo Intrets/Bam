@@ -15,6 +15,7 @@
 #include "PathManager.h"
 
 #include <fstream>
+#include <memory>
 
 WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activity, LuaActivity> ref) {
 	auto list = UIO2::startList(UIO::DIR::DOWN_REVERSE);
@@ -154,7 +155,9 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 	pushButton.get()->setOnRelease([luaText = luaText.get(), uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
-			watched.get()->setScript(join(luaText->text.getLines()), playerState.gameState);
+			auto action = std::make_unique<LuaActivitySetScript>(watched.getHandle(), join(luaText->text.getLines()));
+			playerState.playerActions.operations.push_back(std::move(action));
+			//watched.get()->setScript(join(luaText->text.getLines()), playerState.gameState);
 		}
 		return BIND::RESULT::CONTINUE;
 	});
@@ -172,7 +175,9 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 	runButton.get()->setOnRelease([uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
-			watched.get()->start();
+			auto action = std::make_unique<LuaActivityStart>(watched.getHandle());
+			playerState.playerActions.operations.push_back(std::move(action));
+			//watched.get()->start();
 		}
 
 		return BIND::RESULT::CONTINUE;
@@ -181,7 +186,9 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 	interruptButton.get()->setOnRelease([uioLua = uioLua.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (auto watched = uioLua->getWatched().getRef()) {
-			watched.get()->stop();
+			auto action = std::make_unique<LuaActivityStop>(watched.getHandle());
+			playerState.playerActions.operations.push_back(std::move(action));
+			//watched.get()->stop();
 		}
 
 		return BIND::RESULT::CONTINUE;

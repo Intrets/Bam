@@ -4,16 +4,8 @@ namespace NWT
 {
 	enum class TYPE
 	{
-		LUAACTIVITY,
+		LUAACTIVITY_SETSCRIPT,
+		LUAACTIVITY_START,
+		LUAACTIVITY_STOP,
 	};
-
-	namespace LUAACTIVITY
-	{
-		enum class METHOD
-		{
-			SETSCRIPT,
-			START,
-			STOP,
-		};
-	}
 }

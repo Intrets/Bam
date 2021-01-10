@@ -298,6 +298,7 @@
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="NetworkTypes.cpp" />
+    <ClCompile Include="PlayerActions.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
     <ClCompile Include="UIOConstructActivityInfo.cpp" />
@@ -418,6 +419,7 @@
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkTypes.h" />
+    <ClInclude Include="PlayerActions.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />
     <ClInclude Include="UIOConstructActivityInfo.h" />

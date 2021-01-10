@@ -3,36 +3,75 @@
 #include "NetworkTypes.h"
 
 class GameState;
+class Loader;
+class Saver;
 
-struct Buffer
+class Operation;
+
+namespace OPERATION
 {
-	size_t size;
-	void* danger;
-};
+	std::unique_ptr<Operation> loadOperation(Loader& loader);
+}
 
-struct ReadingBuffer
-{
-	size_t size;
-	size_t offset;
-	void* danger;
-
-	int32_t nextInt32();
-	std::string nextString();
-};
-
-struct Operation
-{
-	NWT::TYPE type;
-	size_t method;
-
-	Buffer args;
-
-	void run(GameState& gameState);
-};
-
-class Network
+class Operation
 {
 public:
-	std::vector<Operation> operations;
+	NWT::TYPE type;
+
+	virtual void run(GameState& gameState) = 0;
+	void load(Loader& loader);
+	void save(Saver& saver);
+
+	virtual void loadDerived(Loader& loader) = 0;
+	virtual void saveDerived(Saver& saver) = 0;
+
+	Operation() = default;
+	virtual ~Operation() = default;
+};
+
+class LuaActivitySetScript : public Operation
+{
+public:
+	std::string text;
+	int32_t h;
+
+	virtual void run(GameState& gameState) override;
+
+	virtual void loadDerived(Loader& loader) override;
+	virtual void saveDerived(Saver& saver) override;
+
+	LuaActivitySetScript() = default;
+	LuaActivitySetScript(int32_t h_, std::string const& text_);
+	virtual ~LuaActivitySetScript() = default;
+};
+
+class LuaActivityStart : public Operation
+{
+public:
+	int32_t h;
+
+	virtual void run(GameState& gameState) override;
+
+	virtual void loadDerived(Loader& loader) override;
+	virtual void saveDerived(Saver& saver) override;
+
+	LuaActivityStart() = default;
+	LuaActivityStart(int32_t h_);
+	virtual ~LuaActivityStart() = default;
+};
+
+class LuaActivityStop : public Operation
+{
+public:
+	int32_t h;
+
+	virtual void run(GameState& gameState) override;
+
+	virtual void loadDerived(Loader& loader) override;
+	virtual void saveDerived(Saver& saver) override;
+
+	LuaActivityStop() = default;
+	LuaActivityStop(int32_t h);
+	virtual ~LuaActivityStop() = default;
 };
 

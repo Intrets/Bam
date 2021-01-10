@@ -67,11 +67,6 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			{
 				network.initializeClient("localhost", 27015);
 
-				NETWORK::Message message;
-				message.type = NETWORK::MESSAGE::TYPE::TEST;
-				message.buffer << "hello server!";
-				network.clients.front()->send(std::move(message));
-
 				networkThread = std::thread([&network]()
 				{
 					network.run();
@@ -218,6 +213,54 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			}
 		}
 
+		switch (type) {
+			case PROGRAM::TYPE::OFFLINE:
+			case PROGRAM::TYPE::CLIENT:
+			case PROGRAM::TYPE::SERVER:
+				{
+					std::scoped_lock<std::mutex> lock(network.mutex);
+					if (!network.clients.empty()) {
+						auto& p = network.clients.front();
+						std::scoped_lock<std::mutex> lock2(p->mutex);
+						if (!client->state.playerActions.operations.empty()) {
+
+							NETWORK::Message m;
+							m.type = NETWORK::MESSAGE::TYPE::TEST;
+							Saver s(m.buffer, gameState);
+							client->state.playerActions.save(s);
+							p->sendUnlocked(std::move(m));
+
+							client->state.playerActions.operations.clear();
+						}
+
+						if (!p->receivedMessages.empty()) {
+							Loader l(p->receivedMessages.front().buffer, gameState);
+							client->state.playerActions.load(l);
+							p->receivedMessages.clear();
+						}
+					}
+				}
+				break;
+			case PROGRAM::TYPE::HEADLESS_SERVER:
+				{
+					std::scoped_lock<std::mutex> lock(network.mutex);
+					if (!network.clients.empty()) {
+						auto& p = network.clients.front();
+						std::scoped_lock<std::mutex> lock2(p->mutex);
+
+						for (auto& message : p->receivedMessages) {
+							std::cout << "echoing message " << message.buffer.str() << "\n";
+							int32_t startPos = static_cast<int32_t>(message.buffer.tellg());
+							int32_t endPos = static_cast<int32_t>(message.buffer.tellp());
+							p->sendUnlocked(std::move(message));
+						}
+						p->receivedMessages.clear();
+					}
+				}
+				break;
+			default:
+				break;
+		}
 		const static auto gameTick = [&]()
 		{
 			for (int32_t i = 0; i < 10; i++) {
@@ -225,6 +268,22 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 					break;
 				}
 				stateChanged = true;
+
+				if (!client->state.playerActions.operations.empty()) {
+					std::stringstream test;
+					Saver s(test, gameState);
+					Loader l(test, gameState);
+					client->state.playerActions.save(s);
+
+					PlayerActions actions;
+					actions.load(l);
+
+					for (auto& operation : actions.operations) {
+						operation->run(gameState);
+					}
+					client->state.playerActions.operations.clear();
+				}
+
 				gameLogic.runStep(client->state.gameState);
 				tickLimiterGameLogic.advance();
 				Locator<Timer>::ref().endTiming("Game Loop");
@@ -255,5 +314,3 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 		}
 	}
 }
-
-

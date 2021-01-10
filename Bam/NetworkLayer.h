@@ -20,7 +20,7 @@ namespace NETWORK
 	struct Message
 	{
 		MESSAGE::TYPE type;
-		std::stringstream buffer;
+		std::stringstream buffer{};
 	};
 
 	class ClientHidden;
@@ -45,6 +45,7 @@ namespace NETWORK
 		void receiveNewMessage();
 
 		void send(Message&& message);
+		void sendUnlocked(Message&& message);
 
 		Client();
 		~Client();

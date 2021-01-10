@@ -56,12 +56,15 @@ namespace NETWORK
 
 		int32_t receivedBufferSize = static_cast<int32_t>(this->receivedBuffer.tellp()) - static_cast<int32_t>(this->receivedBuffer.tellg());
 
+		int32_t startPos1 = static_cast<int32_t>(this->receivedBuffer.tellg());
+		int32_t endPos1 = static_cast<int32_t>(this->receivedBuffer.tellp());
+
 		if (receivedBufferSize >= 4) {
-			int32_t type;
-			this->receivedBuffer >> type;
+			int32_t startPos = static_cast<int32_t>(this->receivedBuffer.tellg());
+			int32_t endPos = static_cast<int32_t>(this->receivedBuffer.tellp());
 
 			this->receivedMessages.emplace_back();
-			this->receivedMessages.back().type = static_cast<MESSAGE::TYPE>(type);
+			//this->receivedMessages.back().type = ;
 			this->receivedMessages.back().buffer = std::move(this->receivedBuffer);
 		}
 		else {
@@ -71,6 +74,10 @@ namespace NETWORK
 
 	void Client::send(Message&& message) {
 		std::lock_guard<std::mutex> lock(this->mutex);
+		this->sendUnlocked(std::move(message));
+	}
+
+	void Client::sendUnlocked(Message&& message) {
 		this->sendMessages.push(std::move(message));
 	}
 
@@ -229,6 +236,10 @@ namespace NETWORK
 	}
 
 	bool Network::run() {
+		timeval interval;
+		interval.tv_sec = 1;
+		interval.tv_usec = 1;
+
 		while (true) {
 			fd_set readFDs;
 			fd_set writeFDs;
@@ -257,7 +268,7 @@ namespace NETWORK
 
 			// first parameter compatibility with Berkeley sockets
 			// last parameter: timeout duration, 0 for blocking
-			if (select(0, &readFDs, &writeFDs, &exceptFDs, 0) > 0) {
+			if (select(0, &readFDs, &writeFDs, &exceptFDs, &interval) >= 0) {
 				std::lock_guard<std::mutex> guard(this->mutex);
 				printf("\nsomething happen\n");
 
@@ -385,7 +396,7 @@ namespace NETWORK
 				}
 			}
 			else {
-				printf("select() failed\n");
+				printf("select failed with error: %ld\n", WSAGetLastError());
 				return false;
 			}
 		}
