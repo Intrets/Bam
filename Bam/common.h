@@ -2,6 +2,8 @@
 
 #define SOL_SAFE_NUMERICS 1
 
+#include <GL/glew.h>
+
 #pragma warning(push,0)
 #include <GLM/glm.hpp>
 #pragma warning(pop)
@@ -28,6 +30,8 @@
 #include <optional>
 #include <memory>
 #include <sstream>
+
+#include "ReferenceManager.h"
 
 //#include "Locator.h"
 //#include "PathManager.h"

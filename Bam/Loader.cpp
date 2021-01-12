@@ -13,13 +13,17 @@
 #include "Inventory.h"
 
 void Loader::addIncompleteActivityRef(Handle handle, Reference* ref) {
-	ref->manager = &this->gameStateRef.getActivityManager();
-	this->gameStateRef.getActivityManager().addIncomplete(handle, ref);
+	ref->manager = &this->gameStateRef->getActivityManager();
+	this->gameStateRef->getActivityManager().addIncomplete(handle, ref);
 }
 
 void Loader::addIncompleteInventoryRef(Handle handle, Reference* ref) {
-	ref->manager = &this->gameStateRef.getInventoryItemManager();
-	this->gameStateRef.getInventoryItemManager().addIncomplete(handle, ref);
+	ref->manager = &this->gameStateRef->getInventoryItemManager();
+	this->gameStateRef->getInventoryItemManager().addIncomplete(handle, ref);
+}
+
+std::istream& Loader::getBuffer() {
+	return this->in;
 }
 
 void Loader::retrieveActivityPointer(Activity*& ptr) {
@@ -30,7 +34,7 @@ void Loader::retrieveActivityPointer(Activity*& ptr) {
 		ptr = nullptr;
 	}
 	else {
-		this->gameStateRef.getActivityManager().addIncomplete(handle, ptr);
+		this->gameStateRef->getActivityManager().addIncomplete(handle, ptr);
 	}
 }
 
@@ -111,27 +115,27 @@ void Loader::retrieveString(std::string& str) {
 }
 
 bool Loader::loadGame() {
-	gameStateRef.clear();
+	gameStateRef->clear();
 
 	try {
-		ACTIVITYSERIALIZER::load(*this, gameStateRef.getActivityManager());
-		INVENTORYSERIALIZER::load(*this, gameStateRef.getInventoryItemManager());
+		ACTIVITYSERIALIZER::load(*this, gameStateRef->getActivityManager());
+		INVENTORYSERIALIZER::load(*this, gameStateRef->getInventoryItemManager());
 
-		this->gameStateRef.load(*this);
+		this->gameStateRef->load(*this);
 	}
 	catch (...) {
-		gameStateRef.clear();
+		gameStateRef->clear();
 		return false;
 	}
 
-	gameStateRef.getActivityManager().completeReferences();
-	gameStateRef.getInventoryItemManager().completeReferences();
+	gameStateRef->getActivityManager().completeReferences();
+	gameStateRef->getInventoryItemManager().completeReferences();
 
-	for (auto& [h, ref] : gameStateRef.getActivityManager().data) {
+	for (auto& [h, ref] : gameStateRef->getActivityManager().data) {
 		assert(h == ref.get()->getHandle());
 	}
 
-	for (auto& [h, ref] : gameStateRef.getInventoryItemManager().data) {
+	for (auto& [h, ref] : gameStateRef->getInventoryItemManager().data) {
 		assert(h == ref.get()->selfHandle);
 	}
 
@@ -139,13 +143,15 @@ bool Loader::loadGame() {
 }
 
 GameState& Loader::getGameStateRef() {
-	return this->gameStateRef;
+	return *this->gameStateRef;
 }
 
-Loader::Loader(std::istream& in_, GameState& gameState) : in(in_), gameStateRef(gameState) {
+Loader::Loader(std::istream& in_, GameState& gameState) : in(in_), gameStateRef(&gameState) {
 	this->in.exceptions(std::istream::badbit | std::istream::failbit | std::istream::eofbit);
 }
 
+Loader::Loader(std::istream& in_) : in(in_) {
+}
 
 Loader::~Loader() {
 }

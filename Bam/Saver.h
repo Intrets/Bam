@@ -19,12 +19,14 @@ class Saver
 private:
 	std::ostream& out;
 
-	GameState& gameStateRef;
+	GameState* gameStateRef;
 
 	template<class A, class B>
 	void store(ManagedReference<A, B> const& t);
 
 public:
+	std::ostream& getBuffer();
+
 	void storeActivityPointer(Activity* ptr);
 
 	template<class T>
@@ -46,6 +48,7 @@ public:
 	bool saveGame();
 
 	Saver(std::ostream& out_, GameState& gameState);
+	Saver(std::ostream& out_);
 	Saver() = delete;
 	~Saver();
 };

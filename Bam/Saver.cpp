@@ -17,6 +17,10 @@ void Saver::storeString(std::string s) {
 	this->out.write(&s[0], s.size());
 }
 
+std::ostream& Saver::getBuffer() {
+	return this->out;
+}
+
 void Saver::storeActivityPointer(Activity* ptr) {
 	if (ptr == nullptr) {
 		this->store<int32_t>(0);
@@ -27,14 +31,21 @@ void Saver::storeActivityPointer(Activity* ptr) {
 }
 
 bool Saver::saveGame() {
-	ACTIVITYSERIALIZER::save(*this, gameStateRef.getActivityManager());
-	INVENTORYSERIALIZER::save(*this, gameStateRef.getInventoryItemManager());
+	if (this->gameStateRef == nullptr) {
+		return false;
+	}
 
-	this->gameStateRef.save(*this);
+	ACTIVITYSERIALIZER::save(*this, gameStateRef->getActivityManager());
+	INVENTORYSERIALIZER::save(*this, gameStateRef->getInventoryItemManager());
+
+	this->gameStateRef->save(*this);
 	return true;
 }
 
-Saver::Saver(std::ostream& out_, GameState& gameState) : out(out_), gameStateRef(gameState) {
+Saver::Saver(std::ostream& out_, GameState& gameState) : out(out_), gameStateRef(&gameState) {
+}
+
+Saver::Saver(std::ostream& out_) : out(out_) {
 }
 
 Saver::~Saver() {

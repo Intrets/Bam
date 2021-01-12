@@ -258,6 +258,7 @@
       <PrecompiledHeaderFile>common.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PrecompiledHeaderOutputFile>pch\$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -294,10 +295,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug no -Werror|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Coordinator.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="PlayerActions.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
@@ -415,10 +416,10 @@
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="Colors.h" />
+    <ClInclude Include="Coordinator.h" />
     <ClInclude Include="FunctionHelpers.h" />
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkTypes.h" />
     <ClInclude Include="PlayerActions.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />

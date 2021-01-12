@@ -1,12 +1,26 @@
 #pragma once
 
-#include "NetworkTypes.h"
-
 class GameState;
 class Loader;
 class Saver;
 
 class Operation;
+
+namespace COORDINATOR
+{
+	class Coordinator;
+}
+
+namespace NWT
+{
+	enum class TYPE
+	{
+		LUAACTIVITY_SETSCRIPT,
+		LUAACTIVITY_START,
+		LUAACTIVITY_STOP,
+		GAME_LOAD,
+	};
+}
 
 namespace OPERATION
 {
@@ -18,7 +32,7 @@ class Operation
 public:
 	NWT::TYPE type;
 
-	virtual void run(GameState& gameState) = 0;
+	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) = 0;
 	void load(Loader& loader);
 	void save(Saver& saver);
 
@@ -35,7 +49,7 @@ public:
 	std::string text;
 	int32_t h;
 
-	virtual void run(GameState& gameState) override;
+	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) override;
 
 	virtual void loadDerived(Loader& loader) override;
 	virtual void saveDerived(Saver& saver) override;
@@ -50,7 +64,7 @@ class LuaActivityStart : public Operation
 public:
 	int32_t h;
 
-	virtual void run(GameState& gameState) override;
+	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) override;
 
 	virtual void loadDerived(Loader& loader) override;
 	virtual void saveDerived(Saver& saver) override;
@@ -65,7 +79,7 @@ class LuaActivityStop : public Operation
 public:
 	int32_t h;
 
-	virtual void run(GameState& gameState) override;
+	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) override;
 
 	virtual void loadDerived(Loader& loader) override;
 	virtual void saveDerived(Saver& saver) override;
@@ -73,5 +87,19 @@ public:
 	LuaActivityStop() = default;
 	LuaActivityStop(int32_t h);
 	virtual ~LuaActivityStop() = default;
+};
+
+class GameLoad : public Operation
+{
+public:
+	std::stringstream saveBuffer;
+
+	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) override;
+
+	virtual void loadDerived(Loader& loader) override;
+	virtual void saveDerived(Saver& saver) override;
+
+	GameLoad();
+	virtual ~GameLoad() = default;
 };
 

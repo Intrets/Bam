@@ -54,7 +54,6 @@ namespace NETWORK
 
 		if (receivedBufferSize >= 4) {
 			this->receivedMessages.emplace_back();
-			//this->receivedMessages.back().type = ;
 			this->receivedMessages.back().buffer = std::move(this->receivedBuffer);
 		}
 		else {

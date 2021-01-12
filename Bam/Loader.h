@@ -19,12 +19,14 @@ private:
 
 	std::istream& in;
 
-	GameState& gameStateRef;
+	GameState* gameStateRef = nullptr;
 
 	void addIncompleteActivityRef(Handle handle, Reference* ref);
 	void addIncompleteInventoryRef(Handle handle, Reference* ref);
 
 public:
+	std::istream& getBuffer();
+
 	void retrieveActivityPointer(Activity*& ptr);
 
 	template<class T>
@@ -60,6 +62,7 @@ public:
 
 	// sets flags so the stream will throw exceptions
 	Loader(std::istream& in_, GameState& gameState);
+	Loader(std::istream& in_);
 
 	Loader() = delete;
 	~Loader();

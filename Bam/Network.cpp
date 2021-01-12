@@ -6,8 +6,11 @@
 #include "Saver.h"
 #include "ReferenceManager.h"
 #include "LUAActivity.h"
+#include "Coordinator.h"
+#include "Locator.h"
+#include "Log.h"
 
-void Operation::run(GameState& gameState) {
+void Operation::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
 }
 
 void Operation::load(Loader& loader) {
@@ -19,7 +22,7 @@ void Operation::save(Saver& saver) {
 	this->saveDerived(saver);
 }
 
-void LuaActivitySetScript::run(GameState& gameState) {
+void LuaActivitySetScript::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
 	WeakReference<Activity, LuaActivity>(gameState.getActivityManager(), this->h).get()->setScript(this->text, gameState);
 }
 
@@ -37,7 +40,7 @@ LuaActivitySetScript::LuaActivitySetScript(int32_t h_, std::string const& text_)
 	this->type = NWT::TYPE::LUAACTIVITY_SETSCRIPT;
 }
 
-void LuaActivityStart::run(GameState& gameState) {
+void LuaActivityStart::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
 	WeakReference<Activity, LuaActivity>(gameState.getActivityManager(), this->h).get()->start();
 }
 
@@ -53,7 +56,7 @@ LuaActivityStart::LuaActivityStart(int32_t h_) : h(h_) {
 	this->type = NWT::TYPE::LUAACTIVITY_START;
 }
 
-void LuaActivityStop::run(GameState& gameState) {
+void LuaActivityStop::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
 	WeakReference<Activity, LuaActivity>(gameState.getActivityManager(), this->h).get()->stop();
 }
 
@@ -90,10 +93,35 @@ std::unique_ptr<Operation> OPERATION::loadOperation(Loader& loader) {
 		case NWT::TYPE::LUAACTIVITY_STOP:
 			LOAD(LuaActivityStop)
 				break;
+		case NWT::TYPE::GAME_LOAD:
+			LOAD(GameLoad)
+				break;
 		default:
 			assert(0);
 			break;
 	}
 
 	return res;
+}
+
+void GameLoad::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
+	if (Loader(this->saveBuffer, gameState).loadGame()) {
+		Locator<Log>::ref().putLine("Successfully loaded the world in Coordinator\n");
+	}
+	else {
+		Locator<Log>::ref().putLine("Failed to load the world in Coordinator\n");
+	}
+	coordinator.reset(gameState.tick);
+}
+
+void GameLoad::loadDerived(Loader& loader) {
+	this->saveBuffer << loader.getBuffer().rdbuf();
+}
+
+void GameLoad::saveDerived(Saver& saver) {
+	saver.getBuffer() << this->saveBuffer.rdbuf();
+}
+
+GameLoad::GameLoad() {
+	this->type = NWT::TYPE::GAME_LOAD;
 }

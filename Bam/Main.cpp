@@ -24,6 +24,8 @@
 #include "Locator.h"
 #include "Log.h"
 #include "PathManager.h"
+#include "Coordinator.h"
+#include "Network.h"
 
 ControlState controlState;
 
@@ -59,6 +61,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 	printf("exiting set up\n\n");
 	NETWORK::Network network;
 	std::thread networkThread;
+	COORDINATOR::Coordinator coordinator;
 
 	switch (type) {
 		case PROGRAM::TYPE::OFFLINE:
@@ -167,10 +170,27 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 				std::ifstream save;
 				Locator<PathManager>::ref().openSave(save, name);
 
-				Loader(save, client->state.gameState).loadGame();
+				std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
+				op->saveBuffer << save.rdbuf();
+
+				//client->state.playerActions.operations.push_back(std::move(op));
+
+				std::stringstream e;
+				Saver s(e);
+				op->save(s);
+
+				Loader l(e);
+
+				auto op2 = OPERATION::loadOperation(l);
+
+				op2->run(gameState, coordinator);
+
+				//Loader(save, client->state.gameState).loadGame();
 
 				client->state.player = gameState.getPlayer(0).value();
 				client->state.gameState.loadFile = std::nullopt;
+
+				//coordinator.reset(gameState.tick);
 			}
 			else if (client->state.gameState.saveFile.has_value()) {
 				auto const& name = client->state.gameState.saveFile.value();
@@ -213,70 +233,69 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			}
 		}
 
-		switch (type) {
-			case PROGRAM::TYPE::OFFLINE:
-			case PROGRAM::TYPE::CLIENT:
-			case PROGRAM::TYPE::SERVER:
-				{
-					std::scoped_lock<std::mutex> lock(network.mutex);
-					if (!network.clients.empty()) {
-						auto& p = network.clients.front();
-						if (!client->state.playerActions.operations.empty()) {
 
-							NETWORK::Message m;
-							Saver s(m.buffer, gameState);
-							client->state.playerActions.save(s);
-							p->send(std::move(m));
+		if (type == PROGRAM::TYPE::OFFLINE ||
+			type == PROGRAM::TYPE::CLIENT ||
+			type == PROGRAM::TYPE::SERVER) {
 
-							client->state.playerActions.operations.clear();
-						}
-
-						if (!p->receivedMessages.empty()) {
-							Loader l(p->receivedMessages.front().buffer, gameState);
-							client->state.playerActions.load(l);
-							p->receivedMessages.clear();
-						}
-					}
-				}
-				break;
-			case PROGRAM::TYPE::HEADLESS_SERVER:
-				{
-					std::scoped_lock<std::mutex> lock(network.mutex);
-					if (!network.clients.empty()) {
-						auto& p = network.clients.front();
-
-						for (auto& message : p->receivedMessages) {
-							std::cout << "echoing message " << message.buffer.str() << "\n";
-							p->send(std::move(message));
-						}
-						p->receivedMessages.clear();
-					}
-				}
-				break;
-			default:
-				break;
+			if (!client->state.playerActions.operations.empty()) {
+				coordinator.pushTick(client->state.gameState.tick, std::move(client->state.playerActions));
+			}
 		}
+		else if (type == PROGRAM::TYPE::HEADLESS_SERVER) {
+			// no client
+		}
+
+		if (type == PROGRAM::TYPE::CLIENT ||
+			type == PROGRAM::TYPE::SERVER ||
+			type == PROGRAM::TYPE::HEADLESS_SERVER) {
+
+			std::lock_guard<std::mutex> lock(network.mutex);
+			for (auto& networkClient : network.clients) {
+				for (auto& message : networkClient->receivedMessages) {
+					coordinator.pushMessage(std::move(message));
+					networkClient->receivedMessages.clear();
+				}
+			}
+		}
+		else if (type == PROGRAM::TYPE::OFFLINE) {
+			// no network
+		}
+
 		const static auto gameTick = [&]()
 		{
 			for (int32_t i = 0; i < 10; i++) {
 				if (!tickLimiterGameLogic.ready()) {
 					break;
 				}
+				if (!coordinator.ready(gameState.tick)) {
+					break;
+				}
+
 				stateChanged = true;
 
-				if (!client->state.playerActions.operations.empty()) {
-					std::stringstream test;
-					Saver s(test, gameState);
-					Loader l(test, gameState);
-					client->state.playerActions.save(s);
+				PlayerActions actions = coordinator.pullTick();
 
-					PlayerActions actions;
-					actions.load(l);
+				for (auto& operation : actions.operations) {
+					operation->run(gameState, coordinator);
+				}
 
-					for (auto& operation : actions.operations) {
-						operation->run(gameState);
+				if (type == PROGRAM::TYPE::SERVER ||
+					type == PROGRAM::TYPE::HEADLESS_SERVER) {
+
+					NETWORK::Message message;
+					Saver saver(message.buffer);
+
+					actions.save(saver);
+
+					for (auto& networkClient : network.clients) {
+						NETWORK::Message m;
+						m.buffer << message.buffer.rdbuf();
+						m.buffer.seekg(message.buffer.tellg());
+						m.buffer.seekp(message.buffer.tellp());
+
+						networkClient->send(std::move(m));
 					}
-					client->state.playerActions.operations.clear();
 				}
 
 				gameLogic.runStep(client->state.gameState);

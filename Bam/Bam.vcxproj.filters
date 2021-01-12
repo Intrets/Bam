@@ -426,13 +426,13 @@
       <Filter>States</Filter>
     </ClCompile>
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="NetworkTypes.cpp" />
     <ClCompile Include="ActivitySerializerHelper.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="PlayerActions.cpp" />
+    <ClCompile Include="Coordinator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -773,12 +773,12 @@
       <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkTypes.h" />
     <ClInclude Include="ActivitySerializerHelper.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="PlayerActions.h" />
+    <ClInclude Include="Coordinator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">
