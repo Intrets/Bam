@@ -7,6 +7,7 @@
 
 class Loader;
 class Saver;
+class Operation;
 
 class PlayerActions
 {
@@ -17,6 +18,7 @@ public:
 	void load(Loader& loader);
 	void save(Saver& saver);
 
-	void append(Loader& loader);
+	//void append(Loader& loader);
+	void append(PlayerActions& other);
 };
 

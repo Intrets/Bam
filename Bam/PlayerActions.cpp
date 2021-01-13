@@ -29,15 +29,8 @@ void PlayerActions::save(Saver& saver) {
 	}
 }
 
-void PlayerActions::append(Loader& loader) {
-	int32_t size;
-	loader.retrieve(size);
-
-	int32_t start = static_cast<int32_t>(this->operations.size());
-	int32_t end = start + size;
-
-	this->operations.resize(end);
-	for (size_t i = start; i < end; i++) {
-		this->operations[i] = OPERATION::loadOperation(loader);
+void PlayerActions::append(PlayerActions& other) {
+	for (auto& operation : other.operations) {
+		this->operations.push_back(std::move(operation));
 	}
 }

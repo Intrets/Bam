@@ -26,6 +26,9 @@
 #include "PathManager.h"
 #include "Coordinator.h"
 #include "Network.h"
+#include "Uuid.h"
+#include "MetaOperation.h"
+#include "Client.h"
 
 ControlState controlState;
 
@@ -45,17 +48,17 @@ void scroll_callback(GLFWwindow* w, double xoffset, double yoffset) {
 	controlState.scroll_callback(w, xoffset, yoffset);
 }
 
-struct Client
-{
-	Renderer renderer;
-	UIState uiState;
-	RenderLimiter renderLimiter;
-	PlayerState state;
-
-	Client(GameState& gameState) :
-		state({ gameState.getPlayer(0).value(), gameState, controlState, uiState }) {
-	};
-};
+//struct Client
+//{
+//	Renderer renderer;
+//	UIState uiState;
+//	RenderLimiter renderLimiter;
+//	PlayerState state;
+//
+//	Client(GameState& gameState) :
+//		state({ gameState.getPlayer(0).value(), gameState, controlState, uiState }) {
+//	};
+//};
 
 void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 	printf("exiting set up\n\n");
@@ -121,7 +124,7 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 		case PROGRAM::TYPE::OFFLINE:
 		case PROGRAM::TYPE::CLIENT:
 		case PROGRAM::TYPE::SERVER:
-			client = std::make_unique<Client>(gameState);
+			client = std::make_unique<Client>(gameState, controlState);
 			client->uiState.updateSize(window);
 			break;
 		case PROGRAM::TYPE::HEADLESS_SERVER:
@@ -163,36 +166,70 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 				client->state.uiState.init();
 			}
 
-			if (client->state.gameState.loadFile.has_value()) {
-				auto const& name = client->state.gameState.loadFile.value();
-				Locator<Log>::ref().putLine("loading: " + name);
+			{
+				if (coordinator.maybeLoadGame) {
+					if (type == PROGRAM::TYPE::HEADLESS_SERVER) {
+						coordinator.maybeLoadGame.value()->run(gameState, coordinator, std::nullopt);
+					}
+					else {
+						coordinator.maybeLoadGame.value()->run(gameState, coordinator, client.get());
+					}
 
-				std::ifstream save;
-				Locator<PathManager>::ref().openSave(save, name);
+					if (type == PROGRAM::TYPE::SERVER ||
+						type == PROGRAM::TYPE::HEADLESS_SERVER) {
 
-				std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
-				op->saveBuffer << save.rdbuf();
+						NETWORK::Message message;
+						Saver saver(message.buffer);
 
-				//client->state.playerActions.operations.push_back(std::move(op));
+						coordinator.maybeLoadGame.value()->saveBuffer.seekg(0);
 
-				std::stringstream e;
-				Saver s(e);
-				op->save(s);
+						coordinator.maybeLoadGame.value()->save(saver);
 
-				Loader l(e);
+						for (auto& networkClient : network.clients) {
+							NETWORK::Message m;
+							m.buffer << message.buffer.rdbuf();
+							//m.buffer.seekg(message.buffer.tellg());
+							//m.buffer.seekp(message.buffer.tellp());
 
-				auto op2 = OPERATION::loadOperation(l);
+							networkClient->send(std::move(m));
+						}
+					}
 
-				op2->run(gameState, coordinator);
-
-				//Loader(save, client->state.gameState).loadGame();
-
-				client->state.player = gameState.getPlayer(0).value();
-				client->state.gameState.loadFile = std::nullopt;
-
-				//coordinator.reset(gameState.tick);
+					coordinator.maybeLoadGame = std::nullopt;
+				}
 			}
-			else if (client->state.gameState.saveFile.has_value()) {
+
+			//if (client->state.gameState.loadFile.has_value()) {
+			//	auto const& name = client->state.gameState.loadFile.value();
+			//	Locator<Log>::ref().putLine("loading: " + name);
+
+			//	std::ifstream save;
+			//	Locator<PathManager>::ref().openSave(save, name);
+
+			//	std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
+			//	op->saveBuffer << save.rdbuf();
+
+			//	//client->state.playerActions.operations.push_back(std::move(op));
+
+			//	std::stringstream e;
+			//	Saver s(e);
+			//	op->save(s);
+
+			//	Loader l(e);
+
+			//	auto op2 = OPERATION::loadOperation(l);
+
+			//	op2->run(gameState, coordinator);
+
+			//	//Loader(save, client->state.gameState).loadGame();
+
+			//	client->state.player = gameState.getPlayer(0).value();
+			//	client->state.gameState.loadFile = std::nullopt;
+
+			//	//coordinator.reset(gameState.tick);
+			//}
+			//else
+			if (client->state.gameState.saveFile.has_value()) {
 				auto const& name = client->state.gameState.saveFile.value();
 				Locator<Log>::ref().putLine("saving: " + name);
 
@@ -238,9 +275,20 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			type == PROGRAM::TYPE::CLIENT ||
 			type == PROGRAM::TYPE::SERVER) {
 
+			std::lock_guard<std::mutex> lock(coordinator.mutex);
+
 			if (!client->state.playerActions.operations.empty()) {
 				coordinator.pushTick(client->state.gameState.tick, std::move(client->state.playerActions));
 			}
+
+			for (auto& metaOperation : client->state.metaActions.operations) {
+				if (metaOperation->type == COORDINATOR::MESSAGE::TYPE::GAME_LOAD) {
+					std::unique_ptr<GameLoad> op = std::unique_ptr<GameLoad>(static_cast<GameLoad*>(metaOperation.release()));
+					coordinator.maybeLoadGame = std::move(op);
+				}
+			}
+
+			client->state.metaActions.operations.clear();
 		}
 		else if (type == PROGRAM::TYPE::HEADLESS_SERVER) {
 			// no client

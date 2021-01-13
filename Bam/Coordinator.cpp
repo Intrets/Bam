@@ -5,6 +5,7 @@
 #include "NetworkLayer.h"
 #include "Saver.h"
 #include "Loader.h"
+#include "MetaOperation.h"
 
 #include <sstream>
 
@@ -47,10 +48,28 @@ void COORDINATOR::Coordinator::pushMessage(NETWORK::Message&& message) {
 	switch (type) {
 		case COORDINATOR::MESSAGE::TYPE::PLAYER_ACTIONS:
 			{
-				this->tickBuffer[this->currentTick].append(loader);
+				if (this->tickBuffer.find(this->currentTick) == this->tickBuffer.end()) {
+					this->tickBuffer[this->currentTick] = PlayerActions();
+				}
+
+				PlayerActions playerActions;
+				playerActions.load(loader);
+
+				//if (playerActions.uuid != this->tickBuffer[this->currentTick])
+
+				//this->tickBuffer[this->currentTick].append(loader);
+				break;
+			}
+		case COORDINATOR::MESSAGE::TYPE::GAME_LOAD:
+			{
+				std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
+				op->load(loader);
+
+				this->maybeLoadGame = std::move(op);
 				break;
 			}
 		default:
+			assert(0);
 			break;
 	}
 

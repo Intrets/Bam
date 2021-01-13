@@ -7,6 +7,7 @@
 
 #include "PlayerActions.h"
 
+class GameLoad;
 class Loader;
 class Saver;
 
@@ -22,6 +23,7 @@ namespace COORDINATOR
 		enum class TYPE
 		{
 			PLAYER_ACTIONS,
+			GAME_LOAD,
 		};
 	}
 
@@ -33,6 +35,9 @@ namespace COORDINATOR
 		int32_t currentTick = 0;
 		int32_t tickBufferSize = 10;
 
+		std::optional<std::unique_ptr<GameLoad>> maybeLoadGame;
+
+		std::string gameStateUuid;
 		std::unordered_map<int32_t, PlayerActions> tickBuffer;
 
 		void pushTick(int32_t tick, PlayerActions&& actions);

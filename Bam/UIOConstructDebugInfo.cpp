@@ -21,6 +21,8 @@
 #include "BufferWrappers.h"
 #include "Locator.h"
 #include "Log.h"
+#include "PathManager.h"
+#include "MetaOperation.h"
 
 WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
@@ -181,7 +183,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	});
 
 	saveButton.get()->setOnRelease(
-		[saveName = saveName.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
+		[saveName = saveName.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -193,7 +195,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		return BIND::RESULT::CONTINUE;
 	});
 
-	loadButton.get()->setOnRelease([saveName = saveName.get()](PlayerState& playerState, UIOBase* self_) -> CallBackBindResult
+	loadButton.get()->setOnRelease([saveName = saveName.get()](PlayerState& playerState, UIOBase* self_)->CallBackBindResult
 	{
 		if (saveName->text.getLines().size() == 0) {
 			return BIND::RESULT::CONTINUE;
@@ -201,8 +203,19 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		auto name = saveName->text.getLines().front();
 		name.erase(name.end() - 1);
 
-		playerState.gameState.loadFile = name;
-		playerState.uiState.reset();
+		//playerState.gameState.loadFile = name;
+		//playerState.uiState.reset();
+
+		std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
+
+		Locator<Log>::ref().putLine("loading: " + name);
+
+		std::ifstream save;
+		Locator<PathManager>::ref().openSave(save, name);
+
+		op->saveBuffer << save.rdbuf();
+		playerState.metaActions.operations.push_back(std::move(op));
+
 		return BIND::RESULT::CONTINUE;
 	});
 

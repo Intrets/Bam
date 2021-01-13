@@ -290,6 +290,7 @@
     <ClCompile Include="BlockIDTextures.cpp" />
     <ClCompile Include="BlockRenderer.cpp" />
     <ClCompile Include="BufferWrappers.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Colors.cpp" />
     <ClCompile Include="common.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug no -Werror|x64'">Create</PrecompiledHeader>
@@ -297,6 +298,8 @@
     </ClCompile>
     <ClCompile Include="Coordinator.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
+    <ClCompile Include="MetaActions.cpp" />
+    <ClCompile Include="MetaOperation.cpp" />
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="PlayerActions.cpp" />
@@ -394,6 +397,7 @@
     <ClCompile Include="UIOPad.cpp" />
     <ClCompile Include="UIRenderInfo.cpp" />
     <ClCompile Include="UpdatedCache.cpp" />
+    <ClCompile Include="Uuid.cpp" />
     <ClCompile Include="vboindexer.cpp" />
     <ClCompile Include="WorldBlock.cpp" />
   </ItemGroup>
@@ -415,9 +419,12 @@
     <ClInclude Include="BufferWrappers.h" />
     <ClInclude Include="CameraInfo.h" />
     <ClInclude Include="CircularArray.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Coordinator.h" />
     <ClInclude Include="FunctionHelpers.h" />
+    <ClInclude Include="MetaActions.h" />
+    <ClInclude Include="MetaOperation.h" />
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="PlayerActions.h" />
@@ -518,6 +525,7 @@
     <ClInclude Include="UIOPad.h" />
     <ClInclude Include="UIRenderInfo.h" />
     <ClInclude Include="UpdatedCache.h" />
+    <ClInclude Include="Uuid.h" />
     <ClInclude Include="vboindexer.h" />
     <ClInclude Include="WorldBlock.h" />
   </ItemGroup>

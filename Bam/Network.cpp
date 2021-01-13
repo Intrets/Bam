@@ -93,9 +93,6 @@ std::unique_ptr<Operation> OPERATION::loadOperation(Loader& loader) {
 		case NWT::TYPE::LUAACTIVITY_STOP:
 			LOAD(LuaActivityStop)
 				break;
-		case NWT::TYPE::GAME_LOAD:
-			LOAD(GameLoad)
-				break;
 		default:
 			assert(0);
 			break;
@@ -104,24 +101,3 @@ std::unique_ptr<Operation> OPERATION::loadOperation(Loader& loader) {
 	return res;
 }
 
-void GameLoad::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
-	if (Loader(this->saveBuffer, gameState).loadGame()) {
-		Locator<Log>::ref().putLine("Successfully loaded the world in Coordinator\n");
-	}
-	else {
-		Locator<Log>::ref().putLine("Failed to load the world in Coordinator\n");
-	}
-	coordinator.reset(gameState.tick);
-}
-
-void GameLoad::loadDerived(Loader& loader) {
-	this->saveBuffer << loader.getBuffer().rdbuf();
-}
-
-void GameLoad::saveDerived(Saver& saver) {
-	saver.getBuffer() << this->saveBuffer.rdbuf();
-}
-
-GameLoad::GameLoad() {
-	this->type = NWT::TYPE::GAME_LOAD;
-}

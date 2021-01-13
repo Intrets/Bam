@@ -18,7 +18,6 @@ namespace NWT
 		LUAACTIVITY_SETSCRIPT,
 		LUAACTIVITY_START,
 		LUAACTIVITY_STOP,
-		GAME_LOAD,
 	};
 }
 
@@ -88,18 +87,3 @@ public:
 	LuaActivityStop(int32_t h);
 	virtual ~LuaActivityStop() = default;
 };
-
-class GameLoad : public Operation
-{
-public:
-	std::stringstream saveBuffer;
-
-	virtual void run(GameState& gameState, COORDINATOR::Coordinator& coordinator) override;
-
-	virtual void loadDerived(Loader& loader) override;
-	virtual void saveDerived(Saver& saver) override;
-
-	GameLoad();
-	virtual ~GameLoad() = default;
-};
-

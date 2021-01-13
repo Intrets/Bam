@@ -8,6 +8,7 @@
 #include "Loader.h"
 #include "Timer.h"
 #include "BlockIDTextures.h"
+#include "Uuid.h"
 
 ReferenceManager<Activity>& GameState::getActivityManager() {
 	return this->activityManager;
@@ -34,6 +35,8 @@ bool GameState::load(Loader& loader) {
 	this->activityPaceHandler.load(loader);
 	this->movementPaceHandler.load(loader);
 
+	loader.retrieve(this->uuid);
+
 	size_t size;
 	loader.retrieve(size);
 	this->players.clear();
@@ -50,6 +53,8 @@ bool GameState::save(Saver& saver) {
 	this->staticWorld.save(saver);
 	this->activityPaceHandler.save(saver);
 	this->movementPaceHandler.save(saver);
+
+	saver.store(this->uuid);
 
 	saver.store(this->players.size());
 	for (auto& player : this->players) {
@@ -69,6 +74,7 @@ void GameState::clear() {
 	}
 
 	this->getActivityManager().clear();
+	this->uuid = UUID::getUUID();
 }
 
 void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
@@ -94,6 +100,7 @@ void GameState::appendStaticRenderInfo(RenderInfo& renderInfo) {
 }
 
 GameState::GameState() {
+	this->uuid = UUID::getUUID();
 }
 
 GameState::~GameState() {

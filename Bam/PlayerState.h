@@ -4,6 +4,7 @@
 #include "UIState.h"
 #include "Player.h"
 #include "PlayerActions.h"
+#include "MetaActions.h"
 
 class ControlState;
 
@@ -13,7 +14,9 @@ struct PlayerState
 	GameState& gameState;
 	ControlState& controlState;
 	UIState& uiState;
+
 	PlayerActions playerActions;
+	MetaActions metaActions;
 
 	Player& getPlayer();
 };

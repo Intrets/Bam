@@ -147,7 +147,7 @@ GameState& Loader::getGameStateRef() {
 }
 
 Loader::Loader(std::istream& in_, GameState& gameState) : in(in_), gameStateRef(&gameState) {
-	this->in.exceptions(std::istream::badbit | std::istream::failbit | std::istream::eofbit);
+	//this->in.exceptions(std::istream::badbit | std::istream::failbit | std::istream::eofbit);
 }
 
 Loader::Loader(std::istream& in_) : in(in_) {

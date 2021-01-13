@@ -433,6 +433,10 @@
     <ClCompile Include="common.cpp" />
     <ClCompile Include="PlayerActions.cpp" />
     <ClCompile Include="Coordinator.cpp" />
+    <ClCompile Include="Uuid.cpp" />
+    <ClCompile Include="MetaActions.cpp" />
+    <ClCompile Include="MetaOperation.cpp" />
+    <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -779,6 +783,10 @@
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="PlayerActions.h" />
     <ClInclude Include="Coordinator.h" />
+    <ClInclude Include="Uuid.h" />
+    <ClInclude Include="MetaActions.h" />
+    <ClInclude Include="MetaOperation.h" />
+    <ClInclude Include="Client.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

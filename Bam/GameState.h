@@ -23,6 +23,8 @@ private:
 	std::vector<std::unique_ptr<Player>> players;
 
 public:
+	std::string uuid;
+
 	std::optional<std::string> loadFile = std::nullopt;
 	std::optional<std::string> saveFile = std::nullopt;
 

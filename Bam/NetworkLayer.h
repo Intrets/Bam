@@ -9,14 +9,6 @@
 
 namespace NETWORK
 {
-	namespace MESSAGE
-	{
-		enum class TYPE
-		{
-			TEST,
-		};
-	}
-
 	struct Message
 	{
 		std::stringstream buffer{};
