@@ -67,6 +67,7 @@ void MetaOperation::load(Loader& loader) {
 }
 
 void MetaOperation::save(Saver& saver) {
-	saver.store(static_cast<int32_t>(this->type));
+	//saver.store(static_cast<int32_t>(this->type));
+	saver.getBuffer() << this->type;
 	this->saveDerived(saver);
 }

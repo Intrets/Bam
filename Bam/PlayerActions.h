@@ -12,6 +12,8 @@ class Operation;
 class PlayerActions
 {
 public:
+	std::string uuid;
+
 	int32_t tick;
 	std::vector<std::unique_ptr<Operation>> operations;
 

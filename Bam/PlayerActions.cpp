@@ -7,6 +7,7 @@
 #include "Network.h"
 
 void PlayerActions::load(Loader& loader) {
+	loader.retrieve(this->uuid);
 	loader.retrieve(this->tick);
 
 	int32_t size;
@@ -19,6 +20,7 @@ void PlayerActions::load(Loader& loader) {
 }
 
 void PlayerActions::save(Saver& saver) {
+	saver.store(this->uuid);
 	saver.store(this->tick);
 
 	int32_t size = static_cast<int32_t>(this->operations.size());

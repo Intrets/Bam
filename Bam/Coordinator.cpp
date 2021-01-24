@@ -9,30 +9,18 @@
 
 #include <sstream>
 
-std::ostream& operator<<(std::ostream& out, COORDINATOR::MESSAGE::TYPE const& type) {
-	out << static_cast<int32_t>(type);
-	return out;
-}
-
-std::istream& operator>>(std::istream& in, COORDINATOR::MESSAGE::TYPE& type) {
-	in.read(reinterpret_cast<char*>(&type), sizeof(int32_t));
-	return in;
-}
-
 void COORDINATOR::Coordinator::pushTick(int32_t tick, PlayerActions&& playerActions) {
 	PlayerActions actions = std::move(playerActions);
 
-	std::stringstream buffer;
-
-	buffer << COORDINATOR::MESSAGE::TYPE::PLAYER_ACTIONS;
-
-	Saver saver(buffer);
-	actions.save(saver);
-
 	auto& op = this->tickBuffer[this->currentTick].operations;
 
-	for (auto& operation : actions.operations) {
-		op.push_back(std::move(operation));
+	if (this->tickBuffer.find(tick) == this->tickBuffer.end()) {
+		this->tickBuffer[tick] = std::move(actions);
+	}
+	else {
+		if (this->gameStateUuid == actions.uuid) {
+			this->tickBuffer[tick].append(actions);
+		}
 	}
 }
 
@@ -50,14 +38,17 @@ void COORDINATOR::Coordinator::pushMessage(NETWORK::Message&& message) {
 			{
 				if (this->tickBuffer.find(this->currentTick) == this->tickBuffer.end()) {
 					this->tickBuffer[this->currentTick] = PlayerActions();
+					this->tickBuffer[this->currentTick].uuid = this->gameStateUuid;
 				}
 
 				PlayerActions playerActions;
 				playerActions.load(loader);
 
-				//if (playerActions.uuid != this->tickBuffer[this->currentTick])
+				if (this->gameStateUuid != playerActions.uuid) {
+					return;
+				}
 
-				//this->tickBuffer[this->currentTick].append(loader);
+				this->tickBuffer[this->currentTick].append(playerActions);
 				break;
 			}
 		case COORDINATOR::MESSAGE::TYPE::GAME_LOAD:

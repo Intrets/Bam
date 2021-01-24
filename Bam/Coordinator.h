@@ -22,7 +22,7 @@ namespace COORDINATOR
 	{
 		enum class TYPE
 		{
-			PLAYER_ACTIONS,
+			PLAYER_ACTIONS = 123,
 			GAME_LOAD,
 		};
 	}
@@ -51,5 +51,17 @@ namespace COORDINATOR
 
 		void reset(int32_t tick);
 	};
+}
+
+inline std::ostream& operator<<(std::ostream& out, COORDINATOR::MESSAGE::TYPE const& type) {
+	out << static_cast<int32_t>(type);
+	return out;
+}
+
+inline std::istream& operator>>(std::istream& in, COORDINATOR::MESSAGE::TYPE& type) {
+	int32_t t;
+	in >> t;
+	type = static_cast<COORDINATOR::MESSAGE::TYPE>(t);
+	return in;
 }
 

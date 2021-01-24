@@ -302,8 +302,8 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 			for (auto& networkClient : network.clients) {
 				for (auto& message : networkClient->receivedMessages) {
 					coordinator.pushMessage(std::move(message));
-					networkClient->receivedMessages.clear();
 				}
+				networkClient->receivedMessages.clear();
 			}
 		}
 		else if (type == PROGRAM::TYPE::OFFLINE) {
@@ -332,15 +332,22 @@ void mainLoop(GLFWwindow* window, PROGRAM::TYPE type) {
 					type == PROGRAM::TYPE::HEADLESS_SERVER) {
 
 					NETWORK::Message message;
+					message.buffer << COORDINATOR::MESSAGE::TYPE::PLAYER_ACTIONS;
+					//COORDINATOR::MESSAGE::TYPE e;
+					//message.buffer >> e;
+
 					Saver saver(message.buffer);
 
 					actions.save(saver);
 
 					for (auto& networkClient : network.clients) {
 						NETWORK::Message m;
+						auto oldp = message.buffer.tellp();
+						auto oldg = message.buffer.tellg();
+
 						m.buffer << message.buffer.rdbuf();
-						m.buffer.seekg(message.buffer.tellg());
-						m.buffer.seekp(message.buffer.tellp());
+						message.buffer.seekg(oldg);
+						message.buffer.seekp(oldp);
 
 						networkClient->send(std::move(m));
 					}
