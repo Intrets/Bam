@@ -127,6 +127,12 @@ inline void Saver::store(INVENTORYITEM::TYPE t) {
 }
 
 template<>
+inline void Saver::store(NETWORKACTION::TYPE t) {
+	int32_t s = static_cast<int32_t>(t);
+	this->store(s);
+}
+
+template<>
 inline void Saver::store(std::string t) {
 	this->storeString(t);
 }

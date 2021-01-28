@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "Network.h"
+#include "GameAction.h"
 #include "GameState.h"
 #include "Loader.h"
 #include "Saver.h"
@@ -10,14 +10,14 @@
 #include "Locator.h"
 #include "Log.h"
 
-void Operation::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
+void GameAction::run(GameState& gameState, COORDINATOR::Coordinator& coordinator) {
 }
 
-void Operation::load(Loader& loader) {
+void GameAction::load(Loader& loader) {
 	this->loadDerived(loader);
 }
 
-void Operation::save(Saver& saver) {
+void GameAction::save(Saver& saver) {
 	saver.store(static_cast<int32_t>(this->type));
 	this->saveDerived(saver);
 }
@@ -76,12 +76,12 @@ LuaActivityStop::LuaActivityStop(int32_t h_) : h(h_) {
 				res->type = type;\
 				res->load(loader);
 
-std::unique_ptr<Operation> OPERATION::loadOperation(Loader& loader) {
+std::unique_ptr<GameAction> OPERATION::loadOperation(Loader& loader) {
 	int32_t t;
 	loader.retrieve(t);
 	auto type = static_cast<NWT::TYPE>(t);
 
-	std::unique_ptr<Operation> res;
+	std::unique_ptr<GameAction> res;
 
 	switch (type) {
 		case NWT::TYPE::LUAACTIVITY_SETSCRIPT:

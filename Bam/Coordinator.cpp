@@ -5,53 +5,50 @@
 #include "NetworkLayer.h"
 #include "Saver.h"
 #include "Loader.h"
-#include "MetaOperation.h"
+#include "NetworkAction.h"
 
 #include <sstream>
 
 void COORDINATOR::Coordinator::pushTick(int32_t tick, PlayerActions&& playerActions) {
-	PlayerActions actions = std::move(playerActions);
+	PlayerActions actions;
+	actions = std::move(playerActions);
 
-	auto& op = this->tickBuffer[this->currentTick].operations;
+	if (this->gameStateUuid != actions.uuid) {
+		return;
+	}
 
-	if (this->tickBuffer.find(tick) == this->tickBuffer.end()) {
-		this->tickBuffer[tick] = std::move(actions);
+	if (this->tickBuffer.find(this->currentTick) == this->tickBuffer.end()) {
+		this->tickBuffer[this->currentTick] = std::move(actions);
+		this->tickBuffer[this->currentTick].uuid = this->gameStateUuid;
 	}
-	else {
-		if (this->gameStateUuid == actions.uuid) {
-			this->tickBuffer[tick].append(actions);
-		}
-	}
+
+	auto& operations = this->tickBuffer[this->currentTick].operations;
+
+	operations.insert(
+		operations.begin(),
+		std::make_move_iterator(actions.operations.begin()),
+		std::make_move_iterator(actions.operations.end())
+	);
 }
 
 void COORDINATOR::Coordinator::pushMessage(NETWORK::Message&& message) {
 	std::lock_guard<std::mutex> lock(this->mutex);
 
-	COORDINATOR::MESSAGE::TYPE type;
-
-	message.buffer >> type;
-
 	Loader loader(message.buffer);
+	NETWORKACTION::TYPE type;
+
+	loader.retrieve(type);
 
 	switch (type) {
-		case COORDINATOR::MESSAGE::TYPE::PLAYER_ACTIONS:
+		case NETWORKACTION::TYPE::PLAYER_ACTIONS:
 			{
-				if (this->tickBuffer.find(this->currentTick) == this->tickBuffer.end()) {
-					this->tickBuffer[this->currentTick] = PlayerActions();
-					this->tickBuffer[this->currentTick].uuid = this->gameStateUuid;
-				}
-
 				PlayerActions playerActions;
 				playerActions.load(loader);
 
-				if (this->gameStateUuid != playerActions.uuid) {
-					return;
-				}
-
-				this->tickBuffer[this->currentTick].append(playerActions);
+				this->pushTick(this->currentTick, std::move(playerActions));
 				break;
 			}
-		case COORDINATOR::MESSAGE::TYPE::GAME_LOAD:
+		case NETWORKACTION::TYPE::GAME_LOAD:
 			{
 				std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
 				op->load(loader);

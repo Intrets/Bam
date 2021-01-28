@@ -425,18 +425,16 @@
     <ClCompile Include="PlayerState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="Network.cpp" />
     <ClCompile Include="ActivitySerializerHelper.cpp">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClCompile>
     <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="common.cpp" />
-    <ClCompile Include="PlayerActions.cpp" />
     <ClCompile Include="Coordinator.cpp" />
     <ClCompile Include="Uuid.cpp" />
-    <ClCompile Include="MetaActions.cpp" />
-    <ClCompile Include="MetaOperation.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="NetworkAction.cpp" />
+    <ClCompile Include="GameAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BufferWrappers.h">
@@ -776,17 +774,15 @@
     <ClInclude Include="PlayerState.h">
       <Filter>States</Filter>
     </ClInclude>
-    <ClInclude Include="Network.h" />
     <ClInclude Include="ActivitySerializerHelper.h">
       <Filter>Game\StaticWorld\Activities\Utils</Filter>
     </ClInclude>
     <ClInclude Include="NetworkLayer.h" />
-    <ClInclude Include="PlayerActions.h" />
     <ClInclude Include="Coordinator.h" />
     <ClInclude Include="Uuid.h" />
-    <ClInclude Include="MetaActions.h" />
-    <ClInclude Include="MetaOperation.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="NetworkAction.h" />
+    <ClInclude Include="GameAction.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DebugLine.frag">

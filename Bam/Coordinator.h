@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <mutex>
 
-#include "PlayerActions.h"
+#include "NetworkAction.h"
 
 class GameLoad;
 class Loader;
@@ -13,20 +13,11 @@ class Saver;
 
 namespace NETWORK
 {
-	struct Message;
+	class Message;
 }
 
 namespace COORDINATOR
 {
-	namespace MESSAGE
-	{
-		enum class TYPE
-		{
-			PLAYER_ACTIONS = 123,
-			GAME_LOAD,
-		};
-	}
-
 	class Coordinator
 	{
 	public:
@@ -52,16 +43,3 @@ namespace COORDINATOR
 		void reset(int32_t tick);
 	};
 }
-
-inline std::ostream& operator<<(std::ostream& out, COORDINATOR::MESSAGE::TYPE const& type) {
-	out << static_cast<int32_t>(type);
-	return out;
-}
-
-inline std::istream& operator>>(std::istream& in, COORDINATOR::MESSAGE::TYPE& type) {
-	int32_t t;
-	in >> t;
-	type = static_cast<COORDINATOR::MESSAGE::TYPE>(t);
-	return in;
-}
-

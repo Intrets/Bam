@@ -22,7 +22,7 @@
 #include "Locator.h"
 #include "Log.h"
 #include "PathManager.h"
-#include "MetaOperation.h"
+#include "NetworkAction.h"
 
 WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 	auto mainList = UIO2::startList(UIO::DIR::DOWN);
@@ -203,9 +203,6 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		auto name = saveName->text.getLines().front();
 		name.erase(name.end() - 1);
 
-		//playerState.gameState.loadFile = name;
-		//playerState.uiState.reset();
-
 		std::unique_ptr<GameLoad> op = std::make_unique<GameLoad>();
 
 		Locator<Log>::ref().putLine("loading: " + name);
@@ -214,7 +211,7 @@ WeakReference<UIOBase, UIOList> UIO2::constructDebugInfo() {
 		Locator<PathManager>::ref().openSave(save, name);
 
 		op->saveBuffer << save.rdbuf();
-		playerState.metaActions.operations.push_back(std::move(op));
+		playerState.maybeGameLoad = std::move(op);
 
 		return BIND::RESULT::CONTINUE;
 	});

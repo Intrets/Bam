@@ -298,11 +298,9 @@
     </ClCompile>
     <ClCompile Include="Coordinator.cpp" />
     <ClCompile Include="FunctionHelpers.cpp" />
-    <ClCompile Include="MetaActions.cpp" />
-    <ClCompile Include="MetaOperation.cpp" />
+    <ClCompile Include="NetworkAction.cpp" />
     <ClCompile Include="NetworkLayer.cpp" />
-    <ClCompile Include="Network.cpp" />
-    <ClCompile Include="PlayerActions.cpp" />
+    <ClCompile Include="GameAction.cpp" />
     <ClCompile Include="UIOAnchoredProxy.cpp" />
     <ClCompile Include="UIOConstructActivityBuilder.cpp" />
     <ClCompile Include="UIOConstructActivityInfo.cpp" />
@@ -423,11 +421,9 @@
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Coordinator.h" />
     <ClInclude Include="FunctionHelpers.h" />
-    <ClInclude Include="MetaActions.h" />
-    <ClInclude Include="MetaOperation.h" />
+    <ClInclude Include="NetworkAction.h" />
     <ClInclude Include="NetworkLayer.h" />
-    <ClInclude Include="Network.h" />
-    <ClInclude Include="PlayerActions.h" />
+    <ClInclude Include="GameAction.h" />
     <ClInclude Include="UIOAnchoredProxy.h" />
     <ClInclude Include="UIOConstructActivityBuilder.h" />
     <ClInclude Include="UIOConstructActivityInfo.h" />

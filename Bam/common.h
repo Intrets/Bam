@@ -33,11 +33,6 @@
 
 #include "ReferenceManager.h"
 
-//#include "Locator.h"
-//#include "PathManager.h"
-//#include "DebugRenderInfo.h"
-//#include "Log.h"
-
 inline int32_t floordiv(int32_t x, int32_t y) {
 	return (x + (x < 0)) / y - (x < 0);
 }
@@ -85,4 +80,8 @@ struct hashVoidPtr
 
 inline float norm2(glm::vec2 v) {
 	return v.x * v.x + v.y * v.y;
+}
+
+inline std::streamoff getSize(std::basic_stringstream<char>& b) {
+	return b.tellp() - b.tellg();
 }

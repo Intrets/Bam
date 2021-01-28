@@ -4,8 +4,6 @@ class GameState;
 class Loader;
 class Saver;
 
-class Operation;
-
 namespace COORDINATOR
 {
 	class Coordinator;
@@ -21,12 +19,7 @@ namespace NWT
 	};
 }
 
-namespace OPERATION
-{
-	std::unique_ptr<Operation> loadOperation(Loader& loader);
-}
-
-class Operation
+class GameAction
 {
 public:
 	NWT::TYPE type;
@@ -38,11 +31,16 @@ public:
 	virtual void loadDerived(Loader& loader) = 0;
 	virtual void saveDerived(Saver& saver) = 0;
 
-	Operation() = default;
-	virtual ~Operation() = default;
+	GameAction() = default;
+	virtual ~GameAction() = default;
 };
 
-class LuaActivitySetScript : public Operation
+namespace OPERATION
+{
+	std::unique_ptr<GameAction> loadOperation(Loader& loader);
+}
+
+class LuaActivitySetScript : public GameAction
 {
 public:
 	std::string text;
@@ -58,7 +56,7 @@ public:
 	virtual ~LuaActivitySetScript() = default;
 };
 
-class LuaActivityStart : public Operation
+class LuaActivityStart : public GameAction
 {
 public:
 	int32_t h;
@@ -73,7 +71,7 @@ public:
 	virtual ~LuaActivityStart() = default;
 };
 
-class LuaActivityStop : public Operation
+class LuaActivityStop : public GameAction
 {
 public:
 	int32_t h;

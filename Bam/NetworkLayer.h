@@ -9,9 +9,21 @@
 
 namespace NETWORK
 {
-	struct Message
+	class Message
 	{
-		std::stringstream buffer{};
+	public:
+		std::stringstream buffer;
+
+		void restore();
+
+		Message() = default;
+		~Message() = default;
+
+		Message(Message& other);
+		Message& operator=(Message& other);
+
+		Message(Message&& other);
+		Message& operator=(Message&& other);
 	};
 
 	constexpr auto BUFFER_SIZE = 1024;

@@ -429,4 +429,52 @@ namespace NETWORK
 			}
 		}
 	}
+
+	void Message::restore() {
+		this->buffer.seekg(0);
+	}
+
+	Message::Message(Message& other) {
+		auto p = other.buffer.tellp();
+		auto g = other.buffer.tellg();
+
+		this->buffer << other.buffer.rdbuf();
+
+		other.buffer.seekp(p);
+		other.buffer.seekg(g);
+	}
+
+	Message& Message::operator=(Message& other) {
+		if (this == &other) {
+			return *this;
+		}
+
+		auto p = other.buffer.tellp();
+		auto g = other.buffer.tellg();
+
+		this->buffer.clear();
+		this->buffer << other.buffer.rdbuf();
+
+		other.buffer.seekp(p);
+		other.buffer.seekg(g);
+
+		return *this;
+	}
+
+	Message::Message(Message&& other) {
+		this->buffer = std::move(other.buffer);
+		other.buffer = std::stringstream();
+	}
+
+	Message& Message::operator=(Message&& other) {
+		if (this == &other) {
+			return *this;
+		}
+
+		this->buffer.clear();
+		this->buffer = std::move(other.buffer);
+		other.buffer = std::stringstream();
+
+		return *this;
+	}
 }

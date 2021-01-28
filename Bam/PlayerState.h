@@ -3,8 +3,7 @@
 #include "GameState.h"
 #include "UIState.h"
 #include "Player.h"
-#include "PlayerActions.h"
-#include "MetaActions.h"
+#include "NetworkAction.h"
 
 class ControlState;
 
@@ -16,7 +15,7 @@ struct PlayerState
 	UIState& uiState;
 
 	PlayerActions playerActions;
-	MetaActions metaActions;
+	std::optional<std::unique_ptr<GameLoad>> maybeGameLoad;
 
 	Player& getPlayer();
 };

@@ -215,6 +215,13 @@ inline void Loader::retrieve(INVENTORYITEM::TYPE& t) {
 }
 
 template<>
+inline void Loader::retrieve(NETWORKACTION::TYPE& t) {
+	int32_t s;
+	this->retrieve(s);
+	t = static_cast<NETWORKACTION::TYPE>(s);
+}
+
+template<>
 inline void Loader::retrieve(sol::type& t) {
 	int32_t s;
 	this->retrieve(s);

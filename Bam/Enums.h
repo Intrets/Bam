@@ -3,6 +3,17 @@
 #include <unordered_map>
 #include <string>
 
+namespace NETWORKACTION
+{
+	enum class TYPE
+	{
+		PING,
+		PONG,
+		GAME_LOAD,
+		PLAYER_ACTIONS,
+	};
+}
+
 namespace PROGRAM
 {
 	enum class TYPE

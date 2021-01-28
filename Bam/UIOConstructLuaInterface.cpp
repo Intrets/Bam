@@ -157,7 +157,6 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		if (auto watched = uioLua->getWatched().getRef()) {
 			auto action = std::make_unique<LuaActivitySetScript>(watched.getHandle(), join(luaText->text.getLines()));
 			playerState.playerActions.operations.push_back(std::move(action));
-			//watched.get()->setScript(join(luaText->text.getLines()), playerState.gameState);
 		}
 		return BIND::RESULT::CONTINUE;
 	});
@@ -177,7 +176,6 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		if (auto watched = uioLua->getWatched().getRef()) {
 			auto action = std::make_unique<LuaActivityStart>(watched.getHandle());
 			playerState.playerActions.operations.push_back(std::move(action));
-			//watched.get()->start();
 		}
 
 		return BIND::RESULT::CONTINUE;
@@ -188,7 +186,6 @@ WeakReference<UIOBase, UIOList> UIO2::constructLuaInterface(WeakReference<Activi
 		if (auto watched = uioLua->getWatched().getRef()) {
 			auto action = std::make_unique<LuaActivityStop>(watched.getHandle());
 			playerState.playerActions.operations.push_back(std::move(action));
-			//watched.get()->stop();
 		}
 
 		return BIND::RESULT::CONTINUE;
