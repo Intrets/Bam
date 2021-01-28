@@ -15,8 +15,6 @@
 #pragma comment(lib, "MsWSock.lib")
 #pragma comment(lib, "AdvApi32.lib")
 
-constexpr auto BUFFER_SIZE = 1024;
-
 #include <string>
 #include <iostream>
 
@@ -46,7 +44,7 @@ namespace NETWORK
 	void Client::receive(const char* bytes, int32_t count) {
 		printf("successfully received part of message of size %d", count);
 		this->receivedBuffer.write(bytes, count);
-		this->messageSizeRemaining -= count;
+		this->messageRemaining -= count;
 	}
 
 	void Client::receiveNewMessage() {
@@ -62,7 +60,7 @@ namespace NETWORK
 	}
 
 	void Client::cycleMessage() {
-		if (this->messageSizeRemaining == 0) {
+		if (this->messageRemaining == 0) {
 			this->receivedMessages.emplace_back();
 			this->receivedMessages.back().buffer = std::move(this->receivedBuffer);
 		}
@@ -71,7 +69,58 @@ namespace NETWORK
 		}
 	}
 
-	void Client::send(Message&& message) {
+	void Client::ingestBuffer(std::array<char, BUFFER_SIZE>& buffer, int32_t size) {
+		int32_t consumed = 0;
+		int32_t remaining = size;
+
+		while (remaining > 0) {
+			// Need to read size of next message
+			if (this->messageRemaining == 0) {
+				int32_t remainingPartialSizeCount = 4 - this->receivedPartialSizeCount;
+				// All bytes for the size are received
+				if (remaining >= remainingPartialSizeCount) {
+					this->receivedPartialSize.write(buffer.data() + consumed, remainingPartialSizeCount);
+					remaining -= remainingPartialSizeCount;
+					consumed += remainingPartialSizeCount;
+					assert(getSize(this->receivedPartialSize) == 4);
+
+					int32_t messageSize;
+					this->receivedPartialSize.read(reinterpret_cast<char*>(&messageSize), 4);
+					this->receivedPartialSize.str(std::string());
+					this->receivedPartialSize.clear();
+
+					this->messageRemaining = messageSize;
+				}
+				else {
+					this->receivedPartialSize.write(buffer.data() + consumed, remaining);
+					this->receivedPartialSizeCount += remaining;
+					consumed += remaining;
+					remaining = 0;
+					break;
+				}
+			}
+
+			if (remaining >= this->messageRemaining) {
+				this->receivedBuffer.write(buffer.data() + consumed, this->messageRemaining);
+				consumed += this->messageRemaining;
+				remaining -= this->messageRemaining;
+
+				this->messageRemaining = 0;
+			}
+			else {
+				this->receivedBuffer.write(buffer.data() + consumed, remaining);
+				this->messageRemaining -= remaining;
+				consumed += remaining;
+				remaining = 0;
+			}
+
+			if (this->messageRemaining == 0) {
+				this->cycleMessage();
+			}
+		}
+	}
+
+	void Client::send(Message message) {
 		this->sendMessages.push(std::move(message));
 	}
 
@@ -287,8 +336,8 @@ namespace NETWORK
 					else {
 						if (FD_ISSET(client->hidden->socket, &readFDs)) {
 							printf("client socket read\n");
-							char buffer[BUFFER_SIZE];
-							int bytesReceived = recv(client->hidden->socket, buffer, BUFFER_SIZE, 0);
+							std::array<char, BUFFER_SIZE> buffer;
+							int bytesReceived = recv(client->hidden->socket, buffer.data(), BUFFER_SIZE, 0);
 							// connection closed
 							if (bytesReceived == 0) {
 								client->close();
@@ -297,40 +346,7 @@ namespace NETWORK
 								client->close();
 							}
 							else if (bytesReceived > 0) {
-								int32_t consumed = 0;
-								if (client->messageSizeRemaining == 0) {
-									if (bytesReceived < 4) {
-										printf("expected new message with first 4 bytes specifying the length\n");
-										client->close();
-									}
-									else {
-										int32_t size = *reinterpret_cast<int32_t*>(buffer);
-										client->messageSizeRemaining = size;
-										consumed = 4;
-									}
-								}
-
-								if (client->messageSizeRemaining >= bytesReceived - consumed) {
-									client->receive(buffer + consumed, bytesReceived - consumed);
-								}
-								else if (client->messageSizeRemaining < 0) {
-									printf("waiting for negative length message.\n");
-									client->close();
-									assert(0);
-								}
-								else {
-									printf("received too many bytes from client.\n");
-									client->close();
-									assert(0);
-								}
-
-								if (client->messageSizeRemaining == 0) {
-									printf("received whole message\n");
-									client->cycleMessage();
-								}
-
-								//std::string m(buffer + 1, bytesReceived - 1);
-								//printf("some message: %s\n", m.c_str());
+								client->ingestBuffer(buffer, bytesReceived);
 							}
 							else {
 								client->close();
@@ -374,9 +390,6 @@ namespace NETWORK
 
 									int32_t bytesSend = send(client->hidden->socket, sendBuffer, sendLength, 0);
 
-									std::string m(sendBuffer + headerLength, bytesSend - headerLength);
-									printf("some message sent: %s\n", m.c_str());
-
 									if (bytesSend == SOCKET_ERROR) {
 										int32_t error;
 										int32_t errorLength = sizeof(error);
@@ -387,6 +400,9 @@ namespace NETWORK
 										}
 									}
 									else {
+										std::string m(sendBuffer + headerLength, bytesSend - headerLength);
+										printf("some message sent: %s\n", m.c_str());
+
 										if (bytesSend != sendLength) {
 											int32_t bufferBytesSend = bytesSend - headerLength;
 											if (bufferBytesSend < 0) {

@@ -14,6 +14,8 @@ namespace NETWORK
 		std::stringstream buffer{};
 	};
 
+	constexpr auto BUFFER_SIZE = 1024;
+
 	class ClientHidden;
 	class Client
 	{
@@ -25,7 +27,11 @@ namespace NETWORK
 		std::vector<Message> receivedMessages;
 
 		std::stringstream receivedBuffer;
-		int32_t messageSizeRemaining = 0;
+
+		std::stringstream receivedPartialSize;
+		int32_t receivedPartialSizeCount = 0;
+
+		int32_t messageRemaining = 0;
 
 		std::queue<Message> sendMessages;
 
@@ -35,7 +41,9 @@ namespace NETWORK
 		void receiveNewMessage();
 		void cycleMessage();
 
-		void send(Message&& message);
+		void ingestBuffer(std::array<char, BUFFER_SIZE>& buffer, int32_t size);
+
+		void send(Message message);
 
 		Client();
 		~Client();
